@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에게모니</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/assets/css/common/sidebar.css">
+    <link rel="stylesheet" href="/assets/css/member/login.css">
+</head>
+<body>
+
+<div id="page-wrapper">
+    <!-- 사이드바 -->
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand">
+                <a href="/">에게모니</a>
+                <input type="text" class="form-control" placeholder="검색" maxlength="20"/>
+            </li>
+            <br/>
+            <p class="acountbuttons" style="text-align: center;">
+                <span sec:authorize="isAnonymous()"><a th:href="@{/login}">로그인</a></span>
+                <span sec:authorize="isAuthenticated()"><a th:href="@{/logout}">로그아웃</a></span>
+                <span sec:authorize="isAnonymous()"><a th:href="@{/join}">회원가입</a></span>
+                <span><a href="#">Mypage</a></span>
+                <span><a href="#">Cart(0)</a></span>
+            </p>
+            <li>-</li>
+            <br/>
+            <li><a href="#">Top</a></li>
+            <li><a href="#">Bottom</a></li>
+            <li><a href="#">Cap</a></li>
+            <li>-</li>
+            <br/>
+            <li><a href="/board/free">자유게시판</a></li>
+            <li><a href="/board/suggestion">건의게시판</a></li>
+            <li><a href="/board/write">게시판</a></li>
+            <li>-</li>
+            <br/>
+            <li>CS CENTER</li>
+            <li>070-4193-9293</li>
+            <li>토요일, 일요일, 공휴일 제외</li>
+            <li>평일 09:00 ~ 18:00</li>
+            <li>-</li>
+            <br/>
+            <li><a href="#">메뉴 4</a></li>
+            <li><a href="#">메뉴 5</a></li>
+            <li><a href="#">메뉴 6</a></li>
+            <li><a href="#">메뉴 7</a></li>
+            <li><a href="#">메뉴 8</a></li>
+            <li><a href="#">메뉴 9</a></li>
+            <li><a href="#">메뉴 1</a></li>
+            <li><a href="#">메뉴 2</a></li>
+            <li><a href="#">메뉴 3</a></li>
+            <li><a href="#">메뉴 4</a></li>
+            <li><a href="#">메뉴 5</a></li>
+            <li><a href="#">메뉴 6</a></li>
+            <li><a href="#">메뉴 7</a></li>
+            <li><a href="#">메뉴 8</a></li>
+            <li><a href="#">메뉴 9</a></li>
+
+        </ul>
+    </div>
+    <!-- /사이드바 -->
+
+
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <!-- 본문 -->
+            <h1 style="text-align: center;">로그인</h1>
+
+            <div class="login-page">
+                <div class="form">
+                    <form class="login-form" method="post" th:action="@{/member/login}" id="login_form">
+                        <input id="userid" name="userid" type="text" th:value="${member?.userid}" placeholder="아이디" maxlength="20" autocomplete="off"/>
+                        <input id="password" name="pswd" type="password" th:value="${member?.pswd}" placeholder="비밀번호" maxlength="25" autocomplete="off"/>
+                        <p id="idMsg" class="error_next_box">[[${idMsg}]]</p>
+                        <p id="pswdMsg" class="error_next_box">[[${pswdMsg}]]</p>
+                        <p class="error_next_box">[[${errorMsg}]]</p>
+                        <button type="button" id="loginbtn">로그인</button>
+                        <span class="message"><a href="#">아이디 찾기</a></span>
+                        <span class="message"><a href="#">비밀번호 찾기</a></span>
+                        <span class="message"><a th:href="@{/join}">회원가입</a></span>
+                    </form>
+                    <div >
+                        <hr id="snsLine">
+                        <h3 class="message" id="snsFont">SNS 로그인 - 가입</h3>
+                    </div>
+                    <a href="https://kauth.kakao.com/oauth/authorize?client_id=98c809757e9444495dd1e34430de4945&redirect_uri=http://localhost:8080/kakao/login&response_type=code">
+                        <img src="//mud-kage.kakao.com/14/dn/btqbjxsO6vP/KPiGpdnsubSq3a0PHEGUK1/o.jpg" width="300"/>
+                    </a>
+                </div>
+            </div>
+
+            <!-- /본문 -->
+        </div>
+    </div>
+</div>
+
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="/assets/js/member/login.js"></script>
+
+</body>
+</html>
