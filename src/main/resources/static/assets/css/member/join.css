@@ -1,0 +1,226 @@
+@charset "UTF-8";
+
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+.login-page {
+	
+  width: 600px;  
+  padding: 8% 0 0;
+  margin: auto;
+}
+
+
+.form {
+  position: relative;
+  z-index: 1;  
+  background: white;  
+  max-width: 600px;
+  margin: 0 auto 100px;
+  padding: 45px;
+  text-align: center;
+}
+
+
+.form input {
+  font-family: "Roboto", sans-serif;
+  outline: 0;  
+  background: white;  
+  width: 100%;
+  border: 1px solid #d3d7df;  
+  margin: 0 0 15px;
+  padding: 15px;  
+  font-size: 18px;
+}
+
+
+.form .button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: white;
+  border-color: black;
+  color: black;
+  
+  width: 100%;
+  padding: 15px;
+  font-size: 20px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+
+
+.form .button:hover,.form .button:active,.form .button:focus {
+  background: black;
+  color: white;
+}
+
+.form .message {
+  margin: 15px 0 0;
+  color: #b3b3b3;
+  font-size: 12px;
+}
+
+.form .message a {
+  color: #040a04;
+  text-decoration: none;
+  font-size: 13px;
+  padding: 4px 11px;
+  
+}
+
+
+.form .message a:hover {
+  color: #808080;
+}
+
+
+.form .register-form {
+  display: none;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.container:before, .container:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.container .info {
+  margin: 50px auto;
+  text-align: center;
+}
+.container .info h1 {
+  margin: 0 0 15px;
+  padding: 0;
+  font-size: 36px;
+  font-weight: 300;
+  color: #1a1a1a;
+}
+.container .info span {
+  color: #4d4d4d;
+  font-size: 12px;
+}
+
+
+.container .info span a {
+  color: #000000;
+  text-decoration: none;
+}
+
+
+.container .info span .fa {
+  color: #EF3B3A;
+}
+
+
+body {
+  background: white;
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;      
+}
+
+
+/* 여기부턴 직접 만든 부분 */
+
+.error_next_box {
+  
+	color: red;
+
+  }
+  
+.error_next_box_green {
+  	
+  	color : green;
+  	
+  }
+  
+.acountbuttons {
+  
+  	text-align: center;
+  
+  }
+
+.inputLabel {
+	
+	margin-right: 460px;
+	display: table-cell;	
+	
+}
+
+
+#btnjoin {
+	margin-top: 60px;
+}
+
+
+#phoneNum {
+	
+	width : 400px;
+	display: inline-block;
+	margin-right: 6px;
+	
+}
+
+#authSendBtn {
+	
+	display: inline-block;
+	width: 100px;
+	font-size: 15px;
+	padding-top: 18px;
+	padding-bottom : 15px;
+	background : white;
+	border-color: black;
+	
+}
+
+
+
+
+   /* 나중에 다시 수정해야함  */
+/*  #pswd1, #pswd2, #eyeBtn1, #eyeBtn2 {
+	
+	display: inline-block;
+	
+  }
+
+  .eyeBtn  {
+	
+		background-image: url("/resources/css/images/eyeButton.png");			
+		background-position-x: right;	
+		background-position-y: center;		
+		background-repeat: no-repeat;
+		background-size: 60px;
+		border: none;
+		position: absolute;
+		background-size: 39px;
+		height: 57px;
+		width: 55px;
+		margin-left: -55px;
+ 		
+  }
+	
+  .XeyeBtn  {
+	
+		background-image: url("/resources/css/images/XeyeButton.png");		
+		background-position-x: right;	
+		background-position-y: center;		
+		background-repeat: no-repeat;
+		background-size: 60px;
+		border: none;
+		position: absolute;
+		background-size: 39px;
+		height: 57px;
+		width: 55px;
+		margin-left: -55px;
+ 		
+  }
+ */
+
+

@@ -1,0 +1,79 @@
+@charset "UTF-8";
+
+
+
+.acountbuttons span a {
+	
+	display: block;
+  	text-decoration: none;
+	color: #000;
+	font-size: 12px;
+	display: inline-block;
+	padding-right: 3px;
+	padding-left: 3px;
+
+}
+
+.acountbuttons span a:hover {
+	
+	color: #808080;
+	background: rgba(255, 255, 255, 0.2);
+	
+}
+
+
+
+#page-wrapper {
+    padding-left: 250px;
+    font-size: 14px;
+  }
+  
+  
+#sidebar-wrapper {
+  position: fixed;
+  width: 250px;
+  height: 100%;
+  margin-left: -250px;
+  background: white;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+#page-content-wrapper {
+  width: 100%;
+  padding: 20px;
+}
+/* 사이드바 스타일 */
+
+.sidebar-nav {
+  width: 250px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sidebar-nav li {
+  text-indent: 1.5em;
+  line-height: 2.8em;
+  color: #000;
+ 
+}
+
+.sidebar-nav li a {
+  display: block;
+  text-decoration: none;
+  color: #000;
+
+}
+
+
+
+.sidebar-nav li a:hover {
+  color: #808080;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-nav > .sidebar-brand {
+  font-size: 1.3em;
+  line-height: 3em;
+}
