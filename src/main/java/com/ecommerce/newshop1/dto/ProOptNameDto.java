@@ -12,10 +12,10 @@ public class ProOptNameDto {
 
     private Long id;
     private Long productId;
-    private String option1Name;
-    private String option2Name;
-    private String option3Name;
-    private String option4Name;
-    private String option5Name;
+    private String optionName1;
+    private String optionName2;
+    private String optionName3;
+    private String optionName4;
+    private String optionName5;
 
 }

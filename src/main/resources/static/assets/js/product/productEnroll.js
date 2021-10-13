@@ -82,7 +82,8 @@ $("#optConfigOk").on("click", function(){
     tag += '<tr>'
     tag += '<td><input type="checkbox"/></td>';
     for(var i=0; i<optName.length; i++){
-        tag += '<td><input type="text" size="10" name="optName" value="' + optName[i] + '" />';
+        var j = i+1;
+        tag += '<td><input type="text" size="10" name="optionName'+j+'" value="' + optName[i] + '" />';
     }
     tag += '<td><input type="text" value="수량" size="10"/></td>';
     tag += '</tr></br>';
