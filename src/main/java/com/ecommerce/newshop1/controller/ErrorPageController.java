@@ -31,6 +31,8 @@ public class ErrorPageController implements ErrorController {
                 return "error/404";
             }else if(statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR){
                 return "error/500";
+            } else{
+                return "error/error";
             }
         }
 

@@ -6,6 +6,7 @@ $(document).ready(function(){
 		checkId();
 		checkPassword();
 		mainSubmit();
+		errorMsg();
 	});	
 	
 });
@@ -38,14 +39,8 @@ function checkId(event){
 	    hideMsg(oMsg);
         return true;
 	}
-	
-//	if ( userid != "" ){
-//		hideMsg(oMsg);
-//		return true;
-//	}
 
 }
-
 
 // 비밀번호 공백검사
 function checkPassword(event){
@@ -61,12 +56,17 @@ function checkPassword(event){
 	    hideMsg(oMsg);
     	return true;
 	}
-	
-//	if ( password != "" ){
-//		hideMsg(oMsg);
-//		return true;
-//	}
+}
 
+function errorMsg(){
+
+    let password = $("#password").val();
+    let oMsg = $("#errorMsg");
+
+    if(password == ""){
+        showErrorMsg(oMsg, "");
+        return false
+    }
 }
 
 // 성공메시지 함수
