@@ -6,11 +6,13 @@ import com.ecommerce.newshop1.dto.ProductDto;
 import com.ecommerce.newshop1.entity.ProOptEntity;
 import com.ecommerce.newshop1.entity.ProOptNameEntity;
 import com.ecommerce.newshop1.entity.ProductEntity;
+import com.ecommerce.newshop1.repository.ProOptNameRepository;
+import com.ecommerce.newshop1.repository.ProOptRepository;
 import com.ecommerce.newshop1.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -19,58 +21,40 @@ import java.util.*;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private String[][] option;
+    private final ProOptRepository proOptRepository;
+    private final ProOptNameRepository proOptNameRepository;
 
+    String[] values = {"option1", "option2", "option3", "option4", "option5" };
 
-//    public String insertProducts(HttpServletRequest request, ProductDto productDto) throws Exception {
-//
-//        List<ProOptEntity> optEntities = new ArrayList<ProOptEntity>();
-//
-//        int optLength = request.getParameterValues("option1").length;
-//        int nameLength = request.getParameterValues("optName").length;
-//
-//        String[][] option = new String[6][optLength];
-//        String[] name = new String[nameLength];
-//
-//        option[0] = request.getParameterValues("option1");
-//        option[1] = request.getParameterValues("option2");
-//        option[2] = request.getParameterValues("option3");
-//        option[3] = request.getParameterValues("option4");
-//        option[4] = request.getParameterValues("option5");
-//        String[] stock = request.getParameterValues("stock");
-//
-//        name = request.getParameterValues("optName");
-//
-//        Map<ProOptEntity, ProOptNameDto> map = new HashMap<ProOptEntity, ProOptNameDto>();
-//
-//        // 상품 옵션들 담기
-//        for(int i = 0; i < optLength; i++){
-//            ProOptEntity entity = ProOptEntity.builder()
-//                    .option1(option[0][i])
-//                    .option2(option[1][i])
-//                    .option3(option[2][i])
-//                    .option4(option[3][i])
-//                    .option5(option[4][i])
-//                    .stock(Integer.parseInt(stock[i]))
-//                    .build();
-//
-//            optEntities.add(entity);
-//        }
-//
-//        // 상품 옵션 이름 담기
-//        for(qwe : name){
-//
-//
-//        }
-//
-//
-//
-//    }
+    @Transactional
+    public void saveProduct(ProductEntity productEntity){
+        productRepository.save(productEntity);
+    }
+
+    @Transactional
+    public void saveProOptions(List<ProOptEntity> proOptEntities){
+        proOptRepository.saveAll(proOptEntities);
+    }
+
+    @Transactional
+    public void saveProOptName(ProOptNameDto dto, ProductEntity productEntity){
+
+        ProOptNameEntity entity = ProOptNameEntity.builder()
+                .productEntity(productEntity)
+                .optionName1(dto.getOptionName1())
+                .optionName2(dto.getOptionName2())
+                .optionName3(dto.getOptionName3())
+                .optionName4(dto.getOptionName4())
+                .optionName5(dto.getOptionName5())
+                .build();
+
+        proOptNameRepository.save(entity);
+    }
+
 
     // 옵션 개수 검사 메소드
     public int proOptLength(ProOptDto proOptDto) throws Exception {
 
-        String[] values = {"option1", "option2", "option3", "option4", "option5" };
         int cnt = 0;
 
         // 몇개의 옵션이 입력됐는지
@@ -89,18 +73,17 @@ public class ProductService {
     }
 
 
+
     // saveAll 하기 위해서 dto를 entity로 바꾸기
-    public List<ProOptEntity> proOptDtoToEntities(ProOptDto proOptDto, int cnt) throws Exception {
+    public List<ProOptEntity> proOptDtoToEntities(ProOptDto proOptDto, int cnt, ProductEntity productEntity) throws Exception {
 
-        String[] values = {"option1", "option2", "option3", "option4", "option5" };
+        List<ProOptEntity> entities = new ArrayList<ProOptEntity>();     // 마지막에 리턴할 entity List
+        int optLength = proOptDto.getOption1().split(",").length;  // 옵션 개수 알기위해서
 
-        List<ProOptEntity> entities = new ArrayList<ProOptEntity>();
-        int optLength = proOptDto.getOption1().split(",").length;
+        String[][] option = new String[5][optLength+1];                  // 옵션값들 담기 위해서
+        String[] stock = proOptDto.getStock().split(",");          // 재고 담기
 
-        String[][] option = new String[5][optLength+1];
-        String[] stock = proOptDto.getStock().split(",");
-
-        // 들어온 옵션 수 만큼 배열에 담는다
+        // 값이 있는건 값들 담고, 없으면 Null 담기
         for(int i = 0; i < 5; i++){
 
             if(i+1 > cnt){
@@ -116,7 +99,11 @@ public class ProductService {
                 String value = (String) field.get(proOptDto);
 
                 // 값이 여러개일 수도 있으니 split해서 담는다
-                option[i] = value.split(",");
+                if(value.contains(",")){
+                    option[i] = value.split(",");
+                } else{
+                    option[i][0] = value;
+                }
             }
         }
 
@@ -124,6 +111,7 @@ public class ProductService {
         for(int i = 0; i < optLength; i++){
 
             ProOptEntity entity = ProOptEntity.builder()
+                .productEntity(productEntity)
                 .option1(option[0][i])
                 .option2(option[1][i])
                 .option3(option[2][i])

@@ -21,19 +21,19 @@ public class ProOptNameEntity {
     private ProductEntity productEntity;
 
     @Column
-    private String option1Name;
+    private String optionName1;
 
     @Column
-    private String option2Name;
+    private String optionName2;
 
     @Column
-    private String option3Name;
+    private String optionName3;
 
     @Column
-    private String option4Name;
+    private String optionName4;
 
     @Column
-    private String option5Name;
+    private String optionName5;
 
 
 }

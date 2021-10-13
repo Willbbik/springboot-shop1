@@ -2,6 +2,7 @@ package com.ecommerce.newshop1.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -15,9 +16,9 @@ public class ProductDto {
     private Long id;
     private String pageName;
     private String productName;
-    private String productPrice;
-    private Date createdDate;
-    private Date modifiedDate;
+    private int productPrice;
+    private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
 
 
 }

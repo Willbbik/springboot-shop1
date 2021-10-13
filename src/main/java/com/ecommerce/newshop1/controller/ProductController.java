@@ -1,17 +1,18 @@
 package com.ecommerce.newshop1.controller;
 
+import com.ecommerce.newshop1.dto.ProOptNameDto;
 import com.ecommerce.newshop1.dto.ProductDto;
 import com.ecommerce.newshop1.dto.ProOptDto;
+import com.ecommerce.newshop1.entity.ProOptEntity;
+import com.ecommerce.newshop1.entity.ProductEntity;
+import com.ecommerce.newshop1.repository.ProOptRepository;
+import com.ecommerce.newshop1.repository.ProductRepository;
 import com.ecommerce.newshop1.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -20,6 +21,8 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductRepository productRepository;
+    private final ProOptRepository proOptRepository;
 
     // 상품 등록 페이지
     @GetMapping("/admin/product/reg")
@@ -29,23 +32,28 @@ public class ProductController {
     }
 
     @PostMapping("/product/register")
-    public String register(ProOptDto proOptDto, ProductDto productDto) throws Exception {
+    public String register(ProOptDto optionDto, ProductDto productDto, ProOptNameDto nameDto) throws Exception {
 
-        // @RequestParam(value = "option1") String[] option1
+        int cnt = productService.proOptLength(optionDto);
 
-        int cnt = productService.proOptLength(proOptDto);
+        ProductEntity productEntity = ProductEntity.builder()
+                .pageName(productDto.getPageName())
+                .productName(productDto.getProductName())
+                .productPrice(productDto.getProductPrice())
+                .build();
 
+        if(cnt == 0) {      // 옵션이 없을 때
+            productService.saveProduct(productEntity);
+        } else if(cnt > 0){ // 옵션이 있을 때
+            productService.saveProduct(productEntity);
+            List<ProOptEntity> proOptEntities = productService.proOptDtoToEntities(optionDto, cnt, productEntity);
+            productService.saveProOptions(proOptEntities);
+            productService.saveProOptName(nameDto, productEntity);
 
-//        if(cnt == 0) {      // 옵션이 없을 때
-//            // 상품 저장
-//        } else if(cnt > 0){ // 옵션이 있을 때
-//            // 상품 저장
-//            // 상품 옵션 저장
-//            // 상품 옵션 이름 저장
-//        }
-
-        productService.proOptDtoToEntities(proOptDto, cnt);
-
+            // 상품 저장
+            // 상품 옵션 저장
+            // 상품 옵션 이름 저장
+        }
 
         return "/product/registration";
 
