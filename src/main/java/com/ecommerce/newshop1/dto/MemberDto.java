@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -16,6 +18,8 @@ public class MemberDto {
     private String role;
     private String sns;
     private String phonenum;
+    private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
 
     public MemberEntity toEntity(){
         return MemberEntity.builder()

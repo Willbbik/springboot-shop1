@@ -49,36 +49,48 @@ public class MemberService {
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 
+    // 아이디 찾기
+    @Transactional(readOnly = true)
+    public Optional<MemberEntity> findByUserId(String userid){
 
-    // 사용자 아이디 찾기
+        return memberRepository.findByuserid(userid);
+    }
+
+    // 일반 회원가입
     @Transactional
-    public Object findByUserId(String userid){
-        Optional<MemberEntity> optMemberEntity = memberRepository.findByuserid(userid);
-        if(optMemberEntity.isPresent()){
-            MemberEntity memberEntity = optMemberEntity.get();
+    public Long joinNormal(MemberDto memberDto, String snsNone){
 
-           return MemberDto.builder()
-                    .id(memberEntity.getId())
-                    .userid(memberEntity.getUserid())
-                    .pswd(memberEntity.getPassword())
-                    .role(memberEntity.getRole())
-                    .sns(memberEntity.getSns())
-                    .phonenum(memberEntity.getPhonenum())
-                    .build();
-        }else{
-            return null;
+        memberDto.setPswd(passwordEncoder.encode(memberDto.getPswd()));
+        memberDto.setRole(Role.MEMBER.getValue());
+        memberDto.setSns(snsNone);
+
+        return memberRepository.save(memberDto.toEntity()).getId();
+    }
+
+    // oAuth2로 회원가입
+    @Transactional
+    public void joinOAuth(String id, String sns) {
+
+        MemberDto memberDto = MemberDto.builder()
+                .userid(id)
+                .role(Role.MEMBER.getValue())
+                .sns(sns)
+                .build();
+        try{
+            memberRepository.save(memberDto.toEntity());
+        } catch (Exception e){
+            log.info("MemberService 355 line, oAuthJoin exception ");
         }
     }
 
-    @Transactional
+    // sns 값 찾기
+    @Transactional(readOnly = true)
     public String findSnsByUserId(String userid){
-
         return memberRepository.findSnsByUserId(userid);
     }
 
     // 비밀번호 검사
     public boolean pswdCheck(String pswd) {
-
         return Pattern.matches(pswdPattern, pswd);
     }
 
@@ -90,6 +102,16 @@ public class MemberService {
         }else{
             return true;
         }
+    }
+
+    // jJoinMemberDto를 MemberDto로 전환
+    public MemberDto joinDtoToMember(JoinMemberDto joinMemberDto){
+
+        return MemberDto.builder()
+                .userid(joinMemberDto.getUserid())
+                .pswd(joinMemberDto.getPswd())
+                .phonenum(joinMemberDto.getPhoneNum())
+                .build();
     }
 
     // 객체 확인
@@ -296,7 +318,7 @@ public class MemberService {
         return model;
     }
 
-    // 객체 길이 조정 메소드
+    // 회원가입 객체 길이 조정 메소드
     public JoinMemberDto joinDtoLength(JoinMemberDto memberDto){
 
         String[] dtoBefore = {memberDto.getUserid(), memberDto.getPswd(), memberDto.getPswdCheck(), memberDto.getPhoneNum(), memberDto.getAuthNum()};
@@ -312,7 +334,6 @@ public class MemberService {
             }
         }
 
-
         return JoinMemberDto.builder()
                 .userid(dtoAfter[0])
                 .pswd(dtoAfter[1])
@@ -322,59 +343,24 @@ public class MemberService {
                 .build();
     }
 
-
-    ////////////////////////////////////////////////////////////
-    // 회원가입 관련 메소드들
-
-    @Transactional
-    public Long joinNormal(MemberDto memberDto, String snsNone){
-
-        memberDto.setPswd(passwordEncoder.encode(memberDto.getPswd()));
-        memberDto.setRole(Role.MEMBER.getValue());
-        memberDto.setSns(snsNone);
-
-        return memberRepository.save(memberDto.toEntity()).getId();
-    }
-
-
-    @Transactional
-    public String joinOAuth(String id, String sns) throws Exception {
-
-        MemberDto memberDto = MemberDto.builder()
-                .userid(id)
-                .role(Role.MEMBER.getValue())
-                .sns(sns)
-                .build();
-        try{
-            return memberRepository.save(memberDto.toEntity()).getUserid();
-        }catch (Exception e){
-            log.info("MemberService 255 line, oAuthJoin exception ");
-            throw new Exception(e.getMessage());
-        }
-
-    }
-
-
-    // jJoinMemberDto를 MemberDto로 전환
-    public MemberDto joinDtoToMember(JoinMemberDto joinMemberDto){
-
-        return MemberDto.builder()
-                .userid(joinMemberDto.getUserid())
-                .pswd(joinMemberDto.getPswd())
-                .phonenum(joinMemberDto.getPhoneNum())
-                .build();
-    }
-
-
-    // Entity를 Dto로 전환하는 메소드
-    public MemberDto EntityToDto(MemberEntity memberEntity){
-        return MemberDto.builder()
-                .id(memberEntity.getId())
-                .pswd(memberEntity.getPassword())
-                .role(memberEntity.getRole())
-                .sns(memberEntity.getSns())
-                .phonenum(memberEntity.getPhonenum())
-                .build();
-    }
+    // 사용자 아이디 찾기
+//    @Transactional
+//    public Object findByUserId(String userid){
+//        Optional<MemberEntity> optMemberEntity = memberRepository.findByuserid(userid);
+//        if(optMemberEntity.isPresent()){
+//            MemberEntity memberEntity = optMemberEntity.get();
+//
+//           return MemberDto.builder()
+//                    .id(memberEntity.getId())
+//                    .userid(memberEntity.getUserid())
+//                    .pswd(memberEntity.getPassword())
+//                    .role(memberEntity.getRole())
+//                    .sns(memberEntity.getSns())
+//                    .phonenum(memberEntity.getPhonenum())
+//                    .build();
+//        }else{
+//            return null;
+//        }
+//    }
 
 }

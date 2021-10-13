@@ -14,7 +14,7 @@ public class Newshop1Application {
 //		SpringApplication.run(Newshop1Application.class, args);
 		new SpringApplicationBuilder(Newshop1Application.class)
 				.properties("spring.config.location=classpath:/yml/coolsms.yml, classpath:/application.yml" +
-						", classpath:/yml/kakao.yml")
+						", classpath:/yml/oauth2.yml")
 				.run();
 	}
 
