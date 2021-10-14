@@ -8,10 +8,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="/assets/css/common/sidebar.css" rel="stylesheet">
-
 </head>
 <body>
-
 
 <div id="page-wrapper">
     <!-- 사이드바 -->
@@ -38,8 +36,9 @@
             <li><a href="#">Cap</a></li>
             <li>-</li>
             <br/>
-            <li><a th:href="@{/board/list/all}">공지사항</a></li>
-            <li><a th:href="@{/board/write/notice}">공지사항 글쓰기</a></li>
+            <li><a href="/board/free">자유게시판</a></li>
+            <li><a href="/board/suggestion">건의게시판</a></li>
+            <li><a href="/board/write">게시판</a></li>
             <li>-</li>
             <br/>
             <li>CS CENTER</li>
@@ -71,16 +70,16 @@
     <!-- 본문 -->
     <div id="page-content-wrapper">
         <div class="container-fluid">
-            <!--   start   -->
+            <!--  start -->
 
-            <h1>간단한 사이드바</h1>
-            <p>메뉴가 많아서 한 페이지를 넘으면 세로 스크롤바 생김</p>
+            게시글들
 
-            <!--   end     -->
+
+
+            <!--  end  -->
         </div>
     </div>
     <!-- /본문 -->
-
 </div>
 
 

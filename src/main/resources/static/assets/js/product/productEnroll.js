@@ -76,16 +76,15 @@ $("#optConfigOk").on("click", function(){
 		}
 	}
 
-
     optName.splice(0, name.length);
 
     tag += '<tr>'
-    tag += '<td><input type="checkbox"/></td>';
+    tag += '<td><input type="checkbox" class="form-check-input"/></td>';
     for(var i=0; i<optName.length; i++){
         var j = i+1;
-        tag += '<td><input type="text" size="10" name="optionName'+j+'" value="' + optName[i] + '" />';
+        tag += '<td><input type="text" size="10" class="form-control" name="optionName'+j+'" value="' + optName[i] + '" />';
     }
-    tag += '<td><input type="text" value="수량" size="10"/></td>';
+    tag += '<td><input type="text" value="수량" size="10" class="form-control" /></td>';
     tag += '</tr></br>';
 
 	// html 생성
@@ -94,13 +93,13 @@ $("#optConfigOk").on("click", function(){
 		values = result[i].split(',');
 
 		tag += '<tr class="optionTr">';
-	 	tag += '<td class="center"><input type="checkbox" name="check" "/></td>';
+	 	tag += '<td class="center"><input type="checkbox" name="check" class="form-check-input" /></td>';
 		for (var j=0; j<values.length; j++){					
 			num = j+1;						
-			tag += '<td class="center"><input type="text" size="10" name="option'+ num +'" value="' + values[j] + '" class="line input-box-default-text-code "/>';
+			tag += '<td class="center"><input type="text" size="10" name="option'+ num +'" value="' + values[j] + '" class="form-control"/>';
 		}
 		
-		tag += '<td class="center"><input type="text" size="10" name="stock" value="0" />';
+		tag += '<td class="center"><input type="text" size="10" name="stock" value="0" class="form-control" />';
 		tag += '</tr>';		
 	}
 	
@@ -120,9 +119,13 @@ function removeOption(){
                 let tr = $(this).parent().parent();
                 tr.remove(); // 삭제하기
           }
-      }); 
+
+      });
+    let length = $("input:checkbox[name=check]").length;
+
+    if(length == 0){
+        var body = $("#optionFinalValues");
+        body.empty();
+    }
+
 }
-
-
-
-    

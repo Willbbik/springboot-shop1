@@ -2,7 +2,6 @@ package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.ProOptDto;
 import com.ecommerce.newshop1.dto.ProOptNameDto;
-import com.ecommerce.newshop1.dto.ProductDto;
 import com.ecommerce.newshop1.entity.ProOptEntity;
 import com.ecommerce.newshop1.entity.ProOptNameEntity;
 import com.ecommerce.newshop1.entity.ProductEntity;
@@ -78,7 +77,7 @@ public class ProductService {
     public List<ProOptEntity> proOptDtoToEntities(ProOptDto proOptDto, int cnt, ProductEntity productEntity) throws Exception {
 
         List<ProOptEntity> entities = new ArrayList<ProOptEntity>();     // 마지막에 리턴할 entity List
-        int optLength = proOptDto.getOption1().split(",").length;  // 옵션 개수 알기위해서
+        int optLength = proOptDto.getOption1().split(",").length;  // 옵션 개수 알기 위해서
 
         String[][] option = new String[5][optLength+1];                  // 옵션값들 담기 위해서
         String[] stock = proOptDto.getStock().split(",");          // 재고 담기

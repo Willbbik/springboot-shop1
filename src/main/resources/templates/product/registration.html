@@ -38,9 +38,8 @@
             <li><a href="#">Cap</a></li>
             <li>-</li>
             <br/>
-            <li><a href="/board/free">자유게시판</a></li>
-            <li><a href="/board/suggestion">건의게시판</a></li>
-            <li><a href="/board/write">게시판</a></li>
+            <li><a th:href="@{/board/list/all}">공지사항</a></li>
+            <li><a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/board/write/notice}">공지사항 글쓰기</a></li>
             <li>-</li>
             <br/>
             <li>CS CENTER</li>
@@ -79,19 +78,19 @@
                     <thead>
                     <tr>
                         <td>
-                            <input type="text" name="pageName" placeholder="상품페이지명">
+                            <input type="text" name="pageName" class="form-control" placeholder="상품페이지명">
                         </td>
                     </tr>
                     </thead>
                 <tbody>
                     <tr>
                         <td>
-                            <input type="text" name="productName" placeholder="제품명">
+                            <input type="text" name="productName" class="form-control" placeholder="제품명">
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input type="text" name="productPrice" placeholder="가격">
+                            <input type="text" name="productPrice" class="form-control" placeholder="가격">
                         </td>
                     </tr>
                 </tbody>
@@ -113,7 +112,7 @@
                         </tbody>
                     </table>
                     <footer>
-                        <input type="submit" value="전송"/>
+                        <input type="submit" value="전송" class="btn btn-primary"/>
                     </footer>
                 </div>
             </form>
@@ -132,7 +131,7 @@
                             <table border="1" width="540" height="150" cellspacing="5">
                                 <thead>
                                 <tr align="center" bordercolor="black">
-                                    <th><button type="button" id="addOption">추가</button></th>
+                                    <th><button type="button" id="addOption" class="btn btn-primary" >추가</button></th>
                                     <th>옵션명</th>
                                     <th>옵션값</th>
                                 </tr>
@@ -141,11 +140,11 @@
                                 <tr align="center" >
                                     <td>
 			           		   	<span class="hide">
-			           		   		<button type="button" id="addOption" class="btn_plus btnplusminus">삭제</button>
+			           		   		<button type="button" id="addOption" class="btn_plus btnplusminus btn btn-warning">삭제</button>
 			           		   	</span>
                                     </td>
-                                    <td><input type="text" name="optionMakeName[]" placeholder="예) 사이즈" title="예) 사이즈" autocomplete="off" /></td>
-                                    <td><input type="text" name="optionMakeValue[]" maxlength="40" placeholder="예) 90, 95, 100"  autocomplete="off" /></td>
+                                    <td><input type="text" name="optionMakeName[]" placeholder="예) 사이즈" title="예) 사이즈" autocomplete="off" class="form-control" /></td>
+                                    <td><input type="text" name="optionMakeValue[]" maxlength="40" placeholder="예) 90, 95, 100"  autocomplete="off" class="form-control" /></td>
                                 </tr>
 
                                 </tbody>
