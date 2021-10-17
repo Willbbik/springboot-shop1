@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="/assets/css/common/sidebar.css" rel="stylesheet">
-
+    <link href="/assets/css/product/productList.css" rel="stylesheet">
 </head>
 <body>
 
@@ -34,7 +34,6 @@
             <li>-</li>
             <br/>
             <li><a th:href="@{/categories/all}">All</a></li>
-            <li><a th:href="@{/product/details}">상세보기</a></li>
             <li><a href="#">Top</a></li>
             <li><a href="#">Bottom</a></li>
             <li><a href="#">Cap</a></li>
@@ -75,9 +74,45 @@
         <div class="container-fluid">
             <!--   start   -->
 
-            <h1>간단한 사이드바</h1>
-            <p>메뉴가 많아서 한 페이지를 넘으면 세로 스크롤바 생김</p>
+            <section class="veg_section layout_padding">
+                <div class="container">
+                    <div class="heading_container heading_center">
+                        <h2>
+                            All
+                        </h2>
+                    </div>
+                    <div class="row"> <!-- row 부터 상품들 -->
 
+                        <th:block th:each="product : ${products}">
+                            <div class="col-md-6 col-lg-4">
+                                <a th:href="@{'/products/' + ${product.id}}">
+                                    <div class="box">
+                                        <div class="img-box">
+                                            <img src="/assets/images/icon_present_64.png" alt="">
+                                        </div>
+                                        <div class="detail-box">
+                                            <h6 th:text="${product.productName}"></h6>
+                                            <div class="price_box">
+                                                <strong class="price_heading" th:text="${product.productPrice}"></strong>
+<!--                                                <h6 class="price_heading" th:text="${product.productPrice}">-->
+<!--                                                </h6>-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </th:block>
+
+
+                        <div class="btn-box">
+                            <a href=" ">
+                                View More
+                            </a>
+                        </div>
+
+                    </div>   <!-- row end tag -->
+                </div>
+            </section>
             <!--   end     -->
         </div>
     </div>

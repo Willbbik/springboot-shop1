@@ -180,12 +180,13 @@ a,
 a:hover,
 a:focus {
   text-decoration: none;
+  color: black;
 }
 
-a:hover,
+/* a:hover,
 a:focus {
   color: initial;
-}
+} */
 
 .btn,
 .btn:focus {
@@ -512,7 +513,7 @@ a:focus {
 .veg_section .btn-box a {
   display: inline-block;
   padding: 10px 45px;
-  background-color: #b6eb7a;
+  background-color: #a0a0a0;
   color: #ffffff;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
@@ -522,8 +523,8 @@ a:focus {
 
 .veg_section .btn-box a:hover {
   background-color: transparent;
-  border-color: #b6eb7a;
-  color: #b6eb7a;
+  border-color: #a0a0a0;
+  color: #a0a0a0;
 }
 
 .about_section {

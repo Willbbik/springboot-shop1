@@ -2,10 +2,7 @@ package com.ecommerce.newshop1.controller;
 
 
 import com.ecommerce.newshop1.dto.JoinMemberDto;
-import com.ecommerce.newshop1.dto.KakaoDto;
 import com.ecommerce.newshop1.dto.MemberDto;
-import com.ecommerce.newshop1.dto.OAuthToken;
-import com.ecommerce.newshop1.entity.MemberEntity;
 import com.ecommerce.newshop1.service.KakaoService;
 import com.ecommerce.newshop1.service.MemberService;
 import com.ecommerce.newshop1.service.MessageService;
@@ -16,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Controller
@@ -54,6 +50,7 @@ public class MemberController {
     @GetMapping("/member/idConfirm")
     public @ResponseBody
     String idConfirm(@RequestParam(name = "userid", required = true) String userid) {
+
         Object result = memberService.findByUserId(userid);
         if (result == null) {
             return "Y";
