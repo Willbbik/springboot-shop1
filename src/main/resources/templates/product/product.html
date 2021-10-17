@@ -28,7 +28,7 @@
             <p class="acountbuttons" style="text-align: center;">
                 <span sec:authorize="isAnonymous()"><a th:href="@{/login}">로그인</a></span>
                 <span sec:authorize="isAuthenticated()"><a th:href="@{/logout}">로그아웃</a></span>
-                <span sec:authorize="isAnonymous()"><a th:href="@{/join}">회원가입</a></span>
+                <span sec:authorize="isAnonymous()"><as th:href="@{/join}">회원가입</as></span>
                 <span><a href="#">Mypage</a></span>
                 <span><a href="#">Cart(0)</a></span>
             </p>
@@ -85,68 +85,45 @@
                     <div class="col-md-6">
                         <h2>[[${product.productName}]]</h2>
                         <h2>[[${product.productPrice}]]</h2>
-                    </div>
                     <th:block th:if="${optionNames}">
                         <div>
                             <select>
                                 <option disabled="disabled" selected>[ [[${optionNames.optionName1}]] ] 옵션을 선택하세요.</option>
-                                <th:block th:each="option : *{options}">
-                                    <option>[[${option}]]</option>
+                                <th:block th:each="options : ${options}">
+                                    <option>[[${options.option}]]</option>
                                 </th:block>
                             </select>
                         </div>
-
+                        <th:block th:if="${optionNames.optionName2 != null}">
+                            <div>
+                                <select>
+                                    <option disabled="disabled" selected>[ [[${optionNames.optionName2}]] ] 옵션을 선택하세요.</option>
+                                </select>
+                            </div>
+                        </th:block>
+                        <th:block th:if="${optionNames.optionName3 != null}">
+                            <div>
+                                <select>
+                                    <option disabled="disabled" selected>[ [[${optionNames.optionName3}]] ] 옵션을 선택하세요.</option>
+                                </select>
+                            </div>
+                        </th:block>
+                        <th:block th:if="${optionNames.optionName4 != null}">
+                            <div>
+                                <select>
+                                    <option disabled="disabled" selected>[ [[${optionNames.optionName4}]] ] 옵션을 선택하세요.</option>
+                                </select>
+                            </div>
+                        </th:block>
+                        <th:block th:if="${optionNames.optionName5 != null}">
+                            <div>
+                                <select>
+                                    <option disabled="disabled" selected>[ [[${optionNames.optionName5}]] ] 옵션을 선택하세요.</option>
+                                </select>
+                            </div>
+                        </th:block>
                     </th:block>
-<!--                    <th:block th:if="${optionNames}">-->
-<!--                        <div>-->
-<!--                            <select>-->
-<!--                                <option disabled="disabled" selected>[ [[${optionNames.optionName1}]] ] 옵션을 선택하세요.</option>-->
-<!--                                <th:block th:each="option : ${options}">-->
-<!--                                    <option>[[${option.option1}]]</option>-->
-<!--                                </th:block>-->
-<!--                            </select>-->
-<!--                        </div>-->
-<!--                        <th:block th:if="${optionNames.optionName2 != null}">-->
-<!--                            <div>-->
-<!--                            <select>-->
-<!--                                <option disabled="disabled" selected>[ [[${optionNames.optionName2}]] ] 옵션을 선택하세요.</option>-->
-<!--                                <th:block th:each="option : ${options}">-->
-<!--                                    <option>[[${option.option2}]]</option>-->
-<!--                                </th:block>-->
-<!--                            </select>-->
-<!--                            </div>-->
-<!--                        </th:block>-->
-<!--                        <th:block th:if="${optionNames.optionName3 != null}">-->
-<!--                            <div>-->
-<!--                                <select>-->
-<!--                                    <option disabled="disabled" selected>[ [[${optionNames.optionName3}]] ] 옵션을 선택하세요.</option>-->
-<!--                                    <th:block th:each="option : ${options}">-->
-<!--                                        <option>[[${option.option3}]]</option>-->
-<!--                                    </th:block>-->
-<!--                                </select>-->
-<!--                            </div>-->
-<!--                        </th:block>-->
-<!--                        <th:block th:if="${optionNames.optionName4 != null}">-->
-<!--                            <div>-->
-<!--                                <select>-->
-<!--                                    <option disabled="disabled" selected>[ [[${optionNames.optionName4}]] ] 옵션을 선택하세요.</option>-->
-<!--                                    <th:block th:each="option : ${options}">-->
-<!--                                        <option>[[${option.option4}]]</option>-->
-<!--                                    </th:block>-->
-<!--                                </select>-->
-<!--                            </div>-->
-<!--                        </th:block>-->
-<!--                        <th:block th:if="${optionNames.optionName5 != null}">-->
-<!--                            <div>-->
-<!--                                <select>-->
-<!--                                    <option disabled="disabled" selected>[ [[${optionNames.optionName5}]] ] 옵션을 선택하세요.</option>-->
-<!--                                    <th:block th:each="option : ${options}">-->
-<!--                                        <option>[[${option.option5}]]</option>-->
-<!--                                    </th:block>-->
-<!--                                </select>-->
-<!--                            </div>-->
-<!--                        </th:block>-->
-<!--                    </th:block>-->
+                    </div>
                     <th:block th:unless="${optionNames}">
                         <select>
                             <option selected>사과</option>
@@ -157,7 +134,17 @@
                     </div>
                 </div>
             </div>
+            <div class="container">
+                <div class="row">
 
+                    <div class="tabs_wrap">
+                        <div class="tab_default tab_active">상품정보</div>
+                        <div class="tab_default">리뷰</div>
+                        <div class="tab_default">Q&A</div>
+                        <div class="tab_default">주문정보</div>
+                    </div>
+                </div>
+            </div>
 
 
             <!--   end     -->
@@ -167,6 +154,7 @@
 
 </div>
 
-
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="/assets/js/product/product.js"></script>
 </body>
 </html>
