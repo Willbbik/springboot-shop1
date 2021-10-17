@@ -8,6 +8,7 @@ import com.ecommerce.newshop1.utils.CustomUserDetailsService;
 import com.ecommerce.newshop1.utils.enums.JoinMsg;
 import com.ecommerce.newshop1.utils.enums.LoginMsg;
 import com.ecommerce.newshop1.utils.enums.Role;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

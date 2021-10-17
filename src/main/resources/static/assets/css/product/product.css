@@ -1,0 +1,21 @@
+
+.main-image-title {
+
+    text-align:center;
+    display:table;
+    width: 360px;
+    height: 450px;
+}
+
+.main-image {
+
+    width : 360px;
+    height : 450px;
+
+}
+
+.main-image-div {
+
+    display:table-cell;
+    vertical-align: middle
+}

@@ -18,7 +18,7 @@ public class ProOptNameEntity {
 
     @OneToOne
     @JoinColumn(name = "productId")
-    private ProductEntity productEntity;
+    private ProductEntity productId;
 
     @Column
     private String optionName1;
