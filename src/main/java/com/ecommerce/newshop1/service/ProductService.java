@@ -1,14 +1,9 @@
 package com.ecommerce.newshop1.service;
 
-import com.ecommerce.newshop1.dto.ProOptDto;
-import com.ecommerce.newshop1.dto.ProOptNameDto;
-import com.ecommerce.newshop1.dto.ProductDto;
-import com.ecommerce.newshop1.entity.ProOptEntity;
-import com.ecommerce.newshop1.entity.ProOptNameEntity;
-import com.ecommerce.newshop1.entity.ProductEntity;
-import com.ecommerce.newshop1.repository.ProOptNameRepository;
-import com.ecommerce.newshop1.repository.ProOptRepository;
-import com.ecommerce.newshop1.repository.ProductRepository;
+import com.ecommerce.newshop1.dto.*;
+import com.ecommerce.newshop1.entity.*;
+import com.ecommerce.newshop1.repository.*;
+import com.ecommerce.newshop1.utils.Options;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -22,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService {
+public class ProductService<T> {
 
     private final ProductRepository productRepository;
     private final ProOptRepository proOptRepository;
@@ -34,9 +29,8 @@ public class ProductService {
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean productOptCheck(Long id){
         Optional<ProductEntity> productEntity = productRepository.findById(id);
-        ProductEntity entity = productEntity.get();
+        ProOptNameEntity result = proOptNameRepository.findByProductId(productEntity.get());
 
-        ProOptNameEntity result = proOptNameRepository.findByProductId(entity);
         if(result != null){
             return true;
         }else{
@@ -44,68 +38,38 @@ public class ProductService {
         }
     }
 
-    // 옵션 체크하고 있으면 옵션까지 없으면 상품만 리턴
+    // 옵션 체크하고 있으면 옵션까지, 없으면 상품만 리턴
     public Model getProducts(boolean result, Long id, Model model) throws Exception {
 
         ModelMapper mapper = new ModelMapper();
+        Optional<ProductEntity> productEntity = productRepository.findById(id);
 
         if(result){  // 옵션이 있다면
-            Optional<ProductEntity> productEntity = productRepository.findById(id);
             ProductEntity entity = productEntity.get();
-            ProOptNameEntity optNameEntity = proOptNameRepository.findByProductId(entity);
-            List<ProOptEntity> optEntities = proOptRepository.findAllByProductId(entity);
 
-            ProductDto product =
-                    mapper.map(productEntity, ProductDto.class);
+            // Entity에서 Dto로 변환
+            ProductDto product = mapper.map(productEntity, ProductDto.class);
             ProOptNameDto optionNames =
-                    mapper.map(optNameEntity, ProOptNameDto.class);
+                    mapper.map(proOptNameRepository.findByProductId(entity), ProOptNameDto.class);
             List<ProOptDto> dtos =
-                    optEntities.stream().map(p -> mapper.map(p, ProOptDto.class)).collect(Collectors.toList());
+                    proOptRepository.findAllByProductId(entity)
+                            .stream().map(p -> mapper.map(p, ProOptDto.class))
+                            .collect(Collectors.toList());
 
-
-            List<String> options = overlapRemove(dtos, 1);
+            // 같은 이름의 옵션값 중복 제거
+            List<Options> options = overlapRemove(dtos, 1);
 
             model.addAttribute("product", product);
             model.addAttribute("optionNames", optionNames);
             model.addAttribute("options", options);
 
         }else{      // 옵션이 없다면
-            Optional<ProductEntity> entity = productRepository.findById(id);
-            ProductDto product =
-                    mapper.map(entity, ProductDto.class);
+            ProductDto product = mapper.map(productEntity, ProductDto.class);
             model.addAttribute("product", product);
         }
 
         return model;
     }
-
-
-
-    @Transactional
-    public void saveProduct(ProductEntity productEntity){
-        productRepository.save(productEntity);
-    }
-
-    @Transactional
-    public void saveProOptions(List<ProOptEntity> proOptEntities){
-        proOptRepository.saveAll(proOptEntities);
-    }
-
-    @Transactional
-    public void saveProOptName(ProOptNameDto dto, ProductEntity productEntity){
-
-        ProOptNameEntity entity = ProOptNameEntity.builder()
-                .productId(productEntity)
-                .optionName1(dto.getOptionName1())
-                .optionName2(dto.getOptionName2())
-                .optionName3(dto.getOptionName3())
-                .optionName4(dto.getOptionName4())
-                .optionName5(dto.getOptionName5())
-                .build();
-
-        proOptNameRepository.save(entity);
-    }
-
 
     // 옵션 개수 검사 메소드
     public int proOptLength(ProOptDto proOptDto) throws Exception {
@@ -118,7 +82,9 @@ public class ProductService {
             for (String str : values) {
                 if (field.getName().equals(str)) {
                     if (field.get(proOptDto) != null) {
+                        // 하나라도 있다면 확인했으니 바로 끝내고 1리턴
                         cnt ++;
+                        break;
                     }
                 }
             }
@@ -130,25 +96,27 @@ public class ProductService {
 
     // 옵션 중복값 제거
     // 로직 흐름은 dto list중에서 중복을 제거할 필드의 값들을 배열에 다 넣고
-    // set 컬렉션에 담아서 중복 제거하고, 그 결과를 일반 배열에 담고
-    // 중복이 제거된 일반 배열을 리턴한다
-    public List<String> overlapRemove(List<ProOptDto> dtos, int paramIndex) throws Exception {
+    // set 컬렉션에 담아서 중복 제거하고, 그 결과를 배열에 담고
+    // 중복이 제거된 배열을 리턴한다
+    public List<Options> overlapRemove(List<ProOptDto> dtos, int paramIndex) throws Exception {
 
         List<String> list = new ArrayList<>();       // 기존 옵션 값들을 담을 리스트
-        List<ProOptDto> optDtos = new ArrayList<>(); // 리턴할 dto 리스트
         int index = paramIndex - 1;                  // 원하는 필드값을 가져오기 위해서
 
         for (ProOptDto dto : dtos){
             Field field = dto.getClass().getDeclaredField(values[index]); // 특정 옵션 필드값 가져오기
             field.setAccessible(true);
+
             list.add((String) field.get(dto));
         }
 
-        Set<String> set = new HashSet<>(list);         // 중복 제거
-        List<String> result = new ArrayList<>(set);    // 중복이 제거된 옵션 값들 담기
+        Set<String> set = new HashSet<>(list);     // 중복 제거
+        List<String> result = new ArrayList<>(set);
 
-        // result 개수만큼 dto의 특정
-        return result;
+        List<Options> options = result.stream()
+                .map(Options::new)
+                .collect(Collectors.toList());
+        return options;
     }
 
 
@@ -204,6 +172,30 @@ public class ProductService {
     }
 
 
+    @Transactional
+    public void saveProduct(ProductEntity productEntity){
+        productRepository.save(productEntity);
+    }
+
+    @Transactional
+    public void saveProOptions(List<ProOptEntity> proOptEntities){
+        proOptRepository.saveAll(proOptEntities);
+    }
+
+    @Transactional
+    public void saveProOptName(ProOptNameDto dto, ProductEntity productEntity){
+
+        ProOptNameEntity entity = ProOptNameEntity.builder()
+                .productId(productEntity)
+                .optionName1(dto.getOptionName1())
+                .optionName2(dto.getOptionName2())
+                .optionName3(dto.getOptionName3())
+                .optionName4(dto.getOptionName4())
+                .optionName5(dto.getOptionName5())
+                .build();
+
+        proOptNameRepository.save(entity);
+    }
 
 
 }
