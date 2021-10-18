@@ -28,8 +28,8 @@
     border-collapse : collapse;
     margin-top: 100px;
     margin-bottom : 40px;
-    margin-left : 47px;
-    width: 90%;
+    margin-left : 12px;
+    width: 97.6%;
 }
 
 .tab_default {
@@ -52,3 +52,119 @@
     border-bottom-color: transparent;
     border-style: double;
 }
+
+
+/* QnA 개수와 댓글 달기 라인 */
+.qna_list_chk {
+
+   display : flex;
+   padding-top: 18px;
+   padding-bottom: 18px;
+
+}
+
+/*  QnA 글씨  */
+.qna_list_chk div {
+
+   width: 700px;
+   font-size: 19px;
+}
+
+/*  문의 내용 작성하기 버튼  */
+.qna_list_chk a {
+
+   border: 1px solid black;
+   text-decoration: none;
+   padding-top: 10px;
+   padding-bottom: 10px;
+   padding-left: 20px;
+   padding-right: 20px;
+   margin-left: 100px;
+   background-color: black;
+   color: white;
+
+}
+
+
+/*  QnA 리스트 전체  */
+.qna_list {
+
+    padding-left: 0px;
+}
+
+
+/* QnA 헤드 부분  */
+.qna_list_head {
+
+    display: flex;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border: 1px solid black;
+    border-left-color: white;
+    border-right-color: white;
+    font-weight: 700;
+}
+
+    /*  QnA head 기본 크기  */
+    .qna_list_head div {
+
+        width : 150px;
+    }
+
+
+    /*  QnA 답변 상태   */
+    .qna_list_head > .qna_head_status {
+
+       margin-left: 20px;
+    }
+
+    /*  QnA 내용  */
+    .qna_list_head > .qna_head_content {
+
+        width : 500px;
+        padding-left: 13px;
+    }
+
+    /*  QnA 작성일   */
+    .qna_list_head > .qna_head_created {
+
+        padding-left: 13px;
+    }
+
+
+/* QnA 바디 부분  */
+.qna_list_body {
+
+    display: flex;
+    border: 1px solid #dadada;
+    border-top-color : white;
+    border-left-color: white;
+    border-right-color: white;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+}
+
+    /*  QnA Body 기본 크기  */
+    .qna_list_body div {
+
+        width : 150px;
+    }
+
+    /* 작성자의 QnA 내용  */
+    .qna_list_body > .qna_text {
+
+        width : 500px;
+    }
+
+    /*  답변 대기  */
+    .qna_list_body > .qna_status {
+
+        margin-left: 20px;
+    }
+
+
+
+
+
+

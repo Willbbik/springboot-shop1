@@ -43,12 +43,12 @@ public class ProductService<T> {
 
         ModelMapper mapper = new ModelMapper();
         Optional<ProductEntity> productEntity = productRepository.findById(id);
+        ProductEntity entity = productEntity.get();
 
-        if(result){  // 옵션이 있다면
-            ProductEntity entity = productEntity.get();
+        if(result){  // 옵션이 있는 상품이라면 옵션까지 리턴
 
             // Entity에서 Dto로 변환
-            ProductDto product = mapper.map(productEntity, ProductDto.class);
+            ProductDto product = mapper.map(entity, ProductDto.class);
             ProOptNameDto optionNames =
                     mapper.map(proOptNameRepository.findByProductId(entity), ProOptNameDto.class);
             List<ProOptDto> dtos =
@@ -63,8 +63,8 @@ public class ProductService<T> {
             model.addAttribute("optionNames", optionNames);
             model.addAttribute("options", options);
 
-        }else{      // 옵션이 없다면
-            ProductDto product = mapper.map(productEntity, ProductDto.class);
+        }else{      // 옵션이 없는 상품이라면 기본 상품정보만 리턴
+            ProductDto product = mapper.map(entity, ProductDto.class);
             model.addAttribute("product", product);
         }
 
@@ -89,7 +89,6 @@ public class ProductService<T> {
                 }
             }
         }
-
         return cnt;
     }
 
@@ -137,14 +136,12 @@ public class ProductService<T> {
                     option[i][j] = null;
                 }
             }else {
-                // 같은 이름의 필드 변수를 가져온다
+                // 같은 이름의 필드의 값을 가져온다
                 Field field = proOptDto.getClass().getDeclaredField(values[i]);
                 field.setAccessible(true);
-
-                // 변수의 값을 가져온다
                 String value = (String) field.get(proOptDto);
 
-                // 값이 여러개일 수도 있으니 split해서 담는다
+                // 값이 여러개일수도 있으니 split해서 담는다
                 if(value.contains(",")){
                     option[i] = value.split(",");
                 } else{
