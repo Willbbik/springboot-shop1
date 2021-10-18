@@ -84,7 +84,7 @@
                     </div>
                     <div class="col-md-6">
                         <h2>[[${product.productName}]]</h2>
-                        <h2>[[${product.productPrice}]]</h2>
+                        <h3>[[${product.productPrice}]]원</h3>
                     <th:block th:if="${optionNames}">
                         <div>
                             <select>
@@ -123,25 +123,51 @@
                             </div>
                         </th:block>
                     </th:block>
-                    </div>
                     <th:block th:unless="${optionNames}">
-                        <select>
-                            <option selected>사과</option>
-                            <option>바나나</option>
-                            <option>수박</option>
-                        </select>
+                        <div>
+                            <select>
+                                <option selected>사과</option>
+                                <option>바나나</option>
+                                <option>수박</option>
+                            </select>
+                        </div>
                     </th:block>
                     </div>
                 </div>
             </div>
+            </div>
             <div class="container">
                 <div class="row">
-
                     <div class="tabs_wrap">
-                        <div class="tab_default tab_active">상품정보</div>
-                        <div class="tab_default">리뷰</div>
-                        <div class="tab_default">Q&A</div>
-                        <div class="tab_default">주문정보</div>
+                        <div class="tab_default tab_active" id="tab1">상품정보</div>
+                        <div class="tab_default" id="tab2">리뷰</div>
+                        <div class="tab_default" id="tab3">Q&A</div>
+                        <div class="tab_default" id="tab4">주문정보</div>
+                    </div>
+                    <div id="info_container_3" class="detail_info_container">
+                        <div class="details_qna_container">
+                            <div class="qna_list_chk">
+                                <div class="">
+                                    QnA
+                                    <span>302</span>
+                                </div>
+                                <a href="#" class="btn_write_qna">문의 내용 작성하기</a>
+                            </div>
+                            <ul class="qna_list">
+                                <div class="qna_list_head">
+                                    <div class="qna_head_status">답변상태</div>
+                                    <div class="qna_head_content">내용</div>
+                                    <div>작성자</div>
+                                    <div class="qna_head_created">작성일</div>
+                                </div>
+                                <li class="qna_list_body">
+                                    <div class="qna_status">답변 대기</div>
+                                    <div class="qna_text">안녕하세요</div>
+                                    <div>min***</div>
+                                    <div>2021/10/18</div>
+                                </li>
+                             </ul>
+                        </div>
                     </div>
                 </div>
             </div>
