@@ -77,3 +77,22 @@
   font-size: 1.3em;
   line-height: 3em;
 }
+
+.footer {
+
+    position: absolute;
+    width: 78%;
+    height: auto;
+    left: auto;
+    bottom: auto;
+    padding: 15px 0;
+    text-align: center;
+    margin-top : 150px;
+    border-top: 1px solid #ebeef2;
+    background-color: hsla(0,0%,96%,.6);
+    color: black;
+
+}
+
+
+
