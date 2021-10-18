@@ -20,6 +20,7 @@ $(document).ready(function(){
         info.append(html);
     });
 
+    // Review
     $("#tab2").on("click", function(){
         info = $(".detail_info_container");
         info.empty();
@@ -28,20 +29,28 @@ $(document).ready(function(){
         info.append(html);
     });
 
+    // QnA
     $("#tab3").on("click", function(){
-        info = $(".detail_info_container");
-        info.empty();
 
-        html = "<p>tab3</p>";
-        info.append(html);
     });
 
+    // 주문정보
     $("#tab4").on("click", function(){
         info = $(".detail_info_container");
         info.empty();
 
         html = "<p>tab4</p>";
         info.append(html);
+    });
+
+    // QnA작성 취소버튼 클릭
+    $("#qna_write_cancel").on("click", function(){
+        $(".qna_write").css('display', 'none');
+    });
+
+    // QnA작성하기 버튼 클릭
+    $("#btn_write_qna").on("click", function(){
+        $(".qna_write").css('display', '');
     });
 
 

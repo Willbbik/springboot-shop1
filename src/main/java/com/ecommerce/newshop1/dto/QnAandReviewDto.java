@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class QnADto {
+public class QnAandReviewDto {
 
 
     private Long id;
