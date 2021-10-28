@@ -1,16 +1,21 @@
 package com.ecommerce.newshop1.entity;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "QnA_1")
-public class QnAEntity extends TimeEntity {
+public class QnAEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,5 +43,11 @@ public class QnAEntity extends TimeEntity {
     @Column(length = 1)
     private Integer depth;
 
+    @CreatedDate
+    @Column(nullable = false)
+    private Date createdDate;
+
+    @LastModifiedDate
+    private Date modifiedDate;
 
 }

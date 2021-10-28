@@ -3,6 +3,7 @@ package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.JoinMemberDto;
 import com.ecommerce.newshop1.dto.MemberDto;
+import com.ecommerce.newshop1.entity.MemberEntity;
 import com.ecommerce.newshop1.service.KakaoService;
 import com.ecommerce.newshop1.service.MemberService;
 import com.ecommerce.newshop1.service.MessageService;
@@ -12,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.swing.text.html.Option;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -51,8 +55,8 @@ public class MemberController {
     public @ResponseBody
     String idConfirm(@RequestParam(name = "userid", required = true) String userid) {
 
-        Object result = memberService.findByUserId(userid);
-        if (result == null) {
+        Optional<MemberEntity> result = memberService.findByUserId(userid);
+        if (result.isEmpty()) {
             return "Y";
         } else {
             return "N";
