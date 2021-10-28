@@ -68,7 +68,8 @@
 .qna_list_chk div {
 
    width: 700px;
-   font-size: 19px;
+   font-size: 20px;
+   font-weight: 700;
 }
 
 /*  문의 내용 작성하기 버튼  */
@@ -116,13 +117,13 @@
     line-height : 145px;
 }
 
-
 .qna_write dd {
     float: left;
     width: 80%;
     padding: 10px;
     border-bottom: 1px solid #dcdcdc;
 }
+
 .qna_write dd textarea {
     background: #f5f5f5;
     padding: 10px;
@@ -155,14 +156,15 @@
     border-bottom-color: white;
 }
 
-.qna_write dd:nth-child(5) input[type=button] {
+.qna_write dd:nth-child(5) #qna_write_cancel {
     border: 1px solid #000;
     padding: 10px 30px;
     background: #fff;
     margin: 5px;
 }
 
-.qna_write dd:nth-child(5) input[type=submit] {
+.qna_write dd:nth-child(5) #qna_post {
+
     border: 1px solid #000;
     padding: 10px 30px;
     background: #000;
@@ -170,14 +172,20 @@
     margin: 5px;
 }
 
+
+
+
 /*  QnA 리스트 전체  */
 .qna_list {
 
     padding-left: 0px;
 }
 
+/*
 
-/* QnA 헤드 부분  */
+*/
+/* QnA 헤드 부분  *//*
+
 .qna_list_head {
 
     display: flex;
@@ -189,35 +197,46 @@
     font-weight: 700;
 }
 
-    /*  QnA head 기본 크기  */
+    */
+/*  QnA head 기본 크기  *//*
+
     .qna_list_head div {
 
         width : 150px;
     }
 
 
-    /*  QnA 답변 상태   */
+    */
+/*  QnA 답변 상태   *//*
+
     .qna_list_head > .qna_head_status {
 
        margin-left: 20px;
     }
 
-    /*  QnA 내용  */
+    */
+/*  QnA 내용  *//*
+
     .qna_list_head > .qna_head_content {
 
         width : 500px;
         padding-left: 13px;
     }
 
-    /*  QnA 작성일   */
+    */
+/*  QnA 작성일   *//*
+
     .qna_list_head > .qna_head_created {
 
         padding-left: 13px;
     }
 
 
-/* QnA 바디 부분  */
-.qna_list_body {
+*/
+/* QnA 바디 부분  *//*
+
+*/
+/* .qna_list_body {
 
     display: flex;
     border: 1px solid #dadada;
@@ -227,25 +246,75 @@
     padding-top: 10px;
     padding-bottom: 10px;
 
-}
+} *//*
 
-    /*  QnA Body 기본 크기  */
+
+
+    */
+/*  QnA Body 기본 크기  *//*
+
+    .qna_list li div {
+
+        float: flex;
+        padding: 10px 0px;
+        text-align: center;
+
+    }
+
+
     .qna_list_body div {
 
+        display: flex;
         width : 150px;
     }
 
-    /* 작성자의 QnA 내용  */
+    */
+/*  QnA Body 기본 크기  *//*
+
+    */
+/* .qna_list_body div {
+
+        width : 150px;
+    } *//*
+
+
+
+    */
+/* 작성자의 QnA 내용  *//*
+
     .qna_list_body > .qna_text {
 
         width : 500px;
+        cursor: pointer;
+
     }
 
-    /*  답변 대기  */
+    */
+/*  답변 대기  *//*
+
     .qna_list_body > .qna_status {
 
         margin-left: 20px;
     }
+
+    .qna_list_body p {
+
+        display: block;
+    }
+
+    .qna_list li p {
+
+        clear: both;
+        border-bottom: 1px solid #e5e5e5;
+        border-top: 1px solid #e5e5e5;
+        padding: 15px 10px 15px 17%;
+        margin: 0px;
+        display: none;
+
+    }
+
+*/
+
 
 
 /*  Review    //////////////////////////////////////////////////////////////////////////////////////////// */
@@ -275,6 +344,10 @@
     cursor : pointer;
     position: absolute;
     top : 1166px;
+
+    max-width: 100%;
+    max-height: 100%;
+
 }
 
 

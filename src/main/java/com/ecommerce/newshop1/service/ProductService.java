@@ -3,11 +3,16 @@ package com.ecommerce.newshop1.service;
 import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.*;
 import com.ecommerce.newshop1.repository.*;
+
+import com.ecommerce.newshop1.utils.CommonService;
 import com.ecommerce.newshop1.utils.Options;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
@@ -17,31 +22,32 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService<T> {
+public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProOptRepository proOptRepository;
     private final ProOptNameRepository proOptNameRepository;
+    private final QnARepository qnARepository;
+    private final CommonService commonService;
 
     String[] values = {"option1", "option2", "option3", "option4", "option5" };
+    ModelMapper mapper = new ModelMapper();
 
     // 옵션이 존재하는지 체크
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    @Transactional(readOnly = true)
     public boolean productOptCheck(Long id){
+
         Optional<ProductEntity> productEntity = productRepository.findById(id);
         ProOptNameEntity result = proOptNameRepository.findByProductId(productEntity.get());
 
-        if(result != null){
-            return true;
-        }else{
-            return false;
-        }
+        return result != null;
     }
 
+
     // 옵션 체크하고 있으면 옵션까지, 없으면 상품만 리턴
+    @Transactional(readOnly = true)
     public Model getProducts(boolean result, Long id, Model model) throws Exception {
 
-        ModelMapper mapper = new ModelMapper();
         Optional<ProductEntity> productEntity = productRepository.findById(id);
         ProductEntity entity = productEntity.get();
 
@@ -67,9 +73,9 @@ public class ProductService<T> {
             ProductDto product = mapper.map(entity, ProductDto.class);
             model.addAttribute("product", product);
         }
-
         return model;
     }
+
 
     // 옵션 개수 검사 메소드
     public int proOptLength(ProOptDto proOptDto) throws Exception {
@@ -97,6 +103,18 @@ public class ProductService<T> {
     // 로직 흐름은 dto list중에서 중복을 제거할 필드의 값들을 배열에 다 넣고
     // set 컬렉션에 담아서 중복 제거하고, 그 결과를 배열에 담고
     // 중복이 제거된 배열을 리턴한다
+
+    /**
+     *  옵션 중복값 제거
+     *  dto list중에서 중복을 제거할 필드의 값들을 배열에 다 넣고
+     *  set 컬렉션에 담아서 중복 제거하고, 그 결과를 배열에 담고
+     *  중복이 제거된 배열을 리턴한다
+     *
+     * @param dtos
+     * @param paramIndex
+     * @return
+     * @throws Exception
+     */
     public List<Options> overlapRemove(List<ProOptDto> dtos, int paramIndex) throws Exception {
 
         List<String> list = new ArrayList<>();       // 기존 옵션 값들을 담을 리스트
@@ -168,15 +186,23 @@ public class ProductService<T> {
         return entities;
     }
 
+    @Transactional(readOnly = true)
+    public int getQnaSize(Long id){
+
+        Optional<ProductEntity> entity = productRepository.findById(id);
+        List<QnAEntity> qnaSize = qnARepository.findAllByProductId(entity.get());
+        return qnaSize.size();
+    }
+
 
     @Transactional
     public void saveProduct(ProductEntity productEntity){
-        productRepository.save(productEntity);
+         productRepository.save(productEntity);
     }
 
     @Transactional
     public void saveProOptions(List<ProOptEntity> proOptEntities){
-        proOptRepository.saveAll(proOptEntities);
+         proOptRepository.saveAll(proOptEntities);
     }
 
     @Transactional
@@ -193,6 +219,184 @@ public class ProductService<T> {
 
         proOptNameRepository.save(entity);
     }
+
+    // QnA 유효성 검사
+    public int qnaValidationCheck(QnADto dto){
+
+        String content = dto.getContent();
+
+        if(content.isEmpty() || content.isBlank() || content.length() > 2048){
+            return -1;
+        }
+
+        if(!commonService.isAuthenticated()){
+            return -2;
+        }
+
+        if(dto.getHide().equals("private")) return 0;
+        else if(dto.getHide().equals("public")) return 0;
+        else return -1;
+
+    }
+
+
+    @Transactional
+    public void saveQnAQuestion(QnADto dto) throws Exception {
+
+        String writer = SecurityContextHolder.getContext().getAuthentication().getName();
+        ProductEntity productEntity = productRepository.findById(dto.getProductId()).orElseThrow(Exception::new);
+
+        QnAEntity qnaEntity = QnAEntity.builder()
+                .productId(productEntity)
+                .writer(writer)
+                .content(dto.getContent().replaceAll("\\s+", " "))
+                .hide(dto.getHide())
+                .parent(null)
+                .depth(1)
+                .replyEmpty("empty")
+                .build();
+
+        qnARepository.save(qnaEntity);
+    }
+
+
+
+    /**
+     *  qna 값 설정
+     *
+     *  파라미터 pageable의 기본 size는 3이고 page는 0이다.
+     *  사용자 아이디를 마스킹해주고,
+     *  qnaDto의 hide가 private일때 사용자 아이디가 다르거나 권한이 ADMIN이 아니라면 비공개 글로 내용을 바꾸고,
+     *  답글이 존재하는지 확인하고 있다면 replyEmpty의 값을 바꾼다.
+     *
+     * @param pageable
+     * @return List<QnADto>
+     */
+    public List<QnADto> qnaEdit(ProductEntity id, Pageable pageable) throws Exception {
+
+        // qna 가져오기
+        List<QnAEntity> qnaEntities = qnARepository.findAllByProductId(id, pageable);
+
+        // 사용자 권한 확인하기 위해서
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        // qna가 존재한다면
+        if (!qnaEntities.isEmpty()) {
+            List<QnADto> qnaDtos = qnaEntities.stream()
+                    .map(p -> mapper.map(p, QnADto.class))
+                    .collect(Collectors.toList());
+
+            // 시큐리티 컨텍스트 홀더에서 사용자 정보 가져오기
+            // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+            // 값들 수정해주기
+            for (QnADto dto : qnaDtos) {
+                // 해당 qna의 답글 가져오기
+                Optional<QnAEntity> reply = qnARepository.findByParent(dto.getId());
+
+                // 아이디 자르기
+                dto.setWriter(dto.getWriter().substring(0, 3) + "***");
+
+                // 비공개 글 설정
+                if (dto.getHide().equals("private")) {
+
+                    // 작성자가 본인이 아니거나 관리자가 아닐경우 비밀글로 보이게끔
+                    if (!auth.getName().equals(dto.getWriter()) &&
+                            !auth.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
+                        dto.setContent("비밀글입니다.");
+                        dto.setTitle("비밀글입니다.");
+                    }
+
+                    if(dto.getContent().length() > 30){
+                        dto.setTitle(dto.getContent().substring(0, 30) + "...");
+                    }
+                }else{
+                        dto.setTitle(dto.getContent());
+                    if(dto.getContent().length() > 30){
+                        dto.setTitle(dto.getContent().substring(0, 30) + "...");
+                    }
+                }
+
+                // 댓글 날짜 설정
+                String time = dto.getCreatedDate().toString().substring(0, 10);
+                dto.setTime(time);
+
+                // 답글 유무 확인
+                if (reply.isPresent()) {
+                    dto.setReplyEmpty("답변완료");
+                }else{
+                    dto.setReplyEmpty("답변대기");
+                }
+            }
+            return qnaDtos;
+        }
+        else{
+
+            List<QnADto> dtos = null;
+            return dtos;
+        }
+    }
+
+
+    // QnA 답글 가져오는 메소드
+    public List<QnADto> getQnAReply(List<QnADto> parent) {
+
+        List<QnADto> replyList = new ArrayList<>();
+
+        for(QnADto dto : parent){
+
+            Optional<QnAEntity> entity = qnARepository.findByParent(dto.getId());
+
+            if(entity.isPresent()){
+                replyList.add(mapper.map(entity.get(), QnADto.class));
+            }else{
+                QnADto reply = null;
+                replyList.add(reply);
+            }
+        }
+
+        return replyList;
+    }
+
+
+    // 답글 값 설정 메소드
+    public List<QnADto> replyEdit(List<QnADto> replyList){
+
+        List<QnADto> replyResult = new ArrayList<>();
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        // writer, content, createdDate 수정
+        for(QnADto reply : replyList){
+
+            if(reply != null){
+
+                QnAEntity parent = qnARepository.findByParent(reply.getParent()).get();
+                String parentWriter = parent.getWriter();
+
+                // 작성자 이름 수정
+                reply.setWriter("판매자");
+
+                // 댓글 작성일 수정
+                String time = reply.getCreatedDate().toString().substring(0, 10);
+                reply.setTime(time);
+
+                // 비밀글인데 작성자가 아니거나 관리자가 아니면 내용 숨기기
+                if(reply.getHide().equals("private")){
+
+                    if(!auth.getName().equals(parentWriter) &&
+                            !auth.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))){
+                        reply.setContent("비밀글입니다.");
+                    }
+                }
+            }
+
+            replyResult.add(reply);
+        }
+
+        return replyResult;
+    }
+
 
 
 }
