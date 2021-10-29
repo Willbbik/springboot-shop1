@@ -25,6 +25,5 @@ public class QnADto {
     private Date createdDate;
     private Date modifiedDate;
     private String title;
-    private String time;
 
 }

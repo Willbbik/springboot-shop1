@@ -1,15 +1,8 @@
 package com.ecommerce.newshop1.controller;
 
-import com.ecommerce.newshop1.dto.ProOptNameDto;
-import com.ecommerce.newshop1.dto.ProductDto;
-import com.ecommerce.newshop1.dto.ProOptDto;
-import com.ecommerce.newshop1.dto.QnADto;
-import com.ecommerce.newshop1.entity.ProOptEntity;
-import com.ecommerce.newshop1.entity.ProductEntity;
-import com.ecommerce.newshop1.repository.ProOptNameRepository;
-import com.ecommerce.newshop1.repository.ProOptRepository;
-import com.ecommerce.newshop1.repository.ProductRepository;
-import com.ecommerce.newshop1.repository.QnARepository;
+import com.ecommerce.newshop1.dto.*;
+import com.ecommerce.newshop1.entity.*;
+import com.ecommerce.newshop1.repository.*;
 import com.ecommerce.newshop1.service.ProductService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +27,8 @@ public class ProductController {
     private final ProOptRepository proOptRepository;
     private final ProOptNameRepository proOptNameRepository;
     private final QnARepository qnARepository;
+
+    ModelMapper mapper = new ModelMapper();
 
     // 상품 등록 페이지
     @GetMapping("/admin/product/reg")
@@ -95,11 +90,10 @@ public class ProductController {
     @GetMapping("/categories/all")
     public String productListAll(Model model) {
 
+        // 상품 전체 가져오기
         List<ProductEntity> entities = productRepository.findAllByOrderByIdDesc();
-        ModelMapper mapper = new ModelMapper();
 
-        List<ProductDto> productDtos =
-                entities.stream().map(p -> mapper.map(p, ProductDto.class)).collect(Collectors.toList());
+        List<ProductDto> productDtos = entities.stream().map(p -> mapper.map(p, ProductDto.class)).collect(Collectors.toList());
 
         model.addAttribute("products", productDtos);
 
