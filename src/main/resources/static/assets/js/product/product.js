@@ -28,7 +28,7 @@ $(document).ready(function(){
 
     });
 
-    // tab3 QnA
+    // tab3 QnA 클릭시
     $(document).on("click", "#tab3", function(){
 
         let info2 = $("#info_container_2");
@@ -37,20 +37,7 @@ $(document).ready(function(){
         info2.css("display", "none");
         info3.css("display", "");
 
-        let productId = $("#productId").val();
-
-        $.ajax({
-          type : "post",
-          url  : "/product/getqnaList",
-          data : { productId : productId },
-          success : function(result){
-              $("#info_container_3").html(result);
-          },
-          error : function(result){
-               alert("에러입니다. 잠시후에 다시 시도해보고 안되면 문의사항에 남겨주시면 감사하겠습니다.");
-          }
-        });
-
+        getQnAList();
     });
 
     // tab4 주문정보

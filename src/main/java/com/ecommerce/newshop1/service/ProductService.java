@@ -287,15 +287,19 @@ public class ProductService {
                     .collect(Collectors.toList());
 
             // 시큐리티 컨텍스트 홀더에서 사용자 정보 가져오기
-            // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
             // 값들 수정해주기
             for (QnADto dto : qnaDtos) {
                 // 해당 qna의 답글 가져오기
                 Optional<QnAEntity> reply = qnARepository.findByParent(dto.getId());
 
-                // 아이디 자르기
-                dto.setWriter(dto.getWriter().substring(0, 3) + "***");
+
+                // 제목 길이 설정
+                if(dto.getContent().length() > 30){
+                    dto.setTitle(dto.getContent().substring(0, 30) + "...");
+                }else{
+                    dto.setTitle(dto.getContent());
+                }
 
                 // 비공개 글 설정
                 if (dto.getHide().equals("private")) {
@@ -306,27 +310,15 @@ public class ProductService {
                         dto.setContent("비밀글입니다.");
                         dto.setTitle("비밀글입니다.");
                     }
-
-                    if(dto.getContent().length() > 30){
-                        dto.setTitle(dto.getContent().substring(0, 30) + "...");
-                    }
-                }else{
-                        dto.setTitle(dto.getContent());
-                    if(dto.getContent().length() > 30){
-                        dto.setTitle(dto.getContent().substring(0, 30) + "...");
-                    }
                 }
 
-                // 댓글 날짜 설정
-                String time = dto.getCreatedDate().toString().substring(0, 10);
-                dto.setTime(time);
+                // 아이디 마스킹
+                dto.setWriter(dto.getWriter().substring(0, 3) + "***");
 
                 // 답글 유무 확인
-                if (reply.isPresent()) {
-                    dto.setReplyEmpty("답변완료");
-                }else{
-                    dto.setReplyEmpty("답변대기");
-                }
+                if (reply.isPresent()) dto.setReplyEmpty("답변완료");
+                else dto.setReplyEmpty("답변대기");
+
             }
             return qnaDtos;
         }
@@ -339,19 +331,23 @@ public class ProductService {
 
 
     // QnA 답글 가져오는 메소드
-    public List<QnADto> getQnAReply(List<QnADto> parent) {
+    public List<QnADto> getQnAReply(List<QnADto> qnaList) {
 
         List<QnADto> replyList = new ArrayList<>();
 
-        for(QnADto dto : parent){
+        if(qnaList != null) {
 
-            Optional<QnAEntity> entity = qnARepository.findByParent(dto.getId());
+            for (QnADto dto : qnaList) {
 
-            if(entity.isPresent()){
-                replyList.add(mapper.map(entity.get(), QnADto.class));
-            }else{
-                QnADto reply = null;
-                replyList.add(reply);
+                Optional<QnAEntity> entity = qnARepository.findByParent(dto.getId());
+
+                if (entity.isPresent()) {
+                    replyList.add(mapper.map(entity.get(), QnADto.class));
+                } else {
+                    QnADto reply = null;
+                    replyList.add(reply);
+                }
+
             }
         }
 
@@ -377,10 +373,6 @@ public class ProductService {
                 // 작성자 이름 수정
                 reply.setWriter("판매자");
 
-                // 댓글 작성일 수정
-                String time = reply.getCreatedDate().toString().substring(0, 10);
-                reply.setTime(time);
-
                 // 비밀글인데 작성자가 아니거나 관리자가 아니면 내용 숨기기
                 if(reply.getHide().equals("private")){
 
@@ -390,7 +382,6 @@ public class ProductService {
                     }
                 }
             }
-
             replyResult.add(reply);
         }
 

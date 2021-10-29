@@ -39,7 +39,6 @@
 
         <th:block th:if="${qnaList}">
             <th:block th:each="qna, index : ${qnaList}">
-
                 <li class="qna_list_body qna_lock">
                     <div class="qna_status" th:text="${qna.replyEmpty}"></div>
                     <div class="qna_text" th:text="${qna.title}"></div>
@@ -49,43 +48,10 @@
 
                     <!-- QnA 답글 -->
                     <th:block th:if="${qna.replyEmpty} == '답변대기'" sec:authorize="hasRole('ROLE_ADMIN')">
-                    <span>
-                        <input type="hidden" id="productId" th:value="${qna.productId}"/>
+                    <span class="reply_write">
                         <input type="hidden" id="parent" th:value="${qna.id}" />
                         <input type="text" id="replyContent" placeholder="답글 작성" />
-
-                        <button type="button" id="replySend">전송</button>
-                        <script>
-
-                            $(document).on('click', '#replySend', function(){
-
-
-
-                                let productId = $("#productId").val();
-                                let parent = $("#parent").val();
-                                let content = $("#replyContent").val();
-
-                                 let param = {
-                                    productId : productId,
-                                    content : content,
-                                    parent : parent
-                                };
-
-                                $.ajax({
-                                    type : "post",
-                                    url  : "/product/reply/send",
-                                    data : param,
-                                    success : function(result){
-                                        alert("성공했습니다");
-                                    },
-                                    error : function(result){
-                                        alert("실패했습니다");
-                                    }
-                                });
-                            });
-
-
-                        </script>
+                        <input type="button" id="replySend" value="전송" />
                     </span>
 
                     </th:block>
@@ -95,15 +61,51 @@
                             <dd>ㄴ답변</dd>
                             <dd class="break-all" th:text="${replyList[index].content}"></dd>
                             <dd th:text="${replyList[index].writer}"></dd>
-                            <dd th:text="${replyList[index].time}"></dd>
+                            <dd th:text="${#dates.format(${replyList[index].time}, 'yyyy.MM.dd')}"></dd>
                         </dl>
                     </th:block>
                 </li>
+         </th:block>
+            <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                <script>
+                $(document).ready(function(){
+                    $("#replySend").on("click", function(){
+
+                        let productId = $("#productId").val();
+
+                        let span = $(this).parent();
+                        let parent = span.find("#parent").val();
+                        let content = span.find("#replyContent").val();
+
+                        let param = {
+                            productId : productId,
+                            content : content,
+                            parent : parent
+                        };
+
+                        $.ajax({
+                            type : "post",
+                            url  : "/product/reply/send",
+                            data : param,
+                            success : function(result){
+
+                                if(result === "Y"){
+                                    span.find("#replyContent").val("");
+                                    alert("성공");
+                                }
+                            },
+                            error : function(result){
+                                alert("실패했습니다");
+                            }
+                        });
+                    });
+                });
+                </script>
             </th:block>
         </th:block>
 
 
-        <th:block th:if="${qnaList} == null">
+        <th:block th:unless="${qnaList}">
             <li class="qna_no_data">등록된 Q&A가 없습니다</li>
         </th:block>
     </ul>
