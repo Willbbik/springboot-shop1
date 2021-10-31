@@ -1,5 +1,27 @@
 $(document).ready(function(){
 
+    getQnAList();
+
+    // QnA 리스트 가져오기
+    function getQnAList(){
+
+       let productId = $("#productId").val();
+
+       $.ajax({
+          type : "get",
+          url  : "/product/getqnaList",
+          data : { productId : productId },
+          success : function(result){
+              $("#info_container_3").html(result);
+          },
+          error : function(result){
+               alert("에러입니다. 잠시후에 다시 시도해보고 안되면 문의사항에 남겨주시면 감사하겠습니다.");
+          }
+       });
+    }
+
+
+
     $('.tab_default').click(function(){
 
         let active = $(".tab_active");
@@ -28,7 +50,7 @@ $(document).ready(function(){
 
     });
 
-    // tab3 QnA 클릭시
+    // tab3 QnA 클릭
     $(document).on("click", "#tab3", function(){
 
         let info2 = $("#info_container_2");
@@ -40,7 +62,7 @@ $(document).ready(function(){
         getQnAList();
     });
 
-    // tab4 주문정보
+    // tab4 주문정보 클릭
     $("#tab4").on("click", function(){
 
         let info2 = $("#info_container_2");
@@ -62,6 +84,7 @@ $(document).ready(function(){
     });
 
 
+    // 댓글 내용 클릭시 답글보이게
     $(document).on("click", ".qna_text", function(){
 
         let list = $(this).parent("li");
@@ -78,27 +101,6 @@ $(document).ready(function(){
         }
     });
 
-
-    // QnA 리스트 가져오기
-    function getQnAList(){
-
-       let productId = $("#productId").val();
-
-       $.ajax({
-          type : "post",
-          url  : "/product/getqnaList",
-          data : { productId : productId },
-          success : function(result){
-              $("#info_container_3").html(result);
-          },
-          error : function(result){
-               alert("에러입니다. 잠시후에 다시 시도해보고 안되면 문의사항에 남겨주시면 감사하겠습니다.");
-          }
-       });
-
-    }
-
-    getQnAList();
 
     // QnA 질문 전송
     $(document).on("click", "#qna_post", function(){
@@ -131,8 +133,10 @@ $(document).ready(function(){
                    alert("등록되었습니다.");
                 }else if(result === "login"){
                    alert("로그인이 필요한 서비스입니다.");
+                   return false;
                 }else{
                    alert("내용을 다시 확인해주세요.");
+                   return false;
                 }
            },
            error : function(result){
@@ -141,101 +145,10 @@ $(document).ready(function(){
         });
     });
 
+
+
+
 });
 
-
-
-
-//function afterSendReview(dto){
-//    let html = "";
-//
-//    html =  "<ul class='detail_review_select'>";
-//    html += "  <li class='active_review_select col-sm'>"+ 여기다가 최신순 +"</li>";
-//    html += "  <li>사진리뷰</li>";
-//    html += "  <li>텍스트 리뷰</li>";
-//    html += "</ul>";
-//
-//    for(var i = 0; i < dto.length; i++){
-//        html += "<div class='Detail-review-box'>";
-//        html += "  <dl class='detail_review_default'>";
-//        html += "     <dt class='review_profile'>";
-//        html += "        <strong>";
-//        html += "            <div class='user_name'>"+ 여기다이름 +"</div>";
-//        html += "            <div class='date'>"+ 여기다 날짜 +"</div>";
-//        html += "        <strong>";
-//        html += "     </dt>";
-//        html += "     <dd class='review_text'>"+ 여기다 댓글내용 +"</dd>";
-//        html += "  </dl>";
-//        html += "</div>";
-//    }
-//
-//    let info_2 = $("#info_container_2");
-//    info_2.empty();
-//    info_2.append(html);
-//
-//}
-//
-//
-//function afterSendQnA(dto){
-//
-//    let html = "";
-//
-//    html += "<div class='details_qna_container'>";
-//    html += "  <div class='qna_list_chk'>";
-//    html += "     <div>";
-//    html += "        QnA";
-//    html += "        <span>"+여기다 개수+"</span>";
-//    html += "     </div>";
-//    html += "     <a id='btn_write_qna'>문의 내용 작성하기</a>";
-//    html += "  </div>";
-//    html += "   <dl class='qna_write' style='display: none;'>";
-//    html += "     <dt>내용</dt>";
-//    html += "     <dd><textarea placeholder='내용을 입력해 주세요.' id='content'></textarea></dd>";
-//    html += "     <dt>공개여부</dt>";
-//    html += "     <dd>";
-//    html += "         <span>";
-//    html += "              <input type='radio' id='public' name='hide' value='private' checked>";
-//    html += "              <label for='public'>비공개</label>";
-//    html += "              <input type='radio' id='private' name='hide' value='public'>";
-//    html += "              <label for='private'>공개</label>";
-//    html += "          </span>";
-//    html += "     </dd>";
-//    html += "     <dd>";
-//    html += "           <input type='button' value='취소하기' id='qna_write_cancel' />";
-//    html += "           <input type='button' value='등록하기' id='qna_post'/>";
-//    html += "     </dd>";
-//    html += "   </dl>";
-//    html += "   <ul class='qna_list'>";
-//    html += "     <div class='qna_list_head'>";
-//    html += "          <div class='qna_head_status'>답변상태</div>";
-//    html += "          <div class='qna_head_content'>내용</div>";
-//    html += "           <div>작성자</div>";
-//    html += "           <div class='qna_head_created'>작성일</div>";
-//    html += "     </div>";
-//
-//    for(var i = 0; i<dto.length; i++){
-//        html += "<li class='qna_list_body'>";
-//        html += "  <div class='qna_status'>"+ 답변대기 쓰면됨 +"</div>";
-//        html += "  <div class='qna_text'>"+ 내용 +"</div>";
-//        html += "  <div>"+ 아이디 +"</div>";
-//        html += "  <div>"+ 날짜 +"</div>";
-//        html += "</li>";
-//    }
-//
-//    html += "  </ul>";
-//    html += "</div>";
-//
-//}
-
-
-
-
-//
-//function getQnAList(){
-//
-//   let productId = $("#productId").val();
-//
-//
-//}
 
 

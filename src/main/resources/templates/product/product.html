@@ -217,5 +217,46 @@
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script src="/assets/js/product/product.js"></script>
 
+    <th:block sec:authorized="hasRole('ROLE_ADMIN')">
+        <script>
+        $(document).ready(function(){
+            $(document).on("click", "#replySend", function(){
+
+                let productId = $("#productId").val();
+
+                let span = $(this).parent();
+                let parent = span.find("#parent").val();
+                let content = span.find("#replyContent").val();
+
+                let param = {
+                    productId : productId,
+                    content : content,
+                    parent : parent
+                };
+
+                $.ajax({
+                    type : "post",
+                    url  : "/product/reply/send",
+                    data : param,
+                    success : function(result){
+                        if(result === "Y"){
+                          span.find("#replyContent").val("");
+                          alert("성공");
+                        }else{
+                          alert("권한이 없습니다");
+                        }
+
+                        },
+                    error : function(result){
+                        alert("실패했습니다");
+                    }
+                });
+            });
+
+        });
+        </script>
+
+    </th:block>
+
 </body>
 </html>

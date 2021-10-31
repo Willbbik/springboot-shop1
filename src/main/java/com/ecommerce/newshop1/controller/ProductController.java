@@ -4,12 +4,16 @@ import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.*;
 import com.ecommerce.newshop1.repository.*;
 import com.ecommerce.newshop1.service.ProductService;
+import com.ecommerce.newshop1.utils.enums.Role;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +49,6 @@ public class ProductController {
         Pageable pageable = PageRequest.of(0, 3, Sort.by("createdDate").descending());
         int qnaSize = productService.getQnaSize(id);
 
-
         // 상품에 옵션 있는지 없는지 체크
         boolean result = productService.productOptCheck(id);
 
@@ -67,7 +70,9 @@ public class ProductController {
         List<QnADto> qnaList = productService.qnaEdit(entity.get(), pageable);
         List<QnADto> replyList =  productService.replyEdit(productService.getQnAReply(qnaList));
 
+        // 댓글 총 개수
         int qnaSize = productService.getQnaSize(productId);
+
         model.addAttribute("qnaSize", qnaSize);
         model.addAttribute("qnaList", qnaList);
         model.addAttribute("qnaReply", replyList);
@@ -77,7 +82,7 @@ public class ProductController {
 
 
     @ApiOperation(value = "상품 상세보기에 QnA html 리턴")
-    @PostMapping("/product/getqnaList")
+    @GetMapping("/product/getqnaList")
     public String test(@RequestParam("productId") Long productId, Model model,
                        @RequestParam(name = "page", defaultValue = "0") int page) throws Exception {
 
@@ -150,9 +155,13 @@ public class ProductController {
     @PostMapping("/product/reply/send")
     public @ResponseBody String productQnaReply(QnADto dto) throws Exception {
 
-        System.out.println(dto.getContent());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(!auth.getAuthorities().contains(new SimpleGrantedAuthority(Role.ADMIN.getValue()))){
+            return "N";
+        }else{
+            return "Y";
+        }
 
-        return "Y";
     }
 
 
