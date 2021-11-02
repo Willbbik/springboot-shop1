@@ -33,7 +33,7 @@
                 <span sec:authorize="isAuthenticated()"><a th:href="@{/logout}">로그아웃</a></span>
                 <span sec:authorize="isAnonymous()"><a th:href="@{/join}">회원가입</a></span>
                 <span><a href="#">Mypage</a></span>
-                <span><a href="#">Cart(0)</a></span>
+                <span><a href="#">장바구니</a></span>
             </p>
             <li>-</li>
             <br/>
@@ -89,43 +89,36 @@
                         <input type="hidden" id="productId" th:value="${product.id}" />
                         <h2 th:text="${product.productName}"></h2>
                         <h3 th:text="${product.productPrice}"></h3>
+
                     <th:block th:if="${optionNames}">
-                        <div>
-                            <select>
-                                <option disabled="disabled" selected>[ [[${optionNames.optionName1}]] ] 옵션을 선택하세요.</option>
-                                <th:block th:each="options : ${options}">
-                                    <option>[[${options.option}]]</option>
-                                </th:block>
-                            </select>
-                        </div>
+                        <div class="detail_options">
+                        <select id="select-id-1">
+                            <option disabled="disabled" selected>[ [[${optionNames.optionName1}]] ] 옵션을 선택하세요.</option>
+                            <th:block th:each="options : ${options}">
+                                <option>[[${options.option}]]</option>
+                            </th:block>
+                        </select>
                         <th:block th:if="${optionNames.optionName2 != null}">
-                            <div>
-                                <select>
-                                    <option disabled="disabled" selected>[ [[${optionNames.optionName2}]] ] 옵션을 선택하세요.</option>
-                                </select>
-                            </div>
+                            <select id="select-id-2">
+                                <option disabled="disabled" selected>[ [[${optionNames.optionName2}]] ] 옵션을 선택하세요.</option>
+                            </select>
                         </th:block>
                         <th:block th:if="${optionNames.optionName3 != null}">
-                            <div>
-                                <select>
-                                    <option disabled="disabled" selected>[ [[${optionNames.optionName3}]] ] 옵션을 선택하세요.</option>
-                                </select>
-                            </div>
+                            <select id="select-id-3">
+                                <option disabled="disabled" selected>[ [[${optionNames.optionName3}]] ] 옵션을 선택하세요.</option>
+                            </select>
                         </th:block>
                         <th:block th:if="${optionNames.optionName4 != null}">
-                            <div>
-                                <select>
-                                    <option disabled="disabled" selected>[ [[${optionNames.optionName4}]] ] 옵션을 선택하세요.</option>
-                                </select>
-                            </div>
+                            <select id="select-id-4">
+                                <option disabled="disabled" selected>[ [[${optionNames.optionName4}]] ] 옵션을 선택하세요.</option>
+                            </select>
                         </th:block>
                         <th:block th:if="${optionNames.optionName5 != null}">
-                            <div>
-                                <select>
-                                    <option disabled="disabled" selected>[ [[${optionNames.optionName5}]] ] 옵션을 선택하세요.</option>
-                                </select>
-                            </div>
+                            <select id="select-id-5">
+                                <option disabled="disabled" selected>[ [[${optionNames.optionName5}]] ] 옵션을 선택하세요.</option>
+                            </select>
                         </th:block>
+                        </div>
                     </th:block>
                     <th:block th:unless="${optionNames}">
                         <div>
@@ -202,60 +195,55 @@
                         </div>
                         <div id="info_container_3" class="detail_info_container" style="display:none;">
 
+                            <div class="details_qna_container">
+                                <div class="qna_list_chk">
+                                    <div>
+                                        QnA
+                                        <span th:text="${qnaSize}"></span>
+                                    </div>
+                                    <a id="btn_write_qna">문의 내용 작성하기</a>
+                                </div>
+                                <dl class="qna_write" style="display: none;">
+                                    <dt>내용</dt>
+                                    <dd><textarea placeholder="내용을 입력해 주세요." id="content"></textarea></dd>
+                                    <dt>공개여부</dt>
+                                    <dd>
+                                        <span>
+                                            <input type="radio" id="public" name="hide" value="private" checked>
+                                            <label for="public">비공개</label>
+                                            <input type="radio" id="private" name="hide" value="public">
+                                            <label for="private">공개</label>
+                                        </span>
+                                    </dd>
+                                    <dd>
+                                        <input type="button" value="취소하기" id="qna_write_cancel" />
+                                        <input type="submit" value="등록하기" id="qna_post" />
+                                    </dd>
+                                </dl>
+                                <ul class="qna_list">
+                                    <div class="qna_list_head">
+                                        <div class="qna_head_status">답변상태</div>
+                                        <div class="qna_head_content">내용</div>
+                                        <div>작성자</div>
+                                        <div class="qna_head_created">작성일</div>
+                                    </div>
+                                     <li class="qna_no_data">등록된 Q&A가 없습니다</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
             <!--   end     -->
         </div>
     </div>
     <!-- /본문 -->
-
 </div>
 
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script src="/assets/js/product/product.js"></script>
 
     <th:block sec:authorized="hasRole('ROLE_ADMIN')">
-        <script>
-        $(document).ready(function(){
-            $(document).on("click", "#replySend", function(){
-
-                let productId = $("#productId").val();
-
-                let span = $(this).parent();
-                let parent = span.find("#parent").val();
-                let content = span.find("#replyContent").val();
-
-                let param = {
-                    productId : productId,
-                    content : content,
-                    parent : parent
-                };
-
-                $.ajax({
-                    type : "post",
-                    url  : "/product/reply/send",
-                    data : param,
-                    success : function(result){
-                        if(result === "Y"){
-                          span.find("#replyContent").val("");
-                          alert("성공");
-                        }else{
-                          alert("권한이 없습니다");
-                        }
-
-                        },
-                    error : function(result){
-                        alert("실패했습니다");
-                    }
-                });
-            });
-
-        });
-        </script>
-
+        <script src="/assets/js/product/adminQnA.js"></script>
     </th:block>
 
 </body>

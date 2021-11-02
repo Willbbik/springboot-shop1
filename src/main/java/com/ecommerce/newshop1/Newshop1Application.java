@@ -1,6 +1,5 @@
 package com.ecommerce.newshop1;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -16,6 +15,7 @@ public class Newshop1Application {
 				.properties("spring.config.location=classpath:/yml/coolsms.yml, classpath:/application.yml" +
 						", classpath:/yml/oauth2.yml")
 				.run();
+
 	}
 
 

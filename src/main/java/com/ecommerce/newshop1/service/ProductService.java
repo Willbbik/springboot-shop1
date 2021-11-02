@@ -4,14 +4,15 @@ import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.*;
 import com.ecommerce.newshop1.repository.*;
 
-import com.ecommerce.newshop1.utils.CommonService;
+import com.ecommerce.newshop1.utils.SecurityService;
 import com.ecommerce.newshop1.utils.Options;
+import com.ecommerce.newshop1.utils.enums.Role;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -28,51 +29,54 @@ public class ProductService {
     private final ProOptRepository proOptRepository;
     private final ProOptNameRepository proOptNameRepository;
     private final QnARepository qnARepository;
-    private final CommonService commonService;
+    private final SecurityService security;
 
     String[] values = {"option1", "option2", "option3", "option4", "option5" };
+
     ModelMapper mapper = new ModelMapper();
 
     // 옵션이 존재하는지 체크
     @Transactional(readOnly = true)
-    public boolean productOptCheck(Long id){
+    public boolean productOptCheck(Long productId){
 
-        Optional<ProductEntity> productEntity = productRepository.findById(id);
-        ProOptNameEntity result = proOptNameRepository.findByProductId(productEntity.get());
+        ProductEntity product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다. productId = " + productId));
 
-        return result != null;
+        ProOptNameEntity optionName = proOptNameRepository.findByProductId(product);
+
+        return optionName != null;
     }
 
-
-    // 옵션 체크하고 있으면 옵션까지, 없으면 상품만 리턴
+    // 상품 가져오기
     @Transactional(readOnly = true)
-    public Model getProducts(boolean result, Long id, Model model) throws Exception {
+    public ProductDto getProducts(Long productId){
 
-        Optional<ProductEntity> productEntity = productRepository.findById(id);
-        ProductEntity entity = productEntity.get();
+        ProductEntity product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다. productId = " + productId));
 
-        if(result){  // 옵션이 있는 상품이라면 옵션까지 리턴
+        ProductDto proDto = mapper.map(product, ProductDto.class);
+        return proDto;
+    }
 
-            // Entity에서 Dto로 변환
-            ProductDto product = mapper.map(entity, ProductDto.class);
-            ProOptNameDto optionNames =
-                    mapper.map(proOptNameRepository.findByProductId(entity), ProOptNameDto.class);
-            List<ProOptDto> dtos =
-                    proOptRepository.findAllByProductId(entity)
-                            .stream().map(p -> mapper.map(p, ProOptDto.class))
-                            .collect(Collectors.toList());
+    // 상품 옵션 가져오기
+    @Transactional(readOnly = true)
+    public Model getOptionAndNames(Long productId, Model model) throws Exception {
+        ProductEntity product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다. productId = " + productId));
 
-            // 같은 이름의 옵션값 중복 제거
-            List<Options> options = overlapRemove(dtos, 1);
+        // Entity에서 Dto로 형변환
+        ProOptNameDto optionNames =
+                mapper.map(proOptNameRepository.findByProductId(product), ProOptNameDto.class);
 
-            model.addAttribute("product", product);
-            model.addAttribute("optionNames", optionNames);
-            model.addAttribute("options", options);
+        List<ProOptDto> optDtos = proOptRepository.findAllByProductId(product)
+                        .stream().map(p -> mapper.map(p, ProOptDto.class))
+                        .collect(Collectors.toList());
 
-        }else{      // 옵션이 없는 상품이라면 기본 상품정보만 리턴
-            ProductDto product = mapper.map(entity, ProductDto.class);
-            model.addAttribute("product", product);
-        }
+        // 상품 옵션
+        List<Options> options = overlapRemove(optDtos, 1);
+
+        model.addAttribute("optionNames", optionNames);
+        model.addAttribute("options", options);
         return model;
     }
 
@@ -99,16 +103,17 @@ public class ProductService {
     }
 
 
-    // 옵션 중복값 제거
-    // 로직 흐름은 dto list중에서 중복을 제거할 필드의 값들을 배열에 다 넣고
-    // set 컬렉션에 담아서 중복 제거하고, 그 결과를 배열에 담고
-    // 중복이 제거된 배열을 리턴한다
-
     /**
+     *  상품 상세보기에서 옵션에 표시될
      *  옵션 중복값 제거
-     *  dto list중에서 중복을 제거할 필드의 값들을 배열에 다 넣고
+     *
+     *  옵션 배열에서 중복을 제거할 필드의 값들을 배열에 다 넣고
      *  set 컬렉션에 담아서 중복 제거하고, 그 결과를 배열에 담고
      *  중복이 제거된 배열을 리턴한다
+     *
+     *  when 언제 사용하나면
+     *   ajax로 옵션값 요청을 받고
+     *   옵션값 리턴할 때 사용한다.
      *
      * @param dtos
      * @param paramIndex
@@ -138,22 +143,40 @@ public class ProductService {
 
 
     // saveAll 하기 위해서 dto를 entity로 바꾸기
+
+    /**
+     * 상품 등록 페이지에서 받은 상품 옵션값들을 저장하기 위해서
+     *
+     * 파라미터
+     *  proOptDto - 옵션명
+     *  cnt - 옵션명 개수
+     *  productEntity - 상품 번호
+     *
+     * @param proOptDto
+     * @param cnt
+     * @param productEntity
+     * @return
+     * @throws Exception
+     */
     public List<ProOptEntity> proOptDtoToEntities(ProOptDto proOptDto, int cnt, ProductEntity productEntity) throws Exception {
 
-        List<ProOptEntity> entities = new ArrayList<ProOptEntity>();     // 마지막에 리턴할 entity List
+        List<ProOptEntity> entities = new ArrayList<ProOptEntity>();                // 마지막에 리턴할 entity List
         int optLength = proOptDto.getOption1().split(",").length;  // 옵션 개수 알기 위해서
 
         String[][] option = new String[5][optLength+1];                  // 옵션값들 담기 위해서
         String[] stock = proOptDto.getStock().split(",");          // 재고 담기
 
         // 값이 있는건 값들 담고, 없으면 Null 담기
+        // 옵션명은 최대 5개까지만 입력할 수 있어서
         for(int i = 0; i < 5; i++){
 
+            // i가 현재 입력된 옵션명 개수보다 높다면
             if(i+1 > cnt){
                 for(int j = 0; j < optLength; j++){
                     option[i][j] = null;
                 }
-            }else {
+            }
+            else {
                 // 같은 이름의 필드의 값을 가져온다
                 Field field = proOptDto.getClass().getDeclaredField(values[i]);
                 field.setAccessible(true);
@@ -186,12 +209,33 @@ public class ProductService {
         return entities;
     }
 
+    // QnA 개수 가져오기 ( 답글 제외 )
     @Transactional(readOnly = true)
-    public int getQnaSize(Long id){
+    public int getQnaSize(Long productId){
 
-        Optional<ProductEntity> entity = productRepository.findById(id);
-        List<QnAEntity> qnaSize = qnARepository.findAllByProductId(entity.get());
+        ProductEntity product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다. productId = " + productId));
+
+        List<QnAEntity> qnaSize = qnARepository.findAllQnASize(product);
+
         return qnaSize.size();
+    }
+
+
+    // 쿼리스트링으로 들어온 page 유효성 검사 메소드
+    public Pageable editPageable(int page, int qnaSize){
+
+        // 존재하는 페이지보다 높은 페이지가 들어오거나
+        // 0보다 작다면
+        // 기본 0으로 설정
+        // 아니라면 들어온 값 그대로 사용
+
+        int maxPage = (int) Math.round((qnaSize * 1.0) / 3);
+
+        if(page < maxPage && page >= 0){ }
+        else page = 0;
+
+        return PageRequest.of(page, 3, Sort.by("createdDate").descending());
     }
 
 
@@ -221,6 +265,19 @@ public class ProductService {
     }
 
     // QnA 유효성 검사
+
+    /**
+     * QnA 유효성 검사
+     *
+     * 값이 없거나, 길이가 정해진 길이보다 길면 -1 리턴
+     * 공개, 비공개 값이 private, public가 아닌 다른 값이 들어오면 -1 리턴
+     * 권한이 없으면 -2 리턴
+     *
+     * 정상적이라면 0 리턴
+     *
+     * @param dto
+     * @return
+     */
     public int qnaValidationCheck(QnADto dto){
 
         String content = dto.getContent();
@@ -228,8 +285,7 @@ public class ProductService {
         if(content.isEmpty() || content.isBlank() || content.length() > 2048){
             return -1;
         }
-
-        if(!commonService.isAuthenticated()){
+        if(!security.isAuthenticated()){
             return -2;
         }
 
@@ -240,15 +296,26 @@ public class ProductService {
     }
 
 
+    /**
+     * QnA 질문 저장 메소드
+     *
+     * content - 띄어쓰기 조절
+     * parent - 질문은 부모 댓글이 없기 때문에 항상 null
+     * depth - QnA 질문은 1, QnA 답변은 2
+     * replyEmpty - 등록하자마자는 무조건 답변이 없기때문에 기본으로 empty
+     *
+     * @param dto
+     * @throws Exception
+     */
     @Transactional
     public void saveQnAQuestion(QnADto dto) throws Exception {
 
-        String writer = SecurityContextHolder.getContext().getAuthentication().getName();
-        ProductEntity productEntity = productRepository.findById(dto.getProductId()).orElseThrow(Exception::new);
+        ProductEntity productEntity = productRepository.findById(dto.getProductId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다. productId = " + dto.getProductId()));
 
         QnAEntity qnaEntity = QnAEntity.builder()
                 .productId(productEntity)
-                .writer(writer)
+                .writer(security.getName())
                 .content(dto.getContent().replaceAll("\\s+", " "))
                 .hide(dto.getHide())
                 .parent(null)
@@ -260,25 +327,62 @@ public class ProductService {
     }
 
 
+    /**
+     * ajax로 값을 받아서 저장
+     *
+     * 파라미터 qnaDto의 담겨져 온 값들 :
+     *  productId, content, parent, hide
+     *
+     *  qnaEntity에서 set해줘야 하는것들 :
+     *  productId, content, parent, hide, depth, writer
+     *
+     * 부모 QnA에서 수정해줘야 하는 값들 :
+     *  replyEmpty - present로 수정
+     *
+     *
+     *@param dto
+     */
+    @Transactional
+    public void saveQnaAnswer(QnADto dto){
+
+        ProductEntity product = productRepository.findById(dto.getProductId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다. productId = " + dto.getProductId()));
+
+        QnAEntity qnaAnswer = QnAEntity.builder()
+                .productId(product)
+                .content(dto.getContent())
+                .parent(dto.getParent())
+                .depth(2)
+                .writer(security.getName())
+                .hide("private") // 고쳐야함
+                .replyEmpty("empty")
+                .build();
+
+        qnARepository.save(qnaAnswer);
+
+        // QnA수정 메소드 있어야함
+    }
+
+
 
     /**
-     *  qna 값 설정
+     *  view에 표시할 QnA질문 값들 수정해주는 메소드
      *
-     *  파라미터 pageable의 기본 size는 3이고 page는 0이다.
-     *  사용자 아이디를 마스킹해주고,
-     *  qnaDto의 hide가 private일때 사용자 아이디가 다르거나 권한이 ADMIN이 아니라면 비공개 글로 내용을 바꾸고,
-     *  답글이 존재하는지 확인하고 있다면 replyEmpty의 값을 바꾼다.
+     *  파라미터 pageable의 기본 size는 3,
+     *  page는 0이지만 바뀔 수 있음
+     *
+     *
+     *  사용자 아이디 마스킹,
+     *  qnaDto의 hide가 private일 때 사용자 아이디가 다르거나 권한이 ADMIN이 아니라면 비공개로 내용을 바꾸고,
+     *  답글이 존재하는지 확인하고 있다면 replyEmpty의 값을 present로 바꾼다.
      *
      * @param pageable
      * @return List<QnADto>
      */
-    public List<QnADto> qnaEdit(ProductEntity id, Pageable pageable) throws Exception {
+    public List<QnADto> qnaEdit(ProductEntity productId, Pageable pageable) throws Exception {
 
         // qna 가져오기
-        List<QnAEntity> qnaEntities = qnARepository.findAllByProductId(id, pageable);
-
-        // 사용자 권한 확인하기 위해서
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        List<QnAEntity> qnaEntities = qnARepository.findAllQnA(productId, pageable);
 
         // qna가 존재한다면
         if (!qnaEntities.isEmpty()) {
@@ -286,15 +390,11 @@ public class ProductService {
                     .map(p -> mapper.map(p, QnADto.class))
                     .collect(Collectors.toList());
 
-            // 시큐리티 컨텍스트 홀더에서 사용자 정보 가져오기
-
             // 값들 수정해주기
             for (QnADto dto : qnaDtos) {
-                // 해당 qna의 답글 가져오기
-                Optional<QnAEntity> reply = qnARepository.findByParent(dto.getId());
-
 
                 // 제목 길이 설정
+                // 제목 : 질문 클릭 안했을 때 처음에 보이는 질문 내용
                 if(dto.getContent().length() > 30){
                     dto.setTitle(dto.getContent().substring(0, 30) + "...");
                 }else{
@@ -304,9 +404,9 @@ public class ProductService {
                 // 비공개 글 설정
                 if (dto.getHide().equals("private")) {
 
-                    // 작성자가 본인이 아니거나 관리자가 아닐경우 비밀글로 보이게끔
-                    if (!auth.getName().equals(dto.getWriter()) &&
-                            !auth.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
+                    // 작성자 && 권한 체크
+                    if (!security.compareName(dto.getWriter()) &&
+                            !security.checkHasRole(Role.ADMIN.getValue())) {
                         dto.setContent("비밀글입니다.");
                         dto.setTitle("비밀글입니다.");
                     }
@@ -315,6 +415,9 @@ public class ProductService {
                 // 아이디 마스킹
                 dto.setWriter(dto.getWriter().substring(0, 3) + "***");
 
+                // 해당 qna의 답글 가져오기
+                Optional<QnAEntity> reply = qnARepository.findByParent(dto.getId());
+
                 // 답글 유무 확인
                 if (reply.isPresent()) dto.setReplyEmpty("답변완료");
                 else dto.setReplyEmpty("답변대기");
@@ -322,10 +425,8 @@ public class ProductService {
             }
             return qnaDtos;
         }
-        else{
-
-            List<QnADto> dtos = null;
-            return dtos;
+        else{ // QnA가 없다면 null 리턴
+            return null;
         }
     }
 
@@ -338,36 +439,42 @@ public class ProductService {
         if(qnaList != null) {
 
             for (QnADto dto : qnaList) {
-
                 Optional<QnAEntity> entity = qnARepository.findByParent(dto.getId());
 
+                // 존재유무 확인
                 if (entity.isPresent()) {
                     replyList.add(mapper.map(entity.get(), QnADto.class));
                 } else {
                     QnADto reply = null;
                     replyList.add(reply);
                 }
-
             }
         }
-
         return replyList;
     }
 
 
-    // 답글 값 설정 메소드
+    /**
+     *
+     * view에 표시할 QnA 질문에 대한 답글들 내용 수정 메소드
+     *
+     * writer, content, createdDate 수정
+     *
+     * @param replyList
+     * @return
+     */
     public List<QnADto> replyEdit(List<QnADto> replyList){
 
         List<QnADto> replyResult = new ArrayList<>();
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         // writer, content, createdDate 수정
         for(QnADto reply : replyList){
-
             if(reply != null){
 
-                QnAEntity parent = qnARepository.findByParent(reply.getParent()).get();
+                Long qnaId = reply.getParent();
+                QnAEntity parent = qnARepository.findById(qnaId)
+                        .orElseThrow(() -> new IllegalArgumentException("해당 QnA가 존재하지 않습니다. QnA Id = " + qnaId));
+
                 String parentWriter = parent.getWriter();
 
                 // 작성자 이름 수정
@@ -375,17 +482,49 @@ public class ProductService {
 
                 // 비밀글인데 작성자가 아니거나 관리자가 아니면 내용 숨기기
                 if(reply.getHide().equals("private")){
-
-                    if(!auth.getName().equals(parentWriter) &&
-                            !auth.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))){
+                    if(!security.compareName(parentWriter) &&
+                            !security.checkHasRole(Role.ADMIN.getValue())){
                         reply.setContent("비밀글입니다.");
                     }
                 }
+            }else{
+                reply = null;
             }
             replyResult.add(reply);
         }
 
         return replyResult;
+    }
+
+
+    @ApiOperation(value = "QnAList 가져오기")
+    /**
+     *
+     * QnA, QnA답글, QnA 개수를 모델에 담아서
+     * html을 반환한다.
+     *
+     * 상품 상세보기에 QnA칸에 사용된다
+     *
+     * return html page
+     */
+    public String getQnAList(Long productId, Model model, int page) throws Exception {
+
+        // 상품번호로 상품 entity 가져오기
+        Optional<ProductEntity> entity = productRepository.findById(productId);
+
+        // 댓글 총 개수
+        int qnaSize = getQnaSize(productId);
+
+        // QnA와 답글 가져와서 model에 담아주기
+        Pageable pageable = editPageable(page, qnaSize);
+        List<QnADto> qnaList   = qnaEdit(entity.get(), pageable);
+        List<QnADto> replyList = replyEdit(getQnAReply(qnaList));
+
+        model.addAttribute("qnaSize", qnaSize);
+        model.addAttribute("qnaList", qnaList);
+        model.addAttribute("replyList", replyList);
+
+        return "product/tab/tab3QnA";
     }
 
 
