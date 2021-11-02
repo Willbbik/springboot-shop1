@@ -1,5 +1,45 @@
 $(document).ready(function(){
 
+
+    // 상품번호와 옵션값으로 다음 옵션값 가져오기
+//    function getOptions(){
+//
+//        let productId = $("#productId").val();
+//
+//    }
+
+    $(".detail_options").on("change", "select", function(event) {
+
+        let productId = $("#productId").val();
+        let next = $(this).index() + 1;
+        let select = $(".detail_options").find("select").eq(next);
+
+        // 다음 옵션 이름에 필요한 인덱스값
+        // 현재 선택된 옵션 값
+        // 상품 번호
+
+        if(select.length){
+            // ajax
+            $.ajax({
+
+                type : "post",
+                url  : "/product/getOption",
+
+
+
+            });
+
+
+            alert("존재");
+        }else{
+            // 계산
+            alert("없음");
+        }
+
+    });
+
+
+
     getQnAList();
 
     // QnA 리스트 가져오기
@@ -9,17 +49,16 @@ $(document).ready(function(){
 
        $.ajax({
           type : "get",
-          url  : "/product/getqnaList",
+          url  : "/product/getqnaList?page=0",
           data : { productId : productId },
           success : function(result){
               $("#info_container_3").html(result);
           },
           error : function(result){
-               alert("에러입니다. 잠시후에 다시 시도해보고 안되면 문의사항에 남겨주시면 감사하겠습니다.");
+               alert("QnA 에러입니다. 잠시후에 다시 시도해보고 안되면 문의사항에 남겨주시면 감사하겠습니다.");
           }
        });
     }
-
 
 
     $('.tab_default').click(function(){
@@ -82,7 +121,6 @@ $(document).ready(function(){
     $(document).on('click', '#btn_write_qna', function(){
         $(".qna_write").css('display', '');
     });
-
 
     // 댓글 내용 클릭시 답글보이게
     $(document).on("click", ".qna_text", function(){

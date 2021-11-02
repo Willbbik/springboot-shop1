@@ -14,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "QnA_1")
+@Table(name = "product_QnA_1")
 public class QnAEntity{
 
     @Id
@@ -25,10 +25,10 @@ public class QnAEntity{
     @JoinColumn(name = "productId")
     private ProductEntity productId;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private String writer;
 
-    @Column(length = 2048)
+    @Column(length = 2048, nullable = false)
     private String content;
 
     @Column
@@ -49,5 +49,6 @@ public class QnAEntity{
 
     @LastModifiedDate
     private Date modifiedDate;
+
 
 }

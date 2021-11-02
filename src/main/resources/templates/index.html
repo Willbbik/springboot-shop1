@@ -29,13 +29,13 @@
                 <span sec:authorize="isAuthenticated()"><a th:href="@{/logout}">로그아웃</a></span>
                 <span sec:authorize="isAnonymous()"><a th:href="@{/join}">회원가입</a></span>
                 <span><a href="#">Mypage</a></span>
-                <span><a href="#">Cart(0)</a></span>
+                <span><a href="#">장바구니</a></span>
             </p>
             <li>-</li>
             <br/>
             <li><a th:href="@{/categories/all}">All</a></li>
             <li><a th:href="@{/product/details}">상세보기</a></li>
-            <li><a th:href="@{/wer}">Top</a></li>
+            <li><a th:href="@{/test/test}">Top</a></li>
             <li><a href="#">Bottom</a></li>
             <li><a href="#">Cap</a></li>
             <li>-</li>
