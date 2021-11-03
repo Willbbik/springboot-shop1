@@ -2,32 +2,15 @@ $(document).ready(function(){
 
 
     // 상품번호와 옵션값으로 다음 옵션값 가져오기
-//    function getOptions(){
-//
-//        let productId = $("#productId").val();
-//
-//    }
-
     $(".detail_options").on("change", "select", function(event) {
 
-        let productId = $("#productId").val();
-        let next = $(this).index() + 1;
-        let select = $(".detail_options").find("select").eq(next);
-
-        // 다음 옵션 이름에 필요한 인덱스값
-        // 현재 선택된 옵션 값
-        // 상품 번호
+        const product_id = $("#productId").val();
+        const option_value = $(this).val();
+        const next_select = $(this).index() + 1;
+        const select = $(".detail_options").find("select").eq(next_select);
 
         if(select.length){
-            // ajax
-            $.ajax({
-
-                type : "post",
-                url  : "/product/getOption",
-
-
-
-            });
+           // ajax
 
 
             alert("존재");

@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "product_opt_name_2")
+@Table(name = "product_opt_name_1")
 public class ProOptNameEntity {
 
     @Id

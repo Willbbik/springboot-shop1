@@ -1,4 +1,4 @@
-package com.ecommerce.newshop1.utils;
+package com.ecommerce.newshop1.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
