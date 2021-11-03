@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "product_option_2")
+@Table(name = "product_option_1")
 public class ProOptEntity {
 
     @Id
