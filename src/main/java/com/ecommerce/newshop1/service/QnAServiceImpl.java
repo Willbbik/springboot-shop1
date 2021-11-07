@@ -42,7 +42,7 @@ public class QnAServiceImpl implements QnAService{
      * return html page
      */
     @Override
-    public String getQnAList(Long productId, Model model, int page) throws Exception {
+    public String getQnAHtml(Long productId, Model model, int page) throws Exception {
 
         Optional<ProductEntity> entity = productRepository.findById(productId);
         int qnaSize = getQnaSize(productId);  // 댓글 총 개수

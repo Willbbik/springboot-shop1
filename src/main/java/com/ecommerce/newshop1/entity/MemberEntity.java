@@ -1,5 +1,6 @@
 package com.ecommerce.newshop1.entity;
 
+import com.ecommerce.newshop1.utils.enums.Role;
 import lombok.*;
 import javax.persistence.*;
 
@@ -22,7 +23,8 @@ public class MemberEntity extends TimeEntity {
     private String password;
 
     @Column(length = 30, nullable = false)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(length = 15, nullable = false)
     private String sns;

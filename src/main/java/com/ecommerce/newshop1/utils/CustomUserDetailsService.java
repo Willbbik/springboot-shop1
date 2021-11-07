@@ -32,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                         );
 
         Collection<SimpleGrantedAuthority> role = new ArrayList<SimpleGrantedAuthority>();
-        role.add(new SimpleGrantedAuthority(member.getRole()));
+        role.add(new SimpleGrantedAuthority(member.getRole().getValue()));
 
 
         return new User(member.getUserid(), member.getPassword(), role);

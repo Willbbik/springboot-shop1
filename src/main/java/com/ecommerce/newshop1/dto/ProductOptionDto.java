@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProOptDto {
+public class ProductOptionDto {
 
     private Long id;
     private Long productId;

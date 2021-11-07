@@ -1,6 +1,7 @@
 package com.ecommerce.newshop1.dto;
 
 import com.ecommerce.newshop1.entity.MemberEntity;
+import com.ecommerce.newshop1.utils.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,7 @@ public class MemberDto {
     private Long id;
     private String userid;
     private String pswd;
-    private String role;
+    private Role role;
     private String sns;
     private String phonenum;
     private LocalDateTime createdDate;

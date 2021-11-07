@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>에게모니</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="/assets/css/common/sidebar.css" rel="stylesheet">
+    <link href="/assets/css/product/productRegist.css" rel="stylesheet">
+
+</head>
+<body>
+
+
+<div id="page-wrapper">
+    <!-- 사이드바 -->
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand">
+                <a href="/">에게모니</a>
+                <a th:href="@{/product/register}">등록페이지</a>
+            </li>
+            <input type="text" class="form-control me-2" placeholder="검색" maxlength="20"/>
+            <br/>
+            <p class="acountbuttons" style="text-align: center;">
+                <span sec:authorize="isAnonymous()"><a th:href="@{/login}">로그인</a></span>
+                <span sec:authorize="isAuthenticated()"><a th:href="@{/logout}">로그아웃</a></span>
+                <span sec:authorize="isAnonymous()"><a th:href="@{/join}">회원가입</a></span>
+                <span><a href="#">Mypage</a></span>
+                <span><a href="#">Cart(0)</a></span>
+            </p>
+            <li>-</li>
+            <br/>
+            <li><a href="#">Top</a></li>
+            <li><a href="#">Bottom</a></li>
+            <li><a href="#">Cap</a></li>
+            <li>-</li>
+            <br/>
+            <li><a th:href="@{/board/list/all}">공지사항</a></li>
+            <li><a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/board/write/notice}">공지사항 글쓰기</a></li>
+            <li>-</li>
+            <br/>
+            <li>CS CENTER</li>
+            <li>070-4193-9293</li>
+            <li>토요일, 일요일, 공휴일 제외</li>
+            <li>평일 09:00 ~ 18:00</li>
+            <li>-</li>
+            <br/>
+            <li><a href="#">메뉴 4</a></li>
+            <li><a href="#">메뉴 5</a></li>
+            <li><a href="#">메뉴 6</a></li>
+            <li><a href="#">메뉴 7</a></li>
+            <li><a href="#">메뉴 8</a></li>
+            <li><a href="#">메뉴 9</a></li>
+            <li><a href="#">메뉴 1</a></li>
+            <li><a href="#">메뉴 2</a></li>
+            <li><a href="#">메뉴 3</a></li>
+            <li><a href="#">메뉴 4</a></li>
+            <li><a href="#">메뉴 5</a></li>
+            <li><a href="#">메뉴 6</a></li>
+            <li><a href="#">메뉴 7</a></li>
+            <li><a href="#">메뉴 8</a></li>
+            <li><a href="#">메뉴 9</a></li>
+
+        </ul>
+    </div>
+    <!-- /사이드바 -->
+
+    <!-- 본문 -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <!--  여기서부터 작성하면 됨   -->
+
+            <form method="post" th:action="@{/admin/register}" enctype="multipart/form-data">
+
+                <div>
+                    <div>
+                        <div>상품 기본 정보</div>
+                    </div>
+                    <div class="item_content">
+                        <label>상품 분류</label>
+                        <span class="category">
+                            <select name="category">
+                                <option value="" disabled="disabled">카테고리</option>
+                                <option value="top">TOP</option>
+                                <option value="bottom">BOTTOM</option>
+                                <option value="cap">CAP</option>
+                            </select>
+                        </span>
+                    </div>
+                    <div class="from-group">
+                        <label>상품명</label>
+                        <span><input type="text" name="productName"></span>
+                    </div>
+                    <div class="from-group">
+                        <label>판매가격</label>
+                        <span><input type="text" name="price"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">상품 이미지</label>
+                        <span>
+                            <div class="imgupload">
+                                <label for="upload_image">
+                                    이미지 찾기
+                                </label>
+                                <input type="file" name="upload_image" id="upload_image" multiple="multiple">
+                            </div>
+                            <div class="img-box"></div>
+                            <div class="discription-box">
+                                <div class="discription-blue">권장 이미지 사이즈(가로: 450px, 세로: 370px)</div>
+                                <div class="discription-blue">파일 저장시 상품내용 저장 후 적용됩니다</div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+                <!-- 상품 상세정보 -->
+                <div>
+                    <div>
+                        <div>상품 상세 정보</div>
+                    </div>
+                    <div class="item-content">
+                        <div class="form-group">
+                            <label class="form-label">INFO</label>
+                            <span>
+                                <textarea rows="7" name="productInfo"></textarea>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">모델 정보</label>
+                            <span>
+                                <textarea rows="2" name="model"></textarea>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">COLOR / SIZE</label>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">옵션 생성</button>
+                        </div>
+                        <div class="form-group" id="options">
+
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <button type="submit" class="btn btn-primary">전송</button>
+                            <button type="button" class="btn btn-primary">목록</button>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- 옵션 생성 모달 -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" id="optionMakePopup">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">필수 옵션 생성</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" >
+                            <!-- 옵션 생성 칸 -->
+                            <table width="540" height="150" cellspacing="5">
+                                <tbody>
+                                    <tr align="center">
+                                        <tr>COLOR<textarea name="color" rows="2" placeholder="예) 베이지,화이트,블랙 (쉼표로 구분)" autocomplete="off" class="form-control" ></textarea></tr>
+                                        <tr>SIZE<textarea name="size" rows="2" placeholder="예) 90,95,100 (쉼표로 구분)" autocomplete="off" class="form-control" ></textarea></tr>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="makeOption">확인</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+            <!--  여기까지만 작성  -->
+        </div>
+    </div>
+    <!-- /본문 -->
+</div>
+
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="/assets/js/admin/register.js"></script>
+
+</body>
+</html>

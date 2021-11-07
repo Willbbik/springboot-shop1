@@ -3,6 +3,7 @@ package com.ecommerce.newshop1.service;
 import com.ecommerce.newshop1.dto.MemberDto;
 import com.ecommerce.newshop1.entity.MemberEntity;
 import com.ecommerce.newshop1.repository.MemberRepository;
+import com.ecommerce.newshop1.utils.enums.Role;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +29,7 @@ public class MemberServiceTest {
                 .userid("test")
                 .pswd("passwordsda")
                 .sns("none")
-                .role("MEMBER")
+                .role(Role.MEMBER)
                 .phonenum("01081387026")
                 .build();
 

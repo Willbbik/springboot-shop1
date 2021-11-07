@@ -4,11 +4,11 @@ import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.*;
 import com.ecommerce.newshop1.repository.*;
 
-import com.ecommerce.newshop1.utils.SecurityService;
 import com.ecommerce.newshop1.dto.Options;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
@@ -20,38 +20,28 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final ProOptRepository proOptRepository;
+    private final ProOptionRepository proOptRepository;
     private final ProOptNameRepository proOptNameRepository;
+    private final ItemRepository itemRepository;
+    private final ItemImageRepository itemImageRepository;
+    private final ItemOptionRepository itemOptionRepository;
 
     String[] values = {"option1", "option2", "option3", "option4", "option5" };
-
     ModelMapper mapper = new ModelMapper();
 
-    // 옵션이 존재하는지 체크
-    @Transactional(readOnly = true)
-    @Override
-    public boolean checkProductOption(Long productId){
-
-        ProductEntity product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다. productId = " + productId));
-
-        ProOptNameEntity optionName = proOptNameRepository.findByProductId(product);
-
-        return optionName != null;
-    }
 
     // 상품 등록후 저장할 때 옵션 있는지 없는지 확인
     @Override
-    public int checkOptionExist(ProOptDto proOptDto) throws Exception {
+    public int checkOptionExist(ProductOptionDto productOptionDto) throws Exception {
 
         int cnt = 0;
 
         // 몇개의 옵션이 입력됐는지
-        for (Field field : proOptDto.getClass().getDeclaredFields()) {
+        for (Field field : productOptionDto.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             for (String str : values) {
                 if (field.getName().equals(str)) {
-                    if (field.get(proOptDto) != null) {
+                    if (field.get(productOptionDto) != null) {
                         // 하나라도 있다면 확인했으니 바로 끝내고 1리턴
                         cnt ++;
                         break;
@@ -80,7 +70,12 @@ public class ProductServiceImpl implements ProductService {
     public ProOptNameDto getOptionName(ProductEntity productId){
 
         ProOptNameEntity entity = proOptNameRepository.findByProductId(productId);
-        return mapper.map(entity, ProOptNameDto.class);
+        if(entity != null){
+            return mapper.map(entity, ProOptNameDto.class);
+        }else{
+            return null;
+        }
+
     }
 
     // 상품 옵션 가져오기
@@ -90,14 +85,18 @@ public class ProductServiceImpl implements ProductService {
 
         List<ProOptEntity> entity = proOptRepository.findAllByProductId(productId);
 
-        List<ProOptDto> optDtos = entity.stream().map(p -> mapper.map(p, ProOptDto.class))  // optionEntity > dto
-                                .collect(Collectors.toList());
+        if(entity != null){
+            List<ProductOptionDto> optDtos = entity.stream().map(p -> mapper.map(p, ProductOptionDto.class))  // optionEntity > dto
+                    .collect(Collectors.toList());
 
-        // 상품 옵션값 중복 제거
-        List<Options> options = overlapRemove(optDtos, index);
-        return options;
-
+            // 상품 옵션값 중복 제거
+            List<Options> options = overlapRemove(optDtos, index);
+            return options;
+        }else {
+            return null;
+        }
     }
+
 
 
     /**
@@ -118,12 +117,12 @@ public class ProductServiceImpl implements ProductService {
      * @throws Exception
      */
     @Override
-    public List<Options> overlapRemove(List<ProOptDto> dtos, int paramIndex) throws Exception {
+    public List<Options> overlapRemove(List<ProductOptionDto> dtos, int paramIndex) throws Exception {
 
         List<String> list = new ArrayList<>();       // 기존 옵션 값들을 담을 리스트
         int index = paramIndex - 1;                  // 원하는 필드값을 가져오기 위해서
 
-        for (ProOptDto dto : dtos){
+        for (ProductOptionDto dto : dtos){
             Field field = dto.getClass().getDeclaredField(values[index]); // 특정 옵션 필드값 가져오기
             field.setAccessible(true);
 
@@ -151,20 +150,20 @@ public class ProductServiceImpl implements ProductService {
      *  cnt - 옵션명 개수
      *  productEntity - 상품 번호
      *
-     * @param proOptDto
+     * @param productOptionDto
      * @param cnt
      * @param productEntity
      * @return
      * @throws Exception
      */
     @Override
-    public List<ProOptEntity> convertOptions(ProOptDto proOptDto, int cnt, ProductEntity productEntity) throws Exception {
+    public List<ProOptEntity> convertOptions(ProductOptionDto productOptionDto, int cnt, ProductEntity productEntity) throws Exception {
 
         List<ProOptEntity> entities = new ArrayList<ProOptEntity>();                // 마지막에 리턴할 entity List
-        int optLength = proOptDto.getOption1().split(",").length;  // 옵션 개수
+        int optLength = productOptionDto.getOption1().split(",").length;  // 옵션 개수
 
         String[][] option = new String[5][optLength+1];                  // 옵션값들 담기 위해서
-        String[] stock = proOptDto.getStock().split(",");          // 재고
+        String[] stock = productOptionDto.getStock().split(",");          // 재고
 
         // 값이 있으면 담고, 없으면 Null 담기
         // 옵션명은 최대 5개까지만 입력할 수 있어서
@@ -178,9 +177,9 @@ public class ProductServiceImpl implements ProductService {
             }
             else {
                 // 같은 이름의 필드의 값을 가져온다
-                Field field = proOptDto.getClass().getDeclaredField(values[i]);
+                Field field = productOptionDto.getClass().getDeclaredField(values[i]);
                 field.setAccessible(true);
-                String value = (String) field.get(proOptDto);   // 옵션값
+                String value = (String) field.get(productOptionDto);   // 옵션값
 
                 // 값이 여러개일수도 있으니 split해서 담는다
                 if(value.contains(",")){
@@ -240,6 +239,28 @@ public class ProductServiceImpl implements ProductService {
         proOptNameRepository.save(entity);
     }
 
+    @Transactional
+    @Override
+    public Long saveItem(Item item) {
+        itemRepository.save(item);
+        return item.getId();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public Long saveItemImage(ItemImage itemImage) {
+
+        itemImageRepository.save(itemImage);
+        return itemImage.getId();
+    }
+
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void saveItemOptions(ItemOptDto itemOptDto, Item item) {
+
+
+    }
 
 
 
