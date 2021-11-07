@@ -87,6 +87,8 @@ $("#optConfigOk").on("click", function(){
     tag += '<td><input type="text" value="수량" size="10" class="form-control" /></td>';
     tag += '</tr></br>';
 
+    console.log(result);
+
 	// html 생성
 	for (var i=0; i<result.length; i++){
 		values.splice(0, values.length);
@@ -98,7 +100,7 @@ $("#optConfigOk").on("click", function(){
 			num = j+1;						
 			tag += '<td class="center"><input type="text" size="10" name="option'+ num +'" value="' + values[j] + '" class="form-control"/>';
 		}
-		
+
 		tag += '<td class="center"><input type="text" size="10" name="stock" value="0" class="form-control" />';
 		tag += '</tr>';		
 	}
@@ -120,7 +122,7 @@ function removeOption(){
                 tr.remove(); // 삭제하기
           }
 
-      });
+    });
     let length = $("input:checkbox[name=check]").length;
 
     if(length == 0){

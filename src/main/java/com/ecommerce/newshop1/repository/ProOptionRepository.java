@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProOptRepository extends JpaRepository<ProOptEntity, Long> {
+public interface ProOptionRepository extends JpaRepository<ProOptEntity, Long> {
 
     List<ProOptEntity> findAllByProductId(ProductEntity ProductId);
 

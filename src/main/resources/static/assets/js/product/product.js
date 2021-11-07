@@ -9,11 +9,24 @@ $(document).ready(function(){
         const next_select = $(this).index() + 1;
         const select = $(".detail_options").find("select").eq(next_select);
 
+        let param = { productId : product_id,
+                      value : option_value,
+                      nextIndex : next_select
+                    };
+
         if(select.length){
            // ajax
-
-
-            alert("존재");
+            $.ajax({
+                type : "get",
+                url  : "/product/getOption",
+                data : param,
+                success : function(result){
+                    alert("성공");
+                },
+                error : function(result){
+                    alert("에러");
+                }
+            });
         }else{
             // 계산
             alert("없음");

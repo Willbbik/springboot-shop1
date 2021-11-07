@@ -26,36 +26,27 @@ public class ProductController {
     private final QnAServiceImpl qnAService;
     private final SecurityService security;
     private final ProductRepository productRepository;
-    private final ProOptRepository proOptRepository;
-    private final ProOptNameRepository proOptNameRepository;
 
     ModelMapper mapper = new ModelMapper();
 
     // 상품 등록 페이지
-    @GetMapping("/admin/product/reg")
+    @GetMapping("/product/register")
     public String productAdminPage() {
 
         return "product/registration";
     }
 
 
-//    @ApiOperation(value = "상품 상세보기", notes = "여기는 상품의 값과 상품옵션만 model에 담아준다.")
-//    @GetMapping("/products/{id}")
-//    public String productDetails(@PathVariable Long id, Model model) throws Exception {
-//
-//        // 상품에 옵션 있는지 없는지 체크
-//        boolean result = productService.productOptCheck(id);
-//        int    qnaSize = productService.getQnaSize(id);
-//
-//
-//        model.addAttribute("product",productService.getProducts(id)); // 상품
-//        model.addAttribute("qnaSize", qnaSize);                       // qna개수
-//        if(result) model = productService.getOptionAndNames(id, model);           // 옵션
-//
-//        model.addAttribute(model);
-//
-//        return "product/product";
-//    }
+    @GetMapping("/product/getOption")
+    public @ResponseBody String getOption(Long productId, String value, int nextIndex){
+
+            if(nextIndex > 5 || nextIndex < 1){
+                return "N";
+            }
+            System.out.println(value);
+            return "Y";
+    }
+
 
     @ApiOperation(value = "상품 상세보기", notes = "여기는 상품의 값과 상품옵션만 model에 담아준다.")
     @GetMapping("/products/{id}")
@@ -66,15 +57,14 @@ public class ProductController {
 
         // QnA 개수
         int qnaSize = qnAService.getQnaSize(id);
-        boolean result = productServiceImpl.checkProductOption(id);
         ProductDto product = productServiceImpl.getProducts(id);
         List<Options> options = productServiceImpl.getOptions(productId, 1);
         ProOptNameDto optionNames = productServiceImpl.getOptionName(productId);
 
         model.addAttribute("product", product);  // 상품
         model.addAttribute("qnaSize", qnaSize);  // qna개수
-        model.addAttribute("options", options);
-        model.addAttribute("optionNames", optionNames);
+        model.addAttribute("options", options);  // 옵션
+        model.addAttribute("optionNames", optionNames); // 옵션명
         model.addAttribute(model);
 
         return "product/product";
@@ -85,9 +75,9 @@ public class ProductController {
     @ApiOperation(value = "상품 상세보기에 QnA html 리턴")
     @GetMapping("/product/getqnaList")
     public String getQna (@RequestParam("productId") Long productId, Model model,
-                       @RequestParam(name = "page", defaultValue = "0") int page) throws Exception {
+                          @RequestParam(name = "page", defaultValue = "0") int page) throws Exception {
 
-        return qnAService.getQnAList(productId, model, page);
+        return qnAService.getQnAHtml(productId, model, page);
     }
 
 
@@ -98,8 +88,7 @@ public class ProductController {
         // 상품 전체 가져오기
         List<ProductEntity> entities = productRepository.findAllByOrderByIdDesc();
 
-        List<ProductDto> productDtos =
-                entities.stream().
+        List<ProductDto> productDtos = entities.stream().
                         map(p -> mapper.map(p, ProductDto.class)).
                         collect(Collectors.toList());
 
@@ -111,34 +100,23 @@ public class ProductController {
 
     @ApiOperation(value = "상품 등록", notes = "상품과 옵션들 저장")
     @PostMapping("/product/register")
-    public String register(ProOptDto optionDto, ProductDto productDto, ProOptNameDto nameDto) throws Exception {
+    public String register(ProductOptionDto optionDto, ProductDto productDto, ProOptNameDto nameDto) throws Exception {
 
         ProductEntity productEntity = ProductEntity.builder()
                 .productName(productDto.getProductName())
                 .productPrice(productDto.getProductPrice())
                 .pageName(productDto.getPageName())
                 .build();
-        productServiceImpl.saveProduct(productEntity);
 
+        productServiceImpl.saveProduct(productEntity);
         int cnt = productServiceImpl.checkOptionExist(optionDto);
-        if(cnt > 0){ // 옵션이 있을 때
+
+        if(cnt > 0){ // 옵션이 있으면 같이 저장
             List<ProOptEntity> options = productServiceImpl.convertOptions(optionDto, cnt, productEntity);
 
             productServiceImpl.saveProOptions(options);
             productServiceImpl.saveProOptName(nameDto, productEntity);
         }
-
-//        if(cnt == 0) {      // 옵션이 없을 때
-//            productServiceImpl.saveProduct(productEntity);
-//        } else if(cnt > 0){ // 옵션이 있을 때
-//            productServiceImpl.saveProduct(productEntity);
-//            productServiceImpl.saveProOptions(productServiceImpl.convertOptions(optionDto, cnt, productEntity));
-//            productServiceImpl.saveProOptName(nameDto, productEntity);
-//
-//            // 상품 저장
-//            // 상품 옵션 저장
-//            // 상품 옵션 이름 저장
-//        }
 
         return "/product/registration";
     }
@@ -156,7 +134,6 @@ public class ProductController {
         }else{
             return "N";     // 유효성 검사에 실패했을때
         }
-
     }
 
     @ApiOperation(value = "QnA답글 저장")

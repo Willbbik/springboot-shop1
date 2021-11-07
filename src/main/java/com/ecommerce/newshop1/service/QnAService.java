@@ -10,7 +10,7 @@ import java.util.List;
 public interface QnAService  {
 
     // QnA들 가져오기
-    String getQnAList(Long productId, Model model, int page) throws Exception;
+    String getQnAHtml(Long productId, Model model, int page) throws Exception;
 
     // QnA 질문 개수 가져오기
     int getQnaSize(Long productId);

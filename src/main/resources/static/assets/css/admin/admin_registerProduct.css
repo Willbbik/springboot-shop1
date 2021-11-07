@@ -1,0 +1,16 @@
+input[type='file'] {
+    display: none;
+}
+
+.imgupload {
+    margin-bottom: 5px;
+}
+
+.img-box {
+    margin-bottom: 5px;
+}
+
+.img-box img {
+    width: 80px;
+    margin-right: 10px;
+}

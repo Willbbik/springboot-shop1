@@ -64,7 +64,7 @@ public class MemberService {
     public Long joinNormal(MemberDto memberDto, String snsNone){
 
         memberDto.setPswd(passwordEncoder.encode(memberDto.getPswd()));
-        memberDto.setRole(Role.MEMBER.getValue());
+        memberDto.setRole(Role.MEMBER);
         memberDto.setSns(snsNone);
 
         return memberRepository.save(memberDto.toEntity()).getId();
@@ -76,7 +76,7 @@ public class MemberService {
 
         MemberDto memberDto = MemberDto.builder()
                 .userid(id)
-                .role(Role.MEMBER.getValue())
+                .role(Role.MEMBER)
                 .sns(sns)
                 .build();
         try{

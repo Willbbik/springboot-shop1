@@ -6,9 +6,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -18,9 +15,9 @@ public abstract class TimeEntity {
 
     @CreatedDate
     @Column(nullable = false)
-    private Timestamp createdDate;
+    private Date createdDate;
 
     @LastModifiedDate
-    private Timestamp modifiedDate;
+    private Date modifiedDate;
 
 }
