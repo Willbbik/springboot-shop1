@@ -8,8 +8,6 @@ $(function(){
        let html = "";
        let k = 0;
 
-
-
        for (var i=0; i<color.length; i++){
             for(var j=0; j<size.length; j++){
                 html += "<div><span>";
@@ -35,10 +33,10 @@ $(function(){
     	let colorList = new Array();
     	let tmp;
 
-        tmp = $("textarea[name='color']").val();
+        tmp = $("textarea[name='colorList[]']").val();
         colorList = tmp.split(",");
 
-        tmp = $("textarea[name='size']").val();
+        tmp = $("textarea[name='sizeList[]']").val();
         sizeList = tmp.split(",");
 
 //        if(Array.isArray(colorList) && colorList.length == 0){

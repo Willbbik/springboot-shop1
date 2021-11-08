@@ -20,9 +20,15 @@ public class Item {
 
     private String productName;
 
+    private String color;
+
+    private String size;
+
     private int price;
 
     private String productInfo;
+
+    private String saleStatus;
 
     private String model;
 

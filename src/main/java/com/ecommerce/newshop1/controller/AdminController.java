@@ -7,6 +7,7 @@ import com.ecommerce.newshop1.entity.ItemImage;
 import com.ecommerce.newshop1.entity.ItemOption;
 import com.ecommerce.newshop1.service.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -16,9 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 
@@ -27,21 +26,25 @@ import java.util.UUID;
 public class AdminController {
 
     private final ProductServiceImpl productService;
-
     private final static Logger logger = LoggerFactory.getLogger(AdminController.class);
+
+    ModelMapper mapper = new ModelMapper();
+
 
     @GetMapping("/admin/main")
     public String adminMain(){
+
         return "admin/admin_main";
     }
 
     @GetMapping("/admin/register")
     public String itemRegister(){
+
         return "admin/admin_registerProduct";
     }
 
     @PostMapping("/admin/register")
-    public String itemSave(MultipartHttpServletRequest mtfRequest, ItemDto itemDto, List<ItemOptDto> itemOptDto) throws Exception {
+    public String itemSave(MultipartHttpServletRequest mtfRequest, ItemDto itemDto, ItemOptDto itemOptDto) throws Exception {
 
         // 디렉토리 만들기
         String FolderPath = "/Users/min/Documents/쇼핑몰/newshop1/src/main/resources/static/assets/images/Item/"
@@ -58,13 +61,7 @@ public class AdminController {
         }
 
         // 상품 정보 저장
-        Item item = Item.builder()
-                .category(itemDto.getCategory())
-                .model(itemDto.getModel())
-                .price(itemDto.getPrice())
-                .productInfo(itemDto.getProductInfo())
-                .productName(itemDto.getProductName())
-                .build();
+        Item item = mapper.map(itemDto, Item.class);
         productService.saveItem(item);
 
         // 상품 이미지 저장
@@ -86,10 +83,12 @@ public class AdminController {
 
                 fileList.get(i).transferTo(new File(saveImage));
             } catch (Exception e) {
-                throw new Exception("save ItemImage exception");
+                throw new Exception("when save ItemImage exception");
             }
         }
-        
+
+        // 옵션 저장 해야함
+
 
         return "admin/admin_registerProduct";
     }

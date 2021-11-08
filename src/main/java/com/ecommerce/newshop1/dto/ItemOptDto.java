@@ -24,7 +24,4 @@ public class ItemOptDto {
 
     private int quantity;
 
-    public void setItem(Item item){
-        this.item = item;
-    }
 }
