@@ -37,9 +37,6 @@ public interface ProductService {
     // 상품 이미지 저장
     Long saveItemImage(ItemImage itemImage);
 
-    // 상품 옵션 저장
-    void saveItemOptions(ItemOptDto itemOptDto, Item item);
-
     // 상품 등록후 저장할 때 옵션 있는지 없는지 확인
     int checkOptionExist(ProductOptionDto productOptionDto) throws Exception;
 

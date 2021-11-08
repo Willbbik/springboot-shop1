@@ -92,7 +92,7 @@
                     </div>
                     <div class="from-group">
                         <label>상품명</label>
-                        <span><input type="text" name="productName"></span>
+                        <span><input type="text" name="itemName"></span>
                     </div>
                     <div class="from-group">
                         <label>판매가격</label>
@@ -124,20 +124,28 @@
                         <div class="form-group">
                             <label class="form-label">INFO</label>
                             <span>
-                                <textarea rows="7" name="productInfo"></textarea>
+                                <textarea rows="7" name="itemInfo"></textarea>
                             </span>
                         </div>
                         <div class="form-group">
                             <label class="form-label">모델 정보</label>
                             <span>
-                                <textarea rows="2" name="model"></textarea>
+                                <input type="text" placeholder="키/몸무게만 예) 180/70" name="model" maxlength="20" />
                             </span>
                         </div>
                         <div class="form-group">
                             <label class="form-label">옵션 COLOR & SIZE</label>
+                            <div>
+                                <input type="text" placeholder="color" name="color">
+                                <input type="text" placeholder="size" name="size">
+                            </div>
                         </div>
-                        <div class="form-group" id="options">
-
+                        <div class="form-group">
+                            <label class="form-label">품절 상태</label>
+                            <span>
+                                <label><input type="radio" name="saleStatus" value="onsale" checked>정상판매</label>
+                                <label><input type="radio" name="saleStatus" value="soldout">품절</label>
+                           </span>
                         </div>
                     </div>
                     <div>
@@ -147,33 +155,6 @@
                         </div>
                     </div>
                 </div>
-
-            <!-- 옵션 생성 모달 -->
-            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" id="optionMakePopup">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">필수 옵션 생성</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body" >
-                            <!-- 옵션 생성 칸 -->
-                            <table width="540" height="150" cellspacing="5">
-                                <tbody>
-                                    <tr align="center">
-                                        <tr>COLOR<textarea name="colorList[]" rows="2" placeholder="예) 베이지,화이트,블랙 (쉼표로 구분)" autocomplete="off" class="form-control" ></textarea></tr>
-                                        <tr>SIZE<textarea name="sizeList[]" rows="2" placeholder="예) 90,95,100 (쉼표로 구분)" autocomplete="off" class="form-control" ></textarea></tr>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="makeOption">확인</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </form>
 
             <!--  여기까지만 작성  -->

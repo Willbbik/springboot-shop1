@@ -1,0 +1,80 @@
+package com.ecommerce.newshop1.repository;
+
+import com.ecommerce.newshop1.dto.ItemDto;
+import com.ecommerce.newshop1.dto.QItemDto;
+import com.ecommerce.newshop1.dto.SearchDto;
+import com.ecommerce.newshop1.entity.QItem;
+import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
+import java.util.List;
+
+@RequiredArgsConstructor
+public class ItemRepositoryImpl implements ItemRepositoryCustom{
+
+    private final JPAQueryFactory queryFactory;
+
+    @Override
+    public Page<ItemDto> searchAll(SearchDto searchDto, Pageable pageable) {
+
+        QueryResults<ItemDto> result = queryFactory
+                .select(new QItemDto(
+                        QItem.item.id,
+                        QItem.item.category,
+                        QItem.item.itemName,
+                        QItem.item.color,
+                        QItem.item.size,
+                        QItem.item.price,
+                        QItem.item.itemInfo,
+                        QItem.item.model,
+                        QItem.item.saleStatus,
+                        QItem.item.imageUrl,
+                        QItem.item.createdDate,
+                        QItem.item.modifiedDate
+                ))
+                .from(QItem.item)
+                .where(eqCategory(searchDto.getCategory()),
+                        eqItemName(searchDto.getItemName()),
+                        eqSaleStatus(searchDto.getSaleStatus()))
+                .orderBy(QItem.item.id.desc())
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetchResults();
+
+        List<ItemDto> itemDtos = result.getResults();
+        long total = result.getTotal();
+
+        return new PageImpl<>(itemDtos, pageable, total);
+
+    }
+
+    private BooleanExpression eqCategory(String category){
+        if(StringUtils.isEmpty(category)){
+            return null;
+        }
+        return QItem.item.category.eq(category);
+    }
+
+    private BooleanExpression eqItemName(String itemName){
+        if(StringUtils.isEmpty(itemName)){
+            return null;
+        }
+        return QItem.item.itemName.eq(itemName);
+    }
+
+    private BooleanExpression eqSaleStatus(String saleStatus){
+        if(StringUtils.isEmpty(saleStatus)){
+            return null;
+        }
+        return QItem.item.saleStatus.eq(saleStatus);
+    }
+
+}
+

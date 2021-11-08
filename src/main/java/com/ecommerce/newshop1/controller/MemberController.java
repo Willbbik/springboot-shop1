@@ -88,6 +88,7 @@ public class MemberController {
 
         if (result) {
             redisService.setAuthNo(phoneNum, randomNum);
+            // 메시지 전송 메소드 사용해야함
             return "Y";
         } else {
             return "N";
