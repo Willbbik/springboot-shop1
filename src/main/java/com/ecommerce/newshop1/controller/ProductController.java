@@ -77,6 +77,7 @@ public class ProductController {
     public String getQna (@RequestParam("productId") Long productId, Model model,
                           @RequestParam(name = "page", defaultValue = "0") int page) throws Exception {
 
+
         return qnAService.getQnAHtml(productId, model, page);
     }
 

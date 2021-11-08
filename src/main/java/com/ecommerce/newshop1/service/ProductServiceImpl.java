@@ -24,7 +24,6 @@ public class ProductServiceImpl implements ProductService {
     private final ProOptNameRepository proOptNameRepository;
     private final ItemRepository itemRepository;
     private final ItemImageRepository itemImageRepository;
-    private final ItemOptionRepository itemOptionRepository;
 
     String[] values = {"option1", "option2", "option3", "option4", "option5" };
     ModelMapper mapper = new ModelMapper();
@@ -252,27 +251,6 @@ public class ProductServiceImpl implements ProductService {
         itemImageRepository.save(itemImage);
         return itemImage.getId();
     }
-
-
-    @Transactional(propagation = Propagation.REQUIRED)
-    @Override
-    public void saveItemOptions(ItemOptDto itemOptDto, Item item) {
-
-        String[] colorList;
-        String[] sizeList;
-
-        if(itemOptDto == null){
-
-        } else{
-            if(itemOptDto.getColor().contains(",")){
-                colorList = itemOptDto.getColor().split(",");
-            }else{
-
-            }
-        }
-
-    }
-
 
 
 
