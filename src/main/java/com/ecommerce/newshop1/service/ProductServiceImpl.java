@@ -75,7 +75,6 @@ public class ProductServiceImpl implements ProductService {
         }else{
             return null;
         }
-
     }
 
     // 상품 옵션 가져오기
@@ -259,8 +258,21 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void saveItemOptions(ItemOptDto itemOptDto, Item item) {
 
+        String[] colorList;
+        String[] sizeList;
+
+        if(itemOptDto == null){
+
+        } else{
+            if(itemOptDto.getColor().contains(",")){
+                colorList = itemOptDto.getColor().split(",");
+            }else{
+
+            }
+        }
 
     }
+
 
 
 
