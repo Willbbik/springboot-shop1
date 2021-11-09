@@ -6,8 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Pagination {
-
+public class QnAPagination {
 
     private int showMaxPage = 3;    // 한 페이지에 보여질 수 있는 QnA의 최대 개수
     private int blockSize = 10;     // 한 페이지에 보여질 수 있는 페이지 버튼 블록 최대 개수
@@ -19,8 +18,7 @@ public class Pagination {
     private int prevBlock;
 
 
-
-    public Pagination(Long qnaTotal, int curPage){
+    public QnAPagination(Long qnaTotal, int curPage){
 
         // 현재 페이지 번호
         setCurPage(curPage);

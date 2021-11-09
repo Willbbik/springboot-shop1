@@ -6,6 +6,7 @@ import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.ItemImage;
 import com.ecommerce.newshop1.service.ItemService;
 import com.ecommerce.newshop1.service.ProductServiceImpl;
+import com.ecommerce.newshop1.utils.ItemPagination;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -47,22 +49,30 @@ public class AdminController {
     @GetMapping("/admin/register")
     public String itemRegister(){
 
-        return "admin/admin_registerProduct";
+        return "admin/admin_registerItem";
     }
 
 
     @GetMapping("/admin/itemList")
     public String itemListPage(Model model, @RequestParam(name = "page", defaultValue = "0") int page, SearchDto searchDto){
 
+        ItemPagination pagination = new ItemPagination();
+
         Pageable pageable = PageRequest.of(page, 10, Sort.Direction.DESC, "createdDate");
 
-        Page<ItemDto> item = itemService.searchAll(searchDto, pageable);
+        Page<ItemDto> result = itemService.searchAll(searchDto, pageable);
 
+        List<ItemDto> items = result.getContent();
 
+        // 총 게시글과 현재 페이지만 알면됨
+        pagination.setTotalPost(result.getTotalElements());
+        pagination.setCurPage(page);
 
-        return "admin/admin_productList";
+        model.addAttribute("items", items);
+        model.addAttribute("page", pagination);
+
+        return "admin/admin_itemList";
     }
-
 
 
     @PostMapping("/admin/register")
@@ -72,7 +82,7 @@ public class AdminController {
         String folderPath = "/Users/min/Documents/쇼핑몰/newshop1/src/main/resources/static/assets/images/Item/"
                           + itemDto.getCategory() + "/" + itemDto.getItemName();
         // view에 뿌려줄 이미지 경로
-        String getFolderPath = "/resources/static/assets/images/Item/" + itemDto.getCategory() + "/" + itemDto.getItemName();
+        String getFolderPath = "/assets/images/Item/" + itemDto.getCategory() + "/" + itemDto.getItemName();
 
         File newFile = new File(folderPath);
         if(newFile.mkdirs()){
@@ -82,7 +92,6 @@ public class AdminController {
             // 예외 던져야 할 수도
         }
 
-        String imageUrl = null;
         // 상품 정보 저장
         Item item = Item.builder()
                 .itemName(itemDto.getItemName())
@@ -121,14 +130,15 @@ public class AdminController {
 
                 fileList.get(i).transferTo(new File(finalFolderUrl));
             } catch (Exception e) {
+                logger.warn("when save ItemImage exception");
                 throw new Exception("when save ItemImage exception");
             }
         }
         // 옵션 저장 해야함
 
-        return "admin/admin_registerProduct";
+        return "redirect:/admin/itemList";
     }
-    
+
 
 
 

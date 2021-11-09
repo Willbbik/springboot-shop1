@@ -45,19 +45,53 @@
     <!-- 본문 -->
     <div id="page-content-wrapper">
         <div class="container-fluid">
-            <!--   start   -->
+            <!--  여기서부터 작성하면 됨   -->
 
+            <table class="item-table">
+                <colgroup>
+                    <col width="10%"/>
+                    <col width="10%"/>
+                    <col width="65%"/>
+                    <col width="15%"/>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" class="checkbox-selectall"></th>
+                        <th colspan="2">상품정보</th>
+                        <th>판매상태</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${items}">
+                        <td><input type="checkbox" class="checkbox-select"></td>
+                        <td><img th:src="@{${item.imageUrl}}" width="70px" height="60px"></td>
+                        <td>
+                            <a href="#">
+                                <div class="item-name" th:text="${item.itemName} + '<' + ${item.color} + '>'"></div>
+                                <div class="item-category" th:text=" '분류 : ' + ${item.category}"></div>
+                                <div class="item-price" th:text="'가격 : ' + ${item.price}"></div>
+                            </a>
+                        </td>
+                        <td>
+                            <input type="button" th:if="${item.saleStatus.toString().equals('onsale')}" th:value="판매중">
+                            <input type="button" id="soldoutbtn" th:if="${item.saleStatus.toString().equals('soldout')}" th:value="품절">
+                        </td>
 
+                    </tr>
+                </tbody>
+            </table>
+            <div class="paginate">
 
+            </div>
 
-
-
+            <!--  여기까지만 작성  -->
         </div>
     </div>
     <!-- /본문 -->
-
 </div>
 
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="/assets/js/admin/register.js"></script>
 
 </body>
 </html>
