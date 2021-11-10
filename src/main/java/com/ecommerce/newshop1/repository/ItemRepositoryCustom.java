@@ -11,4 +11,6 @@ public interface ItemRepositoryCustom {
 
     Page<ItemDto> searchAll(SearchDto searchDto, Pageable pageable);
 
+    Long searchMaxItemIdx();
+
 }

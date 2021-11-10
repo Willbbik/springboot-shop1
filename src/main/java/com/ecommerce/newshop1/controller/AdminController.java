@@ -54,22 +54,23 @@ public class AdminController {
 
 
     @GetMapping("/admin/itemList")
-    public String itemListPage(Model model, @RequestParam(name = "page", defaultValue = "0") int page, SearchDto searchDto){
+    public String itemListPage(Model model, @RequestParam(name = "page", defaultValue = "1") int page, SearchDto searchDto){
 
-        ItemPagination pagination = new ItemPagination();
-
-        Pageable pageable = PageRequest.of(page, 10, Sort.Direction.DESC, "createdDate");
-
+        page = (page < 1) ? 1 : page;
+        Pageable pageable = PageRequest.of(page - 1, 10, Sort.Direction.DESC, "createdDate");
         Page<ItemDto> result = itemService.searchAll(searchDto, pageable);
+        List<ItemDto> items = result.getContent();          // 상품들
 
-        List<ItemDto> items = result.getContent();
-
-        // 총 게시글과 현재 페이지만 알면됨
+        // 페이징기능. 총 게시글 개수와 현재 페이지 저장 후 계산
+        ItemPagination pagination = new ItemPagination();
         pagination.setTotalPost(result.getTotalElements());
         pagination.setCurPage(page);
+        pagination.calculate();
 
         model.addAttribute("items", items);
         model.addAttribute("page", pagination);
+        model.addAttribute("startPage", pagination.getStartPage());
+        model.addAttribute("endPage", pagination.getEndPage());
 
         return "admin/admin_itemList";
     }
@@ -105,7 +106,7 @@ public class AdminController {
                 .build();
 
         productService.saveItem(item);
-        
+
         // 상품 이미지 저장
         List<MultipartFile> fileList =  mtfRequest.getFiles("upload_image");
         for (int i = 0; i < fileList.size(); i++) {

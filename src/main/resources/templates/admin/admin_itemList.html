@@ -81,7 +81,17 @@
                 </tbody>
             </table>
             <div class="paginate">
-
+                <ul>
+                    <li>
+                        <a href="#" th:href="@{/admin/itemList(page=${page.prevPage})}">Previous</a>
+                    </li>
+                    <li th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                        <a href="#" th:href="@{/admin/itemList(page=${i})}" th:text="${i}">1</a>
+                    </li>
+                    <li>
+                        <a href="#" th:href="@{/admin/itemList(page=${page.nextPage})}">Next</a>
+                    </li>
+                </ul>
             </div>
 
             <!--  여기까지만 작성  -->
