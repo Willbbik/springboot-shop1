@@ -3,11 +3,9 @@ package com.ecommerce.newshop1.repository;
 import com.ecommerce.newshop1.dto.ItemDto;
 import com.ecommerce.newshop1.dto.QItemDto;
 import com.ecommerce.newshop1.dto.SearchDto;
-import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.QItem;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -40,6 +38,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                         QItem.item.model,
                         QItem.item.saleStatus,
                         QItem.item.imageUrl,
+                        QItem.item.itemIdx,
                         QItem.item.createdDate,
                         QItem.item.modifiedDate
                 ))
@@ -55,13 +54,16 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
         List<ItemDto> itemDtos = result.getResults();
         Long total = result.getTotal();
 
-
         return new PageImpl<>(itemDtos, pageable, total);
 
     }
 
+    @Override
+    public Long searchMaxItemIdx() {
+        return null;
+    }
 
-//    @Override
+    //    @Override
 //    public List<ItemDto> searchAll(SearchDto searchDto, Pageable pageable) {
 //
 //        List<ItemDto> itemDtos = queryFactory
