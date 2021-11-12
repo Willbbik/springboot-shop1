@@ -2,7 +2,7 @@ package com.ecommerce.newshop1.repository;
 
 import com.ecommerce.newshop1.dto.ItemDto;
 import com.ecommerce.newshop1.dto.SearchDto;
-import com.ecommerce.newshop1.service.ItemService;
+import com.ecommerce.newshop1.service.ItemServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import java.util.List;
 public class ItemRepositoryImplTest {
 
     @Autowired
-    private ItemService itemService;
+    private ItemServiceImpl itemServiceImpl;
 
     @Test
     public void searchAll(){
@@ -29,7 +29,7 @@ public class ItemRepositoryImplTest {
 
         PageRequest pageRequest = PageRequest.of(0, 1, Sort.Direction.DESC, "id");
 
-        Page<ItemDto> result = itemService.searchAll(searchDto, pageRequest);
+        List<ItemDto> result = itemServiceImpl.searchAll(searchDto, pageRequest);
 
         result.forEach(
                 x -> System.out.println("element : " + x)

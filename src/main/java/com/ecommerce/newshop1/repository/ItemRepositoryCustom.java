@@ -7,10 +7,11 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+
 public interface ItemRepositoryCustom {
 
-    Page<ItemDto> searchAll(SearchDto searchDto, Pageable pageable);
+    List<ItemDto> searchAll(SearchDto searchDto, Pageable pageable);
 
-    Long searchMaxItemIdx();
+    Long searchTotal(SearchDto searchDto);
 
 }

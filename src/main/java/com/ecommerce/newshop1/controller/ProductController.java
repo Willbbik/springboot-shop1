@@ -36,7 +36,6 @@ public class ProductController {
         return "product/registration";
     }
 
-
     @GetMapping("/product/getOption")
     public @ResponseBody String getOption(Long productId, String value, int nextIndex){
 
@@ -76,7 +75,6 @@ public class ProductController {
     @GetMapping("/product/getqnaList")
     public String getQna (@RequestParam("productId") Long productId, Model model,
                           @RequestParam(name = "page", defaultValue = "0") int page) throws Exception {
-
 
         return qnAService.getQnAHtml(productId, model, page);
     }

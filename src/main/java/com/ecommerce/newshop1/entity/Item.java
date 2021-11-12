@@ -14,7 +14,7 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "item", indexes = @Index(columnList = "itemIdx"))
+@Table(name = "item", indexes = @Index(name = "idx_item", columnList = "itemName, category, saleStatus"))
 public class Item {
 
     @Id
@@ -39,8 +39,6 @@ public class Item {
 
     private String imageUrl;
 
-    private Long itemIdx;
-
     @CreatedDate
     @Column(nullable = false)
     private Date createdDate;
@@ -51,5 +49,6 @@ public class Item {
     public void setImageUrl(String imageUrl){
         this.imageUrl = imageUrl;
     }
+
 
 }

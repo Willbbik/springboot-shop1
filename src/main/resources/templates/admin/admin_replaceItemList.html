@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+    <div class="form-group">
+        <label class="form-label">판매상태 ssss</label>
+        <span>
+            <label><input type="radio" name="saleStatus" value="onsale" checked th:checked="${saleStatus == 'onsale'}">정상판매</label>
+            &nbsp;
+            <label><input type="radio" name="saleStatus" value="soldout" th:checked="${saleStatus == 'soldout'}">품절</label>
+        </span>
+    </div>
+    <div class="form-group">
+        <label class="form-label">카테고리</label>
+        <span>
+            <select id="category">
+                <option value="whole" selected th:selected="(${category} == 'whole')">전체</option>
+                <option value="top" th:selected="(${category} == 'top')">TOP</option>
+                <option value="bottom" th:selected="(${category} == 'bottom')">BOTTOM</option>
+                <option value="cap" th:selected="(${category} == 'cap')">CAP</option>
+            </select>
+        </span>
+    </div>
+    <div class="form-group">
+        <label class="form-label">상품명</label>
+        <span>
+            <input type="text" name="itemName" th:value="${itemName}">
+        </span>
+    </div>
+    <div class="search-submit-box">
+        <input type="button" onclick="pageBtn();" class="search-submit" value="검색">
+    </div>
+
+    <table class="item-table">
+        <colgroup>
+            <col width="10%"/>
+            <col width="10%"/>
+            <col width="65%"/>
+            <col width="15%"/>
+        </colgroup>
+        <thead>
+        <tr>
+            <th><input type="checkbox" class="checkbox-selectall"></th>
+            <th colspan="2">상품정보</th>
+            <th>판매상태</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${items}">
+            <td><input type="checkbox" class="checkbox-select"></td>
+            <td><img th:src="@{${item.imageUrl}}" width="70px" height="60px"></td>
+            <td>
+                <a href="#">
+                    <div class="item-name" th:text="${item.itemName} + '<' + ${item.color} + '>'"></div>
+                    <div class="item-category" th:text=" '분류 : ' + ${item.category}"></div>
+                    <div class="item-price" th:text="'가격 : ' + ${item.price}"></div>
+                </a>
+            </td>
+            <td>
+                <input type="button" th:if="${item.saleStatus.toString().equals('onsale')}" th:value="판매중">
+                <input type="button" id="soldoutbtn" th:if="${item.saleStatus.toString().equals('soldout')}" th:value="품절">
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="paginate">
+        <input type="hidden" name="page" value="1" th:value="${curPage}" />
+        <ul>
+            <li>
+                <a href="#" th:href="@{/admin/itemList(page=${page.prevPage},itemName=${itemName},category=${category},saleStatus=${saleStatus})}">Previous</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(startPage, endPage)}">
+<!--                <a href="#" th:href="@{/admin/itemList(page=${i})}" th:text="${i}" id="pageBtn">1</a>-->
+<!--                <a href="#" th:text="${i}" id="pageBtn">1</a>-->
+                <button th:text="${i}" id="pageBtn"></button>
+            </li>
+            <li>
+                <a href="#" th:href="@{/admin/itemList(page=${page.nextPage},itemName=${itemName},category=${category},saleStatus=${saleStatus})}">Next</a>
+            </li>
+        </ul>
+    </div>
+
+
+</body>
+</html>

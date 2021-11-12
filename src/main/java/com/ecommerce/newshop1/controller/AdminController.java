@@ -4,9 +4,11 @@ import com.ecommerce.newshop1.dto.ItemDto;
 import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.ItemImage;
-import com.ecommerce.newshop1.service.ItemService;
+import com.ecommerce.newshop1.service.ItemServiceImpl;
 import com.ecommerce.newshop1.service.ProductServiceImpl;
 import com.ecommerce.newshop1.utils.ItemPagination;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -20,7 +22,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -34,7 +35,7 @@ import java.util.UUID;
 public class AdminController {
 
     private final ProductServiceImpl productService;
-    private final ItemService itemService;
+    private final ItemServiceImpl itemServiceImpl;
     private final static Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     ModelMapper mapper = new ModelMapper();
@@ -52,28 +53,57 @@ public class AdminController {
         return "admin/admin_registerItem";
     }
 
-
     @GetMapping("/admin/itemList")
     public String itemListPage(Model model, @RequestParam(name = "page", defaultValue = "1") int page, SearchDto searchDto){
 
-        page = (page < 1) ? 1 : page;
-        Pageable pageable = PageRequest.of(page - 1, 10, Sort.Direction.DESC, "createdDate");
-        Page<ItemDto> result = itemService.searchAll(searchDto, pageable);
-        List<ItemDto> items = result.getContent();          // 상품들
+        // 상품 총 개수
+        Long totalPost = itemServiceImpl.searchTotal(searchDto);
 
-        // 페이징기능. 총 게시글 개수와 현재 페이지 저장 후 계산
+        // 페이징기능. 상품 개수와 현재 페이지 저장 후 계산
         ItemPagination pagination = new ItemPagination();
-        pagination.setTotalPost(result.getTotalElements());
+        pagination.setTotalPost(totalPost);
         pagination.setCurPage(page);
         pagination.calculate();
+        int curPage = pagination.getCurPage();
 
-        model.addAttribute("items", items);
+        // 상품 가져오기
+        Pageable pageable = PageRequest.of(curPage - 1, 10, Sort.Direction.DESC, "createdDate");
+        List<ItemDto> items = itemServiceImpl.searchAll(searchDto, pageable);
+
         model.addAttribute("page", pagination);
+        model.addAttribute("curPage", curPage);
         model.addAttribute("startPage", pagination.getStartPage());
         model.addAttribute("endPage", pagination.getEndPage());
 
+        model.addAttribute("items", items);
+        model.addAttribute("itemName", searchDto.getItemName());
+        model.addAttribute("category", searchDto.getCategory());
+        model.addAttribute("saleStatus", searchDto.getSaleStatus());
+
         return "admin/admin_itemList";
     }
+
+
+    @GetMapping("/admin/get/itemList")
+    @ApiOperation(value = "ajax 전용", notes = "페이징 버튼 클릭시 비동기로 상품들쪽 html만 바꿔준다")
+    public String getItemListHtml(@RequestParam(name = "page", defaultValue = "1") int page,
+                                  @RequestParam(name = "itemName", required = false) String itemName,
+                                  @RequestParam(name = "category", required = false) String category,
+                                  @RequestParam(name = "saleStatus", required = false) String saleStatus,
+                                  Model model){
+
+        // itemServiceImpl에서 getHtmlItemList 메소드 리턴하면됨
+        SearchDto searchDto = new SearchDto();
+        category = (category.equals("")) ? null : category;
+        itemName = (itemName.equals("")) ? null : itemName;
+
+        searchDto.setItemName(itemName);
+        searchDto.setCategory(category);
+        searchDto.setSaleStatus(saleStatus);
+
+        return itemServiceImpl.getHtmlItemList(page, searchDto, model);
+    }
+
 
 
     @PostMapping("/admin/register")
