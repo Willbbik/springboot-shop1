@@ -8,7 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="/assets/css/common/sidebar.css" rel="stylesheet">
-
 </head>
 <body>
 
@@ -46,6 +45,34 @@
     <div id="page-content-wrapper">
         <div class="container-fluid">
             <!--  여기서부터 작성하면 됨   -->
+        <section id="itemList">
+            <div class="form-group">
+                <label class="form-label">판매상태</label>
+                <span>
+                <label><input type="radio" name="saleStatus" value="onsale" checked>정상판매</label>&nbsp;
+                <label><input type="radio" name="saleStatus" value="soldout">품절</label>
+            </span>
+            </div>
+            <div class="form-group">
+                <label class="form-label">카테고리</label>
+                <span>
+                    <select id="category">
+                        <option value="whole" selected>전체</option>
+                        <option value="top">TOP</option>
+                        <option value="bottom">BOTTOM</option>
+                        <option value="cap">CAP</option>
+                    </select>
+                </span>
+            </div>
+            <div class="form-group">
+                <label class="form-label">상품명</label>
+                <span>
+                    <input type="text" name="itemName">
+                </span>
+            </div>
+            <div class="search-submit-box">
+                <input type="button" onclick="pageBtn();" class="search-submit" value="검색">
+            </div>
 
             <table class="item-table">
                 <colgroup>
@@ -76,24 +103,26 @@
                             <input type="button" th:if="${item.saleStatus.toString().equals('onsale')}" th:value="판매중">
                             <input type="button" id="soldoutbtn" th:if="${item.saleStatus.toString().equals('soldout')}" th:value="품절">
                         </td>
-
                     </tr>
                 </tbody>
             </table>
             <div class="paginate">
+                <input type="hidden" name="page" value="1" th:value="${curPage}" />
                 <ul>
                     <li>
-                        <a href="#" th:href="@{/admin/itemList(page=${page.prevPage})}">Previous</a>
+                        <a href="#" th:href="@{/admin/itemList(page=${page.prevPage},itemName=${itemName},category=${category},saleStatus=${saleStatus})}">Previous</a>
                     </li>
                     <li th:each="i : ${#numbers.sequence(startPage, endPage)}">
-                        <a href="#" th:href="@{/admin/itemList(page=${i})}" th:text="${i}">1</a>
+<!--                        <a href="#" th:href="@{/admin/itemList(page=${i})}" th:text="${i}" id="pageBtn">1</a>-->
+<!--                        <a href=" " th:text="${i}" id="pageBtn">1</a>-->
+                        <button th:text="${i}" id="pageBtn"></button>
                     </li>
                     <li>
-                        <a href="#" th:href="@{/admin/itemList(page=${page.nextPage})}">Next</a>
+                        <a href="#" th:href="@{/admin/itemList(page=${page.nextPage},itemName=${itemName},category=${category},saleStatus=${saleStatus})}" >Next</a>
                     </li>
                 </ul>
             </div>
-
+        </section>
             <!--  여기까지만 작성  -->
         </div>
     </div>
@@ -101,7 +130,7 @@
 </div>
 
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script src="/assets/js/admin/register.js"></script>
+<script src="/assets/js/admin/admin_itemList.js"></script>
 
 </body>
 </html>

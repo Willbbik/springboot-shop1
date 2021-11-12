@@ -31,15 +31,13 @@ public class ItemDto {
 
     private String imageUrl;
 
-    private Long itemIdx;
-
     private Date createdDate;
 
     private Date modifiedDate;
 
 
     @QueryProjection
-    public ItemDto(Long id, String category, String itemName, String color, String size, int price, String itemInfo, String model, String saleStatus, String imageUrl, Long itemIdx, Date createdDate, Date modifiedDate) {
+    public ItemDto(Long id, String category, String itemName, String color, String size, int price, String itemInfo, String model, String saleStatus, String imageUrl, Date createdDate, Date modifiedDate) {
         this.id = id;
         this.category = category;
         this.itemName = itemName;
@@ -50,11 +48,14 @@ public class ItemDto {
         this.model = model;
         this.saleStatus = saleStatus;
         this.imageUrl = imageUrl;
-        this.itemIdx = itemIdx;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
     }
 
+    @QueryProjection
+    public ItemDto(Long id) {
+        this.id = id;
+    }
 }
 
 
