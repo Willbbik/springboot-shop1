@@ -105,7 +105,6 @@ public class AdminController {
     }
 
 
-
     @PostMapping("/admin/register")
     public String itemSave(MultipartHttpServletRequest mtfRequest, ItemDto itemDto) throws Exception {
 
@@ -169,8 +168,6 @@ public class AdminController {
 
         return "redirect:/admin/itemList";
     }
-
-
 
 
 }

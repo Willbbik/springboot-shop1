@@ -10,16 +10,15 @@ $(document).ready(function(){
 });
 
 
-function pageBtn(){
+function pageBtn(let page){
 
-        let curPage = $("#curPage").val();
         let itemName = $("input[name='itemName']").val();
         let category = $("#category").find(":selected").val();
         category = (category === "whole") ? null : category;
         let saleStatus = $("input[name='saleStatus']:checked").val();
 
         let param = {
-                page : curPage,
+                page : page,
                 itemName : itemName,
                 category : category,
                 saleStatus : saleStatus
