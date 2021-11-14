@@ -13,8 +13,8 @@ public class PaginationTest {
 
         // given
         ItemPagination page = new ItemPagination();
-        page.setCurPage(0);
-        page.setTotalPost(2L);
+        page.setCurPage(30);
+        page.setTotalPost(100000L);
 
         // when
         page.calculate();

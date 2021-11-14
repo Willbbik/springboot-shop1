@@ -27,7 +27,7 @@ public class ItemPagination {
         // 페이지 버튼 총 개수
         this.totalPage = (this.totalPost % 10 == 0) ?
                 (int) (this.totalPost / 10) :
-                (int)Math.ceil(this.totalPost / 10 + 1);
+                (int) (this.totalPost / 10 + 1);
         this.totalPage = Math.max(this.totalPage, 1);
 
         // 현재 페이지 번호
@@ -40,8 +40,10 @@ public class ItemPagination {
                 (this.curPage / 10) * 10 + 1;
 
         // 현재 페이지의 마지막 버튼 번호
-        this.endPage = ((this.curPage / 10) + 1) * 10;
+        this.endPage = (this.curPage % 10 == 0) ? this.curPage :
+                      ((this.curPage / 10) + 1) * 10;
         this.endPage = Math.min(this.endPage, totalPage);
+
 
         // 다음 페이지 버튼 ( 10칸 앞으로 이동 )
         this.nextPage = (this.curPage % 10 == 0) ?

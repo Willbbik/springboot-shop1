@@ -110,15 +110,15 @@
                 <input type="hidden" name="page" value="1" th:value="${curPage}" />
                 <ul>
                     <li>
-                        <a href="#" th:href="@{/admin/itemList(page=${page.prevPage},itemName=${itemName},category=${category},saleStatus=${saleStatus})}">Previous</a>
+                        <a href="#" th:href="@{/admin/itemList(page=${page.prevPage})}">Previous</a>
                     </li>
                     <li th:each="i : ${#numbers.sequence(startPage, endPage)}">
-<!--                        <a href="#" th:href="@{/admin/itemList(page=${i})}" th:text="${i}" id="pageBtn">1</a>-->
+                        <a href="#" th:href="@{/admin/itemList(page=${i})}" th:text="${i}">1</a>
 <!--                        <a href=" " th:text="${i}" id="pageBtn">1</a>-->
-                        <button th:text="${i}" id="pageBtn"></button>
+<!--                        <button th:text="${i}" id="pageBtn"></button>-->
                     </li>
                     <li>
-                        <a href="#" th:href="@{/admin/itemList(page=${page.nextPage},itemName=${itemName},category=${category},saleStatus=${saleStatus})}" >Next</a>
+                        <a href="#" th:href="@{/admin/itemList(page=${page.nextPage})}" >Next</a>
                     </li>
                 </ul>
             </div>
