@@ -4,6 +4,7 @@ import com.ecommerce.newshop1.dto.ItemDto;
 import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.ItemImage;
+import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.service.ItemServiceImpl;
 import com.ecommerce.newshop1.service.ProductServiceImpl;
 import com.ecommerce.newshop1.utils.ItemPagination;
@@ -36,6 +37,7 @@ public class AdminController {
 
     private final ProductServiceImpl productService;
     private final ItemServiceImpl itemServiceImpl;
+    private final ItemRepository itemRepository;
     private final static Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     ModelMapper mapper = new ModelMapper();
@@ -56,6 +58,10 @@ public class AdminController {
     @GetMapping("/admin/itemList")
     public String itemListPage(Model model, @RequestParam(name = "page", defaultValue = "1") int page, SearchDto searchDto){
 
+//       @RequestParam(name = "saleStatus", required = false) String saleStatus,
+//       @RequestParam(name = "category", required = false) String category,
+//       @RequestParam(name = "itemName", required = false) String itemName
+
         // 상품 총 개수
         Long totalPost = itemServiceImpl.searchTotal(searchDto);
 
@@ -70,6 +76,7 @@ public class AdminController {
         Pageable pageable = PageRequest.of(curPage - 1, 10, Sort.Direction.DESC, "createdDate");
         List<ItemDto> items = itemServiceImpl.searchAll(searchDto, pageable);
 
+
         model.addAttribute("page", pagination);
         model.addAttribute("curPage", curPage);
         model.addAttribute("startPage", pagination.getStartPage());
@@ -81,27 +88,6 @@ public class AdminController {
         model.addAttribute("saleStatus", searchDto.getSaleStatus());
 
         return "admin/admin_itemList";
-    }
-
-
-    @GetMapping("/admin/get/itemList")
-    @ApiOperation(value = "ajax 전용", notes = "페이징 버튼 클릭시 비동기로 상품들쪽 html만 바꿔준다")
-    public String getItemListHtml(@RequestParam(name = "page", defaultValue = "1") int page,
-                                  @RequestParam(name = "itemName", required = false) String itemName,
-                                  @RequestParam(name = "category", required = false) String category,
-                                  @RequestParam(name = "saleStatus", required = false) String saleStatus,
-                                  Model model){
-
-        // itemServiceImpl에서 getHtmlItemList 메소드 리턴하면됨
-        SearchDto searchDto = new SearchDto();
-        category = (category.equals("")) ? null : category;
-        itemName = (itemName.equals("")) ? null : itemName;
-
-        searchDto.setItemName(itemName);
-        searchDto.setCategory(category);
-        searchDto.setSaleStatus(saleStatus);
-
-        return itemServiceImpl.getHtmlItemList(page, searchDto, model);
     }
 
 

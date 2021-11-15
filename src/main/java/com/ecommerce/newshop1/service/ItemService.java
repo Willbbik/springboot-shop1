@@ -12,8 +12,6 @@ public interface ItemService {
 
     List<ItemDto> searchAll(SearchDto searchDto, Pageable pageable);
 
-    String getHtmlItemList(int page, SearchDto searchDto, Model model);
-
     Long searchTotal(SearchDto searchDto);
 
 }
