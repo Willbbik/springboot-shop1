@@ -1,11 +1,13 @@
 package com.ecommerce.newshop1.repository;
 
 import com.ecommerce.newshop1.dto.ItemDto;
+import com.ecommerce.newshop1.dto.QItemDto;
 import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.QItem;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.CollectionUtils;
 
@@ -24,10 +26,10 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
     @Override
     public Long searchTotal(SearchDto searchDto) {
 
-        // test
-
-        return queryFactory
-                .select(QItem.item.id)
+            return queryFactory
+                .select(new QItemDto(
+                        QItem.item.id
+                ))
                 .from(QItem.item)
                 .where(eqItemName(searchDto.getItemName()),
                         eqCategory(searchDto.getCategory()),
@@ -35,25 +37,8 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                 .fetchCount();
     }
 
-//    @Override
-//    public Long searchTotal(SearchDto searchDto) {
-//
-//            return queryFactory
-//                .select(new QItemDto(
-//                        QItem.item.id
-//                ))
-//                .from(QItem.item)
-//                .where(eqItemName(searchDto.getItemName()),
-//                        eqCategory(searchDto.getCategory()),
-//                        eqSaleStatus(searchDto.getSaleStatus()))
-//                .orderBy(QItem.item.createdDate.desc())
-//                .fetchResults().getTotal();
-//    }
-
     @Override
     public List<ItemDto> searchAll(SearchDto searchDto, Pageable pageable) {
-        // test
-
         // 커버링 인덱스로 대상 조회
         List<Long> ids = queryFactory
                 .select(QItem.item.id)
@@ -86,52 +71,32 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                 .where(QItem.item.id.in(ids))
                 .orderBy(QItem.item.id.desc())
                 .fetch();
-
     }
-
-
-//    @Override
-//    public List<ItemDto> searchAll(SearchDto searchDto, Pageable pageable) {
-//
-//        QueryResults<ItemDto> result = queryFactory
-//                .select(new QItemDto(
-//                        QItem.item.id,
-//                        QItem.item.category,
-//                        QItem.item.itemName,
-//                        QItem.item.color,
-//                        QItem.item.size,
-//                        QItem.item.price,
-//                        QItem.item.itemInfo,
-//                        QItem.item.model,
-//                        QItem.item.saleStatus,
-//                        QItem.item.imageUrl,
-//                        QItem.item.createdDate,
-//                        QItem.item.modifiedDate
-//                ))
-//                .from(QItem.item)
-//                .where(eqItemName(searchDto.getItemName()),
-//                        eqCategory(searchDto.getCategory()),
-//                        eqSaleStatus(searchDto.getSaleStatus()))
-//                .orderBy(QItem.item.createdDate.desc())
-//                .limit(pageable.getPageSize())
-//                .offset(pageable.getOffset())
-//                .fetchResults();
-//
-//        return result.getResults();
-//    }
 
 
 
     private BooleanExpression eqCategory(String category){
-        return category != null ? QItem.item.category.eq(category) : null;
+        if(StringUtils.isBlank(category) || category.equals("whole")){
+            return null;
+        }
+
+        return QItem.item.category.eq(category);
     }
 
     private BooleanExpression eqItemName(String itemName){
-        return itemName != null ? QItem.item.itemName.eq(itemName) : null;
+        if(StringUtils.isBlank(itemName)){
+            return null;
+        }
+
+        return QItem.item.itemName.contains(itemName);
     }
 
     private BooleanExpression eqSaleStatus(String saleStatus){
-        return saleStatus != null ? QItem.item.saleStatus.eq(saleStatus) : null;
+        if(StringUtils.isBlank(saleStatus)){
+            return null;
+        }
+
+        return QItem.item.saleStatus.eq(saleStatus);
     }
 
 }
