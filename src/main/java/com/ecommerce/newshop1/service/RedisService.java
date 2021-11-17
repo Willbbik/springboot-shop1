@@ -1,6 +1,7 @@
 package com.ecommerce.newshop1.service;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -10,10 +11,10 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RedisService {
 
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
     private static final Logger log = LoggerFactory.getLogger(RedisService.class);
 
     // 인증번호 저장

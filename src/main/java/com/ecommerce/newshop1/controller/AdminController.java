@@ -5,16 +5,12 @@ import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.ItemImage;
 import com.ecommerce.newshop1.repository.ItemRepository;
-import com.ecommerce.newshop1.service.ItemServiceImpl;
-import com.ecommerce.newshop1.service.ProductServiceImpl;
+import com.ecommerce.newshop1.service.ItemService;
 import com.ecommerce.newshop1.utils.ItemPagination;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -35,8 +31,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminController {
 
-    private final ProductServiceImpl productService;
-    private final ItemServiceImpl itemServiceImpl;
+    private final ItemService itemService;
     private final ItemRepository itemRepository;
     private final static Logger logger = LoggerFactory.getLogger(AdminController.class);
 
@@ -58,30 +53,22 @@ public class AdminController {
     @GetMapping("/admin/itemList")
     public String itemListPage(Model model, @RequestParam(name = "page", defaultValue = "1") int page, SearchDto searchDto){
 
-//       @RequestParam(name = "saleStatus", required = false) String saleStatus,
-//       @RequestParam(name = "category", required = false) String category,
-//       @RequestParam(name = "itemName", required = false) String itemName
-
         // 상품 총 개수
-        Long totalPost = itemServiceImpl.searchTotal(searchDto);
+        Long totalPost = itemService.searchTotal(searchDto);
 
         // 페이징기능. 상품 개수와 현재 페이지 저장 후 계산
-        ItemPagination pagination = new ItemPagination();
-        pagination.setTotalPost(totalPost);
-        pagination.setCurPage(page);
-        pagination.calculate();
+        ItemPagination pagination = new ItemPagination(totalPost, page);
         int curPage = pagination.getCurPage();
 
         // 상품 가져오기
         Pageable pageable = PageRequest.of(curPage - 1, 10, Sort.Direction.DESC, "createdDate");
-        List<ItemDto> items = itemServiceImpl.searchAll(searchDto, pageable);
-
+        List<ItemDto> items = itemService.searchAll(searchDto, pageable);
 
         model.addAttribute("page", pagination);
         model.addAttribute("curPage", curPage);
         model.addAttribute("startPage", pagination.getStartPage());
         model.addAttribute("endPage", pagination.getEndPage());
-
+        
         model.addAttribute("items", items);
         model.addAttribute("itemName", searchDto.getItemName());
         model.addAttribute("category", searchDto.getCategory());
@@ -120,7 +107,8 @@ public class AdminController {
                 .saleStatus(itemDto.getSaleStatus())
                 .build();
 
-        productService.saveItem(item);
+        itemService.saveItem(item);
+
 
         // 상품 이미지 저장
         List<MultipartFile> fileList =  mtfRequest.getFiles("upload_image");
@@ -133,16 +121,16 @@ public class AdminController {
 
             if(i == 0){
                 item.setImageUrl(localImageUrl);
-                productService.saveItem(item);
+                itemService.saveItem(item);
             }
 
             try{
                 ItemImage itemImage = ItemImage.builder()
-                        .item(item)
+                        .itemId(item)
                         .imageUrl(localImageUrl)
                         .imageName(originFileName)
                         .build();
-                productService.saveItemImage(itemImage);
+                itemService.saveItemImage(itemImage);
 
                 fileList.get(i).transferTo(new File(finalFolderUrl));
             } catch (Exception e) {

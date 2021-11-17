@@ -8,7 +8,9 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityManager;
@@ -17,13 +19,9 @@ import java.util.List;
 
 public class ItemRepositoryImpl implements ItemRepositoryCustom{
 
-    private final JPAQueryFactory queryFactory;
+    @Autowired
+    private JPAQueryFactory queryFactory;
 
-    public ItemRepositoryImpl(EntityManager em) {
-        this.queryFactory = new JPAQueryFactory(em);
-    }
-
-    @Override
     public Long searchTotal(SearchDto searchDto) {
 
             return queryFactory
@@ -37,7 +35,6 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                 .fetchCount();
     }
 
-    @Override
     public List<ItemDto> searchAll(SearchDto searchDto, Pageable pageable) {
         // 커버링 인덱스로 대상 조회
         List<Long> ids = queryFactory
@@ -73,6 +70,30 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                 .fetch();
     }
 
+
+    public List<ItemDto> searchAllNoOffset(Long itemId){
+            return queryFactory
+                    .select(Projections.fields(ItemDto.class,
+                            QItem.item.id,
+                            QItem.item.itemName,
+                            QItem.item.price,
+                            QItem.item.imageUrl
+                            ))
+                    .from(QItem.item)
+                    .where(ltItemId(itemId),
+                            eqSaleStatus("onsale"))
+                    .orderBy(QItem.item.id.desc())
+                    .limit(12)
+                    .fetch();
+    }
+
+
+    private BooleanExpression ltItemId(Long itemId){
+        if(itemId == null){
+            return null;
+        }
+        return QItem.item.id.lt(itemId);
+    }
 
 
     private BooleanExpression eqCategory(String category){

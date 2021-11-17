@@ -27,7 +27,7 @@ public class ItemServiceImplTest {
         SearchDto searchDto = new SearchDto();
         searchDto.setSaleStatus("onsale");
         searchDto.setCategory("top");
-        searchDto.setItemName("captest");
+        searchDto.setItemName(null);
 
         PageRequest pageRequest = PageRequest.of(0, 1, Sort.Direction.DESC, "id");
 
@@ -37,6 +37,7 @@ public class ItemServiceImplTest {
                 x -> System.out.println("element : " + x)
         );
     }
+
 
     @Test
     public void isBlankTest(){

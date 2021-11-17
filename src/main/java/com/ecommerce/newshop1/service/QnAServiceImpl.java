@@ -1,17 +1,18 @@
 package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.QnADto;
-import com.ecommerce.newshop1.entity.ProductEntity;
+import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.QnAEntity;
-import com.ecommerce.newshop1.repository.ProductRepository;
+import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.repository.QnARepository;
+import com.ecommerce.newshop1.utils.QnAPagination;
 import com.ecommerce.newshop1.utils.SecurityService;
+import com.ecommerce.newshop1.utils.enums.QnA;
 import com.ecommerce.newshop1.utils.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -19,14 +20,13 @@ import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
 @RequiredArgsConstructor
 public class QnAServiceImpl implements QnAService{
 
-    private final ProductRepository productRepository;
+    private final ItemRepository itemRepository;
     private final QnARepository qnARepository;
     private final SecurityService security;
 
@@ -42,36 +42,36 @@ public class QnAServiceImpl implements QnAService{
      * return html page
      */
     @Override
-    public String getQnAHtml(Long productId, Model model, int page) throws Exception {
+    public String getQnAHtml(Long itemId, Model model, int curPage) throws Exception {
 
-        Optional<ProductEntity> entity = productRepository.findById(productId);
-        int qnaSize = getQnaSize(productId);  // 댓글 총 개수
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다 상품 번호 : " + itemId));
 
-        // QnA와 답글 가져와서 model에 담아주기
-        Pageable pageable = editQnAPageable(page, qnaSize);
-        List<QnADto> qnaList = editQna(entity.get(), pageable);     // QnA 편집
-        List<QnADto> replyList = editReply(getQnAReply(qnaList));   // QnA 답글 편집
+        // 해당 상품의 qna 개수
+        Long qnaSize = qnARepository.countByItemId(item);
 
+        // 페이징 처리
+        QnAPagination page = new QnAPagination(qnaSize, curPage);
+        Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxQnA());
+
+        // qna 존재유무 확인해서 값 담기
+        boolean qnaExists = qnARepository.existsByItemId(item);
+
+        List<QnADto> qnaList = (!qnaExists) ? new ArrayList<>() : qnARepository.searchQnA(item, pageable);
+        List<QnADto> qnaReplyList = getQnAReply(qnaList);
+
+        // 값 편집 ( 비공개 글 일 때는 내용을 숨겨야 하기 때문에 )
+        qnaList = editQna(qnaList);               // QnA 편집
+        qnaReplyList = editReply(qnaReplyList);   // QnA 답글 편집
+
+        model.addAttribute("page", page);
         model.addAttribute("qnaSize", qnaSize);
         model.addAttribute("qnaList", qnaList);
-        model.addAttribute("replyList", replyList);
+        model.addAttribute("qnaReplyList", qnaReplyList);
 
-        return "product/tab/tab3QnA";
+        return "item/tab/tab3QnA";
     }
 
-
-    // QnA 개수 가져오기 ( 답글 제외 )
-    @Transactional(readOnly = true)
-    @Override
-    public int getQnaSize(Long productId){
-
-        ProductEntity product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다. productId = " + productId));
-
-        List<QnAEntity> qnaSize = qnARepository.findAllQnASize(product);
-
-        return qnaSize.size();
-    }
 
     /**
      *
@@ -87,15 +87,18 @@ public class QnAServiceImpl implements QnAService{
 
         List<QnADto> replyResult = new ArrayList<>();
 
-        // writer, content 수정
+        // 관리자 답글의 writer, content 수정
         for(QnADto reply : replyList){
             if(reply != null){
 
-                QnAEntity parent = qnARepository.findById(reply.getParent())
+                // qna 작성자 아이디값 가져오기
+                QnAEntity qnaWriter = qnARepository.findById(reply.getParent())
                         .orElseThrow(() -> new IllegalArgumentException("해당 QnA가 존재하지 않습니다. QnA Id = " + reply.getParent()));
 
-                if(reply.getHide().equals("private")){
-                    if(!security.compareName(parent.getWriter()) && !security.checkHasRole(Role.ADMIN.getValue())){
+                if(reply.getHide().equals(QnA.PRIVATE.getValue())){
+
+                    // 현재 로그인한 사람이 qna 작성자인지 아니 관리자인지 확인하기 위해서
+                    if(!security.compareName(qnaWriter.getWriter()) && !security.checkHasRole(Role.ADMIN.getValue())){
                         reply.setContent("비밀글입니다.");
                     }
                 }
@@ -104,7 +107,6 @@ public class QnAServiceImpl implements QnAService{
             }
                 replyResult.add(reply);
         }
-
         return replyResult;
     }
 
@@ -115,18 +117,18 @@ public class QnAServiceImpl implements QnAService{
 
         List<QnADto> replyList = new ArrayList<>();
 
-        if(qnaList != null) {
+        if(qnaList == null) {
+            return null;
+        }
 
-            for (QnADto dto : qnaList) {
-                Optional<QnAEntity> reply = qnARepository.findByParent(dto.getId());
+        for (QnADto dto : qnaList) {
+            Optional<QnAEntity> reply = qnARepository.findByParent(dto.getId());
 
-                // 존재유무 확인
-                if (reply.isPresent()) {
-                    replyList.add(mapper.map(reply.get(), QnADto.class));
-                } else {
-//                    QnADto reply = null;
-                    replyList.add(null);
-                }
+            // 존재유무 확인
+            if (reply.isPresent()) {
+                replyList.add(mapper.map(reply.get(), QnADto.class));
+            } else {
+                replyList.add(null);
             }
         }
         return replyList;
@@ -143,48 +145,40 @@ public class QnAServiceImpl implements QnAService{
      *  qnaDto의 hide가 private일 때 사용자 아이디가 다르거나 권한이 ADMIN이 아니라면 비공개로 내용을 바꾸고,
      *  답글이 존재하는지 확인하고 있다면 replyEmpty의 값을 present로 바꾼다.
      *
-     * @param pageable
+     * @param qnaList<QnADto>
      * @return List<QnADto>
      */
     @Override
-    public List<QnADto> editQna(ProductEntity productId, Pageable pageable) throws Exception {
+    public List<QnADto> editQna(List<QnADto> qnaList) throws Exception {
 
-        List<QnAEntity> qnaEntities = qnARepository.findAllQnA(productId, pageable);
-
-        if (!qnaEntities.isEmpty()) {
-            List<QnADto> qnaDtos =
-                     qnaEntities.stream()
-                    .map(p -> mapper.map(p, QnADto.class))
-                    .collect(Collectors.toList());
-
-            // 값들 수정해주기
-            for (QnADto dto : qnaDtos) {
-
-                if(dto.getContent().length() > 30){
-                    dto.setTitle(dto.getContent().substring(0, 30) + "...");
-                } else { dto.setTitle(dto.getContent()); }
-
-                if (dto.getHide().equals("private")) {
-                    if (!security.compareName(dto.getWriter()) && !security.checkHasRole(Role.ADMIN.getValue())) {
-                        dto.setContent("비밀글입니다.");
-                        dto.setTitle("비밀글입니다.");
-                    }
-                }
-
-                // 해당 qna의 답글 가져오기
-                Optional<QnAEntity> reply = qnARepository.findByParent(dto.getId());
-
-                // 답글 유무 확인
-                if (reply.isPresent()) dto.setReplyEmpty("답변완료");
-                else dto.setReplyEmpty("답변대기");
-
-                dto.setWriter(dto.getWriter().substring(0, 3) + "***");
-            }
-            return qnaDtos;
-        }
-        else{ // QnA가 없다면 null 리턴
+        if(qnaList.isEmpty()){
             return null;
         }
+        // 값들 수정해주기
+        for (QnADto dto : qnaList) {
+
+            if(dto.getContent().length() > 30){
+                dto.setTitle(dto.getContent().substring(0, 30) + "...");
+            } else { dto.setTitle(dto.getContent()); }
+
+            if (dto.getHide().equals(QnA.PRIVATE.getValue())) {
+                if (!security.compareName(dto.getWriter()) && !security.checkHasRole(Role.ADMIN.getValue())) {
+                    dto.setContent("비밀글입니다.");
+                    dto.setTitle("비밀글입니다.");
+                }
+            }
+
+
+            // 해당 qna의 답글 가져오기
+            Optional<QnAEntity> reply = qnARepository.findByParent(dto.getId());
+
+            // 답글 유무 확인
+            if (reply.isPresent()) dto.setReplyEmpty("답변완료");
+            else dto.setReplyEmpty("답변대기");
+
+            dto.setWriter(dto.getWriter().substring(0, 3) + "***");
+        }
+        return qnaList;
     }
 
     /**
@@ -204,24 +198,24 @@ public class QnAServiceImpl implements QnAService{
      */
     @Transactional
     @Override
-    public void saveQnAAnswer(QnADto dto){
+    public void saveQnAReply(QnADto dto){
 
-        ProductEntity product = productRepository.findById(dto.getProductId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다. productId = " + dto.getProductId()));
-
-        QnAEntity qnaAnswer = QnAEntity.builder()
-                .productId(product)
+        QnAEntity qnaReply = QnAEntity.builder()
+                .itemId(dto.getItemId())
+                .writer(security.getName())
                 .content(dto.getContent())
                 .parent(dto.getParent())
+                .hide(dto.getHide())
+                .replyEmpty(QnA.EMPTY.getValue())
                 .depth(2)
-                .writer(security.getName())
-                .hide("private") // 고쳐야함
-                .replyEmpty("empty")
                 .build();
 
-        qnARepository.save(qnaAnswer);
+        // qna 답글 유무 존재로 수정
+        QnAEntity qna = qnARepository.findById(dto.getParent()).get();
+        qna.setReplyEmpty(QnA.PRESENT.getValue());
 
-        // QnA수정 메소드 있어야함
+        qnARepository.save(qnaReply);
+        qnARepository.save(qna);
     }
 
     /**
@@ -237,35 +231,21 @@ public class QnAServiceImpl implements QnAService{
      */
     @Transactional
     @Override
-    public void saveQnAQuestion(QnADto dto) throws Exception {
-
-        ProductEntity productEntity = productRepository.findById(dto.getProductId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다. productId = " + dto.getProductId()));
+    public void saveQnA(QnADto dto) throws Exception {
 
         QnAEntity qnaEntity = QnAEntity.builder()
-                .productId(productEntity)
+                .itemId(dto.getItemId())
                 .writer(security.getName())
                 .content(dto.getContent().replaceAll("\\s+", " "))
                 .hide(dto.getHide())
                 .parent(null)
                 .depth(1)
-                .replyEmpty("empty")
+                .replyEmpty(QnA.EMPTY.getValue())
                 .build();
 
         qnARepository.save(qnaEntity);
     }
 
-    // 쿼리스트링으로 들어온 page 유효성 검사 메소드
-    @Override
-    public Pageable editQnAPageable(int page, int qnaSize){
-
-        int maxPage = (int) Math.round((qnaSize * 1.0) / 3);
-
-        if(page < maxPage && page >= 0){ }
-        else page = 0;
-
-        return PageRequest.of(page, 3, Sort.by("createdDate").descending());
-    }
 
     /**
      * QnA 유효성 검사
@@ -291,8 +271,8 @@ public class QnAServiceImpl implements QnAService{
             return -2;
         }
 
-        if(dto.getHide().equals("private")) return 0;
-        else if(dto.getHide().equals("public")) return 0;
+        if(dto.getHide().equals(QnA.PRIVATE.getValue())) return 0;
+        else if(dto.getHide().equals(QnA.PUBLIC.getValue())) return 0;
         else return -1;
     }
 

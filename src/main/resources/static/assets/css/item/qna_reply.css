@@ -1,0 +1,78 @@
+/*  QnA Write   */
+
+.qna_reply_write {
+
+    border: 1px solid black;
+}
+
+.qna_reply_write dt {
+
+    float: left;
+    width: 20%;
+    text-align: center;
+    font-size: 1.1em;
+    clear: left;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+.qna_reply_write dd {
+    float: left;
+    width: 80%;
+    padding: 10px;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+
+.qna_reply_write dd textarea {
+    background: #f5f5f5;
+    padding: 10px;
+    border: none;
+    width: 55%;
+    height: 120px;
+    resize: none;
+}
+
+.qna_reply_write dt:nth-child(1) {
+
+    height : 146px;
+    line-height : 145px;
+}
+
+.qna_reply_write dt:nth-child(3) {
+
+    height: 49px;
+    line-height: 43px;
+    border-color: black;
+}
+
+.qna_reply_write dd:nth-child(4) {
+
+    border-bottom-color: black;
+    padding-bottom: 17px;
+}
+
+
+.qna_reply_write dd:nth-child(5){
+
+    text-align: center;
+    width: 100%;
+    border-bottom-color: #000;
+    padding-bottom: 40px;
+    border-bottom-color: white;
+}
+
+.qna_reply_write dd:nth-child(5) #qna_reply_write_cancel {
+    border: 1px solid #000;
+    padding: 10px 30px;
+    background: #fff;
+    margin: 5px;
+}
+
+.qna_reply_write dd:nth-child(5) #qna_reply_post {
+
+    border: 1px solid #000;
+    padding: 10px 30px;
+    background: #000;
+    color: #fff;
+    margin: 5px;
+}

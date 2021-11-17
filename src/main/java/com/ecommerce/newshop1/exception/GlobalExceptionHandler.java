@@ -40,6 +40,12 @@ public class GlobalExceptionHandler{
                 .body(new ErrorResponse(ErrorCode.NO_EXISTS));
     }
 
+    @ExceptionHandler(ItemNotFoundException.class)
+    public String itemNotFound(ItemNotFoundException e){
+        log.error("Exception {}", e.getMessage());
+        return "error/404";
+    }
+
 
 
 }
