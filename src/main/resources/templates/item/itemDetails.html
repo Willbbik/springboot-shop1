@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>에게모니</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link type="text/css" href="/assets/css/common/sidebar.css" rel="stylesheet">
+    <link type="text/css" href="/assets/css/item/item.css" rel="stylesheet">
+    <link type="text/css" href="/assets/css/item/qna_reply.css" rel="stylesheet">
+    <link type="text/css" href="/assets/css/item/qna_list.css" rel="stylesheet">
+
+</head>
+<body>
+
+
+<div id="page-wrapper">
+    <!-- 사이드바 -->
+    <div th:replace="sidebar :: sidebarFragment"></div>
+    <!-- /사이드바 -->
+
+    <!-- 본문 -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <!--   start   -->
+
+            <div class="container">
+                <div class="row">
+                    <div class="main-image-title">
+                        <div class="col-md-6 main-image-div">
+                            <img src="/assets/images/cloud.jpg" class="main-image"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="hidden" id="itemId" th:value="${item.id}" />
+                        <h2 th:text="${item.itemName}"></h2>
+                        <h3 th:text="${item.price}"></h3>
+
+                        <label for="color">색상 : </label>
+                        <select name="color" id="color">
+                            <option th:text="${item.color}"></option>
+                        </select>
+
+                        <label for="size">사이즈 : </label>
+                        <select name="size" id="size">
+                            <option th:text="${item.size}"></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="tabs_wrap">
+                    <div class="tab_default tab_active" id="tab1">상품정보</div>
+                    <div class="tab_default" id="tab2">리뷰</div>
+                    <div class="tab_default" id="tab3">Q&A
+                        <span th:text="${qnaSize}"></span>
+                    </div>
+                    <div class="tab_default" id="tab4">주문정보</div>
+                </div>
+                <div class="tab_container">
+                    <div id="info_container_2" class="detail_info_container">
+                        <ul class="detail_review_select">
+                            <li class="active_review_select col-sm">최신순</li>
+                            <li>사진리뷰</li>
+                            <li>텍스트리뷰</li>
+                        </ul>
+                        <div class="detail_review_container">
+                            <div class="review_head">
+                                <div>
+                                    텍스트리뷰
+                                    <span>604</span>
+                                </div>
+                            </div>
+                            <div class="Detail-review-box">
+                                <dl class="detail_review_default">
+                                    <dt class="review_profile">
+                                        <strong>
+                                            <div class="user_name">min***</div>
+                                            <div class="date">2021.10.18</div>
+                                        </strong>
+                                    </dt>
+                                    <dd class="review_text">좋네요</dd>
+                                </dl>
+                            </div>
+                            <div class="Detail-review-box">
+                                <dl class="detail_review_default">
+                                    <dt class="review_profile">
+                                        <strong>
+                                            <div class="user_name">min***</div>
+                                            <div class="date">2021.10.18</div>
+                                        </strong>
+                                    </dt>
+                                    <dd class="review_text">좋네요</dd>
+                                </dl>
+                            </div>
+                            <div class="Detail-review-box">
+                                <dl class="detail_review_default">
+                                    <dt class="review_profile">
+                                        <strong>
+                                            <div class="user_name">sum***</div>
+                                            <div class="date">2021.10.18</div>
+                                        </strong>
+                                    </dt>
+                                    <dd class="review_text">이상해요</dd>
+                                </dl>
+                            </div>
+                            <a class="btn_more_review">더 많은 텍스트 리뷰 보기</a>
+                        </div>
+                    </div>
+                    <div id="info_container_3" class="detail_info_container" style="display:none;">
+
+                        <div class="details_qna_container">
+                            <div class="qna_list_chk">
+                                <div>
+                                    QnA
+                                    <span th:text="${qnaSize}"></span>
+                                </div>
+                                <a id="btn_write_qna">문의 내용 작성하기</a>
+                            </div>
+                            <dl class="qna_write" style="display: none;">
+                                <dt>내용</dt>
+                                <dd><textarea placeholder="내용을 입력해 주세요." id="content"></textarea></dd>
+                                <dt>공개여부</dt>
+                                <dd>
+                                    <span>
+                                        <input type="radio" id="public" name="hide" value="private" checked>
+                                        <label for="public">비공개</label>
+                                        <input type="radio" id="private" name="hide" value="public">
+                                        <label for="private">공개</label>
+                                    </span>
+                                </dd>
+                                <dd>
+                                    <input type="button" value="취소하기" id="qna_write_cancel" />
+                                    <input type="submit" value="등록하기" id="qna_post" />
+                                </dd>
+                            </dl>
+                            <ul class="qna_list">
+                                <div class="qna_list_head">
+                                    <div class="qna_head_status">답변상태</div>
+                                    <div class="qna_head_content">내용</div>
+                                    <div>작성자</div>
+                                    <div class="qna_head_created">작성일</div>
+                                </div>
+                                <li class="qna_no_data">등록된 Q&A가 없습니다</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /본문 -->
+
+</div>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="/assets/js/item/itemDetails.js"></script>
+
+    <th:block sec:authorized="hasRole('ROLE_ADMIN')">
+<!--        <script src="/assets/js/item/adminQnA.js"></script>-->
+        <script>
+            $(document).ready(function(){
+                $(document).on("click", "#replySend", function(){
+
+                    let itemId = $("#itemId").val();
+
+                    let span = $(this).parent();
+                    let parent = span.find("#parent").val();
+                    let content = span.find("#replyContent").val();
+
+                    let param = {
+                        itemId : itemId,
+                        content : content,
+                        parent : parent
+                    };
+
+                    $.ajax({
+                        type : "post",
+                        url  : "/item/reply/send",
+                        data : param,
+                        success : function(result){
+                            if(result === "Y"){
+
+                              span.find("#replyContent").val("");
+                              alert("성공");
+                              getQnAList();
+
+                            }else{
+                              alert("권한이 없습니다");
+                            }
+
+                            },
+                        error : function(result){
+                            alert("실패했습니다");
+                        }
+                    });
+                });
+
+            });
+        </script>
+    </th:block>
+</body>
+</html>

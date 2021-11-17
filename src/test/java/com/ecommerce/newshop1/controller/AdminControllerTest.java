@@ -1,20 +1,35 @@
 package com.ecommerce.newshop1.controller;
 
-import com.ecommerce.newshop1.entity.Item;
-import com.ecommerce.newshop1.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @WebMvcTest(AdminController.class)
 public class AdminControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    // 테스트 실패함
 
-    @MockBean
-    private ProductService productService;
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    @Autowired
+    MockMvc mockMvc;
+
+    @Test
+    @WithMockUser(username = "qweqwe", roles = {"MEMBER"})
+    public void categoryAllPage() throws Exception {
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders
+                        .get("/category/all"))
+                .andExpect(status().isOk());
+    }
 
 }

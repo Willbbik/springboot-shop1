@@ -14,16 +14,16 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "product_QnA_1")
+@Table(name = "item_QnA_1", indexes = @Index(name ="qnaidx", columnList = "item_id"))
 public class QnAEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "productId")
-    private ProductEntity productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id", nullable = false)
+    private Item itemId;
 
     @Column(length = 20, nullable = false)
     private String writer;
@@ -50,5 +50,8 @@ public class QnAEntity{
     @LastModifiedDate
     private Date modifiedDate;
 
+    public void setReplyEmpty (String replyEmpty){
+        this.replyEmpty = replyEmpty;
+    }
 
 }

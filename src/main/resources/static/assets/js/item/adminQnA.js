@@ -1,21 +1,21 @@
 $(document).ready(function(){
     $(document).on("click", "#replySend", function(){
 
-        let productId = $("#productId").val();
+        let itemId = $("#itemId").val();
 
         let span = $(this).parent();
         let parent = span.find("#parent").val();
         let content = span.find("#replyContent").val();
 
         let param = {
-            productId : productId,
+            itemId : itemId,
             content : content,
             parent : parent
         };
 
         $.ajax({
             type : "post",
-            url  : "/product/reply/send",
+            url  : "/item/reply/send",
             data : param,
             success : function(result){
                 if(result === "Y"){

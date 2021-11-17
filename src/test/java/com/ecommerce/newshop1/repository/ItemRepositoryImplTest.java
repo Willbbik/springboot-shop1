@@ -1,13 +1,53 @@
 package com.ecommerce.newshop1.repository;
 
 
+import com.ecommerce.newshop1.dto.ItemDto;
+import com.ecommerce.newshop1.entity.Item;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
 public class ItemRepositoryImplTest {
 
+    @Autowired
+    ItemRepository itemRepository;
+
+    @Autowired
+    ItemRepositoryImpl itemRepositoryImpl;
+
+    @Test
+    public void nooffset_첫페이지() throws Exception{
+
+        //given
+        String a = "a";
+
+
+
+        for(int i = 1; i <= 30; i++){
+            itemRepository.save(Item.builder()
+                    .itemName(a+i)
+                    .price(30000)
+                    .imageUrl("url")
+                    .saleStatus("onsale")
+                    .build());
+        }
+
+        //when
+        List<ItemDto> items = itemRepositoryImpl.searchAllNoOffset(null);
+
+        //then
+        assertThat(items).hasSize(10);
+        assertThat(items.get(0).getItemName()).isEqualTo("a30");
+        assertThat(items.get(9).getItemName()).isEqualTo("a21");
+
+    }
 
 
 }

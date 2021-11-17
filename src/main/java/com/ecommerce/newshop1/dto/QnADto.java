@@ -1,5 +1,6 @@
 package com.ecommerce.newshop1.dto;
 
+import com.ecommerce.newshop1.entity.Item;
 import lombok.*;
 
 import java.util.Date;
@@ -13,9 +14,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class QnADto {
 
-
     private Long id;
-    private Long productId;
+    private Item itemId;
     private String writer;
     private String content;
     private Long parent;

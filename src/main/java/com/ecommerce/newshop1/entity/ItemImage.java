@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(name = "item_image")
+@Table(name = "item_image", indexes = @Index(name = "itemId_idx", columnList = "item_id"))
 public class ItemImage extends TimeEntity{
 
     @Id
@@ -18,7 +18,7 @@ public class ItemImage extends TimeEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
-    private Item item;
+    private Item itemId;
 
     private String imageUrl;
 

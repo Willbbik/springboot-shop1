@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,11 +33,10 @@
             </p>
             <li>-</li>
             <br/>
-            <li><a th:href="@{/categories/all}">All</a></li>
-            <li><a th:href="@{/product/details}">상세보기</a></li>
-            <li><a th:href="@{/test/test}">Top</a></li>
-            <li><a href="#">Bottom</a></li>
-            <li><a href="#">Cap</a></li>
+            <li><a th:href="@{/category/all}">All</a></li>
+            <li><a th:href="@{/category/top}">Top</a></li>
+            <li><a th:href="@{/category/bottom}">Bottom</a></li>
+            <li><a th:href="@{/category/cap}">Cap</a></li>
             <li>-</li>
             <br/>
             <li><a th:href="@{/board/list/all}">공지사항</a></li>
@@ -68,6 +67,8 @@
 
         </ul>
     </div>
+
+
     <!-- /사이드바 -->
 
     <!-- 본문 -->

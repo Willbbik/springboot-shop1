@@ -1,9 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml", xmlns:sec="http://www.w3.org/1999/xhtml">
-<head>
-</head>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<head></head>
 <body>
-
 <div class="details_qna_container">
     <div class="qna_list_chk">
         <div>
@@ -47,17 +45,40 @@
                     <p class="break-all" th:text="${qna.content}"></p>
 
                     <!-- QnA 답글 -->
+<!--                    <th:block th:if="${qna.replyEmpty} == '답변대기'" sec:authorize="hasRole('ROLE_ADMIN')">-->
+<!--                    <span class="reply_write">-->
+<!--                        <input type="hidden" id="parent" th:value="${qna.id}" />-->
+<!--                        <input type="text" id="replyContent" placeholder="답글 작성" />-->
+<!--                        <input type="button" id="replySend" value="전송" />-->
+<!--                    </span>-->
                     <th:block th:if="${qna.replyEmpty} == '답변대기'" sec:authorize="hasRole('ROLE_ADMIN')">
                     <span class="reply_write">
-                        <input type="hidden" id="parent" th:value="${qna.id}" />
-                        <input type="text" id="replyContent" placeholder="답글 작성" />
-                        <input type="button" id="replySend" value="전송" />
+                        <form th:action="@{/item/reply/send}" method="post">
+                        <input type="hidden" name="parent" th:value="${qna.id}" />
+                        <dl class="qna_reply_write" style="display: none;">
+                            <dt>내용</dt>
+                            <dd><textarea placeholder="내용을 입력해 주세요." name="content"></textarea></dd>
+                            <dt>공개여부</dt>
+                            <dd>
+                             <span>
+                                <input type="radio" id="public" name="hide" value="private" checked>
+                                <label for="public">비공개</label>
+                                <input type="radio" id="private" name="hide" value="public">
+                                <label for="private">공개</label>
+                            </span>
+                            </dd>
+                            <dd>
+                                <input type="button" value="취소하기" id="qna_reply_write_cancel" />
+                                <input type="submit" value="등록하기" id="qna_reply_post"/>
+                            </dd>
+                        </dl>
+                        </form>
                     </span>
 
                     </th:block>
 
                     <th:block th:if="${qna.replyEmpty} == '답변완료'">
-                        <th:block th:with="reply = ${replyList[index.index]}">
+                        <th:block th:with="reply = ${qnaReplyList[index.index]}">
                             <dl>
                                 <dd>ㄴ답변</dd>
                                 <dd class="break-all" th:text="${reply.content}"></dd>
@@ -67,7 +88,7 @@
                         </th:block>
                     </th:block>
                 </li>
-         </th:block>
+            </th:block>
         </th:block>
 
 

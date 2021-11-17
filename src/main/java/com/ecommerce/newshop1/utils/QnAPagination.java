@@ -8,39 +8,50 @@ import lombok.Setter;
 @Setter
 public class QnAPagination {
 
-    private int showMaxPage = 3;    // 한 페이지에 보여질 수 있는 QnA의 최대 개수
-    private int blockSize = 10;     // 한 페이지에 보여질 수 있는 페이지 버튼 블록 최대 개수
-    private int curPage = 1;        // default 현재 페이지
-    private Long totalPost;
+    private int showMaxQnA = 3;   // 한 페이지에 보여질 수 있는 QnA의 최대 개수
+    private int showPageNum = 10; // 총 표시될 페이지 버튼 개수
+    private Long totalQnA;
     private int totalPage;
-    private int lastPage;
-    private int nextBlock;
-    private int prevBlock;
+    private int curPage;
+    private int startPage;
+    private int endPage;
+    private int prevPage;
+    private int nextPage;
 
 
-    public QnAPagination(Long qnaTotal, int curPage){
-
-        // 현재 페이지 번호
-        setCurPage(curPage);
+    public QnAPagination(Long totalQnA, int curPage){
 
         // QnA 총 개수
-        setTotalPost(qnaTotal);
+        this.totalQnA = totalQnA;
 
-        // 총 페이지 블럭 개수
-        setTotalPage((int) Math.round((qnaTotal * 1.0) / showMaxPage));
+        // 페이지 버튼 총 개수
+        this.totalPage = (this.totalQnA % showMaxQnA == 0) ?
+                (int) (this.totalQnA / showMaxQnA) :
+                (int) (this.totalQnA / showMaxQnA + 1);
+        this.totalPage = Math.max(this.totalPage, 1);
 
-        // 마지막 페이지 번호
-        setLastPage((int) Math.round((qnaTotal * 1.0) / showMaxPage));
+        // 현재 페이지 번호
+        this.curPage = Math.min(curPage, this.totalPage);
+        this.curPage = Math.max(this.curPage, 1);
 
-        // 다음 버튼
-        setNextBlock(((curPage / 10) + 1) * 10 + 1);
-        if(getNextBlock() > getTotalPage()) {
-            setNextBlock(getTotalPage());
-        }
+        // 현재 페이지의 시작 버튼
+        this.startPage = (this.curPage % 10 == 0) ?
+                ((this.curPage - 1) / 10) * 10 + 1 :
+                (this.curPage / 10) * 10 + 1;
 
-        // 이전 버튼
-        setPrevBlock(((curPage - 11) / 10) * 10 + 1);
+        // 현재 페이지의 마지막 버튼
+        this.endPage = (this.curPage % 10 == 0) ?
+                this.curPage : ((this.curPage / 10) + 1) * 10;
+        this.endPage = Math.min(endPage, totalPage);
 
+        // 다음 페이지 버튼
+        this.nextPage = (this.curPage % 10 == 0) ?
+                this.curPage + 1 : (((this.curPage / 10) + 1) * 10 + 1);
+        this.nextPage = Math.min(nextPage, totalPage);
+
+        // 이전 페이지 버튼
+        this.prevPage = (((this.curPage - 11) / 10) * 10 + 1);
+        this.prevPage = Math.max(prevPage, 1);
 
     }
 

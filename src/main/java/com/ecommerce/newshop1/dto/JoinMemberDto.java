@@ -1,6 +1,5 @@
 package com.ecommerce.newshop1.dto;
 
-import com.ecommerce.newshop1.entity.MemberEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
