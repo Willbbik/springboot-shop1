@@ -94,7 +94,6 @@ public class ItemController {
     }
 
 
-
     @ApiOperation(value = "Q&A 저장")
     @PostMapping("/item/qna/send")
     public @ResponseBody String saveItemQnA(QnADto dto, Long itemId) throws Exception {

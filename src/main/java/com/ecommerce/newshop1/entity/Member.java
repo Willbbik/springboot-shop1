@@ -1,16 +1,18 @@
 package com.ecommerce.newshop1.entity;
 
 import com.ecommerce.newshop1.utils.enums.Role;
+import com.ecommerce.newshop1.utils.enums.Sns;
 import lombok.*;
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
 @Table(name = "member_1")
-public class MemberEntity extends TimeEntity {
+public class Member extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +29,8 @@ public class MemberEntity extends TimeEntity {
     private Role role;
 
     @Column(length = 15, nullable = false)
-    private String sns;
+    @Enumerated(EnumType.STRING)
+    private Sns sns;
 
     @Column(length = 11)
     private String phonenum;

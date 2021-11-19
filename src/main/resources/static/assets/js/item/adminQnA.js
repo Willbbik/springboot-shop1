@@ -1,16 +1,54 @@
 $(document).ready(function(){
-    $(document).on("click", "#replySend", function(){
+//    $(document).on("click", "#replySend", function(){
+//
+//        let itemId = $("#itemId").val();
+//
+//        let span = $(this).parent();
+//        let parent = span.find("#parent").val();
+//        let content = span.find("#replyContent").val();
+//
+//        let param = {
+//            itemId : itemId,
+//            content : content,
+//            parent : parent
+//        };
+//
+//        $.ajax({
+//            type : "post",
+//            url  : "/item/reply/send",
+//            data : param,
+//            success : function(result){
+//                if(result === "Y"){
+//
+//                  span.find("#replyContent").val("");
+//                  alert("성공");
+//                  getQnAList();
+//
+//                }else{
+//                  alert("권한이 없습니다");
+//                }
+//
+//                },
+//            error : function(result){
+//                alert("실패했습니다");
+//            }
+//        });
+//    });
+
+    $(document).on("click", "#qna_reply_post", function(){
 
         let itemId = $("#itemId").val();
 
-        let span = $(this).parent();
+        let span = $(this).closest("span");
         let parent = span.find("#parent").val();
         let content = span.find("#replyContent").val();
+        let hide = span.find("input[type='radio']:checked").val();
 
         let param = {
             itemId : itemId,
             content : content,
-            parent : parent
+            parent : parent,
+            hide : hide
         };
 
         $.ajax({
@@ -21,7 +59,7 @@ $(document).ready(function(){
                 if(result === "Y"){
 
                   span.find("#replyContent").val("");
-                  alert("성공");
+                  alert("답변 작성에 성공하셨습니다.");
                   getQnAList();
 
                 }else{
@@ -35,16 +73,17 @@ $(document).ready(function(){
         });
     });
 
-
     // QnA 리스트 가져오기
     function getQnAList(){
 
-       let productId = $("#productId").val();
+       let itemId = $("#itemId").val();
 
        $.ajax({
           type : "get",
-          url  : "/product/getqnaList?page=0",
-          data : { productId : productId },
+          url  : "/item/get/qnaList",
+          data : { itemId : itemId,
+                   page : 1
+                   },
           success : function(result){
               $("#info_container_3").html(result);
           },
@@ -53,6 +92,16 @@ $(document).ready(function(){
           }
        });
     }
+
+
+    // QnA작성 취소버튼 클릭
+    $(document).on('click', '#qna_reply_write_cancel', function(){
+
+        $(this).closest(".qna_reply_write").css('display', 'none');
+        $(this).closest(".qna_list_body").find(".qna_title").css('display', 'none');
+    });
+
+
 
 
 });
