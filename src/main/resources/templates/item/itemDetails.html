@@ -160,47 +160,47 @@
     <script src="/assets/js/item/itemDetails.js"></script>
 
     <th:block sec:authorized="hasRole('ROLE_ADMIN')">
-<!--        <script src="/assets/js/item/adminQnA.js"></script>-->
-        <script>
-            $(document).ready(function(){
-                $(document).on("click", "#replySend", function(){
+        <script src="/assets/js/item/adminQnA.js"></script>
+<!--        <script>-->
+<!--            $(document).ready(function(){-->
+<!--                $(document).on("click", "#replySend", function(){-->
 
-                    let itemId = $("#itemId").val();
+<!--                    let itemId = $("#itemId").val();-->
 
-                    let span = $(this).parent();
-                    let parent = span.find("#parent").val();
-                    let content = span.find("#replyContent").val();
+<!--                    let span = $(this).parent();-->
+<!--                    let parent = span.find("#parent").val();-->
+<!--                    let content = span.find("#replyContent").val();-->
 
-                    let param = {
-                        itemId : itemId,
-                        content : content,
-                        parent : parent
-                    };
+<!--                    let param = {-->
+<!--                        itemId : itemId,-->
+<!--                        content : content,-->
+<!--                        parent : parent-->
+<!--                    };-->
 
-                    $.ajax({
-                        type : "post",
-                        url  : "/item/reply/send",
-                        data : param,
-                        success : function(result){
-                            if(result === "Y"){
+<!--                    $.ajax({-->
+<!--                        type : "post",-->
+<!--                        url  : "/item/reply/send",-->
+<!--                        data : param,-->
+<!--                        success : function(result){-->
+<!--                            if(result === "Y"){-->
 
-                              span.find("#replyContent").val("");
-                              alert("성공");
-                              getQnAList();
+<!--                              span.find("#replyContent").val("");-->
+<!--                              alert("성공");-->
+<!--                              getQnAList();-->
 
-                            }else{
-                              alert("권한이 없습니다");
-                            }
+<!--                            }else{-->
+<!--                              alert("권한이 없습니다");-->
+<!--                            }-->
 
-                            },
-                        error : function(result){
-                            alert("실패했습니다");
-                        }
-                    });
-                });
+<!--                            },-->
+<!--                        error : function(result){-->
+<!--                            alert("실패했습니다");-->
+<!--                        }-->
+<!--                    });-->
+<!--                });-->
 
-            });
-        </script>
+<!--            });-->
+<!--        </script>-->
     </th:block>
 </body>
 </html>

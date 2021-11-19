@@ -1,6 +1,6 @@
 package com.ecommerce.newshop1.utils;
 
-import com.ecommerce.newshop1.entity.MemberEntity;
+import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 
 
 @Service
@@ -26,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
 
-        MemberEntity member = memberRepository.findByuserid(userid)
+        Member member = memberRepository.findByuserid(userid)
                 .orElseThrow(() ->
                                 new UsernameNotFoundException("User not found with userid : " + userid)
                         );

@@ -3,18 +3,16 @@ package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.JoinMemberDto;
 import com.ecommerce.newshop1.dto.MemberDto;
-import com.ecommerce.newshop1.entity.MemberEntity;
-import com.ecommerce.newshop1.service.KakaoService;
-import com.ecommerce.newshop1.service.MemberService;
-import com.ecommerce.newshop1.service.MessageService;
-import com.ecommerce.newshop1.service.RedisService;
+import com.ecommerce.newshop1.entity.Member;
+import com.ecommerce.newshop1.repository.MemberRepository;
+import com.ecommerce.newshop1.service.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 
@@ -23,13 +21,13 @@ import java.util.Optional;
 public class MemberController {
 
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final MessageService messageService;
     private final RedisService redisService;
     private final KakaoService kakaoService;
+    private final CartService cartService;
 
-    private String snsKakao = "kakao";
-    private String snsNone = "none";
-
+    ModelMapper mapper = new ModelMapper();
 
     // 기본 페이지
     @GetMapping("/")
@@ -53,9 +51,9 @@ public class MemberController {
     @ApiOperation(value = "아이디 중복검사", notes = "회원가입시 ajax로 아이디 중복검사 할 때")
     @GetMapping("/member/idConfirm")
     public @ResponseBody
-    String idConfirm(@RequestParam(name = "userid", required = true) String userid) {
+    String idConfirm(@RequestParam(name = "userid") String userid) {
 
-        Optional<MemberEntity> result = memberService.findByUserId(userid);
+        Optional<Member> result = memberService.findByUserId(userid);
         if (result.isEmpty()) {
             return "Y";
         } else {
@@ -66,8 +64,7 @@ public class MemberController {
 
     @ApiOperation(value = "비밀번호 검사")
     @GetMapping("/member/pswdCheck")
-    public @ResponseBody
-    String pswdCheck(@RequestParam(name = "pswd", required = true) String pswd) {
+    public @ResponseBody String pswdCheck(@RequestParam(name = "pswd") String pswd) {
 
         boolean result = memberService.pswdCheck(pswd);
         if (result) {
@@ -145,8 +142,11 @@ public class MemberController {
 
         if (result == 0) {
             try {
-                MemberDto memberDto = memberService.joinDtoToMember(joinMemberDto);
-                memberService.joinNormal(memberDto, snsNone);
+//                MemberDto memberDto = memberService.joinDtoToMember(joinMemberDto);
+                MemberDto memberDto = mapper.map(joinMemberDto, MemberDto.class);
+                Member member = memberService.joinNormal(memberDto);
+                cartService.createCart(member);
+
                 return "redirect:/";
             } catch (Exception e) {
                 throw new Exception("MemberController 46 line - join failed : " + e.getMessage());
@@ -162,6 +162,35 @@ public class MemberController {
 
 
     }
+
+// 백업
+//    @ApiOperation(value = "일반 회원가입")
+//    @PostMapping("/join")
+//    public String Join(JoinMemberDto joinMemberDto, Model model) throws Exception {
+//
+//        int result = memberService.joinValidationCheck(joinMemberDto);
+//
+//        if (result == 0) {
+//            try {
+//                MemberDto memberDto = memberService.joinDtoToMember(joinMemberDto);
+//                memberService.joinNormal(memberDto, snsNone);
+//
+//
+//                return "redirect:/";
+//            } catch (Exception e) {
+//                throw new Exception("MemberController 46 line - join failed : " + e.getMessage());
+//            }
+//        } else {
+//            JoinMemberDto dto = memberService.joinDtoLength(joinMemberDto);
+//
+//            model = memberService.joinErrorMsg(dto, model);
+//            model.addAttribute("member", dto);
+//            model.addAttribute(model);
+//            return "member/join";
+//        }
+//
+//
+//    }
 
     // 일단 카카오 로그인은 다음에
 //    @ApiOperation(value = "카카오 로그인 & 회원가입", notes = "여기서 한번에 회원가입과 로그인을 진행한다")

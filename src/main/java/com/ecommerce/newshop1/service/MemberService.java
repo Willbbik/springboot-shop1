@@ -2,13 +2,15 @@ package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.JoinMemberDto;
 import com.ecommerce.newshop1.dto.MemberDto;
-import com.ecommerce.newshop1.entity.MemberEntity;
+import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.repository.MemberRepository;
 import com.ecommerce.newshop1.utils.CustomUserDetailsService;
 import com.ecommerce.newshop1.utils.enums.JoinMsg;
 import com.ecommerce.newshop1.utils.enums.LoginMsg;
 import com.ecommerce.newshop1.utils.enums.Role;
+import com.ecommerce.newshop1.utils.enums.Sns;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     private static final Logger log = LoggerFactory.getLogger(MemberService.class);
+    ModelMapper mapper = new ModelMapper();
 
     String idPattern = "^[a-z0-9][a-z0-9_\\-]{4,20}$";
     String pswdPattern = "^(?=.*[a-z0-9])(?=.*[A-Za-z0-9~`!@#$%\\^&*()-]).{8,25}$";
@@ -54,20 +57,22 @@ public class MemberService {
 
     // 아이디 찾기
     @Transactional(readOnly = true)
-    public Optional<MemberEntity> findByUserId(String userid){
+    public Optional<Member> findByUserId(String userid){
 
         return memberRepository.findByuserid(userid);
     }
 
     // 일반 회원가입
     @Transactional
-    public Long joinNormal(MemberDto memberDto, String snsNone){
+    public Member joinNormal(MemberDto memberDto){
 
-        memberDto.setPswd(passwordEncoder.encode(memberDto.getPswd()));
+        memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
         memberDto.setRole(Role.MEMBER);
-        memberDto.setSns(snsNone);
+        memberDto.setSns(Sns.NONE);
+        Member member = mapper.map(memberDto, Member.class);
 
-        return memberRepository.save(memberDto.toEntity()).getId();
+        memberRepository.save(member);
+        return member;
     }
 
     // oAuth2로 회원가입
@@ -77,10 +82,11 @@ public class MemberService {
         MemberDto memberDto = MemberDto.builder()
                 .userid(id)
                 .role(Role.MEMBER)
-                .sns(sns)
+                .sns(Sns.KAKAO)
                 .build();
+        Member member = mapper.map(memberDto, Member.class);
         try{
-            memberRepository.save(memberDto.toEntity());
+            memberRepository.save(member);
         } catch (Exception e){
             log.info("MemberService 355 line, oAuthJoin exception ");
         }
@@ -88,7 +94,7 @@ public class MemberService {
 
     // sns 값 찾기
     @Transactional(readOnly = true)
-    public String findSnsByUserId(String userid){
+    public Sns findSnsByUserId(String userid){
         return memberRepository.findSnsByUserId(userid);
     }
 
@@ -112,7 +118,7 @@ public class MemberService {
 
         return MemberDto.builder()
                 .userid(joinMemberDto.getUserid())
-                .pswd(joinMemberDto.getPswd())
+                .password(joinMemberDto.getPassword())
                 .phonenum(joinMemberDto.getPhoneNum())
                 .build();
     }
@@ -120,8 +126,8 @@ public class MemberService {
     // 객체 확인
     public boolean MemberDtoCheck(JoinMemberDto memberDto){
 
-        if(!nullCheck(memberDto.getUserid()) || !nullCheck(memberDto.getPswd()) ||
-           !nullCheck(memberDto.getPswd()) || !nullCheck(memberDto.getPhoneNum()) ||
+        if(!nullCheck(memberDto.getUserid()) || !nullCheck(memberDto.getPassword()) ||
+           !nullCheck(memberDto.getPassword()) || !nullCheck(memberDto.getPhoneNum()) ||
            !nullCheck(memberDto.getAuthNum())){
             return false;
         }else{
@@ -133,18 +139,18 @@ public class MemberService {
     public int loginValidationCheck(MemberDto memberDto){
 
         boolean idNull = nullCheck(memberDto.getUserid());
-        boolean pswdNull = nullCheck(memberDto.getPswd());
+        boolean pswdNull = nullCheck(memberDto.getPassword());
         boolean idValidation = Pattern.matches(idPattern, memberDto.getUserid());
-        boolean pswdValidation = Pattern.matches(pswdPattern, memberDto.getPswd());
-        Optional<MemberEntity> memberEntity = memberRepository.findByuserid(memberDto.getUserid());
+        boolean pswdValidation = Pattern.matches(pswdPattern, memberDto.getPassword());
+        Optional<Member> memberEntity = memberRepository.findByuserid(memberDto.getUserid());
 
         if(!idNull || !pswdNull || !idValidation || !pswdValidation || memberEntity.isEmpty()){
             return -1;  // 문제가 있을 경우
         }
 
         // 비밀번호가 같지 않으면 -1 리턴
-        MemberEntity entity = memberEntity.get();
-        boolean result = passwordEncoder.matches(memberDto.getPswd(), entity.getPassword());
+        Member entity = memberEntity.get();
+        boolean result = passwordEncoder.matches(memberDto.getPassword(), entity.getPassword());
         if(!result) return -1;
 
         // 정상일 때
@@ -155,7 +161,7 @@ public class MemberService {
     public MemberDto loginLength(MemberDto memberDto){
         // 아이디와 비밀번호를 최대길이까지 자른 다음에 리턴한다.
 
-        String[] beforeDto = {memberDto.getUserid(), memberDto.getPswd()};
+        String[] beforeDto = {memberDto.getUserid(), memberDto.getPassword()};
         String[] afterDto = new String[2];
         int[] maxLength = {20, 25};
 
@@ -169,7 +175,7 @@ public class MemberService {
         }
 
         memberDto.setUserid(afterDto[0]);
-        memberDto.setPswd(afterDto[1]);
+        memberDto.setPassword(afterDto[1]);
 
         return memberDto;
     }
@@ -178,11 +184,11 @@ public class MemberService {
     public Model loginSetErrorMsg(MemberDto memberDto, Model model){
 
         String userid = memberDto.getUserid();
-        String pswd = memberDto.getPswd();
+        String pswd = memberDto.getPassword();
 
         boolean idValidation = Pattern.matches(idPattern, userid);
         boolean pswdValidation = Pattern.matches(pswdPattern, pswd);
-        Optional<MemberEntity> memberEntity = memberRepository.findByuserid(userid);
+        Optional<Member> memberEntity = memberRepository.findByuserid(userid);
 
         // 공백이거나 값이 없을때
         if(!nullCheck(userid)) {
@@ -205,8 +211,8 @@ public class MemberService {
         // 비밀번호가 다르다면
         if(memberEntity.isPresent()) {
 
-            MemberEntity entity = memberEntity.get();
-            boolean result = passwordEncoder.matches(memberDto.getPswd(), entity.getPassword());
+            Member entity = memberEntity.get();
+            boolean result = passwordEncoder.matches(memberDto.getPassword(), entity.getPassword());
             if (!result) {
                 model.addAttribute("errorMsg", LoginMsg.LOGIN_FAILURE.getValue());
             }
@@ -226,17 +232,17 @@ public class MemberService {
         }
 
         // 아이디 중복검사 && 인증번호 검사
-        Optional<MemberEntity> memberEntity = memberRepository.findByuserid(dto.getUserid());
+        Optional<Member> memberEntity = memberRepository.findByuserid(dto.getUserid());
         int authNum = redisService.getAuthNum(dto.getPhoneNum());
 
         // 유효성 검사 결과들
         boolean idResult = Pattern.matches(idPattern, dto.getUserid());
-        boolean pswd1Result = Pattern.matches(pswdPattern, dto.getPswd());
+        boolean pswd1Result = Pattern.matches(pswdPattern, dto.getPassword());
         boolean phoneNoResult = Pattern.matches(phonePattern, dto.getPhoneNum());
         boolean authResult = Pattern.matches(authPattern, dto.getAuthNum());
 
         if(!idResult || !pswd1Result || !phoneNoResult ||
-           !authResult || !dto.getPswd().equals(dto.getPswdCheck()) || authNum == 1) {
+           !authResult || !dto.getPassword().equals(dto.getPswdCheck()) || authNum == 1) {
 
             log.info("MemberService 102 line: validation failed");
             return -1;
@@ -257,13 +263,13 @@ public class MemberService {
     public Model joinErrorMsg(JoinMemberDto dto,  Model model) throws Exception {
 
         String userid   = dto.getUserid();
-        String pswd1    = dto.getPswd();
+        String pswd1    = dto.getPassword();
         String pswd2    = dto.getPswdCheck();
         String phoneNum = dto.getPhoneNum();
         String authNum  = dto.getAuthNum();
 
         int authNumResult = redisService.getAuthNum(phoneNum);
-        Optional<MemberEntity> memberEntity = memberRepository.findByuserid(userid);
+        Optional<Member> memberEntity = memberRepository.findByuserid(userid);
 
         boolean idValidationResult = Pattern.matches(idPattern, userid);
         boolean pswdValidationResult = Pattern.matches(pswdPattern, pswd1);
@@ -321,10 +327,10 @@ public class MemberService {
         return model;
     }
 
-    // 회원가입 객체 길이 조정 메소드
+    // view에 띄워줄 회원가입 객체 길이 조정 메소드
     public JoinMemberDto joinDtoLength(JoinMemberDto memberDto){
 
-        String[] dtoBefore = {memberDto.getUserid(), memberDto.getPswd(), memberDto.getPswdCheck(), memberDto.getPhoneNum(), memberDto.getAuthNum()};
+        String[] dtoBefore = {memberDto.getUserid(), memberDto.getPassword(), memberDto.getPswdCheck(), memberDto.getPhoneNum(), memberDto.getAuthNum()};
         int[] maxlength = {20, 20, 20, 11, 6};
 
         String[] dtoAfter = new String[5];
@@ -339,7 +345,7 @@ public class MemberService {
 
         return JoinMemberDto.builder()
                 .userid(dtoAfter[0])
-                .pswd(dtoAfter[1])
+                .password(dtoAfter[1])
                 .pswdCheck(dtoAfter[2])
                 .phoneNum(dtoAfter[3])
                 .authNum(dtoAfter[4])
