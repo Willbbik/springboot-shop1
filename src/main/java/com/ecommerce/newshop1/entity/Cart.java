@@ -28,5 +28,4 @@ public class Cart extends TimeEntity{
         return cart;
     }
 
-
 }

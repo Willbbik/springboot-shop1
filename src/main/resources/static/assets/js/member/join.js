@@ -5,7 +5,7 @@ let submitFlag = false;
 
 // input이 포커스됐다가 취소되면 함수실행
 $(document).ready(function(){
-	$("#userid").blur(function(){
+	$("#userId").blur(function(){
 		idFlag = false;
 		checkId("first");
 	});
@@ -120,18 +120,18 @@ function checkId(event){
 	
 	if(idFlag) return true;
 	
-	let userid = $("#userid").val();
+	let userId = $("#userId").val();
 	let oMsg = $("#idMsg");
-	let oInput = $("#userid");
+	let oInput = $("#userId");
 	
-	if ( userid == "" ){
+	if ( userId == "" ){
 		showErrorMsg(oMsg, "아이디는 필수정보 입니다.");
 		setFocusToInputObject(oInput);
 		return false;
 	}
 	
 	const isID = /^[a-z0-9][a-z0-9_\-]{4,20}$/;
-	if (!isID.test(userid)){
+	if (!isID.test(userId)){
 		showErrorMsg(oMsg, "5~20자의 영문 소문자, 숫자와 특수기호(_),(-)만 사용 가능합니다. (띄어쓰기 불가능)");
 		setFocusToInputObject(oInput);
 		return false;
@@ -140,7 +140,7 @@ function checkId(event){
 	idFlag = false;
 	$.ajax({
 		type : "GET",
-		url : "/member/idConfirm?userid=" + userid,
+		url : "/member/idConfirm?userId=" + userId,
 		encoding: "UTF-8",
 		success : function(result){
 			if(result == "Y"){	   

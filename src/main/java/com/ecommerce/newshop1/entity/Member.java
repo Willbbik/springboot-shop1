@@ -19,7 +19,7 @@ public class Member extends TimeEntity {
     private Long id;
 
     @Column(length = 20, nullable = false)
-    private String userid;
+    private String userId;
 
     @Column(length = 100)
     private String password;
@@ -33,6 +33,6 @@ public class Member extends TimeEntity {
     private Sns sns;
 
     @Column(length = 11)
-    private String phonenum;
+    private String phoneNum;
 
 }

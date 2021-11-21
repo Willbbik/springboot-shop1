@@ -23,18 +23,18 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 
-        Member member = memberRepository.findByuserid(userid)
+        Member member = memberRepository.findByuserId(userId)
                 .orElseThrow(() ->
-                                new UsernameNotFoundException("User not found with userid : " + userid)
+                                new UsernameNotFoundException("User not found with userid : " + userId)
                         );
 
         Collection<SimpleGrantedAuthority> role = new ArrayList<SimpleGrantedAuthority>();
         role.add(new SimpleGrantedAuthority(member.getRole().getValue()));
 
 
-        return new User(member.getUserid(), member.getPassword(), role);
+        return new User(member.getUserId(), member.getPassword(), role);
     }
 
 

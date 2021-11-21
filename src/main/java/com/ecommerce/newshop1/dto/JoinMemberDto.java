@@ -16,7 +16,7 @@ public class JoinMemberDto {
     private Long id;
 
     @NotNull
-    private String userid;
+    private String userId;
 
     @NotNull
     private String password;

@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
 
-    Optional<Member> findByuserid(String userid);
+    Optional<Member> findByuserId(String userId);
 
     @Query("select sns from Member where userid = :userid")
     Sns findSnsByUserId(@Param("userid") String userid);

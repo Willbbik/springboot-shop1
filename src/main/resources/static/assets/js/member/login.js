@@ -1,5 +1,3 @@
-
-
 $(document).ready(function(){
 
 	$("#loginbtn").click(function(){
@@ -28,11 +26,11 @@ function mainSubmit(){
 // 아이디 유효성검사
 function checkId(event){
 
-	let userid = $("#userid").val();
+	let userId = $("#userId").val();
 	let oMsg = $("#idMsg");
 	let oInput = $("#userid");
 	
-	if ( userid == "" ){
+	if ( userId == "" ){
 		showErrorMsg(oMsg, "아이디를 입력해 주세요.");		
 		return false;
 	} else {

@@ -13,27 +13,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class MemberServiceTest {
 
-    private MemberService memberService = new MemberService();
 
     @Test
     public void 회원가입(){
 
         //given
         MemberDto memberDto = MemberDto.builder()
-                .userid("asdasd")
+                .userId("asdasd")
                 .password("asdasdasd")
                 .sns(Sns.NONE)
                 .role(Role.MEMBER)
-                .phonenum("01081387026")
+                .phoneNum("01081387026")
                 .build();
-
-        //when
-        String userId = memberService.joinNormal(memberDto).getUserid();
-
-        //then
-        Member result = memberService.findByUserId(userId).get();
-
-        assertThat(result.getUserid()).isEqualTo("asdasd");
 
     }
 
@@ -44,8 +35,6 @@ public class MemberServiceTest {
 
         String userid = "test";
 
-        //when
-        Object qwe = memberService.findByUserId(userid);
 
         //then
     }
