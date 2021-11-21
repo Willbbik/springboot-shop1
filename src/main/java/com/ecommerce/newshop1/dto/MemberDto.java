@@ -19,7 +19,7 @@ public class MemberDto {
     private Long id;
 
     @NotNull
-    private String userid;
+    private String userId;
 
     @NotNull
     private String password;
@@ -29,7 +29,7 @@ public class MemberDto {
     private Sns sns;
 
     @NotNull
-    private String phonenum;
+    private String phoneNum;
 
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;

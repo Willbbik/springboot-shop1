@@ -50,10 +50,9 @@ public class MemberController {
 
     @ApiOperation(value = "아이디 중복검사", notes = "회원가입시 ajax로 아이디 중복검사 할 때")
     @GetMapping("/member/idConfirm")
-    public @ResponseBody
-    String idConfirm(@RequestParam(name = "userid") String userid) {
+    public @ResponseBody String idConfirm(@RequestParam(name = "userId") String userId) {
 
-        Optional<Member> result = memberService.findByUserId(userid);
+        Optional<Member> result = memberService.findByUserId(userId);
         if (result.isEmpty()) {
             return "Y";
         } else {
@@ -121,7 +120,7 @@ public class MemberController {
         int result = memberService.loginValidationCheck(memberDto);
 
         if (result == 0) {
-            memberService.login(memberDto.getUserid());
+            memberService.login(memberDto.getUserId());
             return "redirect:/";
         } else {
             MemberDto dto = memberService.loginLength(memberDto);
@@ -142,7 +141,7 @@ public class MemberController {
 
         if (result == 0) {
             try {
-//                MemberDto memberDto = memberService.joinDtoToMember(joinMemberDto);
+
                 MemberDto memberDto = mapper.map(joinMemberDto, MemberDto.class);
                 Member member = memberService.joinNormal(memberDto);
                 cartService.createCart(member);

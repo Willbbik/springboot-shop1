@@ -11,11 +11,8 @@
     <link type="text/css" href="/assets/css/item/item.css" rel="stylesheet">
     <link type="text/css" href="/assets/css/item/qna_reply.css" rel="stylesheet">
     <link type="text/css" href="/assets/css/item/qna_list.css" rel="stylesheet">
-
 </head>
 <body>
-
-
 <div id="page-wrapper">
     <!-- 사이드바 -->
     <div th:replace="sidebar :: sidebarFragment"></div>
@@ -35,18 +32,29 @@
                     </div>
                     <div class="col-md-6">
                         <input type="hidden" id="itemId" th:value="${item.id}" />
+                        <input type="hidden" id="price" th:value="${item.price}" />
                         <h2 th:text="${item.itemName}"></h2>
-                        <h3 th:text="${item.price}"></h3>
+                        <h4 th:text="${item.price} + '원'"></h4>
 
-                        <label for="color">색상 : </label>
-                        <select name="color" id="color">
-                            <option th:text="${item.color}"></option>
-                        </select>
-
-                        <label for="size">사이즈 : </label>
-                        <select name="size" id="size">
-                            <option th:text="${item.size}"></option>
-                        </select>
+                        <div>
+                            <label for="color"><h5>색상 : </h5></label>
+                            <span id="color"><h5 th:text="${item.color}"></h5></span>
+                        </div>
+                        <div>
+                            <label for="size"><h5>사이즈 : </h5></label>
+                            <span id="size"><h5 th:text="${item.size}"></h5></span>
+                        </div>
+                        <div>
+                            <input type="number" name="quantity" id="quantity" value="1" min="1">
+                        </div>
+                        <div class="details_price">
+                            <h5>총 상품 금액</h5>
+                            <h5 id="totalPrice"></h5>
+                        </div>
+                        <div class="details_btns">
+                            <button type="button" class="cart" onclick="addCart();">장바구니</button>
+                            <button type="button" class="order">바로구매</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -160,47 +168,48 @@
     <script src="/assets/js/item/itemDetails.js"></script>
 
     <th:block sec:authorized="hasRole('ROLE_ADMIN')">
-        <script src="/assets/js/item/adminQnA.js"></script>
-<!--        <script>-->
-<!--            $(document).ready(function(){-->
-<!--                $(document).on("click", "#replySend", function(){-->
+        <!--<script src="/assets/js/item/adminQnA.js"></script>-->
+        <script>
+            $(document).ready(function(){
+                $(document).on("click", "#replySend", function(){
 
-<!--                    let itemId = $("#itemId").val();-->
+                    let itemId = $("#itemId").val();
 
-<!--                    let span = $(this).parent();-->
-<!--                    let parent = span.find("#parent").val();-->
-<!--                    let content = span.find("#replyContent").val();-->
+                    let span = $(this).parent();
+                    let parent = span.find("#parent").val();
+                    let content = span.find("#replyContent").val();
 
-<!--                    let param = {-->
-<!--                        itemId : itemId,-->
-<!--                        content : content,-->
-<!--                        parent : parent-->
-<!--                    };-->
+                    let param = {
+                        itemId : itemId,
+                        content : content,
+                        parent : parent
+                    };
 
-<!--                    $.ajax({-->
-<!--                        type : "post",-->
-<!--                        url  : "/item/reply/send",-->
-<!--                        data : param,-->
-<!--                        success : function(result){-->
-<!--                            if(result === "Y"){-->
+                    $.ajax({
+                        type : "post",
+                        url  : "/item/reply/send",
+                        data : param,
+                        success : function(result){
+                            if(result === "Y"){
 
-<!--                              span.find("#replyContent").val("");-->
-<!--                              alert("성공");-->
-<!--                              getQnAList();-->
+                              span.find("#replyContent").val("");
+                              alert("성공");
+                              getQnAList();
 
-<!--                            }else{-->
-<!--                              alert("권한이 없습니다");-->
-<!--                            }-->
+                            }else{
+                              alert("권한이 없습니다");
+                            }
 
-<!--                            },-->
-<!--                        error : function(result){-->
-<!--                            alert("실패했습니다");-->
-<!--                        }-->
-<!--                    });-->
-<!--                });-->
-
-<!--            });-->
-<!--        </script>-->
+                            },
+                        error : function(result){
+                            alert("실패했습니다");
+                        }
+                    });
+                });
+            });
+        </script>
     </th:block>
+
+    <script src="/assets/js/cart/cart.js"></script>
 </body>
 </html>

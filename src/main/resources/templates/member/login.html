@@ -75,11 +75,11 @@
             <div class="login-page">
                 <div class="form">
                     <form class="login-form" method="post" th:action="@{/member/login}" id="login_form">
-                        <input id="userid" name="userid" type="text" th:value="${member?.userid}" placeholder="아이디" maxlength="20" autocomplete="off"/>
-                        <input id="password" name="pswd" type="password" th:value="${member?.pswd}" placeholder="비밀번호" maxlength="25" autocomplete="off"/>
-                        <p id="idMsg" class="error_next_box">[[${idMsg}]]</p>
-                        <p id="pswdMsg" class="error_next_box">[[${pswdMsg}]]</p>
-                        <p id="errorMsg" class="error_next_box">[[${errorMsg}]]</p>
+                        <input id="userId" name="userId" type="text" th:value="${member?.userId}" placeholder="아이디" maxlength="20" autocomplete="off"/>
+                        <input id="password" name="password" type="password" th:value="${member?.password}" placeholder="비밀번호" maxlength="25" autocomplete="off"/>
+                        <p id="idMsg" class="error_next_box" th:text="${idMsg}"></p>
+                        <p id="pswdMsg" class="error_next_box" th:text="${pswdMsg}"></p>
+                        <p id="errorMsg" class="error_next_box" th:text="${errorMsg}"></p>
                         <button type="button" id="loginbtn">로그인</button>
                         <span class="message"><a href="#">아이디 찾기</a></span>
                         <span class="message"><a href="#">비밀번호 찾기</a></span>
