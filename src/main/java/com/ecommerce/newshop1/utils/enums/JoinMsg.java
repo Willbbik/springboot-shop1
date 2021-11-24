@@ -25,6 +25,6 @@ public enum JoinMsg {
     AUTHNUM_TIMEOUT("인증을 다시 진행해주세요.");
 
 
-    private String value;
+    private final String value;
 
 }

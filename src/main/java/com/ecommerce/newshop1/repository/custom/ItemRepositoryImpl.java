@@ -1,4 +1,4 @@
-package com.ecommerce.newshop1.repository;
+package com.ecommerce.newshop1.repository.custom;
 
 import com.ecommerce.newshop1.dto.ItemDto;
 import com.ecommerce.newshop1.dto.QItemDto;
@@ -10,10 +10,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
 

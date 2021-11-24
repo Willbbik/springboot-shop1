@@ -1,6 +1,5 @@
 package com.ecommerce.newshop1.service;
 
-import lombok.AllArgsConstructor;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.json.simple.JSONObject;
@@ -40,7 +39,7 @@ public class MessageService {
         params.put("app_version", "test app 1.2");
 
         try{
-            JSONObject obj = (JSONObject) coolsms.send(params);
+            JSONObject obj = coolsms.send(params);
         }catch(CoolsmsException e){
             log.info("MessageService 40 line : send failed and " + e.getMessage());
         }

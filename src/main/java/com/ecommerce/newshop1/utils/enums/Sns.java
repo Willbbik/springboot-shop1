@@ -10,6 +10,6 @@ public enum Sns {
     NONE("NONE"),
     KAKAO("KAKAO");
 
-    private String value;
+    private final String value;
 
 }

@@ -1,8 +1,6 @@
 package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.MemberDto;
-import com.ecommerce.newshop1.entity.Member;
-import com.ecommerce.newshop1.repository.MemberRepository;
 import com.ecommerce.newshop1.utils.enums.Role;
 import com.ecommerce.newshop1.utils.enums.Sns;
 import org.junit.jupiter.api.Test;

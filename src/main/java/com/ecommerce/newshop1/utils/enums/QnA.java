@@ -13,7 +13,7 @@ public enum QnA {
     PRIVATE("private"),
     PUBLIC("public");
 
-    private String value;
+    private final String value;
 
 
 }

@@ -2,12 +2,11 @@ package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.ItemDto;
 import com.ecommerce.newshop1.dto.SearchDto;
-import com.ecommerce.newshop1.repository.ItemRepositoryImpl;
+import com.ecommerce.newshop1.repository.custom.ItemRepositoryImpl;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,5 +1,6 @@
 package com.ecommerce.newshop1.entity;
 
+
 import com.ecommerce.newshop1.utils.enums.Role;
 import com.ecommerce.newshop1.utils.enums.Sns;
 import lombok.*;

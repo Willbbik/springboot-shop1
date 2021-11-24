@@ -1,4 +1,4 @@
-package com.ecommerce.newshop1.repository;
+package com.ecommerce.newshop1.repository.custom;
 
 import com.ecommerce.newshop1.dto.ItemImageDto;
 import com.ecommerce.newshop1.entity.Item;
