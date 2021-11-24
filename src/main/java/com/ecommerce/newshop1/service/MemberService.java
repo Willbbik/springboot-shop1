@@ -106,11 +106,7 @@ public class MemberService {
     // 공백, null 검사 메소드
     public boolean nullCheck(String obj){
 
-        if(obj == null || obj == "" || obj.isEmpty() || obj.isBlank()){
-            return false;
-        }else{
-            return true;
-        }
+        return obj != null && obj != "" && !obj.isEmpty() && !obj.isBlank();
     }
 
     // jJoinMemberDto를 MemberDto로 전환
@@ -126,13 +122,9 @@ public class MemberService {
     // 객체 확인
     public boolean MemberDtoCheck(JoinMemberDto memberDto){
 
-        if(!nullCheck(memberDto.getUserId()) || !nullCheck(memberDto.getPassword()) ||
-           !nullCheck(memberDto.getPassword()) || !nullCheck(memberDto.getPhoneNum()) ||
-           !nullCheck(memberDto.getAuthNum())){
-            return false;
-        }else{
-            return true;
-        }
+        return nullCheck(memberDto.getUserId()) && nullCheck(memberDto.getPassword()) &&
+                nullCheck(memberDto.getPassword()) && nullCheck(memberDto.getPhoneNum()) &&
+                nullCheck(memberDto.getAuthNum());
     }
 
     // 로그인 객체 유효성 검사

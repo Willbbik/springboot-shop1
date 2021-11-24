@@ -1,12 +1,10 @@
-package com.ecommerce.newshop1.repository;
+package com.ecommerce.newshop1.repository.custom;
 
 import com.ecommerce.newshop1.dto.QnADto;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.QQnAEntity;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-
-import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;

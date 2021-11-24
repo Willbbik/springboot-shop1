@@ -19,6 +19,7 @@ function calculateTotalPrice(){
     $("#totalPrice").html(totalPrice + '원')
 }
 
+
 // 장바구니에 담기
 function addCart(){
 

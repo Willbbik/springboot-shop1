@@ -109,7 +109,6 @@ public class MemberController {
             default:
                 break;
         }
-
         return "cnt";
     }
 

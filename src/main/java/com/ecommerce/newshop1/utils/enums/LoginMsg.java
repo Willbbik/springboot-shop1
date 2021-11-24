@@ -11,5 +11,5 @@ public enum  LoginMsg {
     PASSWORD_NULL("비밀번호를 입력해 주세요."),
     LOGIN_FAILURE("아이디와 비밀번호를 정확히 입력해 주세요.");
 
-    private String value;
+    private final String value;
 }
