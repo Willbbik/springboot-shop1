@@ -80,7 +80,6 @@
 <!--                        <p id="idMsg" class="error_next_box" th:text="${idMsg}"></p>-->
 <!--                        <p id="pswdMsg" class="error_next_box" th:text="${pswdMsg}"></p>-->
 <!--                        <p id="errorMsg" class="error_next_box" th:text="${errorMsg}"></p>-->
-                        <input type="hidden" sec:authorize="isAuthenticated()" value="loginTrue" id="loginTrue">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
                         <input id="userId" name="userId" type="text" th:value="${#request.getParameter('userId')}" placeholder="아이디" maxlength="20" autocomplete="off"/>
