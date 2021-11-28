@@ -24,3 +24,23 @@ function createAddress() {
         }
     }).open();
 }
+
+    $(document).on("click", "#order-button", function(){
+
+        const tossPayments = TossPayments("test_ck_OyL0qZ4G1VO5jv2azY8oWb2MQYgm");
+        let method = "가상계좌";
+
+        let paymentData = {
+            amount: 30000,
+            orderId: "xYpNG4a48IhLvoSIimnJh",
+            orderName: "토스 티셔츠",
+            customerName: "이토페",
+            successUrl: window.location.origin + "/success",
+            failUrl: window.location.origin + "/fail",
+        };
+
+        tossPayments.requestPayment(method, paymentData);
+
+    });
+
+

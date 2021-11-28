@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -74,13 +74,22 @@
 
             <div class="login-page">
                 <div class="form">
-                    <form class="login-form" method="post" th:action="@{/member/login}" id="login_form">
-                        <input id="userId" name="userId" type="text" th:value="${member?.userId}" placeholder="아이디" maxlength="20" autocomplete="off"/>
-                        <input id="password" name="password" type="password" th:value="${member?.password}" placeholder="비밀번호" maxlength="25" autocomplete="off"/>
+                    <form class="login-form" method="POST" action="/login" id="login_form">
+<!--                        <input id="userId" name="userId" type="text" th:value="${member?.userId}" placeholder="아이디" maxlength="20" autocomplete="off"/>-->
+<!--                        <input id="password" name="password" type="password" th:value="${member?.password}" placeholder="비밀번호" maxlength="25" autocomplete="off"/>-->
+<!--                        <p id="idMsg" class="error_next_box" th:text="${idMsg}"></p>-->
+<!--                        <p id="pswdMsg" class="error_next_box" th:text="${pswdMsg}"></p>-->
+<!--                        <p id="errorMsg" class="error_next_box" th:text="${errorMsg}"></p>-->
+                        <input type="hidden" sec:authorize="isAuthenticated()" value="loginTrue" id="loginTrue">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                        <input id="userId" name="userId" type="text" th:value="${#request.getParameter('userId')}" placeholder="아이디" maxlength="20" autocomplete="off"/>
+                        <input id="password" name="password" type="password" th:value="${#request.getParameter('password')}" placeholder="비밀번호" maxlength="25" autocomplete="off"/>
                         <p id="idMsg" class="error_next_box" th:text="${idMsg}"></p>
                         <p id="pswdMsg" class="error_next_box" th:text="${pswdMsg}"></p>
-                        <p id="errorMsg" class="error_next_box" th:text="${errorMsg}"></p>
-                        <button type="button" id="loginbtn">로그인</button>
+                        <p id="errorMsg" class="error_next_box" th:value="${#request.getParameter('LoginFailureMessage')}"></p>
+                        <button type="submit">로그인</button>
+
                         <span class="message"><a href="#">아이디 찾기</a></span>
                         <span class="message"><a href="#">비밀번호 찾기</a></span>
                         <span class="message"><a th:href="@{/join}">회원가입</a></span>
@@ -101,7 +110,7 @@
 </div>
 
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script src="/assets/js/member/login.js"></script>
+<!--<script src="/assets/js/member/login.js"></script>-->
 
 </body>
 </html>

@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public enum Payment {
 
-    CASH("현금", Arrays.asList(PayType.ACCOUNT_TRANSFER, PayType.REMITTANCE)),
+    CASH("현금", Arrays.asList(PayType.VIRTUAL_ACCOUNT)),
     CARD("카드", Arrays.asList(PayType.KAKAO_PAY, PayType.NAVER_PAY)),
     EMPTY("없음", Collections.EMPTY_LIST);
 

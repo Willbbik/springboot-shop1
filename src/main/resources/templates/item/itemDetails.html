@@ -31,6 +31,7 @@
                         </div>
                     </div>
                     <div class="col-md-6">
+                        <input type="hidden" id="itemCode" th:value="${item.itemCode}">
                         <input type="hidden" id="itemId" th:value="${item.id}" />
                         <input type="hidden" id="price" th:value="${item.price}" />
                         <h2 th:text="${item.itemName}"></h2>
@@ -52,7 +53,7 @@
                         </div>
                         <div class="details_btns">
                             <button type="button" class="cart" onclick="addCart();">장바구니</button>
-                            <button type="button" class="order">바로구매</button>
+                            <button type="button" id="order-button" class="order">바로구매</button>
                         </div>
                     </div>
                 </div>
@@ -209,6 +210,9 @@
         </script>
     </th:block>
 
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script src="/assets/js/cart/cart.js"></script>
+    <script src="https://js.tosspayments.com/v1"></script>
+    <script src="/assets/js/order/order.js"></script>
 </body>
 </html>

@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -31,8 +32,8 @@ public class MemberDto {
     @NotNull
     private String phoneNum;
 
-    private LocalDateTime createdDate;
-    private LocalDateTime modifiedDate;
+    private LocalDate createdDate;
+    private LocalDate modifiedDate;
 
 
 }

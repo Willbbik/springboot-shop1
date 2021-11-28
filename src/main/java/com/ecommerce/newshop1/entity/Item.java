@@ -6,7 +6,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -15,7 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "item", indexes = @Index(name = "idx_item", columnList = "itemName, category, saleStatus"))
-public class Item {
+public class Item extends TimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +24,8 @@ public class Item {
     private String category;
 
     private String itemName;
+
+    private String itemCode;
 
     private String color;
 
@@ -39,12 +41,6 @@ public class Item {
 
     private String imageUrl;
 
-    @CreatedDate
-    @Column(nullable = false)
-    private Date createdDate;
-
-    @LastModifiedDate
-    private Date modifiedDate;
 
     public void setImageUrl(String imageUrl){
         this.imageUrl = imageUrl;

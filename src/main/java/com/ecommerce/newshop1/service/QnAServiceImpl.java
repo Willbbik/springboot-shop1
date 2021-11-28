@@ -6,7 +6,6 @@ import com.ecommerce.newshop1.entity.QnAEntity;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.utils.QnAPagination;
-import com.ecommerce.newshop1.utils.SecurityService;
 import com.ecommerce.newshop1.utils.enums.QnA;
 import com.ecommerce.newshop1.utils.enums.Role;
 import lombok.RequiredArgsConstructor;

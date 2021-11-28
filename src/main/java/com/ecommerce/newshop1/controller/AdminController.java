@@ -81,23 +81,12 @@ public class AdminController {
     @PostMapping("/admin/register")
     public String itemSave(MultipartHttpServletRequest mtfRequest, ItemDto itemDto) throws Exception {
 
-        // 디렉토리 만들기
-        String folderPath = "/Users/min/Documents/쇼핑몰/newshop1/src/main/resources/static/assets/images/Item/"
-                          + itemDto.getCategory() + "/" + itemDto.getItemName();
-        // view에 뿌려줄 이미지 경로
-        String getFolderPath = "/assets/images/Item/" + itemDto.getCategory() + "/" + itemDto.getItemName();
-
-        File newFile = new File(folderPath);
-        if(newFile.mkdirs()){
-            logger.info("directory make ok");
-        }else{
-            logger.warn("directory can't make");
-            // 예외 던져야 할 수도
-        }
+        String itemCode = UUID.randomUUID().toString();
 
         // 상품 정보 저장
         Item item = Item.builder()
                 .itemName(itemDto.getItemName())
+                .itemCode(itemCode)
                 .category(itemDto.getCategory())
                 .color(itemDto.getColor())
                 .size(itemDto.getSize())
@@ -109,6 +98,20 @@ public class AdminController {
 
         itemService.saveItem(item);
 
+
+        // 디렉토리 만들기
+        String folderPath = "/Users/min/Documents/쇼핑몰/newshop1/src/main/resources/static/assets/images/Item/"
+                + itemDto.getCategory() + "/" + itemDto.getItemName();
+        // view에 뿌려줄 이미지 경로
+        String getFolderPath = "/assets/images/Item/" + itemDto.getCategory() + "/" + itemDto.getItemName();
+
+        File newFile = new File(folderPath);
+        if(newFile.mkdirs()){
+            logger.info("directory make ok");
+        }else{
+            logger.warn("directory can't make");
+            // 예외 던져야 할 수도
+        }
 
         // 상품 이미지 저장
         List<MultipartFile> fileList =  mtfRequest.getFiles("upload_image");

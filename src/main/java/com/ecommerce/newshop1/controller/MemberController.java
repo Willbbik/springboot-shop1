@@ -9,10 +9,13 @@ import com.ecommerce.newshop1.service.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 
@@ -26,6 +29,7 @@ public class MemberController {
     private final RedisService redisService;
     private final KakaoService kakaoService;
     private final CartService cartService;
+    private final SecurityService security;
 
     ModelMapper mapper = new ModelMapper();
 
@@ -43,13 +47,24 @@ public class MemberController {
 
     // 로그인 페이지
     @GetMapping("/login")
-    public String login() {
+    public String login(HttpServletRequest request) {
+
+        String referer = request.getHeader("Referer");
+        request.getSession().setAttribute("prevPage", referer);
         return "member/login";
     }
 
+    @GetMapping("/mypage")
+    public String mypage() {
 
-    @ApiOperation(value = "아이디 중복검사", notes = "회원가입시 ajax로 아이디 중복검사 할 때")
+        security.isAuthenticated();
+
+
+        return "member/mypage";
+    }
+
     @GetMapping("/member/idConfirm")
+    @ApiOperation(value = "아이디 중복검사", notes = "회원가입시 ajax로 아이디 중복검사 할 때")
     public @ResponseBody String idConfirm(@RequestParam(name = "userId") String userId) {
 
         Optional<Member> result = memberService.findByUserId(userId);
@@ -61,8 +76,8 @@ public class MemberController {
     }
 
 
-    @ApiOperation(value = "비밀번호 검사")
     @GetMapping("/member/pswdCheck")
+    @ApiOperation(value = "비밀번호 검사")
     public @ResponseBody String pswdCheck(@RequestParam(name = "pswd") String pswd) {
 
         boolean result = memberService.pswdCheck(pswd);
@@ -74,8 +89,8 @@ public class MemberController {
     }
 
 
-    @ApiOperation(value = "인증번호", notes = "인증번호를 전송해주고 reids서버에 저장")
     @GetMapping("/member/sendAuth")
+    @ApiOperation(value = "인증번호", notes = "인증번호를 전송해주고 reids서버에 저장")
     public @ResponseBody
     String sendAuth(@RequestParam(name = "phoneNum", required = true) String phoneNum) throws Exception {
 
@@ -112,24 +127,24 @@ public class MemberController {
         return "cnt";
     }
 
-    @ApiOperation(value = "로그인")
-    @PostMapping("/member/login")
-    public String login(MemberDto memberDto, Model model) {
-
-        int result = memberService.loginValidationCheck(memberDto);
-
-        if (result == 0) {
-            memberService.login(memberDto.getUserId());
-            return "redirect:/";
-        } else {
-            MemberDto dto = memberService.loginLength(memberDto);
-
-            model = memberService.loginSetErrorMsg(memberDto, model);
-            model.addAttribute("member", dto);
-            model.addAttribute(model);
-            return "member/login";
-        }
-    }
+//    @ApiOperation(value = "로그인")
+//    @PostMapping("/member/login")
+//    public String login(MemberDto memberDto, Model model) {
+//
+//        int result = memberService.loginValidationCheck(memberDto);
+//
+//        if (result == 0) {
+//            memberService.login(memberDto.getUserId());
+//            return "redirect:/";
+//        } else {
+//            MemberDto dto = memberService.loginLength(memberDto);
+//
+//            model = memberService.loginSetErrorMsg(memberDto, model);
+//            model.addAttribute("member", dto);
+//            model.addAttribute(model);
+//            return "member/login";
+//        }
+//    }
 
 
     @ApiOperation(value = "일반 회원가입")
@@ -161,34 +176,8 @@ public class MemberController {
 
     }
 
-// 백업
-//    @ApiOperation(value = "일반 회원가입")
-//    @PostMapping("/join")
-//    public String Join(JoinMemberDto joinMemberDto, Model model) throws Exception {
-//
-//        int result = memberService.joinValidationCheck(joinMemberDto);
-//
-//        if (result == 0) {
-//            try {
-//                MemberDto memberDto = memberService.joinDtoToMember(joinMemberDto);
-//                memberService.joinNormal(memberDto, snsNone);
-//
-//
-//                return "redirect:/";
-//            } catch (Exception e) {
-//                throw new Exception("MemberController 46 line - join failed : " + e.getMessage());
-//            }
-//        } else {
-//            JoinMemberDto dto = memberService.joinDtoLength(joinMemberDto);
-//
-//            model = memberService.joinErrorMsg(dto, model);
-//            model.addAttribute("member", dto);
-//            model.addAttribute(model);
-//            return "member/join";
-//        }
-//
-//
-//    }
+
+
 
     // 일단 카카오 로그인은 다음에
 //    @ApiOperation(value = "카카오 로그인 & 회원가입", notes = "여기서 한번에 회원가입과 로그인을 진행한다")

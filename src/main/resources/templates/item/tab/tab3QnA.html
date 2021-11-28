@@ -41,7 +41,7 @@
                     <div class="qna_status" th:text="${qna.replyEmpty}"></div>
                     <div class="qna_text" th:text="${qna.title}"></div>
                     <div th:text="${qna.writer}"></div>
-                    <div th:text="${#dates.format(qna.createdDate, 'yyyy.MM.dd')}"></div>
+                    <div th:text="${#temporals.format(qna.createdDate, 'yyyy.MM.dd')}"></div>
                     <p class="break-all qna_title" th:text="${qna.content}"></p>
 
                     <!-- QnA 답글 -->
@@ -82,7 +82,7 @@
                                 <dd>ㄴ답변</dd>
                                 <dd class="break-all reply_content" th:text="${reply.content}"></dd>
                                 <dd th:text="${reply.writer}"></dd>
-                                <dd th:text="${#dates.format(reply.createdDate, 'yyyy.MM.dd')}"></dd>
+                                <dd th:text="${#temporals.format(reply.createdDate, 'yyyy.MM.dd')}"></dd>
                             </dl>
                         </th:block>
                     </th:block>

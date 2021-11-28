@@ -26,31 +26,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 
         Member member = memberRepository.findByuserId(userId)
-                .orElseThrow(() ->
-                                new UsernameNotFoundException("User not found with userid : " + userId)
-                        );
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with userid : " + userId));
 
         Collection<SimpleGrantedAuthority> role = new ArrayList<SimpleGrantedAuthority>();
         role.add(new SimpleGrantedAuthority(member.getRole().getValue()));
 
-
         return new User(member.getUserId(), member.getPassword(), role);
     }
-
-
-//    @Override
-//    @Transactional(readOnly = true)
-//    public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
-//
-//        Optional<MemberEntity> memberEntity = memberRepository.findByuserid(userid);
-//        MemberEntity member = memberEntity.get();
-//
-//        Collection<SimpleGrantedAuthority> role = new ArrayList<SimpleGrantedAuthority>();
-//        role.add(new SimpleGrantedAuthority(member.getRole()));
-//
-//        return new User(member.getUserid(), member.getPassword(), role);
-//    }
-
 
 }
 

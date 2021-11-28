@@ -10,7 +10,7 @@ import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.service.ItemService;
 import com.ecommerce.newshop1.service.QnAService;
-import com.ecommerce.newshop1.utils.SecurityService;
+import com.ecommerce.newshop1.service.SecurityService;
 import com.ecommerce.newshop1.utils.enums.Role;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

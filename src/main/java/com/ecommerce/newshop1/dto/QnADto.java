@@ -3,7 +3,7 @@ package com.ecommerce.newshop1.dto;
 import com.ecommerce.newshop1.entity.Item;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 
 @Getter
@@ -22,8 +22,8 @@ public class QnADto {
     private String hide;
     private String replyEmpty;
     private Integer depth;
-    private Date createdDate;
-    private Date modifiedDate;
+    private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
     private String title;
 
 }
