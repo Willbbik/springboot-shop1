@@ -5,7 +5,6 @@
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
                     <a href="/">에게모니</a>
-                    <a th:href="@{/product/register}">등록페이지</a>
                     <a th:href="@{/admin/main}">관리자 페이지</a>
                 </li>
                 <input type="text" class="form-control me-2" placeholder="검색" maxlength="20"/>
@@ -14,8 +13,8 @@
                     <span sec:authorize="isAnonymous()"><a th:href="@{/login}">로그인</a></span>
                     <span sec:authorize="isAuthenticated()"><a th:href="@{/logout}">로그아웃</a></span>
                     <span sec:authorize="isAnonymous()"><a th:href="@{/join}">회원가입</a></span>
-                    <span><a href="#">Mypage</a></span>
-                    <span><a href="#">장바구니</a></span>
+                    <span><a th:href="@{/mypage}">MyPage</a></span>
+                    <span><a th:href="@{/cart}">장바구니</a></span>
                 </p>
                 <li>-</li>
                 <br/>

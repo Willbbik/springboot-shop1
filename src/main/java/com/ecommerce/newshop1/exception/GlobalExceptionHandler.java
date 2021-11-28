@@ -46,6 +46,11 @@ public class GlobalExceptionHandler{
         return "error/404";
     }
 
+    @ExceptionHandler(MemberNotFoundException.class)
+    public String memberNotFound(MemberNotFoundException e){
+        log.error("MemberNotFoundException {}", e.getMessage());
+        return "error/500";
+    }
 
 
 }

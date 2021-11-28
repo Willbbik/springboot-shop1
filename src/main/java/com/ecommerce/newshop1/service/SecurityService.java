@@ -1,7 +1,9 @@
-package com.ecommerce.newshop1.utils;
+package com.ecommerce.newshop1.service;
 
 
 import com.ecommerce.newshop1.utils.enums.Role;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,13 +12,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class SecurityService {
 
-    String anonymousUser = "anonymousUser";
-
     // 로그인 했는지 안했는지 검사
     public boolean isAuthenticated(){
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return !authentication.getPrincipal().equals(anonymousUser);
+        AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
+        return (!trustResolver.isAnonymous(SecurityContextHolder.getContext().getAuthentication()));
     }
 
     // 로그인한 사용자 아이디 가져오기
@@ -40,6 +40,7 @@ public class SecurityService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getAuthorities().contains(new SimpleGrantedAuthority(role));
     }
+
 
 
 

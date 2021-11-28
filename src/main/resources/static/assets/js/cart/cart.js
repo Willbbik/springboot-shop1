@@ -41,8 +41,13 @@ function addCart(){
                     alert("상품을 장바구니에 담았습니다.");
                     break;
                 case 403 :
-                    alert("로그인이 필요한 서비스입니다.");
-                    break;
+                    let result = confirm("로그인이 필요한 서비스입니다. \n로그인 페이지로 이동하시겠습니까?");
+                    if(result){
+                        window.location.href = "http://localhost:8080/login";
+                        break;
+                    }else{
+                        break;
+                    }
                 case 401 :
                     alert("상품과 옵션을 정확히 입력해주세요.");
                     break;

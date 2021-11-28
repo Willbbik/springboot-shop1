@@ -11,6 +11,4 @@ public interface ItemImageRepository extends JpaRepository<ItemImage, Long>, Ite
 
     boolean existsByItemId(Item itemId);
 
-
-
 }

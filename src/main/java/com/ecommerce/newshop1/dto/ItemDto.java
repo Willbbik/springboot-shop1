@@ -3,7 +3,8 @@ package com.ecommerce.newshop1.dto;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -16,6 +17,8 @@ public class ItemDto {
     private String category;
 
     private String itemName;
+
+    private String itemCode;
 
     private String color;
 
@@ -31,16 +34,17 @@ public class ItemDto {
 
     private String imageUrl;
 
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
-    private Date modifiedDate;
+    private LocalDateTime modifiedDate;
 
 
     @QueryProjection
-    public ItemDto(Long id, String category, String itemName, String color, String size, int price, String itemInfo, String model, String saleStatus, String imageUrl, Date createdDate, Date modifiedDate) {
+    public ItemDto(Long id, String category, String itemName, String itemCode, String color, String size, int price, String itemInfo, String model, String saleStatus, String imageUrl, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
         this.category = category;
         this.itemName = itemName;
+        this.itemCode = itemCode;
         this.color = color;
         this.size = size;
         this.price = price;

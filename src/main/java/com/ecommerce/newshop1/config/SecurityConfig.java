@@ -2,6 +2,7 @@ package com.ecommerce.newshop1.config;
 
 import com.ecommerce.newshop1.utils.CustomUserDetailsService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,14 +13,18 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
 @EnableWebSecurity
 @Configuration
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomUserDetailsService customUserDetailsService;
+    private final AuthenticationFailureHandler customLoginFailureHandler;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -28,22 +33,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-       http.csrf().disable()
-                    .authorizeRequests()
-                    .antMatchers("/logout").authenticated()
-                    .antMatchers("/mypage").fullyAuthenticated()
-                    .antMatchers("/**").permitAll()
-                    .anyRequest().permitAll()
-               .and()
-                    .formLogin()
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/")
-               .and()
-                    .logout()
-                    .invalidateHttpSession(true)
-                    .logoutSuccessUrl("/")
-               ;
+            http
+                .authorizeRequests()
+                .antMatchers("/mypage", "/cart").authenticated()
+    //                    .antMatchers("/admin/main").hasRole("ADMIN")
+                .antMatchers("/**").permitAll()
+                .anyRequest().permitAll()
+
+                .and()// 로그인 설정
+                .formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .usernameParameter("userId")
+                .successHandler(successHandler())
+                .failureHandler(customLoginFailureHandler)
+
+                .and() // 로그아웃 설정
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .invalidateHttpSession(true)
+                .logoutSuccessUrl("/")
+           ;
     }
+
+    @Bean
+    public AuthenticationSuccessHandler successHandler(){
+        return new CustomLoginSuccessHandler("/");
+    }
+
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -62,5 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
     }
+
+
 
 }

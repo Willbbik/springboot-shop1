@@ -1,11 +1,15 @@
 package com.ecommerce.newshop1.entity;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Entity
@@ -15,7 +19,7 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "item_QnA_1", indexes = @Index(name ="qnaidx", columnList = "item_id"))
-public class QnAEntity{
+public class QnAEntity extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,13 +46,6 @@ public class QnAEntity{
 
     @Column(length = 1)
     private Integer depth;
-
-    @CreatedDate
-    @Column(nullable = false)
-    private Date createdDate;
-
-    @LastModifiedDate
-    private Date modifiedDate;
 
     public void setReplyEmpty (String replyEmpty){
         this.replyEmpty = replyEmpty;
