@@ -127,25 +127,6 @@ public class MemberController {
         return "cnt";
     }
 
-//    @ApiOperation(value = "로그인")
-//    @PostMapping("/member/login")
-//    public String login(MemberDto memberDto, Model model) {
-//
-//        int result = memberService.loginValidationCheck(memberDto);
-//
-//        if (result == 0) {
-//            memberService.login(memberDto.getUserId());
-//            return "redirect:/";
-//        } else {
-//            MemberDto dto = memberService.loginLength(memberDto);
-//
-//            model = memberService.loginSetErrorMsg(memberDto, model);
-//            model.addAttribute("member", dto);
-//            model.addAttribute(model);
-//            return "member/login";
-//        }
-//    }
-
 
     @ApiOperation(value = "일반 회원가입")
     @PostMapping("/join")
