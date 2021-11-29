@@ -121,11 +121,11 @@ public class ItemController {
         dto.setItemId(item);
 
         if(!security.checkHasRole(Role.ADMIN.getValue())){
-            return "N";
+            return "fail";
         }else{
             // 여기다 답글 저장 메소드
             qnAService.saveQnAReply(dto);
-            return "Y";
+            return "success";
         }
     }
 

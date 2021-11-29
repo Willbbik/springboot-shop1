@@ -108,6 +108,9 @@ $(document).ready(function(){
             let content = $("#content").val();
             let hide = $('input:radio[name="hide"]:checked').val();
 
+            let token = $("meta[name='_csrf']").attr("content");
+            let header = $("meta[name='_csrf_header']").attr("content");
+
             if(content == ""){
                 alert("내용을 입력해주세요.");
                 return false;
@@ -123,6 +126,9 @@ $(document).ready(function(){
                type : "post",
                url  : "/item/qna/send",
                data : param,
+               beforeSend : function(xhr){
+                   xhr.setRequestHeader(header, token);
+               },
                success : function(result){
                     if(result === "Y"){
                        $(".qna_write").css('display', 'none');

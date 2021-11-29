@@ -41,12 +41,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().permitAll()
 
                 .and()// 로그인 설정
-                .formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
-                .usernameParameter("userId")
-                .successHandler(successHandler())
-                .failureHandler(customLoginFailureHandler)
+                    .formLogin()
+                    .loginPage("/login")
+                    .loginProcessingUrl("/login")
+                    .usernameParameter("userId")
+                    .successHandler(successHandler())
+                    .failureHandler(customLoginFailureHandler)
 
                 .and() // 로그아웃 설정
                 .logout()

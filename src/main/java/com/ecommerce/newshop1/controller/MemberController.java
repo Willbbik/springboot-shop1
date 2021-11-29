@@ -9,8 +9,8 @@ import com.ecommerce.newshop1.service.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.authentication.AuthenticationTrustResolver;
-import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +32,7 @@ public class MemberController {
     private final SecurityService security;
 
     ModelMapper mapper = new ModelMapper();
+    private RequestCache requestCache = new HttpSessionRequestCache();
 
     // 기본 페이지
     @GetMapping("/")
@@ -51,14 +52,12 @@ public class MemberController {
 
         String referer = request.getHeader("Referer");
         request.getSession().setAttribute("prevPage", referer);
+
         return "member/login";
     }
 
     @GetMapping("/mypage")
     public String mypage() {
-
-        security.isAuthenticated();
-
 
         return "member/mypage";
     }
