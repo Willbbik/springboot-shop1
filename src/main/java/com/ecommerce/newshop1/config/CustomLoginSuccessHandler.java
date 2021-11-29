@@ -50,14 +50,42 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 //    }
 
 
+//    @Override
+//    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
+//
+//        clearAuthenticationAttributes(request);
+//
+//        resultRedirectStrategy(request, response, authentication);
+//    }
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
 
-        clearAuthenticationAttributes(request);
+        SavedRequest savedRequest = requestCache.getRequest(request, response);
 
-        resultRedirectStrategy(request, response, authentication);
+        if ( savedRequest != null ) {
+
+            String targetUrl = savedRequest.getRedirectUrl();
+            redirectStrategy.sendRedirect(request, response, targetUrl);
+        } else {
+            HttpSession session = request.getSession();
+            if (session != null){
+                String redirectUrl = (String) session.getAttribute("prevPage");
+
+                if(redirectUrl != null){ // 이전 페이지가 존재한다면
+                    session.removeAttribute("prevPage");
+                    if(redirectUrl.equals("http://localhost:8080/login")) redirectUrl = "/";
+
+                    getRedirectStrategy().sendRedirect(request, response, redirectUrl);
+                }else{
+                    super.onAuthenticationSuccess(request, response, authentication);
+                }
+            } else{
+                super.onAuthenticationSuccess(request, response, authentication);
+            }
+        }
+
     }
-
 
     // redirectUrl 지정 메서드
     protected void resultRedirectStrategy(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
