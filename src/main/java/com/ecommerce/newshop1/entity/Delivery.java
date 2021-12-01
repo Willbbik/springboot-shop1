@@ -2,6 +2,7 @@ package com.ecommerce.newshop1.entity;
 
 
 import com.ecommerce.newshop1.utils.enums.DeliveryStatus;
+import com.ecommerce.newshop1.utils.enums.DepositStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,7 +28,7 @@ public class Delivery {
     private MemberAddress memberAddress;
 
     @Enumerated(EnumType.STRING)
-    private DeliveryStatus deliveryStatus;
+    private DepositStatus depositStatus;
 
     private int totalPrice;
 
