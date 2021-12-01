@@ -4,13 +4,10 @@ package com.ecommerce.newshop1.controller;
 import com.ecommerce.newshop1.dto.JoinMemberDto;
 import com.ecommerce.newshop1.dto.MemberDto;
 import com.ecommerce.newshop1.entity.Member;
-import com.ecommerce.newshop1.repository.MemberRepository;
 import com.ecommerce.newshop1.service.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,21 +15,17 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
-
-@RequiredArgsConstructor
 @Controller
+@RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
     private final MessageService messageService;
     private final RedisService redisService;
     private final KakaoService kakaoService;
     private final CartService cartService;
-    private final SecurityService security;
 
     ModelMapper mapper = new ModelMapper();
-    private RequestCache requestCache = new HttpSessionRequestCache();
 
     // 기본 페이지
     @GetMapping("/")
@@ -90,8 +83,7 @@ public class MemberController {
 
     @GetMapping("/member/sendAuth")
     @ApiOperation(value = "인증번호", notes = "인증번호를 전송해주고 reids서버에 저장")
-    public @ResponseBody
-    String sendAuth(@RequestParam(name = "phoneNum", required = true) String phoneNum) throws Exception {
+    public @ResponseBody String sendAuth(@RequestParam(name = "phoneNum") String phoneNum) throws Exception {
 
         boolean result = messageService.phoneValidationCheck(phoneNum);
         int randomNum = messageService.randomNum();
@@ -108,8 +100,8 @@ public class MemberController {
     @ApiOperation(value = "회원가입시 인증번호 검사")
     @GetMapping("/member/authNumCheck")
     public @ResponseBody
-    String authNumCheck(@RequestParam(value = "authNum", required = true) String authNum,
-                        @RequestParam(value = "phoneNum", required = true) String phoneNum) {
+    String authNumCheck(@RequestParam(value = "authNum") String authNum,
+                        @RequestParam(value = "phoneNum") String phoneNum) {
 
         int result = redisService.authNumCheck(phoneNum, authNum);
 

@@ -9,19 +9,12 @@ import java.util.Arrays;
 @AllArgsConstructor
 public enum PayType {
 
-    VIRTUAL_ACCOUNT("가상계좌"),
-    KAKAO_PAY("카카오페이"),
-    NAVER_PAY("네이버페이"),
-    EMPTY("없음");
+    VIRTUAL_ACCOUNT("가상계좌", "VIRTUAL_ACCOUNT"),
+    KAKAO_PAY("카카오페이", "KAKAO_PAY"),
+    CARD("신용/체크카드", "CARD"),
+    EMPTY("없음", "없음");
 
+    private String title;
     private String value;
-
-    public static PayType findWe(String payment){
-
-        return Arrays.stream(PayType.values())
-                .filter(paytype -> paytype.getValue().equals(payment))
-                .findAny()
-                .orElse(EMPTY);
-    }
 
 }

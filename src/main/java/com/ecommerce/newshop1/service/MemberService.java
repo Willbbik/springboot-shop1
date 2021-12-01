@@ -4,7 +4,7 @@ import com.ecommerce.newshop1.dto.JoinMemberDto;
 import com.ecommerce.newshop1.dto.MemberDto;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.repository.MemberRepository;
-import com.ecommerce.newshop1.utils.CustomUserDetailsService;
+import com.ecommerce.newshop1.config.CustomUserDetailsService;
 import com.ecommerce.newshop1.utils.enums.JoinMsg;
 import com.ecommerce.newshop1.utils.enums.LoginMsg;
 import com.ecommerce.newshop1.utils.enums.Role;

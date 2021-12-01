@@ -1,0 +1,15 @@
+.order {
+
+    border: 1px solid #dadada;
+    width : 200px;
+    height : 64px;
+    display: table-cell;
+    text-align: center;
+    vertical-align : middle;
+    border-bottom-color : black;
+    cursor : pointer;
+    font-size : 16px;
+    background-color : black;
+    color : white;
+    text-decoration:none;
+}

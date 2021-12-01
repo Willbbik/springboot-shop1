@@ -38,8 +38,6 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private PayType payType;
 
-    private int totalPrice;
-
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime createdDate;

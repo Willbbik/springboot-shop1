@@ -1,6 +1,7 @@
 package com.ecommerce.newshop1.entity;
 
 
+import com.ecommerce.newshop1.utils.enums.DeliveryStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,7 +18,7 @@ public class Delivery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String orderNumber;
+    private String orderId;
 
     @OneToOne
     private Order order;
@@ -25,8 +26,9 @@ public class Delivery {
     @OneToOne
     private MemberAddress memberAddress;
 
+    @Enumerated(EnumType.STRING)
+    private DeliveryStatus deliveryStatus;
+
     private int totalPrice;
-
-
 
 }

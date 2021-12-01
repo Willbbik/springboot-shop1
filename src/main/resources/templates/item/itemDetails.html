@@ -33,30 +33,31 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <input type="hidden" id="itemCode" th:value="${item.itemCode}">
-                        <input type="hidden" id="itemId" th:value="${item.id}" />
-                        <input type="hidden" id="price" th:value="${item.price}" />
-                        <h2 th:text="${item.itemName}"></h2>
-                        <h4 th:text="${item.price} + '원'"></h4>
-                        <div>
-                            <label for="color"><h5>색상 : </h5></label>
-                            <span id="color"><h5 th:text="${item.color}"></h5></span>
-                        </div>
-                        <div>
-                            <label for="size"><h5>사이즈 : </h5></label>
-                            <span id="size"><h5 th:text="${item.size}"></h5></span>
-                        </div>
-                        <div>
-                            <input type="number" name="quantity" id="quantity" value="1" min="1">
-                        </div>
-                        <div class="details_price">
-                            <h5>총 상품 금액</h5>
-                            <h5 id="totalPrice"></h5>
-                        </div>
-                        <div class="details_btns">
-                            <button type="button" class="cart" onclick="addCart();">장바구니</button>
-                            <button type="button" id="order-button" class="order">바로구매</button>
-                        </div>
+                        <form th:action="@{/order/checkout}" method="get">
+                            <input type="hidden" id="itemId" name="itemId" th:value="${item.id}" />
+                            <input type="hidden" id="price" th:value="${item.price}" />
+                            <h2 th:text="${item.itemName}"></h2>
+                            <h4 th:text="${item.price} + '원'"></h4>
+                            <div>
+                                <label for="color"><h5>색상 : </h5></label>
+                                <span id="color"><h5 th:text="${item.color}"></h5></span>
+                            </div>
+                            <div>
+                                <label for="size"><h5>사이즈 : </h5></label>
+                                <span id="size"><h5 th:text="${item.size}"></h5></span>
+                            </div>
+                            <div>
+                                <input type="number" name="quantity" id="quantity" value="1" min="1">
+                            </div>
+                            <div class="details_price">
+                                <h5>총 상품 금액</h5>
+                                <h5 id="totalPrice"></h5>
+                            </div>
+                            <div class="details_btns">
+                                <button type="button" class="cart" onclick="addCart();">장바구니</button>
+                                <button type="submit" id="order-button" class="order">바로구매</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

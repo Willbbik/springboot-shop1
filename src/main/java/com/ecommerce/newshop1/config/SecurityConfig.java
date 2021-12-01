@@ -1,7 +1,5 @@
 package com.ecommerce.newshop1.config;
 
-import com.ecommerce.newshop1.utils.CustomUserDetailsService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

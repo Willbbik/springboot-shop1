@@ -1,3 +1,24 @@
+$(document).ready(function(){
+
+    calculateTotalPrice();
+
+    $("#quantity").change(function(){
+        calculateTotalPrice();
+    });
+
+});
+
+// 최종 금액 계산
+function calculateTotalPrice(){
+
+    let quantity = $("#quantity").val();
+    let price = $("#price").val();
+    let totalPrice = (quantity * price).toString();
+
+    totalPrice = totalPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    $("#totalPrice").html(totalPrice + '원')
+}
+
 function createAddress() {
     new daum.Postcode({
         oncomplete: function(data) {
@@ -25,22 +46,32 @@ function createAddress() {
     }).open();
 }
 
-    $(document).on("click", "#order-button", function(){
+$(document).on("click", "#order-button", function(){
 
-        const tossPayments = TossPayments("test_ck_OyL0qZ4G1VO5jv2azY8oWb2MQYgm");
-        let method = "가상계좌";
+    let paymethod = $("input[name='paymethod']:checked").val();
+
+    if(paymethod === 'VIRTUAL_ACCOUNT'){
+        let tossPayments = TossPayments("test_ck_OyL0qZ4G1VO5jv2azY8oWb2MQYgm");
+        let totalPrice = $("#totalPrice").val();
+        let orderId = $("#orderId").val();
 
         let paymentData = {
-            amount: 30000,
-            orderId: "xYpNG4a48IhLvoSIimnJh",
-            orderName: "토스 티셔츠",
+            amount: totalPrice,
+            orderId: orderId,
+            orderName: "testItem",
             customerName: "이토페",
             successUrl: window.location.origin + "/success",
             failUrl: window.location.origin + "/fail",
         };
 
+        let method = "가상계좌";
         tossPayments.requestPayment(method, paymentData);
+    }else if(paymethod === 'KAKAO_PAY'){
+        alert("카드결제");
+    }
 
-    });
+
+});
+
 
 
