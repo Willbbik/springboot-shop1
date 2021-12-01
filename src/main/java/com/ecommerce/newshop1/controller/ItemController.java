@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -59,7 +60,6 @@ public class ItemController {
         return "item/categoryCap";
     }
 
-
     @ApiOperation(value = "상품 상세보기")
     @GetMapping("/items/{id}")
     public String itemDetails(@PathVariable Long id, Model model) throws Exception {
@@ -79,9 +79,9 @@ public class ItemController {
         model.addAttribute("images", images);  // 상품 이미지
         model.addAttribute("qnaSize", qnaSize);  // qna 개수
 
-
         return "item/itemDetails";
     }
+
 
 
     @ApiOperation(value = "상품 상세보기에 QnA html 리턴", notes = "ajax 용도")

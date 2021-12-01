@@ -12,7 +12,6 @@ import java.util.List;
 
 public class ItemImageRepositoryImpl implements ItemImageRepositoryCustom {
 
-
     @Autowired
     private JPAQueryFactory queryFactory;
 

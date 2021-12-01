@@ -13,14 +13,18 @@ import java.util.TimeZone;
 @SpringBootApplication
 public class Newshop1Application {
 
+	private static final String YMLS = "spring.config.location=" +
+			"classpath:/application.yml," +
+			"classpath:/yml/coolsms.yml," +
+			"classpath:/yml/tosspayments.yml," +
+			"classpath:/yml/oauth2.yml";
 
 	public static void main(String[] args) {
 
 //		SpringApplication.run(Newshop1Application.class, args);
 		new SpringApplicationBuilder(Newshop1Application.class)
-				.properties("spring.config.location=classpath:/yml/coolsms.yml, classpath:/application.yml" +
-						", classpath:/yml/oauth2.yml")
-				.run();
+				.properties(YMLS)
+				.run(args);
 	}
 
 

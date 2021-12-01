@@ -17,13 +17,13 @@ public class MessageService {
     private static final Logger log = LoggerFactory.getLogger(MessageService.class);
 
     @Value("${coolsms.apiKey}")
-    private String apiKey;
+    String apiKey;
 
     @Value("${coolsms.apiSecret}")
-    private String apiSecret;
+    String apiSecret;
 
-    @Value("${coolsms.fromNumber")
-    private String fromNumber;
+    @Value("${coolsms.fromNumber}")
+    String fromNumber;
 
 
     public void sendMessage(String toNumber, int randomNumber){

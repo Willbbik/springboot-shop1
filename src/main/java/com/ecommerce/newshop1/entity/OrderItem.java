@@ -1,6 +1,6 @@
 package com.ecommerce.newshop1.entity;
 
-import com.ecommerce.newshop1.utils.enums.OrderStatus;
+import com.ecommerce.newshop1.utils.enums.DeliveryStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,7 +27,7 @@ public class OrderItem {
     private Item item;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
+    private DeliveryStatus deliveryStatus;
 
     private int quantity;
 

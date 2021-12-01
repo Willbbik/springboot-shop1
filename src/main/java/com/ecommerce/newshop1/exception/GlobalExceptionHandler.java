@@ -42,13 +42,15 @@ public class GlobalExceptionHandler{
 
     @ExceptionHandler(ItemNotFoundException.class)
     public String itemNotFound(ItemNotFoundException e){
-        log.error("Exception {}", e.getMessage());
-        return "error/404";
+        log.error("ItemNotFoundException {}", e.getMessage());
+        log.error("ItemNotFoundException reason : {}", (Object) e.getStackTrace());
+        return "error/500";
     }
 
     @ExceptionHandler(MemberNotFoundException.class)
     public String memberNotFound(MemberNotFoundException e){
         log.error("MemberNotFoundException {}", e.getMessage());
+        log.error("MemberNotFoundException reason : {}", (Object) e.getStackTrace());
         return "error/500";
     }
 
