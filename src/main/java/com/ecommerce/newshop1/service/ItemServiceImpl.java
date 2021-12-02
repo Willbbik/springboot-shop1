@@ -20,6 +20,7 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final ItemImageRepository itemImageRepository;
+    private final RedisService redisService;
 
     @Override
     @Transactional(readOnly = true)
@@ -58,4 +59,9 @@ public class ItemServiceImpl implements ItemService {
         itemImageRepository.save(itemImage);
     }
 
+
+    @Override
+    public String createOrderId(String nowDate, int totalPrice) throws Exception {
+        return redisService.createOrderId(nowDate, totalPrice);
+    }
 }

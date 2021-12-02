@@ -33,9 +33,13 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <form th:action="@{/order/checkout}" method="get">
-                            <input type="hidden" id="itemId" name="itemId" th:value="${item.id}" />
+                        <form action="" method="POST" onsubmit="return sendorder()">
+                            <input type="hidden" id="itemId" th:value="${item.id}" />
                             <input type="hidden" id="price" th:value="${item.price}" />
+                            <input type="hidden" name="where" value="product">
+                            <input type="hidden" name="itemList">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
                             <h2 th:text="${item.itemName}"></h2>
                             <h4 th:text="${item.price} + '원'"></h4>
                             <div>
@@ -55,7 +59,7 @@
                             </div>
                             <div class="details_btns">
                                 <button type="button" class="cart" onclick="addCart();">장바구니</button>
-                                <button type="submit" id="order-button" class="order">바로구매</button>
+                                <button type="submit" id="order-button" class="order_btn">바로구매</button>
                             </div>
                         </form>
                     </div>

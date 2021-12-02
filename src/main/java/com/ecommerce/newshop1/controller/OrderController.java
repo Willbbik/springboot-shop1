@@ -1,11 +1,9 @@
 package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.CallbackPayload;
-import com.ecommerce.newshop1.dto.ItemDto;
-import com.ecommerce.newshop1.entity.Item;
-import com.ecommerce.newshop1.exception.ItemNotFoundException;
+import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.repository.ItemRepository;
-import com.ecommerce.newshop1.service.RedisService;
+import com.ecommerce.newshop1.service.ItemService;
 import com.ecommerce.newshop1.utils.enums.PayMethod;
 import com.ecommerce.newshop1.utils.enums.TossPayments;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,21 +17,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
 public class OrderController {
 
     private final ItemRepository itemRepository;
-    private final RedisService redisService;
+    private final ItemService itemService;
 
     ModelMapper mapper = new ModelMapper();
 
@@ -41,44 +35,22 @@ public class OrderController {
     String SECRET_KEY;
 
 
-    @GetMapping("/order/checkout")
-    public String checkout(@RequestParam Long[] itemId, @RequestParam Long[] quantity, HttpServletRequest request, Model model) throws Exception {
+    @PostMapping("/order/checkout")
+    public String checkout(@RequestParam(name = "itemList") String itemList, @RequestParam(value = "where") String where) throws Exception {
 
-        List<ItemDto> items = new ArrayList<>();      // view에 상품 띄워주기 위해서
-        List<Long> orderIdList = new ArrayList<>();       // session에 상품 번호 저장하기 위해서
-        List<Long> quantityList = new ArrayList<>(); // session에 상품 개수 저장하기 위해서
+        List<OrderItemDto> items = new ArrayList<>();   // view에 상품 띄워주기 위해서
+        String orderName = ""; // 브라우저의 sessionStorage에 저장 ( 가상계좌 결제시 주문 상품명으로 사용하기 위해서 )
 
+        if(where.equals("product")){
 
-        if(itemId.length < 0 || quantity.length < 0 || itemId.length != quantity.length){
-            return "error/404";
+        }else if(where.equals("cart")) {
+
         }
-
-        int totalPrice = 0;
-        for(int i = 0; i < itemId.length; i++){
-
-            Item item = itemRepository.findById(itemId[i])
-                    .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지 않습니다."));
-
-            items.add(mapper.map(item, ItemDto.class));
-
-            orderIdList.add(itemId[i]);          // 상품 번호
-            quantityList.add(quantity[i]);       // 상품 개수
-            totalPrice += item.getPrice() * quantity[i];    // 최종 결제금액 계산
-        }
-
-        HttpSession session = request.getSession();
-        session.setAttribute("order_id", orderIdList);
-        session.setAttribute("order_quantity", quantityList);
-
-        String nowDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String orderId = redisService.createOrderId(nowDate, totalPrice);
-
-        model.addAttribute("totalPrice", totalPrice);
-        model.addAttribute("items", items);
-        model.addAttribute("orderId", orderId);
 
         return "order/order_checkout";
     }
+
+
 
 
     @PostMapping("/order/paymethod/check")
@@ -135,9 +107,6 @@ public class OrderController {
             return "order/order_fail";
         }
 
-
     }
-
-
 
 }

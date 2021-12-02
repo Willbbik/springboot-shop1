@@ -23,5 +23,6 @@ public interface ItemService {
 
     void saveItemImage(ItemImage itemImage);
 
+    String createOrderId(String nowDate, int totalPrice) throws Exception;
 
 }

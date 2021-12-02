@@ -42,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .formLogin()
                     .loginPage("/login")
                     .loginProcessingUrl("/login")
+                    .defaultSuccessUrl("/")
                     .usernameParameter("userId")
                     .successHandler(successHandler())
                     .failureHandler(customLoginFailureHandler)

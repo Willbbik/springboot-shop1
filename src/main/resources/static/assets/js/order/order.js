@@ -48,18 +48,20 @@ function createAddress() {
 
 $(document).on("click", "#order-button", function(){
 
-    let paymethod = $("input[name='paymethod']:checked").val();
+    let tossPayments = TossPayments("test_ck_OyL0qZ4G1VO5jv2azY8oWb2MQYgm");
+    let payMethod = $("input[name='paymethod']:checked").val();
+    let totalPrice = $("#totalPrice").val();
+    let orderId = $("#orderId").val();
+    let orderName = $("#orderName").val();
+    let customerName =  $("#customerName").val();
 
-    if(paymethod === 'VIRTUAL_ACCOUNT'){
-        let tossPayments = TossPayments("test_ck_OyL0qZ4G1VO5jv2azY8oWb2MQYgm");
-        let totalPrice = $("#totalPrice").val();
-        let orderId = $("#orderId").val();
+    if(payMethod === 'VIRTUAL_ACCOUNT'){
 
         let paymentData = {
             amount: totalPrice,
             orderId: orderId,
-            orderName: "testItem",
-            customerName: "이토페",
+            orderName: orderName,
+            customerName: customerName,
             successUrl: window.location.origin + "/success",
             failUrl: window.location.origin + "/fail",
         };
@@ -69,8 +71,6 @@ $(document).on("click", "#order-button", function(){
     }else if(paymethod === 'KAKAO_PAY'){
         alert("카드결제");
     }
-
-
 });
 
 
