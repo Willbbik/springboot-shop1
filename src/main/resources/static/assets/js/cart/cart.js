@@ -6,6 +6,18 @@ $(document).ready(function(){
         calculateTotalPrice();
     });
 
+
+
+    $(".order_btn").on("click", function(){
+
+       if($(this).hasClass("buy_all_item")){
+
+       }else if($(this).hasClass("buy_select_item")){
+
+       }
+
+    });
+
 });
 
 // 최종 금액 계산
@@ -62,3 +74,5 @@ function addCart(){
         }
     })
 }
+
+

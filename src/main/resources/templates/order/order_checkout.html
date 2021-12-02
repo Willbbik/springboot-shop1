@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>에게모니</title>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
@@ -27,8 +29,8 @@
                 <span sec:authorize="isAnonymous()"><a th:href="@{/login}">로그인</a></span>
                 <span sec:authorize="isAuthenticated()"><a th:href="@{/logout}">로그아웃</a></span>
                 <span sec:authorize="isAnonymous()"><a th:href="@{/join}">회원가입</a></span>
-                <span><a href="#">Mypage</a></span>
-                <span><a href="#">장바구니</a></span>
+                <span><a th:href="@{/mypage}">MyPage</a></span>
+                <span><a th:href="@{/cart}">장바구니</a></span>
             </p>
             <li>-</li>
             <br/>
@@ -93,23 +95,25 @@
                 <tbody>
                     <tr th:each="item : ${items}">
                         <td>
-                            <a th:href="@{'/items/' + ${item.id}}"><img th:src="@{${item.imageUrl}}" width="70px" height="60px"></a>
+                            <a th:href="@{'/items/' + ${item.item.id}}"><img th:src="@{${item.item.imageUrl}}" width="70px" height="60px"></a>
                         </td>
                         <td>
-                            <a th:href="@{'/items/' + ${item.id}}">
-                                <div class="item-name" th:text="${item.itemName}"></div>
-                                <div class="item-price" th:text="${item.price}"></div>
+                            <a th:href="@{'/items/' + ${item.item.id}}">
+                                <div class="item-name" th:text="${item.item.itemName}"></div>
+                                <div class="item-price" th:text="${item.item.price}"></div>
                             </a>
                         </td>
                         <td>
-                            <div class="item-color" th:text="${item.color} + ' / ' + ${item.size}"></div>
+                            <div class="item_color" th:text="${item.item.color} + ' / ' + ${item.item.size}"></div>
+                            <div class="item_quantity" th:text="${item.quantity} + '개'"></div>
                         </td>
                         <td>
-                            <div th:text="'최종금액 : ' + ${item.price}"></div>
+                            <div th:text="'최종금액 : ' + ${item.totalPrice} + '원'"></div>
                         </td>
                     </tr>
                     <input type="hidden" id="totalPrice" th:value="${totalPrice}">
                     <input type="hidden" id="orderId" th:value="${orderId}">
+                    <input type="hidden" id="orderName" th:value="${orderName}">
                 </tbody>
             </table>
 
@@ -118,12 +122,12 @@
                     <h3>주문자 정보</h3>
                     <div>
                         <dl>
-                            <dt><label for="orderer_name">이름 </label></dt>
-                            <dd><input type="text" id="orderer_name"></dd>
+                            <dt><label for="customerName">이름 </label></dt>
+                            <dd><input type="text" id="customerName"></dd>
                         </dl>
                         <dl>
-                            <dt><label for="orderer_phoneNum">휴대폰 </label></dt>
-                            <dd><input type="tel" id="orderer_phoneNum"></dd>
+                            <dt><label for="customerPhoneNum">휴대폰 </label></dt>
+                            <dd><input type="tel" id="customerPhoneNum"></dd>
                         </dl>
                     </div>
                 </div>
@@ -165,6 +169,7 @@
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="https://js.tosspayments.com/v1"></script>
+<script src="/assets/js/order/orderCheckout.js"></script>
 <script src="/assets/js/order/order.js"></script>
 
 </body>

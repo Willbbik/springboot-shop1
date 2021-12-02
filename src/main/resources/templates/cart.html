@@ -121,27 +121,15 @@
                             </td>
                             <td>
                                 <div> 총 금액 : 40000원 </div>
-                                <button type="button"> 주문하기 </button>
+                                <button class="orderbtn"> 주문하기 </button>
                             </td>
                         </tr>
-                    <!--<tr th:each="item : ${items}">
-                        <td><input type="checkbox" class="checkbox-select"></td>
-                        <td><img th:src="@{${item.imageUrl}}" width="70px" height="60px"></td>
-                        <td>
-                            <a href="#">
-                                <div class="item-name" th:text="${item.itemName} + ' 사이즈 : [ ' + ${item.size} + ' ]'"></div>
-                                <div class="item-color" th:text="'색상 : ' + ${item.color}"></div>
-                                <div class="item-category" th:text=" '분류 : ' + ${item.category}"></div>
-                                <div class="item-price" th:text="'가격 : ' + ${item.price}"></div>
-                            </a>
-                        </td>
-                        <td>
-                            <input type="button" th:if="${item.saleStatus.toString().equals('onsale')}" th:value="판매중">
-                            <input type="button" id="soldoutbtn" th:if="${item.saleStatus.toString().equals('soldout')}" th:value="품절">
-                        </td>
-                    </tr>-->
                     </th:block>
                     </tbody>
+                    <tfoot>
+                        <button class="order_btn buy_all_item"></button>
+                        <button class="order_btn buy_select_item"></button>
+                    </tfoot>
                 </table>
             </div>
             <!--<div class="cart-wrap">
