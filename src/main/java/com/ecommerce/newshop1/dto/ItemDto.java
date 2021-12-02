@@ -34,6 +34,9 @@ public class ItemDto {
 
     private String imageUrl;
 
+    private int quantity;
+    private int totalPrice;
+
     private LocalDateTime createdDate;
 
     private LocalDateTime modifiedDate;

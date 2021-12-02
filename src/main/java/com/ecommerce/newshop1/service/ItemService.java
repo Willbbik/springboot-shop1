@@ -2,6 +2,7 @@ package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.ItemDto;
 import com.ecommerce.newshop1.dto.ItemImageDto;
+import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.ItemImage;
@@ -25,4 +26,7 @@ public interface ItemService {
 
     String createOrderId(String nowDate, int totalPrice) throws Exception;
 
+    List<ItemDto> itemToPayment(String itemList);
+
 }
+
