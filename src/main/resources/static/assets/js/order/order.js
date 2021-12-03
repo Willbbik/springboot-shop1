@@ -19,6 +19,7 @@ function calculateTotalPrice(){
     $("#totalPrice").html(totalPrice + '원')
 }
 
+// 배송지 생성
 function createAddress() {
     new daum.Postcode({
         oncomplete: function(data) {

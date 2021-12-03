@@ -2,6 +2,7 @@ package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.CartDto;
 import com.ecommerce.newshop1.dto.CartItemDto;
+import com.ecommerce.newshop1.dto.ItemDto;
 import com.ecommerce.newshop1.entity.Cart;
 import com.ecommerce.newshop1.entity.CartItem;
 import com.ecommerce.newshop1.entity.Item;
@@ -11,11 +12,13 @@ import com.ecommerce.newshop1.repository.CartItemRepository;
 import com.ecommerce.newshop1.repository.CartRepository;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.repository.MemberRepository;
+import com.google.gson.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,7 +65,7 @@ public class CartService {
 
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<CartItemDto> findCartItems(Member member){
 
         // 사용자의 장바구니 찾기
@@ -75,6 +78,41 @@ public class CartService {
         return cartItemList.stream()
                 .map(p -> mapper.map(p, CartItemDto.class)).collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<ItemDto> cartItemToPayment(String itemList){
+
+        JsonParser jsonParser = new JsonParser();
+        JsonArray jsonElements = (JsonArray) jsonParser.parse(itemList);
+
+        List<Long> itemIdList = new ArrayList<>();
+        List<Integer> quantityList = new ArrayList<>();
+        List<ItemDto> itemDtoList = new ArrayList<>();
+
+        for (int i = 0; i <jsonElements.size(); i++) {
+
+            JsonObject jsonObject = (JsonObject) jsonElements.get(i);
+            Long itemId = Long.parseLong(jsonObject.get("itemId").getAsString());
+            int quantity = Integer.parseInt(jsonObject.get("quantity").getAsString());
+
+            itemIdList.add(itemId);
+            quantityList.add(quantity);
+        }
+
+        for(int i = 0; i < itemIdList.size(); i++){
+            Item item = itemRepository.findById(itemIdList.get(i))
+                    .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지 않습니다."));
+
+            ItemDto itemDto = mapper.map(item, ItemDto.class);
+            itemDto.setQuantity(quantityList.get(i));
+            itemDto.setTotalPrice(item.getPrice() * quantityList.get(i));
+
+            itemDtoList.add(itemDto);
+        }
+        return itemDtoList;
+    }
+
+
 
 
 }
