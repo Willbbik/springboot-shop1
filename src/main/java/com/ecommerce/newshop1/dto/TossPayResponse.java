@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TossVirtualAccount {
+public class TossPayResponse {
 
     private String accountNumber;
     private String accountType;
