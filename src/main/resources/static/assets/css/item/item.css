@@ -56,7 +56,7 @@
 
 /* 장바구니, 바로구매  //////////////////////////////////////////////////////////////////////////////////////////// */
 
-.details_btns .cart{
+.details_btns .cart_add_btn{
 
     border: 1px solid #dadada;
     width : 200px;
@@ -72,7 +72,7 @@
     text-decoration:none;
 }
 
-.details_btns .order {
+.details_btns .order_btn {
 
     border: 1px solid #dadada;
     width : 200px;
