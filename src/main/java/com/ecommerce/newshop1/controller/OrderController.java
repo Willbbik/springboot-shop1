@@ -1,8 +1,10 @@
 package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.CallbackPayload;
+import com.ecommerce.newshop1.dto.ItemDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.repository.ItemRepository;
+import com.ecommerce.newshop1.service.CartService;
 import com.ecommerce.newshop1.service.ItemService;
 import com.ecommerce.newshop1.utils.enums.PayMethod;
 import com.ecommerce.newshop1.utils.enums.TossPayments;
@@ -28,6 +30,7 @@ public class OrderController {
 
     private final ItemRepository itemRepository;
     private final ItemService itemService;
+    private final CartService cartService;
 
     ModelMapper mapper = new ModelMapper();
 
@@ -36,16 +39,33 @@ public class OrderController {
 
 
     @PostMapping("/order/checkout")
-    public String checkout(@RequestParam(name = "itemList") String itemList, @RequestParam(value = "where") String where) throws Exception {
+    public String checkout(String itemList, String where, Model model) throws Exception {
 
-        List<OrderItemDto> items = new ArrayList<>();   // view에 상품 띄워주기 위해서
+        List<ItemDto> items = new ArrayList<>();   // view에 상품 띄워주기 위해서
         String orderName = ""; // 브라우저의 sessionStorage에 저장 ( 가상계좌 결제시 주문 상품명으로 사용하기 위해서 )
+        int totalPrice = 0;
 
         if(where.equals("product")){
-
+            items = itemService.itemToPayment(itemList);// 사용자가 구매하려는 상품
+            orderName = items.get(0).getItemName();     // 주문 상품명
+            totalPrice += items.get(0).getTotalPrice(); // 최종 결제 금액
         }else if(where.equals("cart")) {
-
+            items = cartService.cartItemToPayment(itemList);                          // 사용자가 구매하려는 상품들
+            orderName = items.get(0).getItemName() + "외 " + (items.size() - 1) + "건";// 주문 상품명
+            for(ItemDto itemDto : items){
+                totalPrice += itemDto.getTotalPrice();                                // 최종 결제 금액
+            }
+        }else{
+            return "redirect:/";
         }
+
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String orderId = date + itemService.createOrderId(date, totalPrice);        // 주문번호
+
+        model.addAttribute("items", items);
+        model.addAttribute("orderId", orderId);
+        model.addAttribute("orderName", orderName);
+        model.addAttribute("totalPrice", totalPrice);
 
         return "order/order_checkout";
     }

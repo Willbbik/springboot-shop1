@@ -95,16 +95,16 @@
                 <tbody>
                     <tr th:each="item : ${items}">
                         <td>
-                            <a th:href="@{'/items/' + ${item.item.id}}"><img th:src="@{${item.item.imageUrl}}" width="70px" height="60px"></a>
+                            <a th:href="@{'/items/' + ${item.id}}"><img th:src="@{${item.imageUrl}}" width="70px" height="60px"></a>
                         </td>
                         <td>
-                            <a th:href="@{'/items/' + ${item.item.id}}">
-                                <div class="item-name" th:text="${item.item.itemName}"></div>
-                                <div class="item-price" th:text="${item.item.price}"></div>
+                            <a th:href="@{'/items/' + ${item.id}}">
+                                <div class="item-name" th:text="${item.itemName}"></div>
+                                <div class="item-price" th:text="${item.price}"></div>
                             </a>
                         </td>
                         <td>
-                            <div class="item_color" th:text="${item.item.color} + ' / ' + ${item.item.size}"></div>
+                            <div class="item_color" th:text="${item.color} + ' / ' + ${item.size}"></div>
                             <div class="item_quantity" th:text="${item.quantity} + '개'"></div>
                         </td>
                         <td>

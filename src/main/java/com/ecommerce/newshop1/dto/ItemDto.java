@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class ItemDto {
 
     private Long id;
@@ -34,13 +35,12 @@ public class ItemDto {
 
     private String imageUrl;
 
-    private int quantity;
-    private int totalPrice;
-
     private LocalDateTime createdDate;
 
     private LocalDateTime modifiedDate;
 
+    private int quantity;
+    private int totalPrice;
 
     @QueryProjection
     public ItemDto(Long id, String category, String itemName, String itemCode, String color, String size, int price, String itemInfo, String model, String saleStatus, String imageUrl, LocalDateTime createdDate, LocalDateTime modifiedDate) {

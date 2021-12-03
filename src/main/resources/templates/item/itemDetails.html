@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <form action="" method="POST" onsubmit="return sendorder()">
+                        <form th:action="@{/order/checkout}" method="POST" onsubmit="return sendorder()">
                             <input type="hidden" id="itemId" th:value="${item.id}" />
                             <input type="hidden" id="price" th:value="${item.price}" />
                             <input type="hidden" name="where" value="product">
@@ -175,7 +175,7 @@
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script src="https://js.tosspayments.com/v1"></script>
     <script src="/assets/js/item/itemQnA.js"></script>
-    <script src="/assets/js/cart/cart.js"></script>
+    <script src="/assets/js/item/itemDetails.js"></script>
     <script src="/assets/js/order/order.js"></script>
 
 <th:block sec:authorized="hasRole('ROLE_ADMIN')">
