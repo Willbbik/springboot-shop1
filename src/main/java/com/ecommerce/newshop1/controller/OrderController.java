@@ -6,6 +6,7 @@ import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.service.CartService;
 import com.ecommerce.newshop1.service.ItemService;
+import com.ecommerce.newshop1.service.OrderService;
 import com.ecommerce.newshop1.utils.enums.PayMethod;
 import com.ecommerce.newshop1.utils.enums.TossPayments;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -31,6 +32,7 @@ public class OrderController {
     private final ItemRepository itemRepository;
     private final ItemService itemService;
     private final CartService cartService;
+    private final OrderService orderService;
 
     ModelMapper mapper = new ModelMapper();
 
@@ -46,7 +48,7 @@ public class OrderController {
         int totalPrice = 0;
 
         if(where.equals("product")){
-            items = itemService.itemToPayment(itemList);// 사용자가 구매하려는 상품
+            items = orderService.itemToPayment(itemList);// 사용자가 구매하려는 상품
             orderName = items.get(0).getItemName();     // 주문 상품명
             totalPrice += items.get(0).getTotalPrice(); // 최종 결제 금액
         }else if(where.equals("cart")) {
@@ -60,7 +62,7 @@ public class OrderController {
         }
 
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String orderId = date + itemService.createOrderId(date, totalPrice);        // 주문번호
+        String orderId = date + orderService.createOrderId(date, totalPrice);        // 주문번호
 
         model.addAttribute("items", items);
         model.addAttribute("orderId", orderId);
@@ -98,34 +100,39 @@ public class OrderController {
 
     @RequestMapping("/success")
     public String confirmPayment(@RequestParam String paymentKey, @RequestParam String orderId,
-                                 @RequestParam Long amount, Model model) throws Exception {
+                                 @RequestParam int amount, Model model) throws Exception {
 
-        RestTemplate restTemplate = new RestTemplate();
-        ObjectMapper objectMapper = new ObjectMapper();
+        // 결제 정보 유효성 검사
+        // 주문페이지로 이동할 때 redis에 주문번호 : 금액으로 저장해놨던 값과 비교
+        // redis에서 주문번호 값으로 확인하고 fail로 보내거나 로직 실행하면됨
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth(SECRET_KEY, "");
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        ResponseEntity<JsonNode> responseEntity = orderService.tossPayment(paymentKey, orderId, amount);
 
-        Map<String, String> payloadMap = new HashMap<>();
-        payloadMap.put("orderId", orderId);
-        payloadMap.put("amount", String.valueOf(amount));
-
-        HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(payloadMap), headers);
-
-        ResponseEntity<JsonNode> responseEntity = restTemplate.postForEntity(
-                "https://api.tosspayments.com/v1/payments/" + paymentKey, request, JsonNode.class);
         if(responseEntity.getStatusCode() == HttpStatus.OK) {
+            // 여기서 Delivery객체 생성해야함
+
             JsonNode successNode = responseEntity.getBody();
-            model.addAttribute("orderId", successNode.get("orderId").asText());
             String secret = successNode.get("secret").asText();
             return "order/order_success";
         } else {
+
             JsonNode failNode = responseEntity.getBody();
             model.addAttribute("message", failNode.get("message").asText());
             model.addAttribute("code", failNode.get("code").asText());
             return "order/order_fail";
         }
+
+        //        if(responseEntity.getStatusCode() == HttpStatus.OK) {
+//            JsonNode successNode = responseEntity.getBody();
+//            model.addAttribute("orderId", successNode.get("orderId").asText());
+//            String secret = successNode.get("secret").asText();
+//            return "order/order_success";
+//        } else {
+//            JsonNode failNode = responseEntity.getBody();
+//            model.addAttribute("message", failNode.get("message").asText());
+//            model.addAttribute("code", failNode.get("code").asText());
+//            return "order/order_fail";
+//        }
 
     }
 
