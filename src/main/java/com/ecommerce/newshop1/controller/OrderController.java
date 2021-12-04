@@ -3,6 +3,7 @@ package com.ecommerce.newshop1.controller;
 import com.ecommerce.newshop1.dto.CallbackPayload;
 import com.ecommerce.newshop1.dto.ItemDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
+import com.ecommerce.newshop1.dto.TossVirtualAccount;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.service.CartService;
 import com.ecommerce.newshop1.service.ItemService;
@@ -106,13 +107,17 @@ public class OrderController {
         // 주문페이지로 이동할 때 redis에 주문번호 : 금액으로 저장해놨던 값과 비교
         // redis에서 주문번호 값으로 확인하고 fail로 보내거나 로직 실행하면됨
 
+        // 결제 승인 요청
         ResponseEntity<JsonNode> responseEntity = orderService.tossPayment(paymentKey, orderId, amount);
 
         if(responseEntity.getStatusCode() == HttpStatus.OK) {
             // 여기서 Delivery객체 생성해야함
 
-            JsonNode successNode = responseEntity.getBody();
-            String secret = successNode.get("secret").asText();
+//            JsonNode successNode = responseEntity.getBody();
+//            String secret = successNode.get("secret").asText();
+
+            TossVirtualAccount toss = orderService.getVirtualAccountInfo(responseEntity.getBody());
+            model.addAttribute("toss", toss);
             return "order/order_success";
         } else {
 

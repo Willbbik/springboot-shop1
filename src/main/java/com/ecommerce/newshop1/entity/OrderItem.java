@@ -19,7 +19,7 @@ public class OrderItem {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order")
+    @JoinColumn(name = "order_id")
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,6 +32,5 @@ public class OrderItem {
     private int quantity;
 
     private int totalPrice;
-
 
 }

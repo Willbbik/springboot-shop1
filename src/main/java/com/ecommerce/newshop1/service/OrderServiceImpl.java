@@ -1,10 +1,10 @@
 package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.ItemDto;
+import com.ecommerce.newshop1.dto.TossVirtualAccount;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.exception.ItemNotFoundException;
 import com.ecommerce.newshop1.repository.ItemRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
@@ -13,10 +13,7 @@ import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -91,17 +88,21 @@ public class OrderServiceImpl implements OrderService {
                 "https://api.tosspayments.com/v1/payments/" + paymentKey, request, JsonNode.class);
     }
 
-    //    @Override
-//    public String requestVirtualAccount(JsonNode successNode) {
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setBasicAuth(SECRET_KEY, "");
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//
-//        Map<String, String> payloadMap = new HashMap<>();
-//        payloadMap.put("orderId", orderId);
-//        payloadMap.put("amount", String.valueOf(amount));
-//
-//
-//    }
+    @Override
+    public TossVirtualAccount getVirtualAccountInfo(JsonNode successNode) {
+
+        JsonNode virtualAccount = successNode.get("virtualAccount");
+
+        return TossVirtualAccount.builder()
+                .accountNumber(virtualAccount.get("accountNumber").asText())
+                .accountType(virtualAccount.get("accountType").asText())
+                .bank(virtualAccount.get("bank").asText())
+                .customerName(virtualAccount.get("customerName").asText())
+                .dueDate(virtualAccount.get("dueDate").asText())
+                .refundStatus(virtualAccount.get("refundStatus").asText())
+                .expired(virtualAccount.get("expired").asBoolean())
+                .settlementStatus(virtualAccount.get("settlementStatus").asText())
+                .build();
+    }
+
 }

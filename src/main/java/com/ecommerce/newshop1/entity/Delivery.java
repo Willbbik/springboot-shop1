@@ -21,7 +21,7 @@ public class Delivery {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "order")
+    @JoinColumn(name = "orders")
     private Order order;
 
     @OneToOne
