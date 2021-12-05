@@ -1,9 +1,6 @@
 package com.ecommerce.newshop1.controller;
 
-import com.ecommerce.newshop1.dto.CallbackPayload;
-import com.ecommerce.newshop1.dto.ItemDto;
-import com.ecommerce.newshop1.dto.OrderItemDto;
-import com.ecommerce.newshop1.dto.TossVirtualAccount;
+import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.service.CartService;
 import com.ecommerce.newshop1.service.ItemService;
@@ -21,6 +18,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -42,7 +41,7 @@ public class OrderController {
 
 
     @PostMapping("/order/checkout")
-    public String checkout(String itemList, String where, Model model) throws Exception {
+    public String checkout(String itemList, String where, Model model, HttpServletRequest request) throws Exception {
 
         List<ItemDto> items = new ArrayList<>();   // view에 상품 띄워주기 위해서
         String orderName = ""; // 브라우저의 sessionStorage에 저장 ( 가상계좌 결제시 주문 상품명으로 사용하기 위해서 )
@@ -64,6 +63,10 @@ public class OrderController {
 
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String orderId = date + orderService.createOrderId(date, totalPrice);        // 주문번호
+
+        HttpSession session = request.getSession();
+
+        session.setAttribute("test", orderId);
 
         model.addAttribute("items", items);
         model.addAttribute("orderId", orderId);
@@ -99,9 +102,23 @@ public class OrderController {
     }
 
 
+    @PostMapping("/order/saveAddress")
+    public @ResponseBody String saveAddressDto(AddressDto addressDto, HttpServletRequest request){
+        // 주문하기 버튼 클릭시 ajax로 먼저 상품 정보들 가져와서
+        // session에 저장해놓고 주문 성공 세션에 있는 값들로 Delivery객체 만들기 위해서
+        // 즉 session에 저장해놓는 테스트
+
+        HttpSession session = request.getSession();
+        session.setAttribute("addressDto", addressDto);
+
+        System.out.println(addressDto);
+        return "good";
+    }
+
+
     @RequestMapping("/success")
     public String confirmPayment(@RequestParam String paymentKey, @RequestParam String orderId,
-                                 @RequestParam int amount, Model model) throws Exception {
+                                 @RequestParam int amount, Model model, HttpServletRequest request) throws Exception {
 
         // 결제 정보 유효성 검사
         // 주문페이지로 이동할 때 redis에 주문번호 : 금액으로 저장해놨던 값과 비교
@@ -113,8 +130,8 @@ public class OrderController {
         if(responseEntity.getStatusCode() == HttpStatus.OK) {
             // 여기서 Delivery객체 생성해야함
 
-//            JsonNode successNode = responseEntity.getBody();
-//            String secret = successNode.get("secret").asText();
+            HttpSession session = request.getSession();
+            System.out.println(session.getAttribute("customerName"));
 
             TossVirtualAccount toss = orderService.getVirtualAccountInfo(responseEntity.getBody());
             model.addAttribute("toss", toss);
@@ -126,18 +143,6 @@ public class OrderController {
             model.addAttribute("code", failNode.get("code").asText());
             return "order/order_fail";
         }
-
-        //        if(responseEntity.getStatusCode() == HttpStatus.OK) {
-//            JsonNode successNode = responseEntity.getBody();
-//            model.addAttribute("orderId", successNode.get("orderId").asText());
-//            String secret = successNode.get("secret").asText();
-//            return "order/order_success";
-//        } else {
-//            JsonNode failNode = responseEntity.getBody();
-//            model.addAttribute("message", failNode.get("message").asText());
-//            model.addAttribute("code", failNode.get("code").asText());
-//            return "order/order_fail";
-//        }
 
     }
 
