@@ -3,10 +3,8 @@ package com.ecommerce.newshop1.service;
 import com.ecommerce.newshop1.dto.CartDto;
 import com.ecommerce.newshop1.dto.CartItemDto;
 import com.ecommerce.newshop1.dto.ItemDto;
-import com.ecommerce.newshop1.entity.Cart;
-import com.ecommerce.newshop1.entity.CartItem;
-import com.ecommerce.newshop1.entity.Item;
-import com.ecommerce.newshop1.entity.Member;
+import com.ecommerce.newshop1.dto.OrderItemDto;
+import com.ecommerce.newshop1.entity.*;
 import com.ecommerce.newshop1.exception.ItemNotFoundException;
 import com.ecommerce.newshop1.repository.CartItemRepository;
 import com.ecommerce.newshop1.repository.CartRepository;
@@ -80,15 +78,16 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<ItemDto> cartItemToPayment(String itemList){
+    public List<OrderItemDto> cartItemToPayment(String itemList){
 
         JsonParser jsonParser = new JsonParser();
         JsonArray jsonElements = (JsonArray) jsonParser.parse(itemList);
 
         List<Long> itemIdList = new ArrayList<>();
         List<Integer> quantityList = new ArrayList<>();
-        List<ItemDto> itemDtoList = new ArrayList<>();
+        List<OrderItemDto> itemDtoList = new ArrayList<>();
 
+        // 상품 번호와 개수를 배열에 차례대로 담기
         for (int i = 0; i <jsonElements.size(); i++) {
 
             JsonObject jsonObject = (JsonObject) jsonElements.get(i);
@@ -103,9 +102,11 @@ public class CartService {
             Item item = itemRepository.findById(itemIdList.get(i))
                     .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지 않습니다."));
 
-            ItemDto itemDto = mapper.map(item, ItemDto.class);
-            itemDto.setQuantity(quantityList.get(i));
-            itemDto.setTotalPrice(item.getPrice() * quantityList.get(i));
+            OrderItemDto itemDto = OrderItemDto.builder()
+                    .item(item)
+                    .quantity(quantityList.get(i))
+                    .totalPrice(item.getPrice() * quantityList.get(i))
+                    .build();
 
             itemDtoList.add(itemDto);
         }

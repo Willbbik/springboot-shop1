@@ -45,50 +45,39 @@ public class OrderController {
     @ApiOperation(value = "구매할 상품 선택후 주문페이지로 이동")
     public String checkout(String itemList, String where, Model model, HttpServletRequest request) throws Exception {
 
-        List<ItemDto> items = new ArrayList<>();   // view에 상품 띄워주기 위해서
+        List<OrderItemDto> orderItems = new ArrayList<>();   // view에 상품 띄워주기 위해서
         String orderName = ""; // 브라우저의 sessionStorage에 저장 ( 가상계좌 결제시 주문 상품명으로 사용하기 위해서 )
         int totalPrice = 0;
 
-        if(where.equals("product")){
-            items = orderService.itemToPayment(itemList);// 사용자가 구매하려는 상품
-            orderName = items.get(0).getItemName();     // 주문 상품명
-            totalPrice += items.get(0).getTotalPrice(); // 최종 결제 금액
-        }else if(where.equals("cart")) {
-            items = cartService.cartItemToPayment(itemList);                          // 사용자가 구매하려는 상품들
-            orderName = items.get(0).getItemName() + "외 " + (items.size() - 1) + "건";// 주문 상품명
-            for(ItemDto itemDto : items){
+        if(where.equals("product")){        // 상품 상세보기에서 주문시
+            orderItems = orderService.itemToPayment(itemList);       // 사용자가 구매하려는 상품
+            orderName = orderItems.get(0).getItem().getItemName();   // 주문 상품명
+            totalPrice += orderItems.get(0).getTotalPrice();         // 최종 결제 금액
+        }
+        else if(where.equals("cart")) {     // 장바구니에서 주문시
+            orderItems = cartService.cartItemToPayment(itemList);                          // 사용자가 구매하려는 상품들
+            orderName = orderItems.get(0).getItem().getItemName() + "외 " + (orderItems.size() - 1) + "건";// 주문 상품명
+            for(OrderItemDto itemDto : orderItems){
                 totalPrice += itemDto.getTotalPrice();                                // 최종 결제 금액
             }
         }else{
-            return "redirect:/";
+            throw new Exception("주문 페이지 이동시 필수 파라미터 'where'가 존재하지않음");
         }
 
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String orderId = date + orderService.createOrderId(date, totalPrice);        // 주문번호
 
         HttpSession session = request.getSession();
+        session.setAttribute("orderId", orderId);
+        session.setAttribute("itemList", orderItems);
+        session.setAttribute("totalPrice", totalPrice);
 
-        session.setAttribute("test", orderId);
-
-        model.addAttribute("items", items);
+        model.addAttribute("orderItems", orderItems);
         model.addAttribute("orderId", orderId);
         model.addAttribute("orderName", orderName);
         model.addAttribute("totalPrice", totalPrice);
 
         return "order/order_checkout";
-    }
-
-
-
-
-    @PostMapping("/order/paymethod/check")
-    public @ResponseBody String payMethodCheck(String payType){
-        PayMethod payMethod = PayMethod.findByPayType(payType);
-        if(payMethod.getTitle().equals("없음")){
-            return "fail";
-        }else{
-            return "success";
-        }
     }
 
 
@@ -105,26 +94,20 @@ public class OrderController {
 
 
     @PostMapping("/order/saveAddress")
+    @ApiOperation(value = "주문페이지로 이동후 주문버튼 클릭시 배송정보와 주문자정보 세션에 저장")
     public @ResponseBody String saveAddressDto(AddressDto addressDto, HttpServletRequest request){
-        // 주문하기 버튼 클릭시 ajax로 먼저 상품 정보들 가져와서
-        // session에 저장해놓고 주문 성공 세션에 있는 값들로 Delivery객체 만들기 위해서
-        // 즉 session에 저장해놓는 테스트
 
+        // 배송정보 유효성 검사
         HttpSession session = request.getSession();
         session.setAttribute("addressDto", addressDto);
 
-        System.out.println(addressDto);
-        return "good";
+        return "";
     }
 
 
     @RequestMapping("/success")
     public String confirmPayment(@RequestParam String paymentKey, @RequestParam String orderId,
                                  @RequestParam int amount, Model model, HttpServletRequest request) throws Exception {
-
-        // 결제 정보 유효성 검사
-        // 주문페이지로 이동할 때 redis에 주문번호 : 금액으로 저장해놨던 값과 비교
-        // redis에서 주문번호 값으로 확인하고 fail로 보내거나 로직 실행하면됨
 
         // 결제 승인 요청
         ResponseEntity<JsonNode> responseEntity = orderService.tossPayment(paymentKey, orderId, amount);
@@ -133,7 +116,7 @@ public class OrderController {
             // 여기서 Delivery객체 생성해야함
 
             HttpSession session = request.getSession();
-            System.out.println(session.getAttribute("addressDto"));
+
 
             TossVirtualAccount toss = orderService.getVirtualAccountInfo(responseEntity.getBody());
             model.addAttribute("toss", toss);

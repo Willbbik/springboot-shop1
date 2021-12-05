@@ -1,6 +1,8 @@
 package com.ecommerce.newshop1.service;
 
+import com.ecommerce.newshop1.dto.AddressDto;
 import com.ecommerce.newshop1.dto.ItemDto;
+import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.dto.TossVirtualAccount;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.exception.ItemNotFoundException;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public List<ItemDto> itemToPayment(String itemList) {
+    public List<OrderItemDto> itemToPayment(String itemList) {
 
         JsonParser jsonParser = new JsonParser();
         JsonArray jsonElements = (JsonArray) jsonParser.parse(itemList);
@@ -54,11 +57,13 @@ public class OrderServiceImpl implements OrderService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지 않습니다. 상품번호 : " + itemId));
 
-        ItemDto itemDto = mapper.map(item, ItemDto.class);
-        itemDto.setTotalPrice(item.getPrice() * quantity);
-        itemDto.setQuantity(quantity);
+        OrderItemDto itemDto = OrderItemDto.builder()
+                .item(item)
+                .quantity(quantity)
+                .totalPrice(item.getPrice() * quantity)
+                .build();
 
-        List<ItemDto> itemDtoList = new ArrayList<>();
+        List<OrderItemDto> itemDtoList = new ArrayList<>();
         itemDtoList.add(itemDto);
 
         return itemDtoList;
@@ -105,4 +110,14 @@ public class OrderServiceImpl implements OrderService {
                 .build();
     }
 
+//    @Override
+//    public void doOrder(HttpSession session) {
+//
+//        String orderId = (String) session.getAttribute("orderId");
+//        int totalPrice = (int) session.getAttribute("totalPrice");
+//        List<ItemDto> itemList  = (List<ItemDto>) session.getAttribute("itemList");
+//        AddressDto addressDto = (AddressDto) session.getAttribute("addressDto");
+//
+//
+//    }
 }
