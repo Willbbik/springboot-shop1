@@ -9,6 +9,7 @@ import com.ecommerce.newshop1.utils.enums.PayMethod;
 import com.ecommerce.newshop1.utils.enums.TossPayments;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +42,7 @@ public class OrderController {
 
 
     @PostMapping("/order/checkout")
+    @ApiOperation(value = "구매할 상품 선택후 주문페이지로 이동")
     public String checkout(String itemList, String where, Model model, HttpServletRequest request) throws Exception {
 
         List<ItemDto> items = new ArrayList<>();   // view에 상품 띄워주기 위해서
@@ -131,7 +133,7 @@ public class OrderController {
             // 여기서 Delivery객체 생성해야함
 
             HttpSession session = request.getSession();
-            System.out.println(session.getAttribute("customerName"));
+            System.out.println(session.getAttribute("addressDto"));
 
             TossVirtualAccount toss = orderService.getVirtualAccountInfo(responseEntity.getBody());
             model.addAttribute("toss", toss);
