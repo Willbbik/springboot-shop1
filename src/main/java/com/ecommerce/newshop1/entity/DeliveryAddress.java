@@ -3,10 +3,7 @@ package com.ecommerce.newshop1.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -17,9 +14,11 @@ public class DeliveryAddress {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    private Delivery delivery;
+
     private String customerName;
     private String customerPhoneNum;
-
     private String recipientName;
     private String recipientPhoneNum;
     private String zipcode;

@@ -18,6 +18,6 @@ public interface OrderService {
 
     TossVirtualAccount getVirtualAccountInfo(JsonNode successNode);
 
-    // void doOrder(HttpSession session);
+    void doOrder(HttpSession session);
 
 }

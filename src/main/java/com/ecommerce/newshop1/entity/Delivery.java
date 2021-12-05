@@ -1,17 +1,15 @@
 package com.ecommerce.newshop1.entity;
 
-
-import com.ecommerce.newshop1.utils.enums.DeliveryStatus;
 import com.ecommerce.newshop1.utils.enums.DepositStatus;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "delivery")
 public class Delivery {
@@ -31,10 +29,10 @@ public class Delivery {
     @Enumerated(EnumType.STRING)
     private DepositStatus depositStatus;
 
-    @ColumnDefault("0")
-    private int totalPrice;
+    public void setDeliveryAddress(DeliveryAddress deliveryAddress){
+        this.deliveryAddress = deliveryAddress;
+        deliveryAddress.setDelivery(this);
+    }
 
-    @Column(name = "order_num", nullable = false)
-    private String orderNum;
 
 }

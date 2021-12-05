@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum DeliveryStatus {
 
+    DEPOSIT_READY("입금대기"),
     DELIVERY_READY("배송준비중"),
     DELIVERY_START("배송중"),
     DELIVERY_COMPLETION("배송완료"),
