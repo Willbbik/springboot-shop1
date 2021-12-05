@@ -69,7 +69,7 @@ public class OrderController {
 
         HttpSession session = request.getSession();
         session.setAttribute("orderId", orderId);
-        session.setAttribute("itemList", orderItems);
+        session.setAttribute("orderItems", orderItems);
         session.setAttribute("totalPrice", totalPrice);
 
         model.addAttribute("orderItems", orderItems);
