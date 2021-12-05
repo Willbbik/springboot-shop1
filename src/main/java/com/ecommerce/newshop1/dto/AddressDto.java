@@ -12,11 +12,10 @@ public class AddressDto {
 
     private String customerName;
     private String customerPhoneNum;
-    private String phoneNum;
+    private String recipientName;
+    private String recipientPhoneNum;
     private String zipcode;
     private String address;
     private String detailAddress;
-
-
 
 }

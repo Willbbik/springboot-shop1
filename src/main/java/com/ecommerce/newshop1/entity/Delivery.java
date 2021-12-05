@@ -24,9 +24,9 @@ public class Delivery {
     @JoinColumn(name = "orders")
     private Order order;
 
-    @OneToOne
-    @JoinColumn(name = "member_address")
-    private MemberAddress memberAddress;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "delivery_address")
+    private DeliveryAddress deliveryAddress;
 
     @Enumerated(EnumType.STRING)
     private DepositStatus depositStatus;

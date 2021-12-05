@@ -23,6 +23,7 @@ function calculateTotalPrice(){
 $(document).on("click", "#order-button", function(){
 
     let tossPayments = TossPayments("test_ck_OyL0qZ4G1VO5jv2azY8oWb2MQYgm");
+    let payMethod = $("input[name='paymethod']:checked").val();
 
     if(payMethod === 'VIRTUAL_ACCOUNT'){
 
@@ -35,10 +36,8 @@ $(document).on("click", "#order-button", function(){
             failUrl: window.location.origin + "/fail",
         };
 
-        let method = "가상계좌";
-
-        sendAddress(method, paymentData);
-        tossPayments.requestPayment(method, paymentData);
+        sendAddress();
+        tossPayments.requestPayment("가상계좌", paymentData);
 
     }else if(paymethod === 'KAKAO_PAY'){
         alert("카드결제");
@@ -46,7 +45,7 @@ $(document).on("click", "#order-button", function(){
 });
 
 
-function sendAddress(method, paymentData){
+function sendAddress(){
 
     let token = $("meta[name='_csrf']").attr("content");
     let header = $("meta[name='_csrf_header']").attr("content");
@@ -54,8 +53,8 @@ function sendAddress(method, paymentData){
     let param = {
          customerName : $("#customerName").val(),
          customerPhoneNum : $("#customerPhoneNum").val(),
-         name : $("#name").val(),
-         phoneNum : $("#pphoneNum").val(),
+         recipientName : $("#recipientName").val(),
+         recipientPhoneNum : $("#recipientPhoneNum").val(),
          zipcode : $("#zipcode").val(),
          address : $("#address").val(),
          detailAddress : $("#detailAddress").val()
