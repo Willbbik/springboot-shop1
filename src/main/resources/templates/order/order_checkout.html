@@ -11,6 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="/assets/css/common/sidebar.css" rel="stylesheet">
     <link href="/assets/css/order/order.css" rel="stylesheet">
+    <link href="/assets/css/order/orderCheckout.css" rel="stylesheet">
 </head>
 <body>
 
@@ -93,18 +94,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="item : ${items}">
+                    <tr th:each="item : ${orderItems}">
                         <td>
-                            <a th:href="@{'/items/' + ${item.id}}"><img th:src="@{${item.imageUrl}}" width="70px" height="60px"></a>
+                            <a th:href="@{'/items/' + ${item.item.id}}"><img th:src="@{${item.item.imageUrl}}" width="70px" height="60px"></a>
                         </td>
                         <td>
-                            <a th:href="@{'/items/' + ${item.id}}">
-                                <div class="item-name" th:text="${item.itemName}"></div>
-                                <div class="item-price" th:text="${item.price}"></div>
+                            <a th:href="@{'/items/' + ${item.item.id}}">
+                                <div class="item-name" th:text="${item.item.itemName}"></div>
+                                <div class="item-price" th:text="${item.item.price}"></div>
                             </a>
                         </td>
                         <td>
-                            <div class="item_color" th:text="${item.color} + ' / ' + ${item.size}"></div>
+                            <div class="item_color" th:text="${item.item.color} + ' / ' + ${item.item.size}"></div>
                             <div class="item_quantity" th:text="${item.quantity} + '개'"></div>
                         </td>
                         <td>
@@ -117,47 +118,63 @@
                 </tbody>
             </table>
 
-            <form>
-                <div style="border-color: black;">
-                    <h3>주문자 정보</h3>
-                    <div>
-                        <dl>
-                            <dt><label for="customerName">이름 </label></dt>
-                            <dd><input type="text" id="customerName"></dd>
-                        </dl>
-                        <dl>
-                            <dt><label for="customerPhoneNum">휴대폰 </label></dt>
-                            <dd><input type="tel" id="customerPhoneNum"></dd>
-                        </dl>
-                    </div>
-                </div>
+            <h2>주문자 정보</h2>
+            <table class="order_delivery">
+                <colgroup>
+                    <col width="120px"/>
+                    <col width="auto"/>
+                </colgroup>
+                <tr>
+                    <th><label for="customerName">주문자 이름<span>＊</span></label></th>
+                    <td><input type="text" id="customerName" placeholder="주문자 이름"></td>
+                </tr>
+                <tr>
+                    <th><label for="customerPhoneNum">주문자 전화번호<span>＊</span></label></th>
+                    <td><input type="text" id="customerPhoneNum" placeholder="주문자 전화번호"></td>
+                </tr>
+            </table>
 
-                <div>
-                    <h3>배송지 정보</h3>
-                    <input type="text" id="recipientName" placeholder="수령인 이름"><br>
-                    <input type="text" id="recipientPhoneNum" placeholder="전화번호"><br>
-                    <input type="text" id="zipcode" placeholder="우편번호">
-                    <input type="button" onclick="createAddress()" value="우편번호 찾기"><br>
-                    <input type="text" id="address" placeholder="주소"><br>
-                    <input type="text" id="detailAddress" placeholder="상세주소">
-                </div>
+            <h2>배송지 정보</h2>
+            <table class="order_delivery">
+                <colgroup>
+                    <col width="120px"/>
+                    <col width="auto"/>
+                </colgroup>
+                <tr>
+                    <th><label for="recipientName">수령인<span>＊</span></label></th>
+                    <td><input type="text" id="recipientName" placeholder="수령인"></td>
+                </tr>
+                <tr>
+                    <th><label for="recipientPhoneNum">수령인 전화번호<span>＊</span></label></th>
+                    <td><input type="text" id="recipientPhoneNum" placeholder="수령인 전화번호"></td>
+                </tr>
+                <tr>
+                    <!-- vertical align을 맞추기위해 th와 td를 같은 class로 지정-->
+                    <th><label for="zipcode">배송주소<span>＊</span></label></th>
+                    <td>
+                        <input type="text" id="zipcode" placeholder="우편번호">
+                        <input type="button" onclick="createAddress()" value="우편번호 찾기"><br>
+                        <input type="text" id="address" placeholder="주소"><br>
+                        <input type="text" id="detailAddress" placeholder="상세주소">
+                    </td>
+                </tr>
+            </table>
 
-                <div>
-                    <h2 th:text="'총 결제 예상금액 = '+ ${totalPrice}"></h2>
-                </div>
+            <div>
+                <h2 th:text="'총 결제 예상금액 = '+ ${totalPrice}"></h2>
+            </div>
 
-                <div id="paymentList">
-                    <h2>결제수단</h2>
-                    <input type="radio" name="paymethod" checked="checked" id="pay1" value="KAKAO_PAY">
-                    <label for="pay1">카카오페이</label>
-                    <input type="radio" name="paymethod" id="pay2" value="VIRTUAL_ACCOUNT">
-                    <label for="pay2">가상계좌</label>
-                </div>
+            <div id="paymentList">
+                <h2>결제수단</h2>
+                <input type="radio" name="paymethod" checked="checked" id="pay1" value="KAKAO_PAY">
+                <label for="pay1">카카오페이</label>
+                <input type="radio" name="paymethod" id="pay2" value="VIRTUAL_ACCOUNT">
+                <label for="pay2">가상계좌</label>
+            </div>
 
-                <div>
-                    <button type="button" id="order-button" class="order">바로구매</button>
-                </div>
-            </form>
+            <div>
+                <button type="button" id="order-button" class="order">바로구매</button>
+            </div>
             <!--   end   -->
         </div>
     </div>
