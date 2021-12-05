@@ -33,4 +33,9 @@ public class OrderItem {
 
     private int totalPrice;
 
+    public void setOrder(Order order){
+        this.order = order;
+    }
+
+
 }

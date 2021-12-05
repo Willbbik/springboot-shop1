@@ -25,7 +25,7 @@ $(document).on("click", "#order-button", function(){
     let tossPayments = TossPayments("test_ck_OyL0qZ4G1VO5jv2azY8oWb2MQYgm");
     let payMethod = $("input[name='paymethod']:checked").val();
 
-    if(payMethod === 'VIRTUAL_ACCOUNT'){
+    if(payMethod === '가상계좌'){
 
         let paymentData = {
             amount: $("#totalPrice").val(),
@@ -37,10 +37,10 @@ $(document).on("click", "#order-button", function(){
         };
 
         sendAddress();
-        tossPayments.requestPayment("가상계좌", paymentData);
+        tossPayments.requestPayment(payMethod, paymentData);
 
-    }else if(paymethod === 'KAKAO_PAY'){
-        alert("카드결제");
+    }else if(paymethod === '카카오페이'){
+        alert("카카오페이");
     }
 });
 
@@ -57,7 +57,8 @@ function sendAddress(){
          recipientPhoneNum : $("#recipientPhoneNum").val(),
          zipcode : $("#zipcode").val(),
          address : $("#address").val(),
-         detailAddress : $("#detailAddress").val()
+         detailAddress : $("#detailAddress").val(),
+         payMethod : $("input[name='paymethod']:checked").val()
     }
 
      $.ajax({

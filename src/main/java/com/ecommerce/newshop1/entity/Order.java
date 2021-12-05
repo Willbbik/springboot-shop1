@@ -3,6 +3,7 @@ package com.ecommerce.newshop1.entity;
 
 import com.ecommerce.newshop1.utils.enums.PayType;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -38,8 +40,52 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private PayType payType;
 
+    @ColumnDefault("0")
+    private int totalPrice;
+
+    @Column(name = "order_num", nullable = false)
+    private String orderNum;
+
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime createdDate;
+
+
+    public void setDelivery(Delivery delivery){
+        this.delivery = delivery;
+        delivery.setOrder(this);
+    }
+
+    public void setMember(Member member){
+        this.member = member;
+    }
+
+    public void setOrderItems(OrderItem orderItem){
+        orderItems.add(orderItem);
+        orderItem.setOrder(this);
+    }
+
+    public static Order createOrder(Member member, Delivery delivery, List<OrderItem> orderItems, PayType payType, String orderId){
+
+        Order order = new Order();
+        order.setMember(member);
+        order.setDelivery(delivery);
+
+        for(OrderItem orderItem : orderItems){
+            order.setOrderItems(orderItem);
+        }
+        order.setPayType(payType);
+        order.setOrderNum(orderId);
+        order.setTotalPrice(getOrderTotalPrice(orderItems));
+        return order;
+    }
+
+    public static int getOrderTotalPrice(List<OrderItem> orderItems){
+        int totalPrice = 0;
+        for(OrderItem orderItem : orderItems){
+            totalPrice += orderItem.getTotalPrice();
+        }
+        return totalPrice;
+    }
 
 }

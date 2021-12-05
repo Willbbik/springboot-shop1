@@ -5,10 +5,9 @@ import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.service.CartService;
 import com.ecommerce.newshop1.service.ItemService;
 import com.ecommerce.newshop1.service.OrderService;
-import com.ecommerce.newshop1.utils.enums.PayMethod;
+import com.ecommerce.newshop1.utils.enums.PayType;
 import com.ecommerce.newshop1.utils.enums.TossPayments;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -17,12 +16,10 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -39,7 +36,6 @@ public class OrderController {
 
     @Value("${tosspayments.secret_key}")
     String SECRET_KEY;
-
 
     @PostMapping("/order/checkout")
     @ApiOperation(value = "구매할 상품 선택후 주문페이지로 이동")
@@ -70,7 +66,6 @@ public class OrderController {
         HttpSession session = request.getSession();
         session.setAttribute("orderId", orderId);
         session.setAttribute("orderItems", orderItems);
-        session.setAttribute("totalPrice", totalPrice);
 
         model.addAttribute("orderItems", orderItems);
         model.addAttribute("orderId", orderId);
@@ -95,11 +90,19 @@ public class OrderController {
 
     @PostMapping("/order/saveAddress")
     @ApiOperation(value = "주문페이지로 이동후 주문버튼 클릭시 배송정보와 주문자정보 세션에 저장")
-    public @ResponseBody String saveAddressDto(AddressDto addressDto, HttpServletRequest request){
+    public @ResponseBody String saveAddressDto(AddressDto addressDto, String payMethod, HttpServletRequest request){
 
         // 배송정보 유효성 검사해야함
         HttpSession session = request.getSession();
         session.setAttribute("addressDto", addressDto);
+
+        PayType payType = PayType.findByPayType(payMethod);
+
+        if(!payType.getTitle().equals("없음")){
+            session.setAttribute("payType", payType);
+        }else{
+            throw new IllegalArgumentException("존재하지 않는 결제타입입니다.");
+        }
 
         return "";
     }
@@ -115,7 +118,8 @@ public class OrderController {
         if(responseEntity.getStatusCode() == HttpStatus.OK) {
 
             // 주문 메소드 생성해야함
-
+            // 로그인 검사
+            orderService.doOrder(request.getSession());
             TossVirtualAccount toss = orderService.getVirtualAccountInfo(responseEntity.getBody());
             model.addAttribute("toss", toss);
             return "order/order_success";
