@@ -97,7 +97,7 @@ public class OrderController {
     @ApiOperation(value = "주문페이지로 이동후 주문버튼 클릭시 배송정보와 주문자정보 세션에 저장")
     public @ResponseBody String saveAddressDto(AddressDto addressDto, HttpServletRequest request){
 
-        // 배송정보 유효성 검사
+        // 배송정보 유효성 검사해야함
         HttpSession session = request.getSession();
         session.setAttribute("addressDto", addressDto);
 
@@ -113,10 +113,8 @@ public class OrderController {
         ResponseEntity<JsonNode> responseEntity = orderService.tossPayment(paymentKey, orderId, amount);
 
         if(responseEntity.getStatusCode() == HttpStatus.OK) {
-            // 여기서 Delivery객체 생성해야함
 
-            HttpSession session = request.getSession();
-
+            // 주문 메소드 생성해야함
 
             TossVirtualAccount toss = orderService.getVirtualAccountInfo(responseEntity.getBody());
             model.addAttribute("toss", toss);
