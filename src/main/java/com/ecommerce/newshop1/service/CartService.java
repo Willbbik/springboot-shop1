@@ -2,7 +2,6 @@ package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.CartDto;
 import com.ecommerce.newshop1.dto.CartItemDto;
-import com.ecommerce.newshop1.dto.ItemDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.entity.*;
 import com.ecommerce.newshop1.exception.ItemNotFoundException;
@@ -73,8 +72,14 @@ public class CartService {
         List<CartItem> cartItemList = cartItemRepository.findByCartId(cart.getId());
 
         // entity 타입을 dto로 변환
-        return cartItemList.stream()
+        List<CartItemDto> cartItemDtos = cartItemList.stream()
                 .map(p -> mapper.map(p, CartItemDto.class)).collect(Collectors.toList());
+
+        for(CartItemDto cartItemDto : cartItemDtos){
+            cartItemDto.setTotalPrice(cartItemDto.getItem().getPrice() * cartItemDto.getQuantity());
+        }
+
+        return cartItemDtos;
     }
 
     @Transactional(readOnly = true)
