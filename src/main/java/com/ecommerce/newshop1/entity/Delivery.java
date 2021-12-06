@@ -18,8 +18,7 @@ public class Delivery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "orders")
+    @OneToOne(mappedBy = "delivery", cascade = CascadeType.ALL)
     private Order order;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -33,6 +32,5 @@ public class Delivery {
         this.deliveryAddress = deliveryAddress;
         deliveryAddress.setDelivery(this);
     }
-
 
 }

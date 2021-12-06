@@ -30,12 +30,16 @@ public class Order {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "payment_info")
+    private OrderPaymentInformation paymentInfo;
 
     @Enumerated(EnumType.STRING)
     private PayType payType;
@@ -49,7 +53,6 @@ public class Order {
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime createdDate;
-
 
     public void setDelivery(Delivery delivery){
         this.delivery = delivery;
@@ -65,11 +68,17 @@ public class Order {
         orderItem.setOrder(this);
     }
 
-    public static Order createOrder(Member member, Delivery delivery, List<OrderItem> orderItems, PayType payType, String orderId){
+    public void setPaymentInfo(OrderPaymentInformation paymentInfo){
+        this.paymentInfo = paymentInfo;
+        paymentInfo.setOrder(this);
+    }
+
+    public static Order createOrder(Member member, Delivery delivery, List<OrderItem> orderItems, PayType payType, OrderPaymentInformation paymentInfo, String orderId){
 
         Order order = new Order();
         order.setMember(member);
         order.setDelivery(delivery);
+        order.setPaymentInfo(paymentInfo);
 
         for(OrderItem orderItem : orderItems){
             order.setOrderItems(orderItem);

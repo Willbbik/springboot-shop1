@@ -1,7 +1,7 @@
 package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.OrderItemDto;
-import com.ecommerce.newshop1.dto.TossVirtualAccount;
+import com.ecommerce.newshop1.entity.OrderPaymentInformation;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.ResponseEntity;
 
@@ -16,8 +16,8 @@ public interface OrderService {
 
     ResponseEntity<JsonNode> tossPayment(String paymentKey, String orderId, int amount) throws Exception;
 
-    TossVirtualAccount getVirtualAccountInfo(JsonNode successNode);
+    OrderPaymentInformation getVirtualAccountInfo(JsonNode successNode);
 
-    void doOrder(HttpSession session);
+    void doOrder(HttpSession session, OrderPaymentInformation paymentInfo);
 
 }

@@ -1,6 +1,7 @@
 package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.*;
+import com.ecommerce.newshop1.entity.OrderPaymentInformation;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.service.CartService;
 import com.ecommerce.newshop1.service.ItemService;
@@ -117,11 +118,16 @@ public class OrderController {
 
         if(responseEntity.getStatusCode() == HttpStatus.OK) {
 
-            // 주문 메소드 생성해야함
+            // 주문 메소드 생성해야함 ok
             // 로그인 검사
-            orderService.doOrder(request.getSession());
-            TossVirtualAccount toss = orderService.getVirtualAccountInfo(responseEntity.getBody());
-            model.addAttribute("toss", toss);
+
+            String payType = responseEntity.getBody().get("method").asText();
+
+            if(payType.equals("가상계좌")){
+                OrderPaymentInformation paymentInfo = orderService.getVirtualAccountInfo(responseEntity.getBody());
+                orderService.doOrder(request.getSession(), paymentInfo);
+            }
+
             return "order/order_success";
         } else {
 
