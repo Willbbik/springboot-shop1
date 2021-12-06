@@ -71,15 +71,10 @@ public class CartService {
         // 장바구니의 상품들 가져오기
         List<CartItem> cartItemList = cartItemRepository.findByCartId(cart.getId());
 
-        // entity 타입을 dto로 변환
-        List<CartItemDto> cartItemDtos = cartItemList.stream()
-                .map(p -> mapper.map(p, CartItemDto.class)).collect(Collectors.toList());
-
-        for(CartItemDto cartItemDto : cartItemDtos){
-            cartItemDto.setTotalPrice(cartItemDto.getItem().getPrice() * cartItemDto.getQuantity());
-        }
-
-        return cartItemDtos;
+        return cartItemList.stream()
+                .map(p -> mapper.map(p, CartItemDto.class))
+                .peek(p -> p.setTotalPrice(p.getItem().getPrice() * p.getQuantity()))
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
