@@ -2,6 +2,7 @@ package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.OrderPaymentInformation;
+import com.ecommerce.newshop1.exception.ParameterNotFoundException;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.service.CartService;
 import com.ecommerce.newshop1.service.ItemService;
@@ -61,7 +62,7 @@ public class OrderController {
                 totalPrice += itemDto.getTotalPrice();                                // 최종 결제 금액
             }
         }else{
-            throw new Exception("주문 페이지 이동시 필수 파라미터 'where'가 정상적인 값이 아님");
+            throw new ParameterNotFoundException("주문 페이지 이동시 필수 파라미터 'where'가 정상적인 값이 아님");
         }
 
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
