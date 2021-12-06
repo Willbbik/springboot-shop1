@@ -16,10 +16,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -58,12 +61,13 @@ public class OrderController {
                 totalPrice += itemDto.getTotalPrice();                                // 최종 결제 금액
             }
         }else{
-            throw new Exception("주문 페이지 이동시 필수 파라미터 'where'가 존재하지않음");
+            throw new Exception("주문 페이지 이동시 필수 파라미터 'where'가 정상적인 값이 아님");
         }
 
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String orderId = date + orderService.createOrderId(date, totalPrice);        // 주문번호
+        String orderId = date + orderService.createOrderId(date, totalPrice);        // 주문번호 생성
 
+        // 주문번호와 상품 번호들 세션에 저장. ( 마지막 최종 주문할 때 사용하기 위해서 )
         HttpSession session = request.getSession();
         session.setAttribute("orderId", orderId);
         session.setAttribute("orderItems", orderItems);
@@ -90,22 +94,19 @@ public class OrderController {
 
 
     @PostMapping("/order/saveAddress")
-    @ApiOperation(value = "주문페이지로 이동후 주문버튼 클릭시 배송정보와 주문자정보 세션에 저장")
-    public @ResponseBody String saveAddressDto(AddressDto addressDto, String payMethod, HttpServletRequest request){
+    @ApiOperation(value = "주문하기 버튼 클릭시 배송정보와 주문자정보 유효성검사 후 세션에 저장")
+    public @ResponseBody String saveAddressDto(@Valid AddressDto addressDto, String payMethod, Errors error, HttpServletRequest request){
 
-        // 배송정보 유효성 검사해야함
         HttpSession session = request.getSession();
-        session.setAttribute("addressDto", addressDto);
-
         PayType payType = PayType.findByPayType(payMethod);
 
-        if(!payType.getTitle().equals("없음")){
+        if(payType.getTitle().equals("없음")){
+            return "fail";
+        } else{
+            session.setAttribute("addressDto", addressDto);
             session.setAttribute("payType", payType);
-        }else{
-            throw new IllegalArgumentException("존재하지 않는 결제타입입니다.");
+            return "success";
         }
-
-        return "";
     }
 
 
