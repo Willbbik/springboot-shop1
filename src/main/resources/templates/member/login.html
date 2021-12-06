@@ -25,19 +25,18 @@
                 <span sec:authorize="isAnonymous()"><a th:href="@{/login}">로그인</a></span>
                 <span sec:authorize="isAuthenticated()"><a th:href="@{/logout}">로그아웃</a></span>
                 <span sec:authorize="isAnonymous()"><a th:href="@{/join}">회원가입</a></span>
-                <span><a href="#">Mypage</a></span>
-                <span><a href="#">Cart(0)</a></span>
+                <span><a th:href="@{/mypage}">MyPage</a></span>
+                <span><a th:href="@{/cart}">장바구니</a></span>
             </p>
             <li>-</li>
             <br/>
-            <li><a href="#">Top</a></li>
-            <li><a href="#">Bottom</a></li>
-            <li><a href="#">Cap</a></li>
+            <li><a th:href="@{/category/all}">All</a></li>
+            <li><a th:href="@{/category/top}">Top</a></li>
+            <li><a th:href="@{/category/bottom}">Bottom</a></li>
+            <li><a th:href="@{/category/cap}">Cap</a></li>
             <li>-</li>
             <br/>
-            <li><a href="/board/free">자유게시판</a></li>
-            <li><a href="/board/suggestion">건의게시판</a></li>
-            <li><a href="/board/write">게시판</a></li>
+            <li><a th:href="@{/board/list/all}">공지사항</a></li>
             <li>-</li>
             <br/>
             <li>CS CENTER</li>
@@ -46,22 +45,6 @@
             <li>평일 09:00 ~ 18:00</li>
             <li>-</li>
             <br/>
-            <li><a href="#">메뉴 4</a></li>
-            <li><a href="#">메뉴 5</a></li>
-            <li><a href="#">메뉴 6</a></li>
-            <li><a href="#">메뉴 7</a></li>
-            <li><a href="#">메뉴 8</a></li>
-            <li><a href="#">메뉴 9</a></li>
-            <li><a href="#">메뉴 1</a></li>
-            <li><a href="#">메뉴 2</a></li>
-            <li><a href="#">메뉴 3</a></li>
-            <li><a href="#">메뉴 4</a></li>
-            <li><a href="#">메뉴 5</a></li>
-            <li><a href="#">메뉴 6</a></li>
-            <li><a href="#">메뉴 7</a></li>
-            <li><a href="#">메뉴 8</a></li>
-            <li><a href="#">메뉴 9</a></li>
-
         </ul>
     </div>
     <!-- /사이드바 -->

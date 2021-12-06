@@ -105,13 +105,12 @@
                                 <input type="checkbox" class="checkbox-select">
                             </td>
                             <td>
-                                <a href="#"><img th:src="@{${cartItem.item.imageUrl}}" width="70px" height="60px"></a>
-                                <!--<a href="#"><img src="/assets/images/cloud.jpg" width="70px" height="60px"></a>-->
+                                <a th:href="@{'/items/' + ${cartItem.item.id}}"><img th:src="@{${cartItem.item.imageUrl}}" width="70px" height="60px"></a>
                             </td>
                             <td>
-                                <a href="#">
+                                <a th:href="@{'/items/' + ${cartItem.item.id}}">
                                     <div class="item-name" th:text="${cartItem.item.itemName}"></div>
-                                    <div class="item-price" th:text="${cartItem.item.price}"></div>
+                                    <div class="item-price" th:text="${cartItem.item.price} + '원'"></div>
                                 </a>
                             </td>
                             <td>
