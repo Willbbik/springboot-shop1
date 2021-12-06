@@ -18,5 +18,6 @@ public class CartItemDto {
     private Cart cart;
     private Item item;
     private int quantity;
+    private int totalPrice;
 
 }
