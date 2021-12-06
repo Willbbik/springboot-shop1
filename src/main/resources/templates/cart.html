@@ -117,10 +117,10 @@
                             <td>
                                 <div class="item-color" th:text="${cartItem.item.color} + ' / ' + ${cartItem.item.size}"></div>
 
-                                <div > 20000원 </div>
+                                <div th:text="${cartItem.item.price} + '원'"></div>
                             </td>
                             <td>
-                                <div> 총 금액 : 40000원 </div>
+                                <div th:text="'총 금액 : ' + ${cartItem.totalPrice}"></div>
                                 <button class="order_single_btn"> 주문하기 </button>
                             </td>
                         </tr>
