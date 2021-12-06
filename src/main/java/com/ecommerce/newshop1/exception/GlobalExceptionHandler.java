@@ -21,7 +21,6 @@ public class GlobalExceptionHandler{
                 .body(new ErrorResponse(e.getErrorCode()));
     }
 
-
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleException(Exception e){
@@ -32,12 +31,9 @@ public class GlobalExceptionHandler{
 
 
     @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseBody
-    public ResponseEntity<ErrorResponse> illegalArgumentException(IllegalArgumentException e){
+    public String illegalArgumentException(IllegalArgumentException e){
         log.error("IllegalArgumentException {}",  e.getMessage());
-        return ResponseEntity
-                .status(ErrorCode.NO_EXISTS.getStatus().value())
-                .body(new ErrorResponse(ErrorCode.NO_EXISTS));
+        return "error/400";
     }
 
     @ExceptionHandler(ItemNotFoundException.class)
@@ -52,6 +48,14 @@ public class GlobalExceptionHandler{
         log.error("MemberNotFoundException {}", e.getMessage());
         log.error("MemberNotFoundException reason : {}", (Object) e.getStackTrace());
         return "error/500";
+    }
+
+    @ExceptionHandler(ParameterNotFoundException.class)
+    public String parameterNotFound(ParameterNotFoundException e){
+
+        log.error("ParameterNotFoundException {}", e.getMessage());
+        log.error("ParameterNotFoundException reason : {}", e.getCause());
+        return "error/400";
     }
 
 
