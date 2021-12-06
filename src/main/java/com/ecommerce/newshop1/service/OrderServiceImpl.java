@@ -2,14 +2,10 @@ package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.AddressDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
-import com.ecommerce.newshop1.dto.TossVirtualAccount;
 import com.ecommerce.newshop1.entity.*;
 import com.ecommerce.newshop1.exception.ItemNotFoundException;
 import com.ecommerce.newshop1.exception.MemberNotFoundException;
-import com.ecommerce.newshop1.repository.DeliveryRepository;
-import com.ecommerce.newshop1.repository.ItemRepository;
-import com.ecommerce.newshop1.repository.MemberRepository;
-import com.ecommerce.newshop1.repository.OrderRepository;
+import com.ecommerce.newshop1.repository.*;
 import com.ecommerce.newshop1.utils.enums.DeliveryStatus;
 import com.ecommerce.newshop1.utils.enums.DepositStatus;
 import com.ecommerce.newshop1.utils.enums.PayType;
@@ -37,6 +33,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
+    private final PaymentInfoRepository paymentInfoRepository;
     private final OrderRepository orderRepository;
     private final DeliveryRepository deliveryRepository;
     private final MemberRepository memberRepository;
@@ -106,49 +103,48 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public TossVirtualAccount getVirtualAccountInfo(JsonNode successNode) {
+    public OrderPaymentInformation getVirtualAccountInfo(JsonNode successNode) {
 
         JsonNode virtualAccount = successNode.get("virtualAccount");
 
-        return TossVirtualAccount.builder()
+        return OrderPaymentInformation.builder()
+                .payType(PayType.VIRTUAL_ACCOUNT.getTitle())
                 .accountNumber(virtualAccount.get("accountNumber").asText())
-                .accountType(virtualAccount.get("accountType").asText())
                 .bank(virtualAccount.get("bank").asText())
-                .customerName(virtualAccount.get("customerName").asText())
                 .dueDate(virtualAccount.get("dueDate").asText())
-                .refundStatus(virtualAccount.get("refundStatus").asText())
-                .expired(virtualAccount.get("expired").asBoolean())
-                .settlementStatus(virtualAccount.get("settlementStatus").asText())
                 .build();
     }
 
     @Override
     @Transactional
-    public void doOrder(HttpSession session) {
+    public void doOrder(HttpSession session, OrderPaymentInformation paymentInfo) {
 
+        // 세션에서 배송 정보 가져오기
         String orderId = (String) session.getAttribute("orderId");
         List<OrderItemDto> itemList  = (List<OrderItemDto>) session.getAttribute("orderItems");
         AddressDto addressDto = (AddressDto) session.getAttribute("addressDto");
         PayType payType = (PayType) session.getAttribute("payType");
         String userId = security.getName();
 
-        // 1 order 만들기
+        // order객체에 저장하기 위해서
         Member member = memberRepository.findByuserId(userId)
                 .orElseThrow(() -> new MemberNotFoundException("해당 아이디가 존재하지 않습니다. 아이디 : " + userId));
         List<OrderItem> orderItems = itemList.stream()
                 .map(p -> mapper.map(p, OrderItem.class)).collect(Collectors.toList());
 
+        // 배송지
         DeliveryAddress deliveryAddress = mapper.map(addressDto, DeliveryAddress.class);
 
         Delivery delivery = new Delivery();
         delivery.setDeliveryAddress(deliveryAddress);
         delivery.setDepositStatus(DepositStatus.DEPOSIT_READY);
 
-        Order order = Order.createOrder(member, delivery, orderItems, payType, orderId);
-        System.out.println(order);
-        orderRepository.save(order);
-        deliveryRepository.save(delivery);
+        Order order = Order.createOrder(member, delivery, orderItems, payType, paymentInfo, orderId);
 
+        // 주문
+        orderRepository.save(order);
+
+        // 주문완료 후 세션에서 배송정보 제거
         session.removeAttribute("orderId");
         session.removeAttribute("orderItems");
         session.removeAttribute("addressDto");
