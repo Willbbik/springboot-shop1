@@ -1,5 +1,6 @@
 package com.ecommerce.newshop1.service;
 
+import com.ecommerce.newshop1.dto.AddressDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.entity.OrderPaymentInformation;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,5 +20,7 @@ public interface OrderService {
     OrderPaymentInformation getVirtualAccountInfo(JsonNode successNode);
 
     void doOrder(HttpSession session, OrderPaymentInformation paymentInfo);
+
+    // boolean addressDtoValidationCheck(AddressDto addressDto);
 
 }
