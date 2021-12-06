@@ -1,5 +1,6 @@
 package com.ecommerce.newshop1.controller;
 
+import com.ecommerce.newshop1.dto.BoardDto;
 import com.ecommerce.newshop1.dto.ItemDto;
 import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.Item;
@@ -7,6 +8,7 @@ import com.ecommerce.newshop1.entity.ItemImage;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.service.ItemService;
 import com.ecommerce.newshop1.utils.ItemPagination;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -42,6 +44,19 @@ public class AdminController {
     public String adminMain(){
 
         return "admin/admin_main";
+    }
+
+    @GetMapping("/admin/write/notice")
+    public String write(){
+        return "admin/admin_writenotice";
+    }
+
+    @ApiOperation(value = "공지사항 저장")
+    @PostMapping("/admin/write/notice")
+    public String writeNotice(BoardDto boardDto){
+
+        System.out.println(boardDto.getSubject());
+        return "redirect:/admin/write/notice";
     }
 
     @GetMapping("/admin/register")
