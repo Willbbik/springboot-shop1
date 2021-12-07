@@ -39,6 +39,7 @@ public class OrderServiceImpl implements OrderService {
     private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
     private final RedisService redisService;
+    private final CartService cartService;
     private final SecurityService security;
 
     ModelMapper mapper = new ModelMapper();
@@ -124,6 +125,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItemDto> itemList  = (List<OrderItemDto>) session.getAttribute("orderItems");
         AddressDto addressDto = (AddressDto) session.getAttribute("addressDto");
         PayType payType = (PayType) session.getAttribute("payType");
+        List<Long> cartItemIdList = (List<Long>) session.getAttribute("cartItemIdList");
         String userId = security.getName();
 
         // order객체에 저장하기 위해서
@@ -143,6 +145,11 @@ public class OrderServiceImpl implements OrderService {
 
         // 주문
         orderRepository.save(order);
+        // 장바구니에서 지우기
+        if(cartItemIdList != null) {
+            cartService.deleteCartItemAllById(cartItemIdList);
+            session.removeAttribute("cartItemIdList");
+        }
 
         // 주문완료 후 세션에서 배송정보 제거
         session.removeAttribute("orderId");
