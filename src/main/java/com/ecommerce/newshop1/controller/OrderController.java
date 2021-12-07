@@ -58,7 +58,7 @@ public class OrderController {
             // cart일 경우 idList 장바구니 아이템의 번호를 의미
 
             orderItems = cartService.cartItemToPayment(itemList);
-            orderName = orderItems.get(0).getItem().getItemName() + "외 " + (orderItems.size() - 1) + "건"; // 주문 상품명
+            orderName = orderItems.get(0).getItem().getItemName() + " 외 " + (orderItems.size() - 1) + "건"; // 주문 상품명
             for(OrderItemDto itemDto : orderItems){
                 totalPrice += itemDto.getTotalPrice();
             }

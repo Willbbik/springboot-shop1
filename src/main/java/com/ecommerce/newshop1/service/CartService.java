@@ -9,6 +9,7 @@ import com.ecommerce.newshop1.repository.CartItemRepository;
 import com.ecommerce.newshop1.repository.CartRepository;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.repository.MemberRepository;
+import com.ecommerce.newshop1.utils.enums.DeliveryStatus;
 import com.google.gson.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -103,6 +104,7 @@ public class CartService {
                     .item(cartItem.getItem())
                     .quantity(cartItem.getQuantity())
                     .totalPrice(cartItem.getItem().getPrice() * cartItem.getQuantity())
+                    .deliveryStatus(DeliveryStatus.DEPOSIT_READY)
                     .build();
             itemDtoList.add(itemDto);
         }

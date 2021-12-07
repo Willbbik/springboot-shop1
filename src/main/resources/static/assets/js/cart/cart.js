@@ -7,7 +7,7 @@ $(function(){
         let tr = $(this).closest("tr");
         let cartId = tr.find("input[name='cartItemId']").val();
         let cartJson = {cartItemId : cartId};
-        
+
         cartList.push(cartJson);
 
         const form = $("<form method='post'></form>");
