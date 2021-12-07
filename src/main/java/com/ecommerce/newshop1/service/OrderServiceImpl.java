@@ -151,8 +151,4 @@ public class OrderServiceImpl implements OrderService {
         session.removeAttribute("payType");
     }
 
-//    @Override
-//    public boolean addressDtoValidationCheck(AddressDto addressDto) {
-//
-//    }
 }

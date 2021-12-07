@@ -78,40 +78,72 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderItemDto> cartItemToPayment(String itemList){
+    public List<OrderItemDto> cartItemToPayment(String cartIdList){
 
         JsonParser jsonParser = new JsonParser();
-        JsonArray jsonElements = (JsonArray) jsonParser.parse(itemList);
+        JsonArray jsonElements = (JsonArray) jsonParser.parse(cartIdList);
 
-        List<Long> itemIdList = new ArrayList<>();
-        List<Integer> quantityList = new ArrayList<>();
+        List<Long> cartItemIdList = new ArrayList<>();
         List<OrderItemDto> itemDtoList = new ArrayList<>();
 
         // 상품 번호와 개수를 배열에 차례대로 담기
         for (int i = 0; i <jsonElements.size(); i++) {
 
             JsonObject jsonObject = (JsonObject) jsonElements.get(i);
-            Long itemId = Long.parseLong(jsonObject.get("itemId").getAsString());
-            int quantity = Integer.parseInt(jsonObject.get("quantity").getAsString());
+            Long cartItemId = jsonObject.get("cartItemId").getAsLong();
 
-            itemIdList.add(itemId);
-            quantityList.add(quantity);
+            cartItemIdList.add(cartItemId);
         }
 
-        for(int i = 0; i < itemIdList.size(); i++){
-            Item item = itemRepository.findById(itemIdList.get(i))
-                    .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지 않습니다."));
+        for(int i = 0; i < cartItemIdList.size(); i++){
+            CartItem cartItem = cartItemRepository.findById((cartItemIdList.get(i)))
+                    .orElseThrow(() -> new ItemNotFoundException("해당 장바구니 상품이 존재하지 않습니다."));
 
             OrderItemDto itemDto = OrderItemDto.builder()
-                    .item(item)
-                    .quantity(quantityList.get(i))
-                    .totalPrice(item.getPrice() * quantityList.get(i))
+                    .item(cartItem.getItem())
+                    .quantity(cartItem.getQuantity())
+                    .totalPrice(cartItem.getItem().getPrice() * cartItem.getQuantity())
                     .build();
-
             itemDtoList.add(itemDto);
         }
         return itemDtoList;
     }
+
+//    @Transactional(readOnly = true)
+//    public List<OrderItemDto> cartItemToPayment(String itemList){
+//
+//        JsonParser jsonParser = new JsonParser();
+//        JsonArray jsonElements = (JsonArray) jsonParser.parse(itemList);
+//
+//        List<Long> itemIdList = new ArrayList<>();
+//        List<Integer> quantityList = new ArrayList<>();
+//        List<OrderItemDto> itemDtoList = new ArrayList<>();
+//
+//        // 상품 번호와 개수를 배열에 차례대로 담기
+//        for (int i = 0; i <jsonElements.size(); i++) {
+//
+//            JsonObject jsonObject = (JsonObject) jsonElements.get(i);
+//            Long itemId = Long.parseLong(jsonObject.get("itemId").getAsString());
+//            int quantity = Integer.parseInt(jsonObject.get("quantity").getAsString());
+//
+//            itemIdList.add(itemId);
+//            quantityList.add(quantity);
+//        }
+//
+//        for(int i = 0; i < itemIdList.size(); i++){
+//            Item item = itemRepository.findById(itemIdList.get(i))
+//                    .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지 않습니다."));
+//
+//            OrderItemDto itemDto = OrderItemDto.builder()
+//                    .item(item)
+//                    .quantity(quantityList.get(i))
+//                    .totalPrice(item.getPrice() * quantityList.get(i))
+//                    .build();
+//
+//            itemDtoList.add(itemDto);
+//        }
+//        return itemDtoList;
+//    }
 
 
 
