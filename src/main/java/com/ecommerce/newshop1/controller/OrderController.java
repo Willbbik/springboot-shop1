@@ -45,19 +45,18 @@ public class OrderController {
     @ApiOperation(value = "구매할 상품 선택후 주문페이지로 이동")
     public String checkout(String itemList, String where, Model model, HttpServletRequest request) throws Exception {
 
-        List<OrderItemDto> orderItems = new ArrayList<>();   // view에 상품 띄워주기 위해서
-        String orderName = ""; // 브라우저의 sessionStorage에 저장 ( 가상계좌 결제시 주문 상품명으로 사용하기 위해서 )
+        List<OrderItemDto> orderItems = new ArrayList<>();
+        String orderName = ""; // 주문 상품명 ( 브라우저의 sessionStorage에 저장하기 위해서 )
+        HttpSession session = request.getSession();
         int totalPrice = 0;
 
         if(where.equals("product")){
-            orderItems = orderService.itemToPayment(itemList);         // 사용자가 구매하려는 상품
-            orderName = orderItems.get(0).getItem().getItemName();   // 주문 상품명
-            totalPrice += orderItems.get(0).getTotalPrice();         // 최종 결제 금액
+            orderItems = orderService.itemToPayment(itemList);
+            orderName = orderItems.get(0).getItem().getItemName();
+            totalPrice += orderItems.get(0).getTotalPrice();
         }
         else if(where.equals("cart")) {
-            // cart일 경우 idList 장바구니 아이템의 번호를 의미
-
-            orderItems = cartService.cartItemToPayment(itemList);
+            orderItems = cartService.cartItemToPayment(itemList, session);
             orderName = orderItems.get(0).getItem().getItemName() + " 외 " + (orderItems.size() - 1) + "건"; // 주문 상품명
             for(OrderItemDto itemDto : orderItems){
                 totalPrice += itemDto.getTotalPrice();
@@ -70,7 +69,6 @@ public class OrderController {
         String orderId = date + orderService.createOrderId(date, totalPrice);        // 주문번호 생성
 
         // 주문번호와 상품 번호들 세션에 저장. ( 마지막 최종 주문할 때 사용하기 위해서 )
-        HttpSession session = request.getSession();
         session.setAttribute("orderId", orderId);
         session.setAttribute("orderItems", orderItems);
 

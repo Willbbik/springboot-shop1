@@ -16,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -79,7 +80,7 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderItemDto> cartItemToPayment(String cartIdList){
+    public List<OrderItemDto> cartItemToPayment(String cartIdList, HttpSession session){
 
         JsonParser jsonParser = new JsonParser();
         JsonArray jsonElements = (JsonArray) jsonParser.parse(cartIdList);
@@ -96,6 +97,8 @@ public class CartService {
             cartItemIdList.add(cartItemId);
         }
 
+        session.setAttribute("cartItemIdList", cartItemIdList);
+
         for(int i = 0; i < cartItemIdList.size(); i++){
             CartItem cartItem = cartItemRepository.findById((cartItemIdList.get(i)))
                     .orElseThrow(() -> new ItemNotFoundException("해당 장바구니 상품이 존재하지 않습니다."));
@@ -111,43 +114,17 @@ public class CartService {
         return itemDtoList;
     }
 
-//    @Transactional(readOnly = true)
-//    public List<OrderItemDto> cartItemToPayment(String itemList){
-//
-//        JsonParser jsonParser = new JsonParser();
-//        JsonArray jsonElements = (JsonArray) jsonParser.parse(itemList);
-//
-//        List<Long> itemIdList = new ArrayList<>();
-//        List<Integer> quantityList = new ArrayList<>();
-//        List<OrderItemDto> itemDtoList = new ArrayList<>();
-//
-//        // 상품 번호와 개수를 배열에 차례대로 담기
-//        for (int i = 0; i <jsonElements.size(); i++) {
-//
-//            JsonObject jsonObject = (JsonObject) jsonElements.get(i);
-//            Long itemId = Long.parseLong(jsonObject.get("itemId").getAsString());
-//            int quantity = Integer.parseInt(jsonObject.get("quantity").getAsString());
-//
-//            itemIdList.add(itemId);
-//            quantityList.add(quantity);
-//        }
-//
-//        for(int i = 0; i < itemIdList.size(); i++){
-//            Item item = itemRepository.findById(itemIdList.get(i))
-//                    .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지 않습니다."));
-//
-//            OrderItemDto itemDto = OrderItemDto.builder()
-//                    .item(item)
-//                    .quantity(quantityList.get(i))
-//                    .totalPrice(item.getPrice() * quantityList.get(i))
-//                    .build();
-//
-//            itemDtoList.add(itemDto);
-//        }
-//        return itemDtoList;
-//    }
+    // 장바구니 상품 하나만 삭제
+    @Transactional
+    public void deleteCartItemById(Long id){
+        cartItemRepository.deleteById(id);
+    }
 
-
+    // 장바구니 상품 여러개 삭제
+    @Transactional
+    public void deleteCartItemAllById(List<Long> id){
+        cartItemRepository.deleteAllById(id);
+    }
 
 
 }
