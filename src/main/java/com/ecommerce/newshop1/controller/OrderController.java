@@ -18,7 +18,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,16 +49,18 @@ public class OrderController {
         String orderName = ""; // 브라우저의 sessionStorage에 저장 ( 가상계좌 결제시 주문 상품명으로 사용하기 위해서 )
         int totalPrice = 0;
 
-        if(where.equals("product")){        // 상품 상세보기에서 주문시
-            orderItems = orderService.itemToPayment(itemList);       // 사용자가 구매하려는 상품
+        if(where.equals("product")){
+            orderItems = orderService.itemToPayment(itemList);         // 사용자가 구매하려는 상품
             orderName = orderItems.get(0).getItem().getItemName();   // 주문 상품명
             totalPrice += orderItems.get(0).getTotalPrice();         // 최종 결제 금액
         }
-        else if(where.equals("cart")) {     // 장바구니에서 주문시
-            orderItems = cartService.cartItemToPayment(itemList);                          // 사용자가 구매하려는 상품들
-            orderName = orderItems.get(0).getItem().getItemName() + "외 " + (orderItems.size() - 1) + "건";// 주문 상품명
+        else if(where.equals("cart")) {
+            // cart일 경우 idList 장바구니 아이템의 번호를 의미
+
+            orderItems = cartService.cartItemToPayment(itemList);
+            orderName = orderItems.get(0).getItem().getItemName() + "외 " + (orderItems.size() - 1) + "건"; // 주문 상품명
             for(OrderItemDto itemDto : orderItems){
-                totalPrice += itemDto.getTotalPrice();                                // 최종 결제 금액
+                totalPrice += itemDto.getTotalPrice();
             }
         }else{
             throw new ParameterNotFoundException("주문 페이지 이동시 필수 파라미터 'where'가 정상적인 값이 아님");

@@ -21,6 +21,4 @@ public interface OrderService {
 
     void doOrder(HttpSession session, OrderPaymentInformation paymentInfo);
 
-    // boolean addressDtoValidationCheck(AddressDto addressDto);
-
 }

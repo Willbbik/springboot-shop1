@@ -95,7 +95,7 @@
                         <td><input type="checkbox" class="checkbox-select"></td>
                         <td><img th:src="@{${item.imageUrl}}" width="70px" height="60px"></td>
                         <td>
-                            <a href="#">
+                            <a th:href="'/items/' + ${item.id}">
                                 <div class="item-name" th:text="${item.itemName} + ' 사이즈 : [ ' + ${item.size} + ' ]'"></div>
                                 <div class="item-color" th:text="'색상 : ' + ${item.color}"></div>
                                 <div class="item-category" th:text=" '분류 : ' + ${item.category}"></div>
@@ -114,14 +114,12 @@
                 <ul>
                     <li>
                         <a href="#" th:href="@{/admin/itemList(page=${page.prevPage},itemName=${itemName},category=${category},saleStatus=${saleStatus})}">Previous</a>
-<!--                        <a href="#" th:href="@{/admin/itemList(page=${page.prevPage})}">Previous</a>-->
                     </li>
                     <li th:each="i : ${#numbers.sequence(startPage, endPage)}">
                         <a href="#" th:href="@{/admin/itemList(page=${i},itemName=${itemName},category=${category},saleStatus=${saleStatus})}" th:text="${i}">1</a>
                     </li>
                     <li>
                         <a href="#" th:href="@{/admin/itemList(page=${page.nextPage},itemName=${itemName},category=${category},saleStatus=${saleStatus})}">Next</a>
-<!--                        <a href="#" th:href="@{/admin/itemList(page=${page.nextPage})}" id="next" >Next</a>-->
                     </li>
                 </ul>
             </div>
