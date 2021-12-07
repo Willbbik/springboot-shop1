@@ -66,17 +66,20 @@
 
             <div class="cart-wrap">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" id="form_csrf_token">
+                <input type="checkbox" class="checkbox-selectall">
+                <button class="delete_select_item">선택삭제</button>
                 <table class="item-table">
                     <colgroup>
                         <col width="10%"/>
                         <col width="10%"/>
-                        <col width="50%"/>
+                        <col width="45%"/>
                         <col width="15%"/>
                         <col width="15%"/>
+                        <col width="5%"/>
                     </colgroup>
                     <thead>
                         <tr>
-                            <th><input type="checkbox" class="checkbox-selectall"></th>
+                            <th></th>
                             <th colspan="2">상품정보</th>
                             <th>옵션</th>
                             <th>상품금액</th>
@@ -106,6 +109,9 @@
                             <td>
                                 <div th:text="'총 금액 : ' + ${cartItem.totalPrice}"></div>
                                 <button class="order_single_btn"> 주문하기 </button>
+                            </td>
+                            <td>
+                                <button class="cart_delete">삭제</button>
                             </td>
                         </tr>
                     </th:block>
