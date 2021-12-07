@@ -8,11 +8,13 @@ import com.ecommerce.newshop1.repository.CartRepository;
 import com.ecommerce.newshop1.repository.MemberRepository;
 import com.ecommerce.newshop1.service.CartService;
 import com.ecommerce.newshop1.service.SecurityService;
+import com.ecommerce.newshop1.dto.CartQuantityUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -56,5 +58,10 @@ public class CartController {
     }
 
 
+    @PatchMapping("/cart/updateQuantity")
+    public @ResponseBody String updateQuantity(@Valid CartQuantityUpdateDto updateDto){
+        cartService.updateQuantity(updateDto);
+        return "수량 변경 완료";
+    }
 
 }

@@ -4,11 +4,13 @@ import com.ecommerce.newshop1.dto.CartDto;
 import com.ecommerce.newshop1.dto.CartItemDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.entity.*;
+import com.ecommerce.newshop1.exception.CartNotFoundException;
 import com.ecommerce.newshop1.exception.ItemNotFoundException;
 import com.ecommerce.newshop1.repository.CartItemRepository;
 import com.ecommerce.newshop1.repository.CartRepository;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.repository.MemberRepository;
+import com.ecommerce.newshop1.dto.CartQuantityUpdateDto;
 import com.ecommerce.newshop1.utils.enums.DeliveryStatus;
 import com.google.gson.*;
 import lombok.RequiredArgsConstructor;
@@ -126,5 +128,11 @@ public class CartService {
         cartItemRepository.deleteAllById(id);
     }
 
+    @Transactional
+    public void updateQuantity(CartQuantityUpdateDto updateDto){
+        CartItem cartItem = cartItemRepository.findById(updateDto.getId())
+                .orElseThrow(() -> new CartNotFoundException("존재하지 않는 장바구니 상품입니다."));
+        cartItem.setQuantity(updateDto.getQuantity());
+    }
 
 }
