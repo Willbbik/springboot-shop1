@@ -60,12 +60,12 @@
                     <form class="login-form" method="POST" action="/login" id="login_form">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-                        <input type="text" id="userId" name="userId" th:text="${#request.getParameter('userId')}" placeholder="아이디" maxlength="20" autocomplete="off"/>
-                        <input type="password" id="password" name="password" th:text="${#request.getParameter('password')}" placeholder="비밀번호" maxlength="25" autocomplete="off"/>
+                        <input type="text" id="userId" name="userId" th:value="${#request.getAttribute('userId')}" placeholder="아이디" maxlength="20" autocomplete="off"/>
+                        <input type="password" id="password" name="password" th:value="${#request.getAttribute('password')}" placeholder="비밀번호" maxlength="25" autocomplete="off"/>
                         <p id="idMsg" class="error_next_box" th:text="${idMsg}"></p>
                         <p id="pswdMsg" class="error_next_box" th:text="${pswdMsg}"></p>
-                        <p id="errorMsg" class="error_next_box" th:value="${#request.getParameter('LoginFailureMessage')}"></p>
-                        <button type="button" id="loginbtn">로그인</button>
+                        <p id="errorMsg" class="error_next_box" th:text="${#request.getAttribute('LoginFailureMessage')}"></p>
+                        <button type="button" id="loginbtn" >로그인</button>
 
                         <span class="message"><a href="#">아이디 찾기</a></span>
                         <span class="message"><a href="#">비밀번호 찾기</a></span>

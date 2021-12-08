@@ -23,6 +23,7 @@ import org.springframework.ui.Model;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomUserDetailsService customUserDetailsService;
+    private final CustomLoginFailureHandler failureHandler;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -34,30 +35,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             http
                 .authorizeRequests()
                 .antMatchers("/mypage", "/cart").authenticated()
-    //                    .antMatchers("/admin/**").hasRole("ADMIN")
+                 //.antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/**").permitAll()
                 .anyRequest().permitAll()
+                .and()
+                    .csrf()
 
-                .and()// 로그인 설정
+                .and() // 로그인 설정
                     .formLogin()
                     .loginPage("/login")
                     .loginProcessingUrl("/login")
                     .defaultSuccessUrl("/")
                     .usernameParameter("userId")
-                    .failureHandler(failureHandler())
+                    .successHandler(successHandler())
+                    .failureHandler(failureHandler)
 
                 .and() // 로그아웃 설정
-                .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .invalidateHttpSession(true)
-                .logoutSuccessUrl("/")
+                    .logout()
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .invalidateHttpSession(true)
+                    .logoutSuccessUrl("/")
            ;
     }
 
 
     @Bean
-    public AuthenticationFailureHandler failureHandler(){
-        return new CustomLoginFailureHandler();
+    public AuthenticationSuccessHandler successHandler(){
+        return new CustomLoginSuccessHandler("/");
     }
 
     @Bean
