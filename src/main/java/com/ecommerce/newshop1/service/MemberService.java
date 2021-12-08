@@ -45,15 +45,6 @@ public class MemberService {
     String phonePattern = "^(010[1-9][0-9]{7})$";
     String authPattern  = "^[0-9]{6}$";
 
-    // 로그인 메소드
-    public void login(String userid){
-
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(userid);
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-    }
 
     // 아이디 찾기
     @Transactional(readOnly = true)
@@ -109,15 +100,6 @@ public class MemberService {
         return obj != null && obj != "" && !obj.isEmpty() && !obj.isBlank();
     }
 
-    // jJoinMemberDto를 MemberDto로 전환
-    public MemberDto joinDtoToMember(JoinMemberDto joinMemberDto){
-
-        return MemberDto.builder()
-                .userId(joinMemberDto.getUserId())
-                .password(joinMemberDto.getPassword())
-                .phoneNum(joinMemberDto.getPhoneNum())
-                .build();
-    }
 
     // 객체 확인
     public boolean MemberDtoCheck(JoinMemberDto memberDto){
@@ -125,91 +107,6 @@ public class MemberService {
         return nullCheck(memberDto.getUserId()) && nullCheck(memberDto.getPassword()) &&
                 nullCheck(memberDto.getPassword()) && nullCheck(memberDto.getPhoneNum()) &&
                 nullCheck(memberDto.getAuthNum());
-    }
-
-    // 로그인 객체 유효성 검사
-    public int loginValidationCheck(MemberDto memberDto){
-
-        boolean idNull = nullCheck(memberDto.getUserId());
-        boolean pswdNull = nullCheck(memberDto.getPassword());
-        boolean idValidation = Pattern.matches(idPattern, memberDto.getUserId());
-        boolean pswdValidation = Pattern.matches(pswdPattern, memberDto.getPassword());
-        Optional<Member> memberEntity = memberRepository.findByuserId(memberDto.getUserId());
-
-        if(!idNull || !pswdNull || !idValidation || !pswdValidation || memberEntity.isEmpty()){
-            return -1;  // 문제가 있을 경우
-        }
-
-        // 비밀번호가 같지 않으면 -1 리턴
-        Member entity = memberEntity.get();
-        boolean result = passwordEncoder.matches(memberDto.getPassword(), entity.getPassword());
-        if(!result) return -1;
-
-        // 정상일 때
-        return 0;
-    }
-
-    // 로그인 객체 길이 조절 메소드
-    public MemberDto loginLength(MemberDto memberDto){
-        // 아이디와 비밀번호를 최대길이까지 자른 다음에 리턴한다.
-
-        String[] beforeDto = {memberDto.getUserId(), memberDto.getPassword()};
-        String[] afterDto = new String[2];
-        int[] maxLength = {20, 25};
-
-        for(int i = 0; i < 2; i++){
-
-            if(beforeDto[i].length() > maxLength[i]){
-                afterDto[i] = beforeDto[i].substring(0, maxLength[i]);
-            }else{
-                afterDto[i] = beforeDto[i];
-            }
-        }
-
-        memberDto.setUserId(afterDto[0]);
-        memberDto.setPassword(afterDto[1]);
-
-        return memberDto;
-    }
-
-    // 로그인 실패시 에러 메시지 전송
-    public Model loginSetErrorMsg(MemberDto memberDto, Model model){
-
-        String userId = memberDto.getUserId();
-        String pswd = memberDto.getPassword();
-
-        boolean idValidation = Pattern.matches(idPattern, userId);
-        boolean pswdValidation = Pattern.matches(pswdPattern, pswd);
-        Optional<Member> memberEntity = memberRepository.findByuserId(userId);
-
-        // 공백이거나 값이 없을때
-        if(!nullCheck(userId)) {
-            model.addAttribute("idMsg", LoginMsg.USERID_NULL.getValue());
-        }
-        if(!nullCheck(pswd)) {
-            model.addAttribute("pswdMsg", LoginMsg.PASSWORD_NULL.getValue());
-        }
-
-        // 유효성 검사에 실패 했을때
-        if(nullCheck(userId) && nullCheck(pswd)) {
-
-            if(!idValidation || !pswdValidation) {
-                model.addAttribute("errorMsg", LoginMsg.LOGIN_FAILURE.getValue());
-            }else if(memberEntity.isEmpty()){
-                model.addAttribute("errorMsg", LoginMsg.LOGIN_FAILURE.getValue());
-            }
-        }
-
-        // 비밀번호가 다르다면
-        if(memberEntity.isPresent()) {
-
-            Member entity = memberEntity.get();
-            boolean result = passwordEncoder.matches(memberDto.getPassword(), entity.getPassword());
-            if (!result) {
-                model.addAttribute("errorMsg", LoginMsg.LOGIN_FAILURE.getValue());
-            }
-        }
-        return model;
     }
 
     // 회원가입 객체 유효성 검사 메소드

@@ -13,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.Optional;
 
 @Controller
@@ -40,7 +42,7 @@ public class MemberController {
     }
 
     // 로그인 페이지
-    @GetMapping("/login")
+    @RequestMapping("/login")
     public String login(HttpServletRequest request) {
 
         String referer = request.getHeader("Referer");
