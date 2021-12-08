@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.ui.Model;
 
 
 @EnableWebSecurity
@@ -22,7 +23,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomUserDetailsService customUserDetailsService;
-    private final AuthenticationFailureHandler customLoginFailureHandler;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             http
                 .authorizeRequests()
                 .antMatchers("/mypage", "/cart").authenticated()
-    //                    .antMatchers("/admin/main").hasRole("ADMIN")
+    //                    .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/**").permitAll()
                 .anyRequest().permitAll()
 
@@ -44,8 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .loginProcessingUrl("/login")
                     .defaultSuccessUrl("/")
                     .usernameParameter("userId")
-                    .successHandler(successHandler())
-                    .failureHandler(customLoginFailureHandler)
+                    .failureHandler(failureHandler())
 
                 .and() // 로그아웃 설정
                 .logout()
@@ -55,11 +54,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
            ;
     }
 
-    @Bean
-    public AuthenticationSuccessHandler successHandler(){
-        return new CustomLoginSuccessHandler("/");
-    }
 
+    @Bean
+    public AuthenticationFailureHandler failureHandler(){
+        return new CustomLoginFailureHandler();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){

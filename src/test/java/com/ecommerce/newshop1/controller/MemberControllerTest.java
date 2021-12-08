@@ -25,5 +25,4 @@ public class MemberControllerTest extends AbstractControllerTest{
     }
 
 
-
 }

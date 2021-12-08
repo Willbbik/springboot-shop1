@@ -7,24 +7,22 @@ import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
-import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@Component
-public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
-    private RequestCache requestCache = new HttpSessionRequestCache();
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+
+        setDefaultFailureUrl("/login");
+        String userId = request.getParameter("userId");
+        String password = request.getParameter("password");
 
         if(exception instanceof AuthenticationServiceException) {
             request.setAttribute("LoginFailureMessage", "죄송합니다, 시스템에 오류가 발생했습니다.");
@@ -33,9 +31,11 @@ public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHan
             request.setAttribute("LoginFailureMessage", "아이디 또는 비밀번호가 일치하지 않습니다.");
         }
 
-        setDefaultFailureUrl("/login");
+        request.setAttribute("userId", userId);
+        request.setAttribute("password", password);
 
-        super.onAuthenticationFailure(request, response, exception);
 
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/login");
+        dispatcher.forward(request, response);
     }
 }

@@ -58,19 +58,14 @@
             <div class="login-page">
                 <div class="form">
                     <form class="login-form" method="POST" action="/login" id="login_form">
-<!--                        <input id="userId" name="userId" type="text" th:value="${member?.userId}" placeholder="아이디" maxlength="20" autocomplete="off"/>-->
-<!--                        <input id="password" name="password" type="password" th:value="${member?.password}" placeholder="비밀번호" maxlength="25" autocomplete="off"/>-->
-<!--                        <p id="idMsg" class="error_next_box" th:text="${idMsg}"></p>-->
-<!--                        <p id="pswdMsg" class="error_next_box" th:text="${pswdMsg}"></p>-->
-<!--                        <p id="errorMsg" class="error_next_box" th:text="${errorMsg}"></p>-->
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-                        <input id="userId" name="userId" type="text" th:value="${#request.getParameter('userId')}" placeholder="아이디" maxlength="20" autocomplete="off"/>
-                        <input id="password" name="password" type="password" th:value="${#request.getParameter('password')}" placeholder="비밀번호" maxlength="25" autocomplete="off"/>
+                        <input type="text" id="userId" name="userId" th:text="${#request.getParameter('userId')}" placeholder="아이디" maxlength="20" autocomplete="off"/>
+                        <input type="password" id="password" name="password" th:text="${#request.getParameter('password')}" placeholder="비밀번호" maxlength="25" autocomplete="off"/>
                         <p id="idMsg" class="error_next_box" th:text="${idMsg}"></p>
                         <p id="pswdMsg" class="error_next_box" th:text="${pswdMsg}"></p>
                         <p id="errorMsg" class="error_next_box" th:value="${#request.getParameter('LoginFailureMessage')}"></p>
-                        <button type="submit">로그인</button>
+                        <button type="button" id="loginbtn">로그인</button>
 
                         <span class="message"><a href="#">아이디 찾기</a></span>
                         <span class="message"><a href="#">비밀번호 찾기</a></span>
@@ -80,9 +75,9 @@
                         <hr id="snsLine">
                         <h3 class="message" id="snsFont">SNS 로그인 - 가입</h3>
                     </div>
-<!--                    <a href="https://kauth.kakao.com/oauth/authorize?client_id=98c809757e9444495dd1e34430de4945&redirect_uri=http://localhost:8080/kakao/login&response_type=code">-->
-<!--                        <img src="//mud-kage.kakao.com/14/dn/btqbjxsO6vP/KPiGpdnsubSq3a0PHEGUK1/o.jpg" width="300"/>-->
-<!--                    </a>-->
+                    <a href="https://kauth.kakao.com/oauth/authorize?client_id=98c809757e9444495dd1e34430de4945&redirect_uri=http://localhost:8080/kakao/login&response_type=code">
+                        <img src="//mud-kage.kakao.com/14/dn/btqbjxsO6vP/KPiGpdnsubSq3a0PHEGUK1/o.jpg" width="300"/>
+                    </a>
                 </div>
             </div>
 
@@ -92,7 +87,7 @@
 </div>
 
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<!--<script src="/assets/js/member/login.js"></script>-->
+<script src="/assets/js/member/login.js"></script>
 
 </body>
 </html>
