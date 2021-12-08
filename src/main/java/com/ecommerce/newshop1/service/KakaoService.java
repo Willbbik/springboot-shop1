@@ -36,6 +36,12 @@ public class KakaoService {
     @Value("${kakao.logout_redirect_uri")
     String logout_redirect_uri;
 
+    @Value("${kakao.provider.oauth_token")
+    String oauthTokenUrl;
+
+    @Value("${kakao.provider.user_info")
+    String userInfoUrl;
+
     public OAuthToken getAccessToken(String code){
 
         RestTemplate rt = new RestTemplate();
@@ -55,7 +61,7 @@ public class KakaoService {
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, header);
 
         ResponseEntity<String> response = rt.exchange(
-                "https://kauth.kakao.com/oauth/token",
+                oauthTokenUrl,
                 HttpMethod.POST,
                 kakaoTokenRequest,
                 String.class
@@ -91,7 +97,7 @@ public class KakaoService {
 
         // Http 요청하기
         ResponseEntity<String> response = rt.exchange(
-                "https://kapi.kakao.com/v2/user/me",
+                userInfoUrl,
                 HttpMethod.POST,
                 request,
                 String.class

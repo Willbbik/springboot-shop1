@@ -99,8 +99,7 @@ public class MemberController {
 
     @ApiOperation(value = "회원가입시 인증번호 검사")
     @GetMapping("/member/authNumCheck")
-    public @ResponseBody
-    String authNumCheck(@RequestParam(value = "authNum") String authNum,
+    public @ResponseBody String authNumCheck(@RequestParam(value = "authNum") String authNum,
                         @RequestParam(value = "phoneNum") String phoneNum) {
 
         int result = redisService.authNumCheck(phoneNum, authNum);
@@ -160,7 +159,7 @@ public class MemberController {
 //        OAuthToken oAuthToken = kakaoService.getAccessToken(code);
 //        KakaoDto kakaoDto = kakaoService.getUserKakaoProfile(oAuthToken.getAccess_token());
 //
-//        // 카카오로 회원가입시 아이디 뒤에 @k를 붙여주기 때문에
+//        // oauth2 회원가입시 해당 포털을 구분하기 위해서. @k = kakao
 //        String userid = kakaoDto.getId().toString() + "@k";
 //
 //        // 아이디 중복 검사
