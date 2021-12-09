@@ -9,7 +9,7 @@ $(document).ready(function(){
 		idFlag = false;
 		checkId("first");
 	});
-	
+
 	$("#pswd1").blur(function(){
 		pwFlag = false;
 		checkPswd1();
@@ -23,8 +23,8 @@ $(document).ready(function(){
 		checkPswd2();
         checkShiftDown(event);
     });
-    
-    
+
+
 	$("#pswd2").blur(function(){
 		checkPswd2();
 	}).keyup(function(event) {
@@ -38,52 +38,53 @@ $(document).ready(function(){
         checkShiftDown(event);
     });
 
-	
+
 	$("#phoneNum").blur(function() {
         checkPhoneNum();
     });
-    
+
 	$("#authNum").blur(function() {
         authFlag = false;
         checkAuthNum();
     });
-    
+
+    // 인증번호 전송 버튼
     $("#authSendBtn").click(function(){
 		sendSmsButton();
 		return false;
 	});
-    
+
     $("#btnjoin").click(function(event){
 		submitClose();
 		if(idFlag && pwFlag && authFlag){
 			mainSubmit();
 		} else {
 			setTimeout(function(){
-				mainSubmit();	
+				mainSubmit();
 			}, 200);
-		}		
+		}
 	});
-	
+
 });
 
 // 가입하기 버튼
 function mainSubmit(){
-	
+
 	if(!checkUnrealInput()){
 		submitOpen();
 		return false;
 	}
-	
+
 	if(idFlag && pwFlag && authFlag){
 		try{
 			$("#join_form").submit();
 		} catch (e){
 			$("#join_form").submit();
 		}
-	} else { 
+	} else {
 		submitOpen();
 		return false;
-	} 
+	}
 }
 
 // 가입하기 클릭시 모든 input 검사
@@ -116,36 +117,36 @@ function submitClose(){
 
 // 아이디 유효성검사
 function checkId(event){
-	
+
 	if(idFlag) return true;
-	
+
 	let userId = $("#userId").val();
 	let oMsg = $("#idMsg");
 	let oInput = $("#userId");
-	
+
 	if ( userId == "" ){
 		showErrorMsg(oMsg, "아이디는 필수정보 입니다.");
 		setFocusToInputObject(oInput);
 		return false;
 	}
-	
+
 	const isID = /^[a-z0-9][a-z0-9_\-]{4,20}$/;
 	if (!isID.test(userId)){
 		showErrorMsg(oMsg, "5~20자의 영문 소문자, 숫자와 특수기호(_),(-)만 사용 가능합니다. (띄어쓰기 불가능)");
 		setFocusToInputObject(oInput);
 		return false;
 	}
-	
+
 	idFlag = false;
 	$.ajax({
 		type : "GET",
 		url : "/member/idConfirm?userId=" + userId,
 		encoding: "UTF-8",
 		success : function(result){
-			if(result == "Y"){	   
+			if(result == "Y"){
 				if(event == "first"){
 					showSuccessMsg(oMsg, "");
-				} else{			  
+				} else{
 					hideMsg(oMsg);
 				}
 				idFlag = true;
@@ -158,7 +159,7 @@ function checkId(event){
 			alert("실패했습니다");
 		}
 	});
-	
+
 	return true;
 }
 
@@ -166,62 +167,44 @@ function checkId(event){
 // 비밀번호 검사
 function checkPswd1(){
 	if(pwFlag) return true;
-	
+
 	let pw = $("#pswd1").val();
 	let oInput = $("#pswd1");
-	let oMsg = $("#pswd1Msg");	
+	let oMsg = $("#pswd1Msg");
 
 	if( pw == "" ){
 		showErrorMsg(oMsg, "비밀번호는 필수정보 입니다.");
 		setFocusToInputObject(oInput);
+		pwFlag = false;
 		return false;
 	}
-	
-	if(isValidPasswd(pw) != true){
+
+	if(isValidPswd(pw) != true){
 		showErrorMsg(oMsg, "8~25자 영문 대 소문자, 숫자를 사용하세요. (특수문자 사용가능) (띄어쓰기 불가능)");
 		setFocusToInputObject(oInput);
+		pwFlag = false;
 		return false;
 	}
-	
-	pwFlag = false;
-	$.ajax({
-		type : "get",
-		url : "/member/pswdCheck?pswd=" + pw,
-		encoding: "UTF-8",
-		success : function(data){
-			if(data == "Y"){
-				showSuccessMsg(oMsg, "");
-				setFocusToInputObject(oInput);				
-			}
-			else if(data == "N"){
-				showErrorMsg(oMsg, "8~25자 영문 대 소문자, 숫자를 사용하세요. (특수문자 사용가능) (띄어쓰기 불가능)");
-				return false;
-			}
-			pwFlag = true;
-		},
-		error : function(error){
-			alert("실패했습니다.");
-		}
-	});
-	return true;
 
+
+    pwFlag = true;
+	return true;
 }
 
 // 비밀번호 재확인 검사
 function checkPswd2(){
-	
+
 	let pswd1 = $("#pswd1");
 	let pswd2 = $("#pswd2");
 	let oMsg = $("#pswd2Msg");
 	let oInput = $("#pswd2");
-	
-	
+
 	if(pswd2.val() == ""){
 		showErrorMsg(oMsg, "비밀번호 재확인은 필수정보 입니다");
 		setFocusToInputObject(oInput);
 		return false;
 	}
-	
+
 	if(pswd1.val() != pswd2.val()){
 		showErrorMsg(oMsg, "비밀번호가 일치하지 않습니다");
 		setFocusToInputObject(oInput);
@@ -231,116 +214,114 @@ function checkPswd2(){
 		setFocusToInputObject(oInput);
 		return true;
 	}
-	
+
 	return true;
-	
 }
 
 // 전화번호 검사
 function checkPhoneNum() {
-	
+
 	let phoneNum = $("#phoneNum").val();
 	let oMsg = $("#phoneNumMsg");
 	let oInput = $("#phoneNum");
-	
+
 	if (phoneNum == "") {
         showErrorMsg(oMsg, "전화번호는 필수정보 입니다.");
         setFocusToInputObject(oInput);
         return false;
     }
-    
+
     if(!isCellPhone(phoneNum)) {
         showErrorMsg(oMsg,"형식에 맞지 않는 번호입니다.");
         return false;
     }
 
-    //hideMsg(oMsg);
+    hideMsg(oMsg);
     return true;
-	
+
 }
 
 
 
 // 인증번호 발송
 function sendSmsButton() {
-	
+
 	let phoneNum = $("#phoneNum").val();
 	let oMsg = $("#phoneNumMsg");
-	
-	// phoneNum = phoneNum.replace(/ /gi, "").replace(/-/gi, "");
-	// $("#phoneNum").val(phoneNum);
+
 	authFlag = false;
-	
+
 	$("#authNumMsg").hide();
 	if(!isCellPhone(phoneNum)) {
         showErrorMsg(oMsg,"형식에 맞지 않는 번호입니다.");
         return false;
     }
-	
+
 	$.ajax({
 		type: "get",
 		url: "/member/sendAuth?phoneNum=" + phoneNum,
 		encoding: "UTF-8",
 		success : function(result){
 			if(result == "Y"){
-				showSuccessMsg(oMsg, "인증번호를 발송했습니다.(유효시간 3분)");				
+				showSuccessMsg(oMsg, "인증번호를 발송했습니다.(유효시간 3분)");
 			}else{
 				showErrorMsg(oMsg, "전화번호를 다시 확인해주세요.");
-			}			
-		},		
+			}
+		},error : function(){
+		    alert("오류입니다. 잠시후에 다시 시도해보시기 바랍니다.");
+		}
 	});
 	return false;
-	
+
 }
 
 // 인증번호 기본 유효성 검사
 function checkAuthNum(){
-	
+
 	let authNum = $("#authNum").val();
 	let oMsg = $("#authNumMsg");
 	let oInput = $("#authNum");
-	
-	
+
 	if(authNum == ""){
 		showErrorMsg(oMsg, "인증이 필요합니다.");
 		setFocusToInputObject(oInput);
 		return false;
 	}
-	
+
 	if(!isAuthNum(authNum)){
 		showErrorMsg(oMsg, "인증번호를 다시 확인해주세요.");
 		return false;
 	}
-	
+
 	if(authFlag){
-		showSuccessMsg(oMsg, "");
+		showSuccessMsg(oMsg, "인증에 성공 했습니다.");
 		$("#phoneNumMsg").hide();
 		return true;
 	}else{
 		checkAuthNumByAjax();
-	}	
+	}
 	return true;
-	
+
 }
 
 
 
 // 인증번호 확인
 function checkAuthNumByAjax(){
-	
+
 	let authNum = $("#authNum").val();
 	let phoneNum = $("#phoneNum").val();
 	let oMsg = $("#authNumMsg");
 	let oInput = $("#authNum");
-	
+
 	$.ajax({
 		type: "get",
 		url: "/member/authNumCheck?phoneNum=" + phoneNum + "&authNum=" + authNum,
 		encoding: "UTF-8",
 		success : function(result){
 			if(result == "Y"){
-				showSuccessMsg(oMsg, "");
-				//$("#phoneNumMsg").hide();
+				showSuccessMsg(oMsg, "인증에 성공 했습니다.");
+				$("#phoneNumMsg").hide();
 				authFlag = true;
 			} else if (result == "cnt"){
 				showErrorMsg(oMsg, "인증을 다시 진행해주세요.");
@@ -357,16 +338,14 @@ function checkAuthNumByAjax(){
 
 // 인증번호 유효성 검사
 function isAuthNum(a){
-	
+
 	const regAuth = /^[0-9]{6}$/;
 	return regAuth.test(a);
-	
 }
 
 
 // 전화번호 유효성 검사
 function isCellPhone(p) {
-    // const regPhone = /^((01[1|6|7|8|9])[1-9][0-9]{6,7})$|(010[1-9][0-9]{7})$/;
     const regPhone = /^(010[1-9][0-9]{7})$/;
     return regPhone.test(p);
 }
@@ -374,24 +353,24 @@ function isCellPhone(p) {
 
 
 // 비밀번호 유효성 검사
-function isValidPasswd(str){
-	
+function isValidPswd(str){
+
 	let cnt = 0;
 	if (str == ""){
 		return false;
 	}
-	
+
 	// 공백이 포함돼있는지 아닌지
 	let retVal = checkSpace(str);
 	if (retVal){
 		return false;
 	}
-	
+
 	// 길이 확인
 	if(str.length < 8){
 		return false;
 	}
-	
+
 	// 똑같은 단어 계속 못쓰게끔
 	for (let i = 0; i < str.length; ++i) {
         if (str.charAt(0) == str.substring(i, i + 1))
@@ -400,17 +379,15 @@ function isValidPasswd(str){
 	if(cnt == str.length){
 		return false;
 	}
-	
-	const isPW = /^[A-Za-z0-9`\-=\\\[\];',\./~!@#\$%\^&\*\(\)_\+|\{\}:"<>\?]{7,25}$/;
+
+    const isPw = /^[A-Za-z0-9~`!@#$%\^&*()-]{8,25}$/;
 
 	if(!isPW.test(str)){
 		return false;
 	}
-	
-	
+
 	return true;
 }
-
 
 
 // input 포커스해주는 함수
@@ -432,7 +409,6 @@ function checkSpace(str) {
 }
 
 
-
 let isShift = false;
 function checkShiftUp(e){
 	if (e.which && e.which == 16) {
@@ -446,12 +422,12 @@ function checkShiftDown(e) {
     }
 }
 
-// 캡스록 검사
+// 비밀번호 캡스록 검사
 function checkCapslock(e){
-	
+
 	let myKeyCode = 0;
 	let myShiftKey = false;
-	
+
 	if(window.event){  // IE
 		myKeyCode = e.keyCode;
 		myShiftKey = e.shiftKey;
@@ -459,7 +435,7 @@ function checkCapslock(e){
 		myKeyCode = e.which;
 		myShiftKey = isShift;
 	}
-	
+
 	let oMsg = $("#pswd1Msg");
 	if((myKeyCode >= 65 && myKeyCode <= 90) && !myShiftKey){
 		showErrorMsg(oMsg, "Caps Lock이 켜져 있습니다.");
@@ -471,12 +447,12 @@ function checkCapslock(e){
 }
 
 
-// 캡스록 검사
+// 비밀번호 재확인 캡스록 검사
 function checkCapslock2(e){
-	
+
 	let myKeyCode = 0;
 	let myShiftKey = false;
-	 
+
 	if(window.event){   // IE
 		myKeyCode = e.keyCode;
 		myShiftKey = e.shiftKey;
@@ -484,7 +460,7 @@ function checkCapslock2(e){
 		myKeyCode = e.which;
 		myShiftKey = isShift;
 	}
-	
+
 	let oMsg = $("#pswd2Msg");
 	if((myKeyCode >= 65 && myKeyCode <= 90) && !myShiftKey){
 		showErrorMsg(oMsg, "Caps Lock이 켜져 있습니다.");
@@ -493,25 +469,23 @@ function checkCapslock2(e){
     } else{
 		hideMsg(oMsg);
 	}
-	
+
 }
 
-// 성공메시지 함수
+// 메시지 색깔 초록색으로
 function showSuccessMsg(obj, msg){
-	
+
 	obj.attr("class", "error_next_box_green");
 	obj.html(msg);
 	obj.show();
-	
 }
 
-// 에러메시지 함수
+// 메시지 색깔 빨간색으로
 function showErrorMsg(obj, msg){
 
 	 obj.attr("class", "error_next_box");
      obj.html(msg);
      obj.show();
-     
 }
 
 
@@ -523,8 +497,7 @@ function hideMsg(obj) {
 
 
 
-   
-   
-   
+
+
+
       
-   

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -34,7 +35,7 @@ public class RedisService {
     }
 
 
-    // 주문번호 생성후 중복확인하고 저장
+    // 상품 주문시 주문번호 생성 후 중복 확인하고 저장
     public String createOrderId(String nowDate, int totalPrice) throws Exception {
 
         ValueOperations<String, Object> vop = redisTemplate.opsForValue();
@@ -52,7 +53,6 @@ public class RedisService {
     }
 
 
-
     // 인증번호 가져오기
     public int getAuthNum(String phoneNum) throws Exception {
         ValueOperations<String, Object> vop = redisTemplate.opsForValue();
@@ -66,22 +66,22 @@ public class RedisService {
     }
 
     // 인증번호 비교하기
-    public int authNumCheck(String phoneNum, String givenAuthNum){
+    public int authNumCheck(String phoneNum, String dtoAuthNum){
 
         ValueOperations<String, Object> vop = redisTemplate.opsForValue();
 
-        Object getAuthResult = vop.get(phoneNum);
-        int authNum = Integer.parseInt(givenAuthNum);
+        Object realAuthNum = vop.get(phoneNum);
+        int authNum = Integer.parseInt(dtoAuthNum); // 사용자가 입력한 인증번호
 
-        if(getAuthResult != null){
-            int authResult = (int)getAuthResult;
+        if(realAuthNum != null){                    // 인증번호가 존재한다면
+            int authResult = (int)realAuthNum;
             if(authResult == authNum){
-                return 1;
+                return 1;           // 인증번호가 같다면 1
             } else {
-                return 2;
+                return 2;           // 다르다면 2
             }
         }
-        return 3;
+        return 3;                   // 존재하지 않는다면 3
     }
 
     // 랜덤 번호 생성
