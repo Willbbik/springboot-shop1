@@ -26,6 +26,7 @@ public class MemberController {
     private final MessageService messageService;
     private final RedisService redisService;
     private final KakaoService kakaoService;
+    private final CartService cartService;
 
     ModelMapper mapper = new ModelMapper();
 
@@ -130,7 +131,9 @@ public class MemberController {
             return "member/join";
         }
 
-        memberService.joinNormal(mapper.map(joinMemberDto, MemberDto.class));
+        MemberDto memberDto = mapper.map(joinMemberDto, MemberDto.class);
+        Member member = memberService.joinNormal(memberDto);
+        cartService.createCart(member);
 
         return "redirect:/";
     }
