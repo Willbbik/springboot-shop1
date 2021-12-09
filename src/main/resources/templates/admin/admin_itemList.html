@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <title>에게모니</title>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
@@ -76,22 +78,26 @@
                 <input type="submit" class="search-submit" value="검색">
             </div>
             </form>
+
+            <input type="checkbox" class="checkbox-selectall">
+            <button id="delete_select">선택 삭제</button>
             <table class="item-table">
                 <colgroup>
                     <col width="10%"/>
                     <col width="10%"/>
-                    <col width="65%"/>
+                    <col width="55%"/>
                     <col width="15%"/>
+                    <col width="10%"/>
                 </colgroup>
                 <thead>
                     <tr>
-                        <th><input type="checkbox" class="checkbox-selectall"></th>
                         <th colspan="2">상품정보</th>
                         <th>판매상태</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="item : ${items}">
+                        <input type="hidden" name="itemId" th:value="${item.id}" />
                         <td><input type="checkbox" class="checkbox-select"></td>
                         <td><img th:src="@{${item.imageUrl}}" width="70px" height="60px"></td>
                         <td>
@@ -105,6 +111,9 @@
                         <td>
                             <input type="button" th:if="${item.saleStatus.toString().equals('onsale')}" th:value="판매중">
                             <input type="button" id="soldoutbtn" th:if="${item.saleStatus.toString().equals('soldout')}" th:value="품절">
+                        </td>
+                        <td>
+                            <button class="item_delete">삭제</button>
                         </td>
                     </tr>
                 </tbody>
