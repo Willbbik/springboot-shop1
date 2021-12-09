@@ -34,13 +34,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
             http
                 .authorizeRequests()
-                .antMatchers("/mypage", "/cart").authenticated()
-                 //.antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/**").permitAll()
-                .anyRequest().permitAll()
+                    .antMatchers("/mypage", "/cart").authenticated()
+                    .antMatchers("/join", "/login").anonymous()
+
+                     //.antMatchers("/admin/**").hasRole("ADMIN")
+                    .antMatchers("/**").permitAll()
+                    .anyRequest().permitAll()
                 .and()
                     .csrf()
-
+                .and()
+                    .exceptionHandling().accessDeniedPage("/")
                 .and() // 로그인 설정
                     .formLogin()
                     .loginPage("/login")

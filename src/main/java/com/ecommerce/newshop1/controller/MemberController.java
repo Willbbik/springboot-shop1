@@ -15,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.Map;
 import java.util.Optional;
 
@@ -27,7 +26,6 @@ public class MemberController {
     private final MessageService messageService;
     private final RedisService redisService;
     private final KakaoService kakaoService;
-    private final CartService cartService;
 
     ModelMapper mapper = new ModelMapper();
 
@@ -39,7 +37,7 @@ public class MemberController {
 
     // 회원가입 페이지
     @GetMapping("/join")
-    public String join(Model model) {
+    public String join() {
         return "member/join";
     }
 
@@ -72,7 +70,7 @@ public class MemberController {
     }
 
     @GetMapping("/member/sendAuth")
-    @ApiOperation(value = "인증번호", notes = "인증번호를 전송해주고 reids서버에 저장")
+    @ApiOperation(value = "인증번호", notes = "인증번호를 전송해주고 redis에 저장")
     public @ResponseBody String sendAuth(@RequestParam(name = "phoneNum") String phoneNum) throws Exception {
 
         boolean result = messageService.phoneValidationCheck(phoneNum);
@@ -110,7 +108,7 @@ public class MemberController {
 
     @ApiOperation(value = "일반 회원가입")
     @PostMapping("/join")
-    public String Join(@ModelAttribute @Validated(ValidationSequence.class) JoinMemberDto joinMemberDto, BindingResult errors, Model model) throws Exception {
+    public String join(@ModelAttribute @Validated(ValidationSequence.class) JoinMemberDto joinMemberDto, BindingResult errors, Model model) throws Exception {
 
         if(errors.hasErrors()){
             Map<String, String > errorMsgMap = memberService.getErrorMsg(errors);   // 에러 메시지가 담긴 map

@@ -25,8 +25,6 @@ public class JoinMemberDto {
     private String userId;
 
     @NotBlank(message = "비밀번호는 필수정보 입니다.", groups = ValidationGroups.NotBlankGroup.class)
-//    @Pattern(regexp = "^(?=.*[a-z0-9])(?=.*[A-Za-z0-9~`!@#$%\\^&*()-]).{8,25}$",
-//             message = "8~25자 영문 대 소문자, 숫자를 사용하세요. (특수문자 사용가능) (띄어쓰기 불가능)")
     @Pattern(regexp = "^[A-Za-z0-9~`!@#$%\\^&*()-]{8,25}$",
             message = "8~25자 영문 대 소문자, 숫자를 사용하세요. (특수문자 사용가능) (띄어쓰기 불가능)",
             groups = ValidationGroups.PatternGroup.class)

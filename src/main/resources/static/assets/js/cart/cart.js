@@ -85,22 +85,25 @@ $(function(){
 
         let tr = $(this).closest("tr");
         let cartId = tr.find("input[name=cartItemId]").val();
-
         let param = { id : cartId };
 
-        $.ajax({
-            url : "/cart/delete/item",
-            type : "delete",
-            data : param,
-            beforeSend : function(xhr){
-                xhr.setRequestHeader(header, token);
-            }
-        }).done(function(result){
-            alert(result);
-            location.reload();
-        }).fail(function(result){
-            alert("오류가 발생했습니다. 잠시후 다시 시도해보시기 바랍니다.");
-        });
+        let result = confirm("해당 상품을 장바구니에서 삭제 하시겠습니까?");
+
+        if(result){
+            $.ajax({
+                url : "/cart/delete/item",
+                type : "delete",
+                data : param,
+                beforeSend : function(xhr){
+                    xhr.setRequestHeader(header, token);
+                }
+            }).done(function(result){
+                alert(result);
+                location.reload();
+            }).fail(function(result){
+                alert("오류가 발생했습니다. 잠시후 다시 시도해보시기 바랍니다.");
+            });
+        }
     });
 
 
@@ -115,20 +118,24 @@ $(function(){
                 }
             });
 
-            $.ajax({
-                url : "/cart/delete/itemList",
-                type : "delete",
-                data : { itemList : itemList },
-                beforeSend : function(xhr){
-                    xhr.setRequestHeader(header, token);
-                },
-                traditional: true
-            }).done(function(result){
-                alert(result);
-                location.reload();
-            }).fail(function(result){
-                alert("오류가 발생했습니다. 잠시후 다시 시도해보시기 바랍니다.");
-            });
+            let result = confirm("선택한 상품들을 장바구니에서 삭제 하시겠습니까?");
+
+            if(result){
+                $.ajax({
+                    url : "/cart/delete/itemList",
+                    type : "delete",
+                    data : { itemList : itemList },
+                    beforeSend : function(xhr){
+                        xhr.setRequestHeader(header, token);
+                    },
+                    traditional: true
+                }).done(function(result){
+                    alert(result);
+                    location.reload();
+                }).fail(function(result){
+                    alert("오류가 발생했습니다. 잠시후 다시 시도해보시기 바랍니다.");
+                });
+            }
         });
 
 

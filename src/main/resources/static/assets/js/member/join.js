@@ -382,7 +382,7 @@ function isValidPswd(str){
 
     const isPw = /^[A-Za-z0-9~`!@#$%\^&*()-]{8,25}$/;
 
-	if(!isPW.test(str)){
+	if(!isPw.test(str)){
 		return false;
 	}
 
