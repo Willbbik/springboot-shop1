@@ -1,12 +1,10 @@
 package com.ecommerce.newshop1.service;
 
+import com.ecommerce.newshop1.config.CustomUserDetailsService;
 import com.ecommerce.newshop1.dto.JoinMemberDto;
 import com.ecommerce.newshop1.dto.MemberDto;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.repository.MemberRepository;
-import com.ecommerce.newshop1.config.CustomUserDetailsService;
-import com.ecommerce.newshop1.utils.enums.JoinMsg;
-import com.ecommerce.newshop1.utils.enums.LoginMsg;
 import com.ecommerce.newshop1.utils.enums.Role;
 import com.ecommerce.newshop1.utils.enums.Sns;
 import lombok.RequiredArgsConstructor;
@@ -14,14 +12,15 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -89,138 +88,65 @@ public class MemberService {
         return memberRepository.findSnsByUserId(userid);
     }
 
-    // 비밀번호 검사
-    public boolean pswdCheck(String pswd) {
-        return Pattern.matches(pswdPattern, pswd);
-    }
-
-    // 공백, null 검사 메소드
-    public boolean nullCheck(String obj){
-
-        return obj != null && obj != "" && !obj.isEmpty() && !obj.isBlank();
-    }
-
-
-    // 객체 확인
-    public boolean MemberDtoCheck(JoinMemberDto memberDto){
-
-        return nullCheck(memberDto.getUserId()) && nullCheck(memberDto.getPassword()) &&
-                nullCheck(memberDto.getPassword()) && nullCheck(memberDto.getPhoneNum()) &&
-                nullCheck(memberDto.getAuthNum());
-    }
 
     // 회원가입 객체 유효성 검사 메소드
     public int joinValidationCheck(JoinMemberDto dto) throws Exception {
-        // 문제 있으면 -1 리턴
-        // 없으면 0 리턴
-
-        // dto 기본 공백 검사
-        if(!MemberDtoCheck(dto)){
-            log.info("MemberServcie join dto validation check exception");
-            return -1;
-        }
 
         // 아이디 중복검사 && 인증번호 검사
         Optional<Member> memberEntity = memberRepository.findByuserId(dto.getUserId());
         int authNum = redisService.getAuthNum(dto.getPhoneNum());
+        int authNumCheckResult = redisService.authNumCheck(dto.getPhoneNum(), dto.getAuthNum());
 
-        // 유효성 검사 결과들
-        boolean idResult = Pattern.matches(idPattern, dto.getUserId());
-        boolean pswd1Result = Pattern.matches(pswdPattern, dto.getPassword());
-        boolean phoneNoResult = Pattern.matches(phonePattern, dto.getPhoneNum());
-        boolean authResult = Pattern.matches(authPattern, dto.getAuthNum());
+        // 문제가 있으면
+        if(memberEntity.isPresent() || !dto.getPassword().equals(dto.getPswdCheck()) || authNum == 1 || authNumCheckResult != 1) {
 
-        if(!idResult || !pswd1Result || !phoneNoResult ||
-           !authResult || !dto.getPassword().equals(dto.getPswdCheck()) || authNum == 1) {
-
-            log.info("MemberService 102 line: validation failed");
+            log.info("MemberService : join validation check failed");
             return -1;
         }
 
-        // 인증번호가 다를때
-        int dtoAuthNum = Integer.parseInt(dto.getAuthNum());
-        if(dtoAuthNum != authNum){
-            log.info("MemberService 109 line: different authNum");
-            return -1;
-        }
-
-        // 유효성 검사도 다 통과하고 인증 번호도 같다면
+        // 정상적이라면
         return 0;
     }
 
     // 회원가입 에러 메시지 담기
-    public Model joinErrorMsg(JoinMemberDto dto,  Model model) throws Exception {
+    @Transactional(readOnly = true)
+    public Model createJoinDtoErrorMsg(JoinMemberDto dto,  Model model) throws Exception {
 
         String userid   = dto.getUserId();
         String pswd1    = dto.getPassword();
         String pswd2    = dto.getPswdCheck();
         String phoneNum = dto.getPhoneNum();
-        String authNum  = dto.getAuthNum();
+        String dtoAuthNum  = dto.getAuthNum();
 
-        int authNumResult = redisService.getAuthNum(phoneNum);
+        // realAuthNum가 1이면 일치, 2면 다름, 3이면 db에 인증번호가 존재하지 않음
+        int realAuthNum = redisService.authNumCheck(phoneNum, dtoAuthNum);        // 인증번호 검사
         Optional<Member> memberEntity = memberRepository.findByuserId(userid);
 
-        boolean idValidationResult = Pattern.matches(idPattern, userid);
-        boolean pswdValidationResult = Pattern.matches(pswdPattern, pswd1);
-        boolean phoneValidationResult = Pattern.matches(phonePattern, phoneNum);
-        boolean authValidationResult = Pattern.matches(authPattern, authNum);
-
         // 아이디 검사
-        if(!nullCheck(userid)) {    		 		 // 공백이거나 null일때
-            model.addAttribute("idMsg", JoinMsg.USERID_NULL.getValue());
-        } else if (!idValidationResult) {			 // 유효성검사에 실패했을때
-            model.addAttribute("idMsg", JoinMsg.USERID_VALIDATION.getValue());
-        } else if (memberEntity.isPresent()) {		 		 // 아이디가 존재할때
-            model.addAttribute("idMsg", JoinMsg.USERID_EXIST.getValue());
+        if (memberEntity.isPresent()) {	 // 아이디가 존재할때
+            model.addAttribute("valid_userId", "이미 사용중이거나 탈퇴한 아이디입니다.");
         }
-
-        // 비밀번호 검사
-        if(!nullCheck(pswd1)) {						// 공백이거나 null일때
-            model.addAttribute("pswd1Msg", JoinMsg.PSWD1_NULL.getValue());
-        } else if (!pswdValidationResult) {					// 유효성검사에 실패했을때
-            model.addAttribute("pswd1Msg", JoinMsg.PSWD1_VALIDATION.getValue());
+        // 비밀번호 비교
+        if (!pswd1.equals(pswd2)) {		 // 비밀번호가 다를때
+            model.addAttribute("valid_pswdCheck","비밀번호가 일치하지 않습니다.");
         }
-
-        // 비밀번호확인 검사
-        if(!nullCheck(pswd2)) {						// 공백이거나 null일때
-            model.addAttribute("pswd2Msg", JoinMsg.PSWD2_NULL.getValue());
-        } else if (!pswd1.equals(pswd2)) {			// 비밀번호가 다를때
-            model.addAttribute("pswd2Msg", JoinMsg.PSWD2_DIFFERENCE.getValue());
-        }
-
-        // 전화번호 검사
-        if(!nullCheck(phoneNum)) {					// 공백이거나 null일때
-            model.addAttribute("phoneNumMsg", JoinMsg.PHONENUM_NULL.getValue());
-        } else if (!phoneValidationResult) {		// 전화번호가 정규식에 맞지않을때
-            model.addAttribute("phoneNumMsg", JoinMsg.PHONENUM_VALIDATION.getValue());
-        }
-
 
         // 인증번호 검사
-        if(!nullCheck(authNum)) {							// 인증번호를 보내지 않았을때
-            model.addAttribute("authNumMsg", JoinMsg.AUTHNUM_NOSEND.getValue());
-        } else if (!authValidationResult) {     			// 정규식에 맞지않을때
-            model.addAttribute("authNumMsg", JoinMsg.AUTHNUM_DIFFERENCE.getValue());
-        }
-        else if (authNumResult == 1) {                      // 인증번호가 시간이 지나서 사라졌거나 db에 인증번호가 없을때
-            model.addAttribute("authNumMsg", JoinMsg.AUTHNUM_TIMEOUT.getValue());
+        if (realAuthNum == 3) {          // 인증번호가 시간이 지나서 사라졌거나 db에 인증번호가 없을때
+            model.addAttribute("valid_authNum", "인증번호를 다시 확인해주세요.");
+        }else if(realAuthNum == 2){      // 인증번호가 다를 때
+            model.addAttribute("valid_authNum", "인증을 다시 진행해주세요.");
         }
 
-        // 인증번호가 다를때
-        if(authValidationResult && nullCheck(authNum) && authNumResult != 1) {
-            int AuthNum = Integer.parseInt(authNum);
-            if (AuthNum != authNumResult) {
-                model.addAttribute("authNumMsg", JoinMsg.AUTHNUM_DIFFERENCE.getValue());
-            }
-        }
         return model;
     }
 
+
     // view에 띄워줄 회원가입 객체 길이 조정 메소드
-    public JoinMemberDto joinDtoLength(JoinMemberDto memberDto){
+    public JoinMemberDto joinDtoLengthEdit(JoinMemberDto memberDto){
 
         String[] dtoBefore = {memberDto.getUserId(), memberDto.getPassword(), memberDto.getPswdCheck(), memberDto.getPhoneNum(), memberDto.getAuthNum()};
-        int[] maxlength = {20, 20, 20, 11, 6};
+        int[] maxlength = {20, 25, 25, 11, 6};
 
         String[] dtoAfter = new String[5];
 
@@ -239,6 +165,21 @@ public class MemberService {
                 .phoneNum(dtoAfter[3])
                 .authNum(dtoAfter[4])
                 .build();
+    }
+
+    // 에러메시지 생성
+    public Map<String, String> getErrorMsg(Errors errors){
+        Map<String, String> map = new HashMap<>();
+        for(FieldError error : errors.getFieldErrors()){
+
+            if(map.get("valid_" + error.getField()) != null){
+                continue;
+            }
+
+            String key = String.format("valid_%s", error.getField());
+            map.put(key, error.getDefaultMessage());
+        }
+        return map;
     }
 
     // 사용자 아이디 찾기

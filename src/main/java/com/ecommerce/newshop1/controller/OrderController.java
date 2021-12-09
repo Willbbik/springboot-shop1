@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -95,7 +94,7 @@ public class OrderController {
 
     @PostMapping("/order/saveAddress")
     @ApiOperation(value = "주문하기 버튼 클릭시 배송정보와 주문자정보 유효성검사 후 세션에 저장")
-    public @ResponseBody String saveAddressDto(@Valid AddressDto addressDto, String payMethod, Errors error, HttpServletRequest request){
+    public @ResponseBody String saveAddressDto(@Valid AddressDto addressDto, String payMethod, HttpServletRequest request){
 
         HttpSession session = request.getSession();
         PayType payType = PayType.findByPayType(payMethod);

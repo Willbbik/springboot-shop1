@@ -1,20 +1,22 @@
 package com.ecommerce.newshop1.controller;
 
-
 import com.ecommerce.newshop1.dto.JoinMemberDto;
 import com.ecommerce.newshop1.dto.MemberDto;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.service.*;
+import com.ecommerce.newshop1.utils.ValidationSequence;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.security.Principal;
+import javax.validation.Valid;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -69,20 +71,6 @@ public class MemberController {
         }
     }
 
-
-    @GetMapping("/member/pswdCheck")
-    @ApiOperation(value = "비밀번호 검사")
-    public @ResponseBody String pswdCheck(@RequestParam(name = "pswd") String pswd) {
-
-        boolean result = memberService.pswdCheck(pswd);
-        if (result) {
-            return "Y";
-        } else {
-            return "N";
-        }
-    }
-
-
     @GetMapping("/member/sendAuth")
     @ApiOperation(value = "인증번호", notes = "인증번호를 전송해주고 reids서버에 저장")
     public @ResponseBody String sendAuth(@RequestParam(name = "phoneNum") String phoneNum) throws Exception {
@@ -122,32 +110,61 @@ public class MemberController {
 
     @ApiOperation(value = "일반 회원가입")
     @PostMapping("/join")
-    public String Join(JoinMemberDto joinMemberDto, Model model) throws Exception {
+    public String Join(@ModelAttribute @Validated(ValidationSequence.class) JoinMemberDto joinMemberDto, BindingResult errors, Model model) throws Exception {
 
-        int result = memberService.joinValidationCheck(joinMemberDto);
+        if(errors.hasErrors()){
+            Map<String, String > errorMsgMap = memberService.getErrorMsg(errors);   // 에러 메시지가 담긴 map
+            joinMemberDto = memberService.joinDtoLengthEdit(joinMemberDto);             // 최대 길이 조절
 
-        if (result == 0) {
-            try {
-
-                MemberDto memberDto = mapper.map(joinMemberDto, MemberDto.class);
-                Member member = memberService.joinNormal(memberDto);
-                cartService.createCart(member);
-
-                return "redirect:/";
-            } catch (Exception e) {
-                throw new Exception("MemberController 46 line - join failed : " + e.getMessage());
+            for(String key : errorMsgMap.keySet()){
+                model.addAttribute(key, errorMsgMap.get(key));
             }
-        } else {
-            JoinMemberDto dto = memberService.joinDtoLength(joinMemberDto);
-
-            model = memberService.joinErrorMsg(dto, model);
-            model.addAttribute("member", dto);
-            model.addAttribute(model);
+            model.addAttribute("member", joinMemberDto);
             return "member/join";
         }
 
+        // 유효성 문제가 없으면 중복검사
+        int checkResult = memberService.joinValidationCheck(joinMemberDto);
+        if(checkResult == -1){
 
+            model.addAttribute(memberService.createJoinDtoErrorMsg(joinMemberDto, model));            // 에러 메시지
+            model.addAttribute("member", memberService.joinDtoLengthEdit(joinMemberDto)); // dto
+            return "member/join";
+        }
+
+        memberService.joinNormal(mapper.map(joinMemberDto, MemberDto.class));
+
+        return "redirect:/";
     }
+
+//    @ApiOperation(value = "일반 회원가입")
+//    @PostMapping("/join")
+//    public String Join(JoinMemberDto joinMemberDto, Model model) throws Exception {
+//
+//        int result = memberService.joinValidationCheck(joinMemberDto);
+//
+//        if (result == 0) {
+//            try {
+//
+//                MemberDto memberDto = mapper.map(joinMemberDto, MemberDto.class);
+//                Member member = memberService.joinNormal(memberDto);
+//                cartService.createCart(member);
+//
+//                return "redirect:/";
+//            } catch (Exception e) {
+//                throw new Exception("MemberController 46 line - join failed : " + e.getMessage());
+//            }
+//        } else {
+//            JoinMemberDto dto = memberService.joinDtoLength(joinMemberDto);
+//
+//            model = memberService.joinErrorMsg(dto, model);
+//            model.addAttribute("member", dto);
+//            model.addAttribute(model);
+//            return "member/join";
+//        }
+//
+//
+//    }
 
 
 

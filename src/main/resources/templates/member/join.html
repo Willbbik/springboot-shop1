@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>에게모니 회원가입</title>
@@ -57,18 +57,18 @@
             <div class="login-page">
                 <div class="form">
                     <form id="join_form" class="login-form" method="post" th:action="@{/join}">
-
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                         <label class="inputLabel">아이디</label>
-                        <input type="text" id="userId" name="userId" th:value="${member?.userId}" placeholder="아이디" maxlength="13" title="아이디 입력" autocomplete="off"/>
-                        <span id="idMsg" class="error_next_box">[[${idMsg}]]</span>
+                        <input type="text" id="userId" name="userId" th:value="${member?.userId}" placeholder="아이디" maxlength="20" title="아이디 입력" autocomplete="off"/>
+                        <span id="idMsg" class="error_next_box" th:text="${valid_userId}"></span>
 
                         <label class="inputLabel">비밀번호</label>
                         <input type="password" id="pswd1" name="password" th:value="${member?.password}" placeholder="비밀번호" maxlength="25" title="비밀번호 입력" autocomplete="off"/>
-                        <span id="pswd1Msg" class="error_next_box" >[[${pswd1Msg}]]</span>
+                        <span id="pswd1Msg" class="error_next_box" th:text="${valid_password}"></span>
 
                         <label class="inputLabel">비밀번호 확인</label>
                         <input type="password" id="pswd2" name="pswdCheck" th:value="${member?.pswdCheck}" placeholder="비밀번호 확인" maxlength="25" autocomplete="off"/>
-                        <span id="pswd2Msg" class="error_next_box">[[${pswd2Msg}]]</span>
+                        <span id="pswd2Msg" class="error_next_box" th:text="${valid_pswdCheck}"></span>
 
                         <label class="inputLabel">본인인증</label>
                         <div>
@@ -79,8 +79,8 @@
                         </div>
 
                         <input type="tel" id="authNum" name="authNum" th:value="${member?.authNum}" placeholder="인증번호" maxlength="6" autocomplete="off"/>
-                            <p><span id="phoneNumMsg" class="error_next_box" >[[${phoneNumMsg}]]</span></p>
-                            <p><span id="authNumMsg" class="error_next_box" >[[${authNumMsg}]]</span></p>
+                        <p><span id="phoneNumMsg" class="error_next_box" th:text="${valid_phoneNum}"></span></p>
+                        <p><span id="authNumMsg" class="error_next_box" th:text="${valid_authNum}"></span></p>
                         <button type="button" id="btnjoin" class="button">
                             <span>가입하기</span>
                         </button>
