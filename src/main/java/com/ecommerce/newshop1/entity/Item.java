@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = "item", indexes = @Index(name = "idx_item", columnList = "itemName, category, saleStatus"))
 public class Item extends TimeEntity{
 

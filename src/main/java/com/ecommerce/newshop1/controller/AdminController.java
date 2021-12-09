@@ -18,9 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -92,8 +90,8 @@ public class AdminController {
         return "admin/admin_itemList";
     }
 
-
     @PostMapping("/admin/register")
+    @ApiOperation(value = "관리자페이지에서 상품 등록")
     public String itemSave(MultipartHttpServletRequest mtfRequest, ItemDto itemDto) throws Exception {
 
         String itemCode = UUID.randomUUID().toString();
@@ -159,6 +157,13 @@ public class AdminController {
         // 옵션 저장 해야함
 
         return "redirect:/admin/itemList";
+    }
+
+    @DeleteMapping("/admin/item/delete")
+    @ApiOperation(value = "관리자페이지에서 단일 상품 삭제")
+    public @ResponseBody String itemDelete(@RequestParam List<Long> itemIdList){
+        itemRepository.deleteAllById(itemIdList);
+        return "상품 삭제 완료";
     }
 
 
