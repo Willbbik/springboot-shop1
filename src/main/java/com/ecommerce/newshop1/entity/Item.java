@@ -50,7 +50,7 @@ public class Item extends TimeEntity{
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "item")
     private List<ItemImage> itemImageList = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "item")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "item")
     private List<QnAEntity> qnAEntityList = new ArrayList<>();
 
     public void setItemImageList(ItemImage itemImage){

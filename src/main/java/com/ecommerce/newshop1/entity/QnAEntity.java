@@ -18,7 +18,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "item_QnA_1", indexes = @Index(name ="qnaidx", columnList = "item_id"))
+@Table(name = "item_qna", indexes = @Index(name ="qnaidx", columnList = "item_id"))
 public class QnAEntity extends TimeEntity {
 
     @Id

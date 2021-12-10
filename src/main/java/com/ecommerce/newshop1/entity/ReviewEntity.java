@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "item_review_1")
+@Table(name = "item_review")
 public class ReviewEntity extends TimeEntity {
 
     @Id

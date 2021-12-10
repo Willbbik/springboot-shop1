@@ -209,12 +209,15 @@
                 },
                 success : function(result){
                     if(result === "success"){
-
                       span.find("#replyContent").val("");
                       alert("답변 작성에 성공하셨습니다.");
                       getQnAList();
-                    }else{
+                    }else if(result === "N"){
+                      alert("값을 정확히 입력해주세요 ( 최대길이 2048자 )");
+                      return false;
+                    } else{
                       alert("권한이 없습니다");
+                      return false;
                     }
                 },
                 error : function(result){

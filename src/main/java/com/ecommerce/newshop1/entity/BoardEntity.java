@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(name = "board_1")
+@Table(name = "board")
 public class BoardEntity extends TimeEntity {
 
     @Id
