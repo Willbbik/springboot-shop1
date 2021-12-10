@@ -156,6 +156,7 @@ public class OrderServiceImpl implements OrderService {
         session.removeAttribute("orderItems");
         session.removeAttribute("addressDto");
         session.removeAttribute("payType");
+        session.removeAttribute("cartItemIdList");
     }
 
 }

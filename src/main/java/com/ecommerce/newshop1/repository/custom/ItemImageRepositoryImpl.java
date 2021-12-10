@@ -31,7 +31,7 @@ public class ItemImageRepositoryImpl implements ItemImageRepositoryCustom {
 
 
     private BooleanExpression eqItemId(Item item){
-        return QItemImage.itemImage.itemId.eq(item);
+        return QItemImage.itemImage.item.eq(item);
     }
 
 
