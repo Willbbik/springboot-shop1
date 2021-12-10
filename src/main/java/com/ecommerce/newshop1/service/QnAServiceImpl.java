@@ -236,8 +236,18 @@ public class QnAServiceImpl implements QnAService{
     @Transactional
     public void saveQnA(QnADto dto) {
 
+//        QnAEntity qnaEntity = QnAEntity.builder()
+//                .item(dto.getItem())
+//                .writer(security.getName())
+//                .content(dto.getContent().replaceAll("\\s+", " "))
+//                .hide(dto.getHide())
+//                .parent(null)
+//                .depth(1)
+//                .replyEmpty(QnA.EMPTY.getValue())
+//                .build();
+
+
         QnAEntity qnaEntity = QnAEntity.builder()
-                .item(dto.getItem())
                 .writer(security.getName())
                 .content(dto.getContent().replaceAll("\\s+", " "))
                 .hide(dto.getHide())
@@ -246,7 +256,7 @@ public class QnAServiceImpl implements QnAService{
                 .replyEmpty(QnA.EMPTY.getValue())
                 .build();
 
-        qnARepository.save(qnaEntity);
+        dto.getItem().setQnaEntityList(qnaEntity);
     }
 
 
