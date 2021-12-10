@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
-@Table(name = "member_1")
+@Table(name = "member")
 public class Member extends TimeEntity {
 
     @Id

@@ -48,7 +48,7 @@ public class QnAServiceImpl implements QnAService{
                 .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다 상품 번호 : " + itemId));
 
         // 해당 상품의 qna 개수
-        Long qnaSize = qnARepository.countByItem (item);
+        Long qnaSize = qnARepository.countByItem(item);
 
         // 페이징 처리
         QnAPagination page = new QnAPagination(qnaSize, curPage);
@@ -204,7 +204,6 @@ public class QnAServiceImpl implements QnAService{
     public void saveQnAReply(QnADto dto){
 
         QnAEntity qnaReply = QnAEntity.builder()
-                .item(dto.getItem())
                 .writer(security.getName())
                 .content(dto.getContent())
                 .parent(dto.getParent())
@@ -213,39 +212,19 @@ public class QnAServiceImpl implements QnAService{
                 .depth(2)
                 .build();
 
-        // qna 답글 유무 존재로 수정
-        QnAEntity qna = qnARepository.findById(dto.getParent()).get();
-        qna.setReplyEmpty(QnA.PRESENT.getValue());
+        QnAEntity parentQna = qnARepository.findById(dto.getParent()).get();
+        // 해당 질문 답변 상태 변경. 답변없음 > 답변존재
+        parentQna.setReplyEmpty(QnA.PRESENT.getValue());
 
-        qnARepository.save(qnaReply);
-        qnARepository.save(qna);
+        Item item = dto.getItem();
+        item.setQnaEntityList(qnaReply);
+        itemRepository.save(item);
     }
 
-    /**
-     * QnA 질문 저장 메소드
-     *
-     * content - 띄어쓰기 조절
-     * parent - 질문은 부모 댓글이 없기 때문에 항상 null
-     * depth - QnA 질문은 1, QnA 답변은 2
-     * replyEmpty - 등록하자마자는 무조건 답변이 없기때문에 기본으로 empty
-     *
-     * @param dto
-     * @throws Exception
-     */
+
     @Override
     @Transactional
     public void saveQnA(QnADto dto) {
-
-//        QnAEntity qnaEntity = QnAEntity.builder()
-//                .item(dto.getItem())
-//                .writer(security.getName())
-//                .content(dto.getContent().replaceAll("\\s+", " "))
-//                .hide(dto.getHide())
-//                .parent(null)
-//                .depth(1)
-//                .replyEmpty(QnA.EMPTY.getValue())
-//                .build();
-
 
         QnAEntity qnaEntity = QnAEntity.builder()
                 .writer(security.getName())
@@ -256,24 +235,17 @@ public class QnAServiceImpl implements QnAService{
                 .replyEmpty(QnA.EMPTY.getValue())
                 .build();
 
-        dto.getItem().setQnaEntityList(qnaEntity);
+        Item item = dto.getItem();
+        item.setQnaEntityList(qnaEntity);
+        itemRepository.save(item);
     }
 
 
-    /**
-     * QnA 유효성 검사
-     *
-     * 값이 없거나, 길이가 정해진 길이보다 길면 -1 리턴
-     * 공개, 비공개 값이 private, public가 아닌 다른 값이 들어오면 -1 리턴
-     * 권한이 없으면 -2 리턴
-     *
-     * 정상적이라면 0 리턴
-     *
-     * @param dto
-     * @return
-     */
     @Override
     public int checkValidationQnA(QnADto dto){
+        // 정상 = 0
+        // 공백 or 길이초과 or 값 조작 있을시 = -1
+        // 비로그인 = -2
 
         String content = dto.getContent();
 

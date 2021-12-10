@@ -95,17 +95,18 @@ public class ItemController {
     }
 
 
-    @ApiOperation(value = "Q&A 저장")
+
     @PostMapping("/item/qna/send")
-    public @ResponseBody String saveItemQnA(QnADto dto, Long itemId) throws Exception {
+    @ApiOperation(value = "Q&A 저장")
+    public @ResponseBody String saveItemQnA(QnADto qnaDto, Long itemId) throws Exception {
 
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지 않습니다. itemId : " + itemId));
-        dto.setItem(item);
+        qnaDto.setItem(item);
 
-        int result = qnAService.checkValidationQnA(dto);
+        int result = qnAService.checkValidationQnA(qnaDto);
         if(result == 0){
-            qnAService.saveQnA(dto);
+            qnAService.saveQnA(qnaDto);
             return "Y";     // 저장에 성공하면
         }else if(result == -2){
             return "login"; // 비로그인일때
@@ -122,13 +123,17 @@ public class ItemController {
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지 않습니다. itemId : " + itemId));
         dto.setItem(item);
 
+        int result = qnAService.checkValidationQnA(dto);
         if(!security.checkHasRole(Role.ADMIN.getValue())){
             return "fail";
-        }else{
-            // 여기다 답글 저장 메소드
-            qnAService.saveQnAReply(dto);
-            return "success";
         }
+        else if(result != 0){
+            return "N";
+        }
+
+        // 여기다 답글 저장 메소드
+        qnAService.saveQnAReply(dto);
+        return "success";
     }
 
 }
