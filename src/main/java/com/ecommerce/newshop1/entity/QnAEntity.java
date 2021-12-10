@@ -51,4 +51,7 @@ public class QnAEntity extends TimeEntity {
         this.replyEmpty = replyEmpty;
     }
 
+    public void setItem(Item item){
+        this.item = item;
+    }
 }

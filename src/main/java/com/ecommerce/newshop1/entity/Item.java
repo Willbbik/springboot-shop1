@@ -50,8 +50,8 @@ public class Item extends TimeEntity{
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "item")
     private List<ItemImage> itemImageList = new ArrayList<>();
 
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "item")
-//    private List<QnAEntity> qnAEntityList = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "item")
+    private List<QnAEntity> qnAEntityList = new ArrayList<>();
 
     public void setItemImageList(ItemImage itemImage){
 
@@ -59,5 +59,9 @@ public class Item extends TimeEntity{
         itemImage.setItem(this);
     }
 
+    public void setQnaEntityList(QnAEntity qnAEntity){
+        qnAEntityList.add(qnAEntity);
+        qnAEntity.setItem(this);
+    }
 
 }
