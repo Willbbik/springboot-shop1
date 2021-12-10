@@ -36,8 +36,7 @@ $(document).on("click", "#order-button", function(){
             failUrl: window.location.origin + "/fail",
         };
 
-        sendAddress(paymentData);
-//        tossPayments.requestPayment(payMethod, paymentData);
+        order(paymentData);
 
     }else if(paymethod === '카카오페이'){
         alert("카카오페이");
@@ -45,7 +44,7 @@ $(document).on("click", "#order-button", function(){
 });
 
 
-function sendAddress(paymentData){
+function order(paymentData){
 
     let tossPayments = TossPayments("test_ck_OyL0qZ4G1VO5jv2azY8oWb2MQYgm");
 
@@ -64,7 +63,7 @@ function sendAddress(paymentData){
     }
 
      $.ajax({
-        url : "/order/saveAddress",
+        url : "/order/order",
         type : "post",
         data : addressDto,
         beforeSend : function(xhr){
@@ -73,14 +72,16 @@ function sendAddress(paymentData){
         success : function(result){
             if(result === 'success'){
                 tossPayments.requestPayment("가상계좌", paymentData);
-            }else{
+            }else if(result === "fail"){
                 alert("결제방법을 다시 확인해주세요.");
+                return false;
+            }else{
+                alert(result);
                 return false;
             }
         },
-        error : function(result){
+        error : function(){
             alert("필수 주문 정보를 입력해주세요.");
-            console.log("주문 실패");
             return false;
         }
     });

@@ -7,6 +7,8 @@ import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.service.CartService;
 import com.ecommerce.newshop1.service.ItemService;
 import com.ecommerce.newshop1.service.OrderService;
+import com.ecommerce.newshop1.utils.ValidationGroups;
+import com.ecommerce.newshop1.utils.ValidationSequence;
 import com.ecommerce.newshop1.utils.enums.PayType;
 import com.ecommerce.newshop1.utils.enums.TossPayments;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,6 +19,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -92,16 +97,25 @@ public class OrderController {
     }
 
 
-    @PostMapping("/order/saveAddress")
-    @ApiOperation(value = "주문하기 버튼 클릭시 배송정보와 주문자정보 유효성검사 후 세션에 저장")
-    public @ResponseBody String saveAddressDto(@Valid AddressDto addressDto, String payMethod, HttpServletRequest request){
+    @PostMapping("/order/order")
+    public @ResponseBody String saveAddressDto(@Validated(ValidationSequence.class) AddressDto addressDto, BindingResult errors, String payMethod, HttpServletRequest request){
 
         HttpSession session = request.getSession();
         PayType payType = PayType.findByPayType(payMethod);
 
         if(payType.getTitle().equals("없음")){
             return "fail";
-        } else{
+        }else if(errors.hasErrors()){
+            String message = "";
+            for(FieldError error : errors.getFieldErrors()){
+
+                message = error.getDefaultMessage();
+                break;
+            }
+            return message;
+        }
+
+        else{
             session.setAttribute("addressDto", addressDto);
             session.setAttribute("payType", payType);
             return "success";

@@ -109,16 +109,13 @@ public class MemberController {
 
     @ApiOperation(value = "일반 회원가입")
     @PostMapping("/join")
-    public String join(@ModelAttribute @Validated(ValidationSequence.class) JoinMemberDto joinMemberDto, BindingResult errors, Model model) throws Exception {
+    public String join(@ModelAttribute("member") @Validated(ValidationSequence.class) JoinMemberDto joinMemberDto, BindingResult errors, Model model) throws Exception {
 
         if(errors.hasErrors()){
             Map<String, String > errorMsgMap = memberService.getErrorMsg(errors);   // 에러 메시지가 담긴 map
-            joinMemberDto = memberService.joinDtoLengthEdit(joinMemberDto);             // 최대 길이 조절
-
             for(String key : errorMsgMap.keySet()){
                 model.addAttribute(key, errorMsgMap.get(key));
             }
-            model.addAttribute("member", joinMemberDto);
             return "member/join";
         }
 
@@ -127,7 +124,7 @@ public class MemberController {
         if(checkResult == -1){
 
             model.addAttribute(memberService.createJoinDtoErrorMsg(joinMemberDto, model));            // 에러 메시지
-            model.addAttribute("member", memberService.joinDtoLengthEdit(joinMemberDto)); // dto
+            model.addAttribute("member", memberService.joinDtoLengthEdit(joinMemberDto)); // input 값 유지
             return "member/join";
         }
 
@@ -137,37 +134,6 @@ public class MemberController {
 
         return "redirect:/";
     }
-
-//    @ApiOperation(value = "일반 회원가입")
-//    @PostMapping("/join")
-//    public String Join(JoinMemberDto joinMemberDto, Model model) throws Exception {
-//
-//        int result = memberService.joinValidationCheck(joinMemberDto);
-//
-//        if (result == 0) {
-//            try {
-//
-//                MemberDto memberDto = mapper.map(joinMemberDto, MemberDto.class);
-//                Member member = memberService.joinNormal(memberDto);
-//                cartService.createCart(member);
-//
-//                return "redirect:/";
-//            } catch (Exception e) {
-//                throw new Exception("MemberController 46 line - join failed : " + e.getMessage());
-//            }
-//        } else {
-//            JoinMemberDto dto = memberService.joinDtoLength(joinMemberDto);
-//
-//            model = memberService.joinErrorMsg(dto, model);
-//            model.addAttribute("member", dto);
-//            model.addAttribute(model);
-//            return "member/join";
-//        }
-//
-//
-//    }
-
-
 
 
     // 일단 카카오 로그인은 다음에
