@@ -41,20 +41,21 @@ public class QnAServiceImpl implements QnAService{
      * return html page
      */
     @Override
+    @Transactional
     public String getQnAHtml(Long itemId, Model model, int curPage) throws Exception {
 
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다 상품 번호 : " + itemId));
 
         // 해당 상품의 qna 개수
-        Long qnaSize = qnARepository.countByItemId(item);
+        Long qnaSize = qnARepository.countByItem (item);
 
         // 페이징 처리
         QnAPagination page = new QnAPagination(qnaSize, curPage);
         Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxQnA());
 
         // qna 존재유무 확인해서 값 담기
-        boolean qnaExists = qnARepository.existsByItemId(item);
+        boolean qnaExists = qnARepository.existsByItem(item);
 
         List<QnADto> qnaList = (!qnaExists) ? new ArrayList<>() : qnARepository.searchQnA(item, pageable);
         List<QnADto> qnaReplyList = getQnAReply(qnaList);
@@ -82,6 +83,7 @@ public class QnAServiceImpl implements QnAService{
      * @return
      */
     @Override
+    @Transactional(readOnly = true)
     public List<QnADto> editReply(List<QnADto> replyList){
 
         List<QnADto> replyResult = new ArrayList<>();
@@ -112,6 +114,7 @@ public class QnAServiceImpl implements QnAService{
 
     // QnA 답글 가져오는 메소드
     @Override
+    @Transactional(readOnly = true)
     public List<QnADto> getQnAReply(List<QnADto> qnaList) {
 
         List<QnADto> replyList = new ArrayList<>();
@@ -148,6 +151,7 @@ public class QnAServiceImpl implements QnAService{
      * @return List<QnADto>
      */
     @Override
+    @Transactional(readOnly = true)
     public List<QnADto> editQna(List<QnADto> qnaList) throws Exception {
 
         if(qnaList.isEmpty()){
@@ -195,12 +199,12 @@ public class QnAServiceImpl implements QnAService{
      *
      *@param dto
      */
-    @Transactional
     @Override
+    @Transactional
     public void saveQnAReply(QnADto dto){
 
         QnAEntity qnaReply = QnAEntity.builder()
-                .itemId(dto.getItemId())
+                .item(dto.getItem())
                 .writer(security.getName())
                 .content(dto.getContent())
                 .parent(dto.getParent())
@@ -228,12 +232,12 @@ public class QnAServiceImpl implements QnAService{
      * @param dto
      * @throws Exception
      */
-    @Transactional
     @Override
-    public void saveQnA(QnADto dto) throws Exception {
+    @Transactional
+    public void saveQnA(QnADto dto) {
 
         QnAEntity qnaEntity = QnAEntity.builder()
-                .itemId(dto.getItemId())
+                .item(dto.getItem())
                 .writer(security.getName())
                 .content(dto.getContent().replaceAll("\\s+", " "))
                 .hide(dto.getHide())

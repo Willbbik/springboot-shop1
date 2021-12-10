@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class QnADto {
 
     private Long id;
-    private Item itemId;
+    private Item item;
     private String writer;
     private String content;
     private Long parent;

@@ -13,8 +13,8 @@ public interface QnARepository extends JpaRepository<QnAEntity, Long>, QnAReposi
 
     Optional<QnAEntity> findByParent(Long parent);
 
-    Long countByItemId(Item itemId);
+    Long countByItem(Item itemId);
 
-    boolean existsByItemId(Item itemId);
+    boolean existsByItem(Item item);
 
 }
