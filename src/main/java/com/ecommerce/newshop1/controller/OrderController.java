@@ -118,7 +118,6 @@ public class OrderController {
 
         if(responseEntity.getStatusCode() == HttpStatus.OK) {
 
-            // 주문 메소드 생성해야함 ok
             // 로그인 검사
 
             String payType = responseEntity.getBody().get("method").asText();
@@ -126,9 +125,9 @@ public class OrderController {
             if(payType.equals("가상계좌")){
                 OrderPaymentInformation paymentInfo = orderService.getVirtualAccountInfo(responseEntity.getBody());
                 orderService.doOrder(request.getSession(), paymentInfo);
+                return "order/order_success";
             }
-
-            return "order/order_success";
+            return "order/order_fail";
         } else {
 
             JsonNode failNode = responseEntity.getBody();
