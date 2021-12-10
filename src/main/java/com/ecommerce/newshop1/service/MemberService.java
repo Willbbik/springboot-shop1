@@ -29,20 +29,14 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class MemberService {
 
+    private static final Logger log = LoggerFactory.getLogger(MemberService.class);
     private final MemberRepository memberRepository;
-    private final CustomUserDetailsService customUserDetailsService;
     private final RedisService redisService;
 
     @Autowired
     private final PasswordEncoder passwordEncoder;
 
-    private static final Logger log = LoggerFactory.getLogger(MemberService.class);
     ModelMapper mapper = new ModelMapper();
-
-    String idPattern = "^[a-z0-9][a-z0-9_\\-]{4,20}$";
-    String pswdPattern = "^(?=.*[a-z0-9])(?=.*[A-Za-z0-9~`!@#$%\\^&*()-]).{8,25}$";
-    String phonePattern = "^(010[1-9][0-9]{7})$";
-    String authPattern  = "^[0-9]{6}$";
 
 
     // 아이디 찾기
