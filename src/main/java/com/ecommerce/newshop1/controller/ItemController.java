@@ -60,9 +60,10 @@ public class ItemController {
         return "item/categoryCap";
     }
 
-    @ApiOperation(value = "상품 상세보기")
+
     @GetMapping("/items/{id}")
-    public String itemDetails(@PathVariable Long id, Model model) throws Exception {
+    @ApiOperation(value = "상품 상세보기")
+    public String itemDetails(@PathVariable Long id, Model model) {
 
         // 상품
         Item item = itemRepository.findById(id)
@@ -73,11 +74,11 @@ public class ItemController {
         boolean imageExists = itemImageRepository.existsByItem(item);
         List<ItemImageDto> images = (!imageExists) ? null : itemService.searchAllItemImage(item);
 
-        // 해당 상품의 QnA 질문 개수
-        Long qnaSize = qnARepository.countByItemId(item);
+        // 상품 QnA 질문 개수
+        Long qnaSize = qnARepository.countByItem(item);
 
-        model.addAttribute("item", itemDto);  // 상품
-        model.addAttribute("images", images);  // 상품 이미지
+        model.addAttribute("item", itemDto);     // 상품
+        model.addAttribute("images", images);    // 상품 이미지
         model.addAttribute("qnaSize", qnaSize);  // qna 개수
 
         return "item/itemDetails";
@@ -100,7 +101,7 @@ public class ItemController {
 
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지 않습니다. itemId : " + itemId));
-        dto.setItemId(item);
+        dto.setItem(item);
 
         int result = qnAService.checkValidationQnA(dto);
         if(result == 0){
@@ -119,7 +120,7 @@ public class ItemController {
 
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지 않습니다. itemId : " + itemId));
-        dto.setItemId(item);
+        dto.setItem(item);
 
         if(!security.checkHasRole(Role.ADMIN.getValue())){
             return "fail";

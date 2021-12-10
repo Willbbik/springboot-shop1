@@ -26,8 +26,8 @@ public class QnAEntity extends TimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id", nullable = false)
-    private Item itemId;
+    @JoinColumn(name = "item_id")
+    private Item item;
 
     @Column(length = 20, nullable = false)
     private String writer;

@@ -29,7 +29,7 @@ public class QnARepositoryImpl implements QnARepositoryCustom{
                         ))
                 .from(QQnAEntity.qnAEntity)
                 .where(QQnAEntity.qnAEntity.depth.eq(1),
-                        QQnAEntity.qnAEntity.itemId.id.eq(item.getId()))
+                        QQnAEntity.qnAEntity.item.id.eq(item.getId()))
                 .orderBy(QQnAEntity.qnAEntity.id.desc())
                 .limit(3)
                 .offset(pageable.getOffset())
