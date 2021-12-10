@@ -7,9 +7,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -41,8 +44,17 @@ public class Item extends TimeEntity{
     private String imageUrl;
 
 
-    public void setImageUrl(String imageUrl){
-        this.imageUrl = imageUrl;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "item")
+    private List<CartItem> cartItemList = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "item")
+    private List<ItemImage> itemImageList = new ArrayList<>();
+
+
+    public void setItemImageList(ItemImage itemImage){
+
+        itemImageList.add(itemImage);
+        itemImage.setItem(this);
     }
 
 

@@ -70,9 +70,10 @@ public class ItemController {
         ItemDto itemDto = mapper.map(item, ItemDto.class);
 
         // 상품 이미지
-        boolean imageExists = itemImageRepository.existsByItemId(item);
+        boolean imageExists = itemImageRepository.existsByItem(item);
         List<ItemImageDto> images = (!imageExists) ? null : itemService.searchAllItemImage(item);
 
+        // 해당 상품의 QnA 질문 개수
         Long qnaSize = qnARepository.countByItemId(item);
 
         model.addAttribute("item", itemDto);  // 상품

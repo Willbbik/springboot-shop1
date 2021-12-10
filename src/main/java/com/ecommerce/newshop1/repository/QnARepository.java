@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
+
 public interface QnARepository extends JpaRepository<QnAEntity, Long>, QnARepositoryCustom {
 
     Optional<QnAEntity> findByParent(Long parent);
