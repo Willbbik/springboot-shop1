@@ -81,7 +81,7 @@
                         <input type="tel" id="authNum" name="authNum" th:value="${member?.authNum}" placeholder="인증번호" maxlength="6" autocomplete="off"/>
                         <p><span id="phoneNumMsg" class="error_next_box" th:text="${valid_phoneNum}"></span></p>
                         <p><span id="authNumMsg" class="error_next_box" th:text="${valid_authNum}"></span></p>
-                        <button type="button" id="btnjoin" class="button">
+                        <button type="submit" id="btnjoin" class="button">
                             <span>가입하기</span>
                         </button>
                     </form>

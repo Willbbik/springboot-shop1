@@ -19,8 +19,8 @@ public class JoinMemberDto {
     private Long id;
 
     @NotBlank(message = "아이디는 필수정보 입니다.", groups = ValidationGroups.NotBlankGroup.class)
-    @Pattern(regexp = "^[a-z0-9][a-z0-9_\\-]{4,20}$",
-            message = "5~20자의 영문 소문자, 숫자와 특수기호(_),(-)만 사용 가능합니다. (띄어쓰기 불가능)",
+    @Pattern(regexp = "^[a-z0-9]{5,20}$",
+            message = "5~20자의 영문 소문자, 숫자만 사용 가능합니다. (띄어쓰기 불가능)",
             groups = ValidationGroups.PatternGroup.class)
     private String userId;
 
