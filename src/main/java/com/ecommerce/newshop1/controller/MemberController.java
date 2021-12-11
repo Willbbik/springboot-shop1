@@ -1,13 +1,16 @@
 package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.JoinMemberDto;
+import com.ecommerce.newshop1.dto.KakaoDto;
 import com.ecommerce.newshop1.dto.MemberDto;
+import com.ecommerce.newshop1.dto.OAuthToken;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.ValidationSequence;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -149,21 +152,20 @@ public class MemberController {
 //        String userid = kakaoDto.getId().toString() + "@k";
 //
 //        // 아이디 중복 검사
-//        Optional<MemberEntity> memberEntity = memberService.findByUserId(userid);
+//        Optional<Member> memberEntity = memberService.findByUserId(userid);
 //
 //        // 존재하지 않으면 가입
 //        if (memberEntity.isEmpty()) {
 //            try{
-//                memberService.joinOAuth(userid, snsKakao);
+//                memberService.joinOAuth(userid);
 //            }catch (Exception e){
 //                throw new Exception("MemberController 176 line : " + e.getCause());
 //            }
 //        }
 //
 //        // 로그인
-//        Optional<MemberEntity> Entity = memberService.findByUserId(userid);
-//        MemberEntity entity = Entity.get();
-//        memberService.login(entity.getUserid());
+//        Member entity = memberService.findByUserId(userid).get();
+//        SecurityContextHolder.
 //
 //        return "redirect:/";
 //    }
