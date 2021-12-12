@@ -78,6 +78,20 @@ public class MemberController {
         return "member/mypage";
     }
 
+
+    @GetMapping("/mypage/orderList")
+    @ApiOperation(value = "mypage에 주문한 상품들이 담긴 html 리턴", notes = "ajax 전용")
+    public String orderList(Model model){
+        String userId = security.getName();
+        Member member = memberRepository.findByuserId(userId)
+                .orElseThrow(() -> new MemberNotFoundException("MemberController mypage에서 발생, 존재하지 않는 아이디입니다."));
+
+        List<Order> orderList = orderRepository.findAllByMember(member);
+        model.addAttribute("orderList", orderList);
+        return "member/tab/tab1orderList";
+    }
+
+
     @GetMapping("/member/idConfirm")
     @ApiOperation(value = "아이디 중복검사", notes = "회원가입시 ajax로 아이디 중복검사 할 때")
     public @ResponseBody String idConfirm(@RequestParam(name = "userId") String userId) {
