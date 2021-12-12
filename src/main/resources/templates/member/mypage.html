@@ -61,8 +61,8 @@
 
             <div>
                 <div>
-                    <span><button type="button" class="btn btn-primary">주문/배송조회</button></span>
-                    <span><button type="button" class="btn btn-primary">Q & A</button></span>
+                    <span><button type="button" id="orderListBtn" class="btn btn-primary">주문/배송조회</button></span>
+                    <span><button type="button" id="mypageqna" class="btn btn-primary">Q & A</button></span>
                 </div>
                 <div class="orderpage frame">
                     <div class="mypage_orderList">
@@ -71,7 +71,7 @@
                                <span th:text="${#temporals.format(order.createdDate, 'yyyy.MM.dd')}"></span>
                                <span>ㅣ</span>
                                <span th:text="${order.orderNum}"></span>
-                               <a href="#" class="btn_showdetailorder">주문상세보기</a>
+                               <a href="#" class="btn_showdetailorder">주문상세보기></a>
                            </h2>
                            <div th:each="orderItem : ${order.orderItems}" class="order_item"> <!-- 주문 상품 정보 --> <!-- order의 orderitem만큼 반복 -->
                                 <dl>
@@ -120,5 +120,6 @@
 
 
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="/assets/js/member/mypage.js"></script>
 </body>
 </html>
