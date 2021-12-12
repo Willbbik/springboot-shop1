@@ -4,6 +4,7 @@ import com.ecommerce.newshop1.dto.JoinMemberDto;
 import com.ecommerce.newshop1.dto.MemberDto;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.repository.MemberRepository;
+import com.ecommerce.newshop1.repository.OrderRepository;
 import com.ecommerce.newshop1.utils.enums.Role;
 import com.ecommerce.newshop1.utils.enums.Sns;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ import java.util.UUID;
 public class MemberService {
 
     private static final Logger log = LoggerFactory.getLogger(MemberService.class);
+
     private final MemberRepository memberRepository;
     private final RedisService redisService;
     private final CustomUserDetailsService customUserDetailsService;
@@ -85,12 +87,6 @@ public class MemberService {
                 .build();
         Member member = mapper.map(memberDto, Member.class);
         return memberRepository.save(member);
-    }
-
-    // sns 값 찾기
-    @Transactional(readOnly = true)
-    public Sns findSnsByUserId(String userid){
-        return memberRepository.findSnsByUserId(userid);
     }
 
 

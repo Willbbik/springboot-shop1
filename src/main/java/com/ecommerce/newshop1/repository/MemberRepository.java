@@ -14,8 +14,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByuserId(String userId);
 
-    @Query("select sns from Member where userid = :userid")
-    Sns findSnsByUserId(@Param("userid") String userid);
-
 
 }

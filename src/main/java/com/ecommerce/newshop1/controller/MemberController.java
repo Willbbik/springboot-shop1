@@ -5,6 +5,10 @@ import com.ecommerce.newshop1.dto.KakaoDto;
 import com.ecommerce.newshop1.dto.MemberDto;
 import com.ecommerce.newshop1.dto.OAuthToken;
 import com.ecommerce.newshop1.entity.Member;
+import com.ecommerce.newshop1.entity.Order;
+import com.ecommerce.newshop1.exception.MemberNotFoundException;
+import com.ecommerce.newshop1.repository.MemberRepository;
+import com.ecommerce.newshop1.repository.OrderRepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.ValidationSequence;
 import com.ecommerce.newshop1.utils.enums.Sns;
@@ -21,6 +25,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -33,6 +38,9 @@ public class MemberController {
     private final RedisService redisService;
     private final KakaoService kakaoService;
     private final CartService cartService;
+    private final MemberRepository memberRepository;
+    private final OrderRepository orderRepository;
+    private final SecurityService security;
 
     ModelMapper mapper = new ModelMapper();
 
@@ -59,7 +67,13 @@ public class MemberController {
     }
 
     @GetMapping("/mypage")
-    public String mypage() {
+    public String mypage(Model model) {
+
+        String userId = security.getName();
+        Member member = memberRepository.findByuserId(userId)
+                .orElseThrow(() -> new MemberNotFoundException("MemberController mypage에서 발생, 존재하지 않는 아이디입니다."));
+
+        List<Order> orderList = orderRepository.findAllByMember(member);
 
         return "member/mypage";
     }
