@@ -7,9 +7,12 @@ import com.ecommerce.newshop1.dto.OAuthToken;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.ValidationSequence;
+import com.ecommerce.newshop1.utils.enums.Sns;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -139,36 +142,33 @@ public class MemberController {
     }
 
 
-    // 일단 카카오 로그인은 다음에
-//    @ApiOperation(value = "카카오 로그인 & 회원가입", notes = "여기서 한번에 회원가입과 로그인을 진행한다")
-//    @GetMapping("/kakao/login")
-//    public String kakaoLogin(String code) throws Exception {
-//
-//        // code로 AccessToken을 받아오고 그 토큰으로 사용자 정보 가져오기
-//        OAuthToken oAuthToken = kakaoService.getAccessToken(code);
-//        KakaoDto kakaoDto = kakaoService.getUserKakaoProfile(oAuthToken.getAccess_token());
-//
-//        // oauth2 회원가입시 해당 포털을 구분하기 위해서. @k = kakao
-//        String userid = kakaoDto.getId().toString() + "@k";
-//
-//        // 아이디 중복 검사
-//        Optional<Member> memberEntity = memberService.findByUserId(userid);
-//
-//        // 존재하지 않으면 가입
-//        if (memberEntity.isEmpty()) {
-//            try{
-//                memberService.joinOAuth(userid);
-//            }catch (Exception e){
-//                throw new Exception("MemberController 176 line : " + e.getCause());
-//            }
-//        }
-//
-//        // 로그인
-//        Member entity = memberService.findByUserId(userid).get();
-//        SecurityContextHolder.
-//
-//        return "redirect:/";
-//    }
+    @GetMapping("/kakao/login")
+    @ApiOperation(value = "카카오 로그인 & 회원가입", notes = "여기서 한번에 회원가입과 로그인을 진행한다")
+    public String kakaoLogin(String code) throws Exception {
+
+        // code로 AccessToken을 받아오고 그 토큰으로 사용자 정보 가져오기
+        OAuthToken oAuthToken = kakaoService.getAccessToken(code);
+        KakaoDto kakaoDto = kakaoService.getUserKakaoProfile(oAuthToken.getAccess_token());
+
+        // oauth2 회원가입시 해당 포털을 구분하기 위해서. @k = kakao
+        String userId = kakaoDto.getId().toString() + "@k";
+
+        Optional<Member> memberEntity = memberService.findByUserId(userId);
+        Member member = new Member();
+
+        // 존재하지 않으면 가입
+        if (memberEntity.isEmpty()) {
+            member = memberService.joinOAuth(userId, Sns.KAKAO);
+            cartService.createCart(member);
+        }else{
+            member = memberEntity.get();
+        }
+
+        // 로그인
+        memberService.login(member.getUserId());
+
+        return "redirect:/";
+    }
 
 
 

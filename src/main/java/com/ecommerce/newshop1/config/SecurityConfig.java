@@ -1,5 +1,6 @@
 package com.ecommerce.newshop1.config;
 
+import com.ecommerce.newshop1.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,10 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.ui.Model;
 
 
 @EnableWebSecurity
@@ -24,6 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final CustomLoginFailureHandler failureHandler;
+
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -52,7 +52,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .usernameParameter("userId")
                     .successHandler(successHandler())
                     .failureHandler(failureHandler)
-
                 .and() // 로그아웃 설정
                     .logout()
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
@@ -84,6 +83,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
     }
+
+
+//    @Bean
+//    public ClientRegistrationRepository clientRegistrationRepository(@Value("${kakao.secret}") String secret, @Value("${kakao.client_id}") String kakaoClientId){
+//
+//        List<ClientRegistration> registrations = new ArrayList<>();
+//        registrations.add(
+//                CustomOAuth2Provider.KAKAO.getBuilder("kakao")
+//                .clientId(kakaoClientId)
+//                .clientSecret(secret)
+//                .jwkSetUri("temp")
+//                .build()
+//        );
+//        return new InMemoryClientRegistrationRepository(registrations);
+//    }
 
 
 
