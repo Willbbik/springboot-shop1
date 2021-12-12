@@ -171,40 +171,4 @@ public class MemberController {
     }
 
 
-
-//    @GetMapping("/kakao/login")
-//    public String kakaoLogin(String code) throws Exception {
-//
-//        // code로 AccessToken을 받아오고 그 토큰으로 사용자 정보 가져오기
-//        OAuthToken oAuthToken = kakaoService.getAccessToken(code);
-//        KakaoDto kakaoDto = kakaoService.getUserKakaoProfile(oAuthToken.getAccess_token());
-//
-//        // 카카오로 회원가입시 아이디 뒤에 @k를 붙여주기 때문에
-//        String userid = kakaoDto.getId().toString() + "@k";
-//
-//        // 아이디 중복 검사
-//        Object result = memberService.findByUserId(userid);
-//
-//        // 존재하지 않으면 가입
-//        if(result == null){
-//            try{
-//                memberService.joinOAuth(userid, snsKakao);
-//            }catch (Exception e){
-//                throw new Exception("MemberController 169 line : " + e.getCause());
-//            }
-//        }
-//
-//        // 해당 아이디의 sns 값 확인
-//        // 혹시라도 일반 아이디와 같을 경우를 위해서
-//        String sns = memberService.findSnsByUserId(userid);
-//        if(sns.equals(snsKakao)){
-//            memberService.login(userid);
-//            return "redirect:/";
-//        }else{
-//            throw new Exception();
-//        }
-//    }
-
-
-
 }
