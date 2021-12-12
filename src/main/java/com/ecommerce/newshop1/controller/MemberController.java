@@ -74,7 +74,7 @@ public class MemberController {
                 .orElseThrow(() -> new MemberNotFoundException("MemberController mypage에서 발생, 존재하지 않는 아이디입니다."));
 
         List<Order> orderList = orderRepository.findAllByMember(member);
-
+        model.addAttribute("orderList", orderList);
         return "member/mypage";
     }
 
