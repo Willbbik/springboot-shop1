@@ -66,14 +66,14 @@
                 </div>
                 <div class="orderpage frame">
                     <div class="mypage_orderList">
-                       <div class="mypage_order_item_wrap"> <!-- 반복 -->
+                       <div th:each="order : ${orderList}" class="mypage_order_item_wrap"> <!-- 반복 -->
                            <h2> <!-- 냘짜, 주문번호, 상세보기 -->
-                               <span>2021.12.12</span>
+                               <span th:text="${#temporals.format(order.createdDate, 'yyyy.MM.dd')}"></span>
                                <span>ㅣ</span>
-                               <span>202121122321322</span>
+                               <span th:text="${order.orderNum}"></span>
                                <a href="#" class="btn_showdetailorder">주문상세보기</a>
                            </h2>
-                           <div class="order_item"> <!-- 주문 상품 정보 -->
+                           <div th:each="orderItem : ${order.orderItems}" class="order_item"> <!-- 주문 상품 정보 --> <!-- order의 orderitem만큼 반복 -->
                                 <dl>
                                     <dt>주문 상품 정보</dt>
                                     <dt></dt>
@@ -81,20 +81,25 @@
                                     <dt>진행상황</dt>
                                 </dl>
                                <dl>
-                                    <dd><a href="#"><img src="#"></a></dd> <!-- 상품 이미지 -->
-                                    <dd> <!-- 상품 이름, 옵션, 개수 -->
-                                        <a href="#">
-                                            <span class="itemname">맨투맨</span>
+                                    <dd>    <!-- 상품 이미지 -->
+                                        <a th:href="@{'/items/' + ${orderItem.item.id}}">
+                                            <img th:src="@{${orderItem.item.imageUrl}}">
                                         </a>
-                                        <span>연베이지L</span>
-                                        <span>2개</span>
+                                    </dd>
+                                    <dd> <!-- 상품 이름, 옵션, 개수 -->
+                                        <a th:href="@{'/items/' + ${orderItem.item.id}}">
+                                            <span th:text="${orderItem.item.itemName}" class="itemname"></span>
+                                        </a>
+                                        <span th:text="${orderItem.item.color} + ${orderItem.item.size}"></span>
+                                        <span th:text="${orderItem.quantity} + '개'"></span>
                                     </dd>
                                    <dd>     <!-- 주문금액 -->
-                                       <strong>20,000원</strong>
+                                       <!--<strong th:text="${orderItem.totalPrice}"></strong>-->
+                                       <strong th:text="${#numbers.formatDecimal(orderItem.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'"></strong>
                                    </dd>
                                    <dd>     <!-- 진행상황 -->
                                        <span class="status_name">
-                                           <strong>구매확정</strong>
+                                           <strong th:text="${orderItem.deliveryStatus.getValue}"></strong>
                                        </span>
                                    </dd>
                                </dl>
