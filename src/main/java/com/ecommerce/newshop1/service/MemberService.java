@@ -1,6 +1,5 @@
 package com.ecommerce.newshop1.service;
 
-import com.ecommerce.newshop1.config.CustomUserDetailsService;
 import com.ecommerce.newshop1.dto.JoinMemberDto;
 import com.ecommerce.newshop1.dto.MemberDto;
 import com.ecommerce.newshop1.entity.Member;
@@ -12,6 +11,9 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +24,7 @@ import org.springframework.validation.FieldError;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Pattern;
+import java.util.UUID;
 
 
 @Service
@@ -32,18 +34,28 @@ public class MemberService {
     private static final Logger log = LoggerFactory.getLogger(MemberService.class);
     private final MemberRepository memberRepository;
     private final RedisService redisService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     private final PasswordEncoder passwordEncoder;
 
     ModelMapper mapper = new ModelMapper();
 
-
     // 아이디 찾기
     @Transactional(readOnly = true)
     public Optional<Member> findByUserId(String userId){
 
         return memberRepository.findByuserId(userId);
+    }
+
+    // 로그인 메소드
+    public void login(String userId){
+
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(userId);
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 
     // 일반 회원가입
@@ -61,19 +73,18 @@ public class MemberService {
 
     // oAuth2로 회원가입
     @Transactional
-    public void joinOAuth(String id) {
+    public Member joinOAuth(String id, Sns sns) {
+        String password = UUID.randomUUID().toString();
+        password = passwordEncoder.encode(password);
 
         MemberDto memberDto = MemberDto.builder()
                 .userId(id)
+                .password(password)
                 .role(Role.MEMBER)
-                .sns(Sns.KAKAO)
+                .sns(sns)
                 .build();
         Member member = mapper.map(memberDto, Member.class);
-        try{
-            memberRepository.save(member);
-        } catch (Exception e){
-            log.info("MemberService 355 line, oAuthJoin exception ");
-        }
+        return memberRepository.save(member);
     }
 
     // sns 값 찾기
@@ -161,7 +172,7 @@ public class MemberService {
                 .build();
     }
 
-    // 에러메시지 생성
+    // 회원 가입 실패시 에러메시지 생성
     public Map<String, String> getErrorMsg(Errors errors){
         Map<String, String> map = new HashMap<>();
         for(FieldError error : errors.getFieldErrors()){

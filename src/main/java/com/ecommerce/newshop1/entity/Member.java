@@ -9,8 +9,8 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "member")
 public class Member extends TimeEntity {

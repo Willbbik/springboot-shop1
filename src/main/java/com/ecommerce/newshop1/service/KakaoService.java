@@ -33,13 +33,13 @@ public class KakaoService {
     @Value("${kakao.redirect_uri}")
     String redirect_uri;
 
-    @Value("${kakao.logout_redirect_uri")
+    @Value("${kakao.logout_redirect_uri}")
     String logout_redirect_uri;
 
-    @Value("${kakao.provider.oauth_token")
+    @Value("${kakao.provider.oauth_token}")
     String oauthTokenUrl;
 
-    @Value("${kakao.provider.user_info")
+    @Value("${kakao.provider.user_info}")
     String userInfoUrl;
 
     public OAuthToken getAccessToken(String code){
@@ -73,10 +73,10 @@ public class KakaoService {
         try{
             oAuthToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
         } catch (JsonMappingException e) {
-            log.info("KakaoService JsonMappingException 66 line, reason : " + e.getMessage());
+            log.info("KakaoService getAccessToken method error, reason  : " + e.getMessage());
             e.printStackTrace();
         } catch (JsonProcessingException e) {
-            log.info("KakaoService JsonProcessingException 66 line, reason : " + e.getMessage());
+            log.info("KakaoService getAccessToken method error, reason : " + e.getMessage());
             e.printStackTrace();
         }
         return oAuthToken;
