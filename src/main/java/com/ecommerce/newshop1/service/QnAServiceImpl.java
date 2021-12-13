@@ -2,6 +2,7 @@ package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.QnADto;
 import com.ecommerce.newshop1.entity.Item;
+import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.QnAEntity;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.repository.QnARepository;
@@ -19,6 +20,7 @@ import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -111,6 +113,19 @@ public class QnAServiceImpl implements QnAService{
         return replyResult;
     }
 
+//    @Override
+//    @Transactional(readOnly = true)
+//    public List<QnADto> findAllQnaListByMember(Member member){
+//
+//        List<QnAEntity> qnaEntityList = qnARepository.findAllByMemberOrderByIdDesc(member);
+//        List<QnADto> qnADtoList = new ArrayList<>();
+//        if(qnaEntityList != null){
+//            qnADtoList = qnaEntityList.stream()
+//                    .map(q -> mapper.map(q, QnADto.class))
+//                    .collect(Collectors.toList());
+//        }
+//        return qnADtoList;
+//    }
 
     // QnA 답글 가져오는 메소드
     @Override
@@ -136,23 +151,10 @@ public class QnAServiceImpl implements QnAService{
         return replyList;
     }
 
-    /**
-     *  view에 표시할 QnA질문 값들 수정해주는 메소드
-     *
-     *  파라미터 pageable의 기본 size는 3,
-     *  page는 0이지만 바뀔 수 있음
-     *
-     *
-     *  사용자 아이디 마스킹,
-     *  qnaDto의 hide가 private일 때 사용자 아이디가 다르거나 권한이 ADMIN이 아니라면 비공개로 내용을 바꾸고,
-     *  답글이 존재하는지 확인하고 있다면 replyEmpty의 값을 present로 바꾼다.
-     *
-     * @param qnaList<QnADto>
-     * @return List<QnADto>
-     */
+    // view에 표시할 QnA 값들 수정
     @Override
     @Transactional(readOnly = true)
-    public List<QnADto> editQna(List<QnADto> qnaList) throws Exception {
+    public List<QnADto> editQna(List<QnADto> qnaList){
 
         if(qnaList.isEmpty()){
             return null;
@@ -171,7 +173,6 @@ public class QnAServiceImpl implements QnAService{
                 }
             }
 
-
             // 해당 qna의 답글 가져오기
             Optional<QnAEntity> reply = qnARepository.findByParent(dto.getId());
 
@@ -184,21 +185,7 @@ public class QnAServiceImpl implements QnAService{
         return qnaList;
     }
 
-    /**
-     * ajax로 값을 받아서 저장
-     *
-     * 파라미터 qnaDto의 담겨져 온 값들 :
-     *  productId, content, parent, hide
-     *
-     *  qnaEntity에서 set해줘야 하는것들 :
-     *  productId, content, parent, hide, depth, writer
-     *
-     * 부모 QnA에서 수정해줘야 하는 값들 :
-     *  replyEmpty - present로 수정
-     *
-     *
-     *@param dto
-     */
+
     @Override
     @Transactional
     public void saveQnAReply(QnADto dto){
@@ -227,7 +214,7 @@ public class QnAServiceImpl implements QnAService{
     public void saveQnA(QnADto dto) {
 
         QnAEntity qnaEntity = QnAEntity.builder()
-                .writer(security.getName())
+                .writer(dto.getMember().getUserId())
                 .content(dto.getContent().replaceAll("\\s+", " "))
                 .hide(dto.getHide())
                 .parent(null)

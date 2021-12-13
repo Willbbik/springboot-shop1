@@ -2,6 +2,14 @@ a:link {
     text-decoration: none;
 }
 
+.frame {
+    width: 100%;
+    max-width: 1300px;
+    margin: 0px auto;
+    clear: both;
+    overflow: hidden;
+}
+
 .mypage_order_item_wrap h2 {
     font-weight: 200;
     font-size: 1.8em;
@@ -139,5 +147,196 @@ a:link {
     display: inline-block;
     color: #000000;
 }
+
+
+/*  mypage qnaList 부분    -----------------------------------        */
+
+.myqna_list {
+    border: none;
+}
+
+.myqna_list {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.myqna_list {
+    display: block;
+    border-bottom: 1px solid #ccc;
+}
+
+.myqna_list .qna_tit_area {
+    display: table-row;
+}
+
+.myqna_list .qna_tit_area span.condition {
+    width: 18%;
+}
+
+.myqna_list .qna_tit_area span.contents {
+     width: auto;
+ }
+
+.myqna_list .qna_tit_area span.date, .myqna_list .qna_tit_area span.writer {
+    width: 18%;
+}
+
+
+.myqna_list .qna_tit_area span {
+    display: table-cell;
+    padding: 20px 10px;
+    font-weight: 700;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+/* 질문 타이틀 ----------------- */
+.qna_content.qna_content_on {
+    background: #f7f8fa;
+}
+
+.qna_content {
+    display: table-row-group;
+    border-top: 0;
+}
+
+.qna_content .qna_title {
+    display: table-row;
+    padding: 12px 16px;
+}
+
+.qna_content .qna_title>span.condition {
+    font-weight: 700;
+}
+
+.qna_content .qna_title>span {
+    padding: 14px 0 18px;
+    font-size: 16px;
+    text-align: center;
+    border-top: 1px solid #e1e1e1;
+    cursor: pointer;
+}
+
+.qna_content .qna_title>span[data-v-2fd56802] {
+    display: block;
+    font-size: 12px;
+}
+
+.qna_content .qna_title>span.date, .qna_content .qna_title>span.writer {
+    display: none;
+}
+
+.qna_content .qna_title>span.contents {
+    display: table-cell;
+    width: auto;
+    text-align: left;
+}
+
+.qna_content .qna_title>span.contents {
+    margin-top: 12px;
+    word-break: break-all;
+}
+
+.qna_content .qna_title>span.condition, .qna_content .qna_title>span.date, .qna_content .qna_title>span.writer {
+    display: table-cell;
+    width: 18%;
+}
+
+/* 질문 타이틀안에 질문  -------------------- */
+.qna_content .qna_answer, .qna_content .qna_question {
+    display: none;
+}
+
+.qna_content .qna_question>span.condition, .qna_content .qna_question>span.writer {
+    display: none;
+}
+
+.qna_content .qna_question {
+    display: none;
+    padding: 12px 16px;
+    border-top: 1px solid #e1e1e1;
+}
+
+.qna_content .qna_answer>span.condition, .qna_content .qna_answer>span.date,
+.qna_content .qna_answer>span.writer, .qna_content .qna_question>span.condition,
+.qna_content .qna_question>span.date, .qna_content .qna_question>span.writer {
+    display: table-cell;
+    width: 18%;
+    text-align: center;
+}
+
+
+.qna_content .qna_answer>span,
+.qna_content .qna_question>span {
+    padding: 14px 0 18px;
+    font-size: 16px;
+    text-align: center;
+    border-top: 1px solid #e1e1e1;
+    cursor: pointer;
+}
+
+.qna_content .qna_answer>span.contents, .qna_content .qna_question>span.contents {
+    display: table-cell;
+    width: auto;
+    text-align: left;
+}
+
+.qna_content .qna_question>span.contents {
+    word-break: break-all;
+}
+
+.qna_content .qna_question>span.date {
+    margin-top: 16px;
+    text-align: right;
+}
+
+/* 답변 */
+.qna_content.qna_content_on .qna_answer, .qna_content.qna_content_on .qna_question {
+    display: table-row;
+}
+
+.qna_content .qna_answer>span.date, .qna_content .qna_answer>span.writer {
+    float: none;
+}
+
+.qna_content .qna_answer {
+    overflow: hidden;
+    display: none;
+    padding: 12px 16px;
+    border-top: 1px solid #e1e1e1;
+}
+
+.qna_content .qna_answer>span.condition {
+    display: none;
+    word-break: break-all;
+}
+
+.qna_content .qna_answer>span.condition,
+.qna_content .qna_answer>span.date,
+.qna_content .qna_answer>span.writer,
+.qna_content .qna_question>span.condition,
+.qna_content .qna_question>span.date,
+.qna_content .qna_question>span.writer {
+    display: table-cell;
+    width: 18%;
+    text-align: center;
+}
+
+
+.qna_content .qna_answer>span, .qna_content .qna_question>span {
+    padding: 14px 0 18px;
+    font-size: 16px;
+    text-align: center;
+    border-top: 1px solid #e1e1e1;
+    cursor: pointer;
+}
+
+.qna_content .qna_answer>span.contents{
+    clear: both;
+    margin-bottom: 24px;
+}
+
+
 
 

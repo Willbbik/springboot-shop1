@@ -8,8 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Transactional
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = Newshop1Application.class)
+@SpringBootTest(properties = "classpath:/application.yml," +
+		"classpath:/yml/coolsms.yml," +
+		"classpath:/yml/tosspayments.yml," +
+		"classpath:/yml/oauth2.yml")
 class Newshop1ApplicationTests {
 
 	@Test

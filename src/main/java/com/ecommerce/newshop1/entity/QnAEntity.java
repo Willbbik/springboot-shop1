@@ -14,6 +14,7 @@ import java.util.Date;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,7 +30,9 @@ public class QnAEntity extends TimeEntity {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    @Column(length = 20, nullable = false)
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Member member;
+
     private String writer;
 
     @Column(length = 2048, nullable = false)
@@ -47,11 +50,6 @@ public class QnAEntity extends TimeEntity {
     @Column(length = 1)
     private Integer depth;
 
-    public void setReplyEmpty (String replyEmpty){
-        this.replyEmpty = replyEmpty;
-    }
 
-    public void setItem(Item item){
-        this.item = item;
-    }
+
 }

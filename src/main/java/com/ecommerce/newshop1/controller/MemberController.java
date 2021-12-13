@@ -1,9 +1,6 @@
 package com.ecommerce.newshop1.controller;
 
-import com.ecommerce.newshop1.dto.JoinMemberDto;
-import com.ecommerce.newshop1.dto.KakaoDto;
-import com.ecommerce.newshop1.dto.MemberDto;
-import com.ecommerce.newshop1.dto.OAuthToken;
+import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.Order;
 import com.ecommerce.newshop1.exception.MemberNotFoundException;
@@ -15,9 +12,6 @@ import com.ecommerce.newshop1.utils.enums.Sns;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -37,6 +32,7 @@ public class MemberController {
     private final MessageService messageService;
     private final RedisService redisService;
     private final KakaoService kakaoService;
+    private final QnAService qnAService;
     private final CartService cartService;
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
@@ -90,6 +86,28 @@ public class MemberController {
         model.addAttribute("orderList", orderList);
         return "member/tab/tab1orderList";
     }
+
+
+//    @GetMapping("/mypage/qnaList")
+//    @ApiOperation(value = "mypage에 해당 사용자가 작성한 qna와 답변들이 담긴 html 리턴", notes = "ajax 전용")
+//    public String qnaList(Model model){
+//
+//        List<QnADto> qnaReplyList = new ArrayList<>();
+//        Member member = memberService.getCurrentMember();
+//
+//        // qna 가져오고 값 수정
+//        List<QnADto> qnaList = qnAService.findAllQnaListByMember(member);
+//        qnaList = qnAService.editQna(qnaList);
+//
+//        // qna 답글 가져오고 값 수정
+//        qnaReplyList = qnAService.getQnAReply(qnaList);
+//        qnaReplyList = qnAService.editReply(qnaReplyList);
+//
+//        model.addAttribute("qnaList", qnaList);
+//        model.addAttribute("qnaReplyList", qnaReplyList);
+//        return "member/tab/tab2qnaList";
+//    }
+
 
 
     @GetMapping("/member/idConfirm")
