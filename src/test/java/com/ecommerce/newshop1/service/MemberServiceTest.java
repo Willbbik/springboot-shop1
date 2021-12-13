@@ -5,45 +5,42 @@ import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.repository.MemberRepository;
 import com.ecommerce.newshop1.utils.enums.Role;
 import com.ecommerce.newshop1.utils.enums.Sns;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(properties = "classpath:/application.yml," +
+        "classpath:/yml/coolsms.yml," +
+        "classpath:/yml/tosspayments.yml," +
+        "classpath:/yml/oauth2.yml")
 class MemberServiceTest {
 
-    @Mock
-    MemberRepository memberRepository;
-
-    @Mock
-    RedisService redisService;
-
-    @Mock
-    CustomUserDetailsService customUserDetailsService;
-
-    @Mock
-    SecurityService security;
-
-    @Mock
-    PasswordEncoder passwordEncoder;
-
+    @Autowired
+    MemberService memberService;
 
     @Test
+    @Transactional
+    @DisplayName("일반 회원가입 테스트")
     void joinNormal() {
 
-        MemberService memberService = new MemberService(memberRepository, redisService, customUserDetailsService, security, passwordEncoder);
-
         // given
-        MemberDto dto = MemberDto.builder()
-                .id(1L)
+        Member member = Member.builder()
                 .userId("test")
                 .password("password")
                 .phoneNum("01081387026")
@@ -52,13 +49,19 @@ class MemberServiceTest {
                 .build();
 
         // when
-        memberService.joinNormal(dto);
+        memberService.joinNormal(member);
 
-        // 비어있는지 아닌지
-        Optional<Member> member = memberService.findByUserId("test");
+        // then
+        Optional<Member> findMember = memberService.findByUserId("test");
+        assertEquals("test", findMember.get().getUserId());
+    }
 
-        System.out.println(member);
 
+    @Test
+    @DisplayName("일반 회원가입 중복 테스트")
+    void 일반회원가입중복테스트(){
 
     }
+
+
 }

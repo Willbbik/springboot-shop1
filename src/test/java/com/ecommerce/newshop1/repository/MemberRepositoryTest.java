@@ -23,7 +23,7 @@ class MemberRepositoryTest {
 
         // given
         Member member = Member.builder()
-                .id(2L)
+                .id(3L)
                 .userId("test")
                 .password("password")
                 .phoneNum("01081387026")

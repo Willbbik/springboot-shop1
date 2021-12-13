@@ -70,12 +70,11 @@ public class MemberService {
 
     // 일반 회원가입
     @Transactional
-    public Member joinNormal(MemberDto memberDto){
+    public Member joinNormal(Member member){
 
-        memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
-        memberDto.setRole(Role.MEMBER);
-        memberDto.setSns(Sns.NONE);
-        Member member = mapper.map(memberDto, Member.class);
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
+        member.setRole(Role.MEMBER);
+        member.setSns(Sns.NONE);
 
         memberRepository.save(member);
         return member;
