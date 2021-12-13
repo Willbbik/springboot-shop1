@@ -180,8 +180,8 @@ public class MemberController {
             return "member/join";
         }
 
-        MemberDto memberDto = mapper.map(joinMemberDto, MemberDto.class);
-        Member member = memberService.joinNormal(memberDto);
+        Member member = mapper.map(joinMemberDto, Member.class);
+        member = memberService.joinNormal(member);
         cartService.createCart(member);
 
         return "redirect:/";
