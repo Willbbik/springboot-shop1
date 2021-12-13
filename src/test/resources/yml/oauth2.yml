@@ -1,0 +1,12 @@
+
+kakao:
+  client_id : 98c809757e9444495dd1e34430de4945
+  redirect_uri : http://localhost:8080/kakao/login
+  grant_type: authorization_code
+  logout_redirect_uri : http://localhost:8080/logout
+  secret : 7Il0iYG3Z4dt9i1gnE2JWQCLKnik98nR
+  provider:
+     oauth_token : https://kauth.kakao.com/oauth/token
+     user_info : https://kapi.kakao.com/v2/user/me
+
+

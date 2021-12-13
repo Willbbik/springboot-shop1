@@ -1,6 +1,7 @@
 package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.AddressDto;
+import com.ecommerce.newshop1.dto.OrderDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.entity.*;
 import com.ecommerce.newshop1.exception.ItemNotFoundException;
@@ -159,4 +160,10 @@ public class OrderServiceImpl implements OrderService {
         session.removeAttribute("cartItemIdList");
     }
 
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrderDto> searchAllByMember(Long orderId, Member member) {
+        return orderRepository.searchAllByMember(orderId, member);
+    }
 }

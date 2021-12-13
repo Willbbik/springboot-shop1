@@ -1,6 +1,7 @@
 package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.QnADto;
+import com.ecommerce.newshop1.entity.Member;
 import org.springframework.ui.Model;
 
 import java.util.List;
@@ -23,10 +24,11 @@ public interface QnAService  {
     List<QnADto> editReply(List<QnADto> replyList);
 
     // view에 표시할 QnA질문 편집
-    List<QnADto> editQna(List<QnADto> qnaList) throws Exception;
+    List<QnADto> editQna(List<QnADto> qnaList);
 
     // QnA 질문 저장하기 전에 유효성 검사
     int checkValidationQnA(QnADto dto);
 
+    // List<QnADto> findAllQnaListByMember(Member member);
 
 }

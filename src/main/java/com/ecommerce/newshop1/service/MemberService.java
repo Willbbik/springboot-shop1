@@ -3,6 +3,7 @@ package com.ecommerce.newshop1.service;
 import com.ecommerce.newshop1.dto.JoinMemberDto;
 import com.ecommerce.newshop1.dto.MemberDto;
 import com.ecommerce.newshop1.entity.Member;
+import com.ecommerce.newshop1.exception.MemberNotFoundException;
 import com.ecommerce.newshop1.repository.MemberRepository;
 import com.ecommerce.newshop1.repository.OrderRepository;
 import com.ecommerce.newshop1.utils.enums.Role;
@@ -37,8 +38,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final RedisService redisService;
     private final CustomUserDetailsService customUserDetailsService;
+    private final SecurityService security;
 
-    @Autowired
     private final PasswordEncoder passwordEncoder;
 
     ModelMapper mapper = new ModelMapper();
@@ -48,6 +49,13 @@ public class MemberService {
     public Optional<Member> findByUserId(String userId){
 
         return memberRepository.findByuserId(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public Member getCurrentMember(){
+        String userId = security.getName();
+        return memberRepository.findByuserId(userId)
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 아이디입니다."));
     }
 
     // 로그인 메소드

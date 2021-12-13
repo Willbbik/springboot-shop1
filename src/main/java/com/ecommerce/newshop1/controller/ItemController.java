@@ -4,11 +4,13 @@ import com.ecommerce.newshop1.dto.ItemDto;
 import com.ecommerce.newshop1.dto.ItemImageDto;
 import com.ecommerce.newshop1.dto.QnADto;
 import com.ecommerce.newshop1.entity.Item;
+import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.exception.ItemNotFoundException;
 import com.ecommerce.newshop1.repository.ItemImageRepository;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.service.ItemService;
+import com.ecommerce.newshop1.service.MemberService;
 import com.ecommerce.newshop1.service.QnAService;
 import com.ecommerce.newshop1.service.SecurityService;
 import com.ecommerce.newshop1.utils.enums.Role;
@@ -27,6 +29,7 @@ import java.util.List;
 public class ItemController {
 
     private final ItemService itemService;
+    private final MemberService memberService;
     private final ItemRepository itemRepository;
     private final ItemImageRepository itemImageRepository;
     private final QnARepository qnARepository;
@@ -102,7 +105,9 @@ public class ItemController {
 
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지 않습니다. itemId : " + itemId));
+        Member member = memberService.getCurrentMember();
         qnaDto.setItem(item);
+        qnaDto.setMember(member);
 
         int result = qnAService.checkValidationQnA(qnaDto);
         if(result == 0){
