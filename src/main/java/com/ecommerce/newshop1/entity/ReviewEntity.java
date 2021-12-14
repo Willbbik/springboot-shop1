@@ -15,6 +15,7 @@ public class ReviewEntity extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "item_review_id")
     private Long id;
 
     @Column(nullable = false)

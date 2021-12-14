@@ -25,10 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(properties = "classpath:/application.yml," +
-        "classpath:/yml/coolsms.yml," +
-        "classpath:/yml/tosspayments.yml," +
-        "classpath:/yml/oauth2.yml")
+@SpringBootTest
 class MemberServiceTest {
 
     @Autowired
@@ -54,13 +51,6 @@ class MemberServiceTest {
         // then
         Optional<Member> findMember = memberService.findByUserId("test");
         assertEquals("test", findMember.get().getUserId());
-    }
-
-
-    @Test
-    @DisplayName("일반 회원가입 중복 테스트")
-    void 일반회원가입중복테스트(){
-
     }
 
 

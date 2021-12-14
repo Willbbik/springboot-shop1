@@ -17,6 +17,7 @@ public class Member extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id")
     private Long id;
 
     @Column(length = 20, nullable = false)

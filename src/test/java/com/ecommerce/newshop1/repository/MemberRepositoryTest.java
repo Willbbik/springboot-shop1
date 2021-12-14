@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 
-@SpringBootTest(properties = "classpath:/application.yml," +
-        "classpath:/yml/coolsms.yml," +
-        "classpath:/yml/tosspayments.yml," +
-        "classpath:/yml/oauth2.yml")
+@SpringBootTest
 class MemberRepositoryTest {
 
     @Autowired

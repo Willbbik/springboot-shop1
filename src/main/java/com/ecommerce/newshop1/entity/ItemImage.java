@@ -15,6 +15,7 @@ public class ItemImage extends TimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "item_image_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
