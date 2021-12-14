@@ -39,7 +39,7 @@ public class Order {
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "payment_info")
+    @JoinColumn(name = "payment_info_id")
     private OrderPaymentInformation paymentInfo;
 
     @Enumerated(EnumType.STRING)
@@ -58,10 +58,6 @@ public class Order {
     public void setDelivery(Delivery delivery){
         this.delivery = delivery;
         delivery.setOrder(this);
-    }
-
-    public void setMember(Member member){
-        this.member = member;
     }
 
     public void setOrderItems(OrderItem orderItem){

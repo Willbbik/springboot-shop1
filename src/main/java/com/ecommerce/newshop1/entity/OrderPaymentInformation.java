@@ -10,10 +10,12 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "order_payment_info")
 public class OrderPaymentInformation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_payment_info_id")
     private Long id;
 
     @OneToOne
