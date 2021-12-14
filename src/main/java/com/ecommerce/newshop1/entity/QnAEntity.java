@@ -24,6 +24,7 @@ public class QnAEntity extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "item_qna_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

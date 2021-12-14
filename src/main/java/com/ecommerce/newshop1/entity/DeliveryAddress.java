@@ -12,6 +12,7 @@ public class DeliveryAddress {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "delivery_address_id")
     private Long id;
 
     @OneToOne
