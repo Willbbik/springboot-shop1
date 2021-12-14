@@ -58,5 +58,11 @@ public class GlobalExceptionHandler{
         return "error/400";
     }
 
+    @ExceptionHandler(NotLoginException.class)
+    public String notLogin(NotLoginException e){
+
+        log.error("NotLoginException {} ", e.getMessage());
+        return "member/login";
+    }
 
 }

@@ -25,4 +25,7 @@ public interface OrderService {
 
     List<OrderDto> searchAllByMember(Long orderId, Member member);
 
+    void updateOrderDepositStatus(String orderId);
+
+
 }

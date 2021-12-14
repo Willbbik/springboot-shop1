@@ -94,8 +94,8 @@
 <!--                        </div>-->
 <!--                    </div>-->
 
-
                     <div class="mypage_orderList">
+                        <input type="hidden" id="lastOrderId" th:value="${lastOrderId}">
                        <div th:each="order : ${orderList}" class="mypage_order_item_wrap"> <!-- 반복 -->
                            <h2> <!-- 냘짜, 주문번호, 상세보기 -->
                                <span th:text="${#temporals.format(order.createdDate, 'yyyy.MM.dd')}"></span>
@@ -120,11 +120,10 @@
                                         <a th:href="@{'/items/' + ${orderItem.item.id}}">
                                             <span th:text="${orderItem.item.itemName}" class="itemname"></span>
                                         </a>
-                                        <span th:text="${orderItem.item.color} + ${orderItem.item.size}"></span>
+                                        <span th:text="${orderItem.item.color} + '/' + ${orderItem.item.size}"></span>
                                         <span th:text="${orderItem.quantity} + '개'"></span>
                                     </dd>
                                    <dd>     <!-- 주문금액 -->
-                                       <!--<strong th:text="${orderItem.totalPrice}"></strong>-->
                                        <strong th:text="${#numbers.formatDecimal(orderItem.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'"></strong>
                                    </dd>
                                    <dd>     <!-- 진행상황 -->
@@ -136,6 +135,8 @@
                            </div>
                        </div>
                     </div>
+                    <button clas="btn btn-primary" id="moreOrder" >주문 상품 더보기</button>
+
                 </div>
             </div>
 
@@ -150,5 +151,6 @@
 
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="/assets/js/member/mypage.js"></script>
+
 </body>
 </html>
