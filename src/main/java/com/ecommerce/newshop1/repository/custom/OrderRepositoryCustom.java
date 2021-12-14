@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface OrderRepositoryCustom {
 
-    List<OrderDto> searchAllByMember(Long orderId, Member member);
+    List<Order> searchAllByMember(Long orderId, Member member);
 
 }

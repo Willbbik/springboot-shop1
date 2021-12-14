@@ -34,6 +34,7 @@ public class MemberController {
     private final KakaoService kakaoService;
     private final QnAService qnAService;
     private final CartService cartService;
+    private final OrderService orderService;
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
     private final SecurityService security;
@@ -64,12 +65,9 @@ public class MemberController {
 
     @GetMapping("/mypage")
     public String mypage(Model model) {
+        Member member = memberService.getCurrentMember();
 
-        String userId = security.getName();
-        Member member = memberRepository.findByuserId(userId)
-                .orElseThrow(() -> new MemberNotFoundException("MemberController mypage에서 발생, 존재하지 않는 아이디입니다."));
-
-        List<Order> orderList = orderRepository.findAllByMember(member);
+        List<OrderDto> orderList = orderService.searchAllByMember(null, member);
         model.addAttribute("orderList", orderList);
         return "member/mypage";
     }
@@ -77,12 +75,10 @@ public class MemberController {
 
     @GetMapping("/mypage/orderList")
     @ApiOperation(value = "mypage에 주문한 상품들이 담긴 html 리턴", notes = "ajax 전용")
-    public String orderList(Model model){
-        String userId = security.getName();
-        Member member = memberRepository.findByuserId(userId)
-                .orElseThrow(() -> new MemberNotFoundException("MemberController mypage에서 발생, 존재하지 않는 아이디입니다."));
+    public String orderList(Model model, @RequestParam(required = false) Long id){
+        Member member = memberService.getCurrentMember();
+        List<OrderDto> orderList = orderService.searchAllByMember(id, member);
 
-        List<Order> orderList = orderRepository.findAllByMember(member);
         model.addAttribute("orderList", orderList);
         return "member/tab/tab1orderList";
     }

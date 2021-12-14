@@ -60,10 +60,10 @@ class OrderServiceImplTest {
         Member findMember = memberRepository.findByuserId("test").get();
 
         //when
-        List<OrderDto> orderDtoList = orderRepository.searchAllByMember(null, findMember);
+        List<Order> orderDtoList = orderRepository.searchAllByMember(null, findMember);
 
         //then
-        Assertions.assertThat(orderDtoList).hasSize(30);
+        Assertions.assertThat(orderDtoList).hasSize(3);
 
     }
 

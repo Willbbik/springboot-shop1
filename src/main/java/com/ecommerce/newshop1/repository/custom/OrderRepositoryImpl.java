@@ -2,6 +2,7 @@ package com.ecommerce.newshop1.repository.custom;
 
 import com.ecommerce.newshop1.dto.OrderDto;
 import com.ecommerce.newshop1.entity.Member;
+import com.ecommerce.newshop1.entity.Order;
 import com.ecommerce.newshop1.entity.QOrder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -16,19 +17,9 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
     private JPAQueryFactory queryFactory;
 
     @Override
-    public List<OrderDto> searchAllByMember(Long orderId, Member member) {
+    public List<Order> searchAllByMember(Long orderId, Member member) {
             return queryFactory
-                    .select(Projections.fields(OrderDto.class,
-                            QOrder.order.id,
-                            QOrder.order.member,
-                            QOrder.order.delivery,
-                            QOrder.order.paymentInfo,
-                            QOrder.order.orderItems,
-                            QOrder.order.orderNum,
-                            QOrder.order.payType,
-                            QOrder.order.totalPrice,
-                            QOrder.order.createdDate
-                    ))
+                    .select(QOrder.order)
                     .from(QOrder.order)
                     .where(
                             QOrder.order.member.eq(member),

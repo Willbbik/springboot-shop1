@@ -164,6 +164,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public List<OrderDto> searchAllByMember(Long orderId, Member member) {
-        return orderRepository.searchAllByMember(orderId, member);
+        List<Order> orderList = orderRepository.searchAllByMember(orderId, member);
+        return orderList.stream()
+                .map(p -> mapper.map(p, OrderDto.class))
+                .collect(Collectors.toList());
     }
+
 }
