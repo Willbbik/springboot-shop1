@@ -65,10 +65,18 @@ public class MemberController {
 
     @GetMapping("/mypage")
     public String mypage(Model model) {
-        Member member = memberService.getCurrentMember();
 
+        Member member = memberService.getCurrentMember();
         List<OrderDto> orderList = orderService.searchAllByMember(null, member);
+
+        Long lastOrderId = null;
+        if(orderList.size() > 3){
+            int lastIndex = orderList.size() - 1;
+            lastOrderId = orderList.get(lastIndex).getId();
+        }
+
         model.addAttribute("orderList", orderList);
+        model.addAttribute("lastOrderId", lastOrderId);
         return "member/mypage";
     }
 
@@ -76,34 +84,41 @@ public class MemberController {
     @GetMapping("/mypage/orderList")
     @ApiOperation(value = "mypage에 주문한 상품들이 담긴 html 리턴", notes = "ajax 전용")
     public String orderList(Model model, @RequestParam(required = false) Long id){
+
         Member member = memberService.getCurrentMember();
         List<OrderDto> orderList = orderService.searchAllByMember(id, member);
 
+        Long lastOrderId = null;
+        if(orderList.size() > 3){
+            int lastIndex = orderList.size() - 1;
+            lastOrderId = orderList.get(lastIndex).getId();
+        }
+
         model.addAttribute("orderList", orderList);
+        model.addAttribute("lastOrderId", lastOrderId);
+
         return "member/tab/tab1orderList";
     }
 
+    @GetMapping("/mypage/qnaList")
+    @ApiOperation(value = "mypage에 해당 사용자가 작성한 qna와 답변들이 담긴 html 리턴", notes = "ajax 전용")
+    public String qnaList(Model model, @RequestParam(required = false) Long lastQnAId){
 
-//    @GetMapping("/mypage/qnaList")
-//    @ApiOperation(value = "mypage에 해당 사용자가 작성한 qna와 답변들이 담긴 html 리턴", notes = "ajax 전용")
-//    public String qnaList(Model model){
-//
-//        List<QnADto> qnaReplyList = new ArrayList<>();
-//        Member member = memberService.getCurrentMember();
-//
-//        // qna 가져오고 값 수정
-//        List<QnADto> qnaList = qnAService.findAllQnaListByMember(member);
-//        qnaList = qnAService.editQna(qnaList);
-//
-//        // qna 답글 가져오고 값 수정
-//        qnaReplyList = qnAService.getQnAReply(qnaList);
-//        qnaReplyList = qnAService.editReply(qnaReplyList);
-//
-//        model.addAttribute("qnaList", qnaList);
-//        model.addAttribute("qnaReplyList", qnaReplyList);
-//        return "member/tab/tab2qnaList";
-//    }
+        List<QnADto> qnaReplyList = new ArrayList<>();
+        Member member = memberService.getCurrentMember();
 
+        // qna 가져오고 값 수정
+        List<QnADto> qnaList = qnAService.searchAllByMember(lastQnAId, member);
+        qnaList = qnAService.editQna(qnaList);
+
+        // qna 답글 가져오고 값 수정
+        qnaReplyList = qnAService.getQnAReply(qnaList);
+        qnaReplyList = qnAService.editReply(qnaReplyList);
+
+        model.addAttribute("qnaList", qnaList);
+        model.addAttribute("qnaReplyList", qnaReplyList);
+        return "member/tab/tab2qnaList";
+    }
 
 
     @GetMapping("/member/idConfirm")

@@ -159,11 +159,21 @@ a:link {
     display: table;
     width: 100%;
     table-layout: fixed;
+
+    border-bottom: 1px solid #ccc;
 }
 
-.myqna_list {
+/*.myqna_list {
     display: block;
     border-bottom: 1px solid #ccc;
+}*/
+
+.myqna_list .qna_tit_area span {
+    display: table-cell;
+    padding: 20px 10px;
+    font-weight: 700;
+    font-size: 1.2em;
+    text-align: center;
 }
 
 .myqna_list .qna_tit_area {
@@ -183,13 +193,6 @@ a:link {
 }
 
 
-.myqna_list .qna_tit_area span {
-    display: table-cell;
-    padding: 20px 10px;
-    font-weight: 700;
-    font-size: 1.2em;
-    text-align: center;
-}
 
 /* 질문 타이틀 ----------------- */
 .qna_content.qna_content_on {
@@ -199,6 +202,7 @@ a:link {
 .qna_content {
     display: table-row-group;
     border-top: 0;
+    cursor: pointer;
 }
 
 .qna_content .qna_title {
@@ -264,6 +268,7 @@ a:link {
     display: table-cell;
     width: 18%;
     text-align: center;
+    min-width: 200px;
 }
 
 
@@ -321,7 +326,10 @@ a:link {
     display: table-cell;
     width: 18%;
     text-align: center;
+    min-width: 200px;
 }
+
+
 
 
 .qna_content .qna_answer>span, .qna_content .qna_question>span {

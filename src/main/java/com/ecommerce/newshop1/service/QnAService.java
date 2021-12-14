@@ -29,6 +29,6 @@ public interface QnAService  {
     // QnA 질문 저장하기 전에 유효성 검사
     int checkValidationQnA(QnADto dto);
 
-    // List<QnADto> findAllQnaListByMember(Member member);
+    List<QnADto> searchAllByMember(Long id, Member member);
 
 }

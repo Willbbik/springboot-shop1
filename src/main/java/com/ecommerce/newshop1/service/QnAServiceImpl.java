@@ -30,18 +30,11 @@ public class QnAServiceImpl implements QnAService{
     private final ItemRepository itemRepository;
     private final QnARepository qnARepository;
     private final SecurityService security;
+    private final MemberService memberService;
 
     ModelMapper mapper = new ModelMapper();
 
-    /**
-     *
-     * QnA, QnA답글, QnA 개수를 모델에 담아서
-     * html을 반환한다.
-     *
-     * 상품 상세보기에 QnA칸에 사용된다
-     *
-     * return html page
-     */
+
     @Override
     @Transactional
     public String getQnAHtml(Long itemId, Model model, int curPage) throws Exception {
@@ -75,15 +68,6 @@ public class QnAServiceImpl implements QnAService{
     }
 
 
-    /**
-     *
-     * view에 표시할 QnA 질문에 대한 답글들 내용 수정 메소드
-     *
-     * writer, content, createdDate 수정
-     *
-     * @param replyList
-     * @return
-     */
     @Override
     @Transactional(readOnly = true)
     public List<QnADto> editReply(List<QnADto> replyList){
@@ -113,19 +97,13 @@ public class QnAServiceImpl implements QnAService{
         return replyResult;
     }
 
-//    @Override
-//    @Transactional(readOnly = true)
-//    public List<QnADto> findAllQnaListByMember(Member member){
-//
-//        List<QnAEntity> qnaEntityList = qnARepository.findAllByMemberOrderByIdDesc(member);
-//        List<QnADto> qnADtoList = new ArrayList<>();
-//        if(qnaEntityList != null){
-//            qnADtoList = qnaEntityList.stream()
-//                    .map(q -> mapper.map(q, QnADto.class))
-//                    .collect(Collectors.toList());
-//        }
-//        return qnADtoList;
-//    }
+    @Override
+    @Transactional(readOnly = true)
+    public List<QnADto> searchAllByMember(Long id, Member member){
+
+        return qnARepository.searchAllByMember(id, member);
+    }
+
 
     // QnA 답글 가져오는 메소드
     @Override
@@ -189,9 +167,11 @@ public class QnAServiceImpl implements QnAService{
     @Override
     @Transactional
     public void saveQnAReply(QnADto dto){
+        Member member = memberService.getCurrentMember();
 
         QnAEntity qnaReply = QnAEntity.builder()
-                .writer(security.getName())
+                .member(member)
+                .writer(member.getUserId())
                 .content(dto.getContent())
                 .parent(dto.getParent())
                 .hide(dto.getHide())
@@ -212,9 +192,11 @@ public class QnAServiceImpl implements QnAService{
     @Override
     @Transactional
     public void saveQnA(QnADto dto) {
+        Member member = memberService.getCurrentMember();
 
         QnAEntity qnaEntity = QnAEntity.builder()
-                .writer(dto.getMember().getUserId())
+                .member(member)
+                .writer(member.getUserId())
                 .content(dto.getContent().replaceAll("\\s+", " "))
                 .hide(dto.getHide())
                 .parent(null)

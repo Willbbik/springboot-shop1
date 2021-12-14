@@ -1,6 +1,14 @@
 $(document).ready(function(){
 
 
+    $(document).on("click", ".qna_content", function(){
+        if($(this).hasClass("qna_content_on")){
+            $(this).removeClass("qna_content_on");
+        }else{
+            $(this).addClass("qna_content_on");
+        }
+
+    });
 
 });
 
@@ -19,7 +27,33 @@ $("#orderListBtn").on("click", function(){
 });
 
 
+$("#moreOrder").on("click", function(){
+
+      let lastOrderId = $("#lastOrderId").val();
+
+      $.ajax({
+            type : "get",
+            url  : "/mypage/orderList?lastOrderId=" + lastOrderId,
+        }).done(function(result){
+            $(".orderpage").html(result);
+        }).fail(function(){
+            alert("에러가 발생했습니다.");
+        });
+});
+
+
 $("#mypageqna").on("click", function(){
 
-   $(".orderpage").empty();
+    // let lastQnAId = $("#lastQnAId").val();
+
+    $.ajax({
+        type : "get",
+        url  : "/mypage/qnaList"
+    }).done(function(result){
+        $(".orderpage").html(result);
+    }).fail(function(){
+        alert("에러가 발생했습니다.");
+    });
+
 });
+

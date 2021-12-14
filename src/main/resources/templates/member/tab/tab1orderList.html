@@ -3,6 +3,7 @@
 <head></head>
 <body>
 <div class="mypage_orderList">
+    <input type="hidden" id="lastOrderId" th:value="${lastOrderId}">
     <div th:each="order : ${orderList}" class="mypage_order_item_wrap"> <!-- 반복 -->
         <h2> <!-- 냘짜, 주문번호, 상세보기 -->
             <span th:text="${#temporals.format(order.createdDate, 'yyyy.MM.dd')}"></span>
@@ -36,12 +37,13 @@
                 </dd>
                 <dd>     <!-- 진행상황 -->
                     <span class="status_name">
-                                               <strong th:text="${orderItem.deliveryStatus.getValue}"></strong>
-                                           </span>
+                       <strong th:text="${orderItem.deliveryStatus.getValue}"></strong>
+                   </span>
                 </dd>
             </dl>
         </div>
     </div>
+    <button clas="btn btn-primary" id="moreOrder" >주문 상품 더보기</button>
 </div>
 </body>
 </html>

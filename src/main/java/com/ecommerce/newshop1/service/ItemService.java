@@ -12,6 +12,8 @@ import java.util.List;
 
 public interface ItemService {
 
+    Item findById(Long id);
+
     List<ItemDto> searchAll(SearchDto searchDto, Pageable pageable);
 
     Long searchTotal(SearchDto searchDto);

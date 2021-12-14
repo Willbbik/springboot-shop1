@@ -4,9 +4,7 @@ import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.OrderPaymentInformation;
 import com.ecommerce.newshop1.exception.ParameterNotFoundException;
 import com.ecommerce.newshop1.repository.ItemRepository;
-import com.ecommerce.newshop1.service.CartService;
-import com.ecommerce.newshop1.service.ItemService;
-import com.ecommerce.newshop1.service.OrderService;
+import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.ValidationGroups;
 import com.ecommerce.newshop1.utils.ValidationSequence;
 import com.ecommerce.newshop1.utils.enums.PayType;
@@ -42,8 +40,6 @@ public class OrderController {
 
     ModelMapper mapper = new ModelMapper();
 
-    @Value("${tosspayments.secret_key}")
-    String SECRET_KEY;
 
     @PostMapping("/order/checkout")
     @ApiOperation(value = "구매할 상품 선택후 주문페이지로 이동")
@@ -65,7 +61,7 @@ public class OrderController {
             for(OrderItemDto itemDto : orderItems){
                 totalPrice += itemDto.getTotalPrice();
             }
-        }else{
+        } else{
             throw new ParameterNotFoundException("주문 페이지 이동시 필수 파라미터 'where'가 정상적인 값이 아님");
         }
 
@@ -91,6 +87,8 @@ public class OrderController {
 
         if(callbackPayload.getStatus().equals(TossPayments.DONE.getValue())){
             // 입금 완료일 때 처리
+            orderService.updateOrderDepositStatus(callbackPayload.getOrderId());
+
         }else if(callbackPayload.getStatus().equals(TossPayments.CANCELED.getValue())){
             // 입금 취소일 때 처리
         }

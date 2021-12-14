@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
             http
                 .authorizeRequests()
-                    .antMatchers("/mypage", "/cart").authenticated()
+                    .antMatchers("/mypage", "/cart", "/order/checkout").authenticated()
                     .antMatchers("/join", "/login").anonymous()
 
                      //.antMatchers("/admin/**").hasRole("ADMIN")

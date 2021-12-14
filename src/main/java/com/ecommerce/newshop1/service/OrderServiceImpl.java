@@ -34,9 +34,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    private final PaymentInfoRepository paymentInfoRepository;
     private final OrderRepository orderRepository;
-    private final DeliveryRepository deliveryRepository;
     private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
     private final RedisService redisService;
@@ -169,5 +167,17 @@ public class OrderServiceImpl implements OrderService {
                 .map(p -> mapper.map(p, OrderDto.class))
                 .collect(Collectors.toList());
     }
+
+
+    @Override
+    @Transactional
+    public void updateOrderDepositStatus(String orderId) {
+
+        Order order = orderRepository.findByOrderNum(orderId);
+        order.getDelivery().setDepositStatus(DepositStatus.DEPOSIT_SUCCESS);
+    }
+
+
+
 
 }

@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long>, OrderRepositoryCustom {
 
+    Order findByOrderNum(String orderNum);
 
 }

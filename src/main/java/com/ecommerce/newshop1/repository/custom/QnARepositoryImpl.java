@@ -2,8 +2,10 @@ package com.ecommerce.newshop1.repository.custom;
 
 import com.ecommerce.newshop1.dto.QnADto;
 import com.ecommerce.newshop1.entity.Item;
+import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.QQnAEntity;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,34 @@ public class QnARepositoryImpl implements QnARepositoryCustom{
                 .fetch();
     }
 
+    @Override
+    public List<QnADto> searchAllByMember(Long id, Member member) {
+
+        return queryFactory.select(Projections.fields(QnADto.class,
+                            QQnAEntity.qnAEntity.id,
+                            QQnAEntity.qnAEntity.writer,
+                            QQnAEntity.qnAEntity.content,
+                            QQnAEntity.qnAEntity.hide,
+                            QQnAEntity.qnAEntity.replyEmpty,
+                            QQnAEntity.qnAEntity.createdDate
+                            ))
+                .from(QQnAEntity.qnAEntity)
+                .where(
+                        QQnAEntity.qnAEntity.member.eq(member),
+                        ltQnAId(id)
+                )
+                .orderBy(QQnAEntity.qnAEntity.id.desc())
+                .limit(3)
+                .fetch();
+    }
 
 
+    private BooleanExpression ltQnAId(Long qnaId){
+
+        if(qnaId == null){
+            return null;
+        }
+        return QQnAEntity.qnAEntity.id.lt(qnaId);
+    }
 
 }

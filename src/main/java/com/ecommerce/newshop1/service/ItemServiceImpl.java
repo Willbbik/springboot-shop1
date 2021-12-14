@@ -5,6 +5,7 @@ import com.ecommerce.newshop1.dto.ItemImageDto;
 import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.ItemImage;
+import com.ecommerce.newshop1.exception.ItemNotFoundException;
 import com.ecommerce.newshop1.repository.ItemImageRepository;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,14 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final ItemImageRepository itemImageRepository;
+
+    @Override
+    @Transactional(readOnly = true)
+    public Item findById(Long itemId) {
+
+        return itemRepository.findById(itemId)
+                .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지 않습니다. itemId : " + itemId));
+    }
 
     @Override
     @Transactional(readOnly = true)

@@ -4,6 +4,7 @@ import com.ecommerce.newshop1.dto.JoinMemberDto;
 import com.ecommerce.newshop1.dto.MemberDto;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.exception.MemberNotFoundException;
+import com.ecommerce.newshop1.exception.NotLoginException;
 import com.ecommerce.newshop1.repository.MemberRepository;
 import com.ecommerce.newshop1.repository.OrderRepository;
 import com.ecommerce.newshop1.utils.enums.Role;
@@ -23,10 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 
 @Service
@@ -53,6 +51,10 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public Member getCurrentMember(){
+
+        if(!security.isAuthenticated()){
+            throw new NotLoginException(" getCurrentMember,  로그인을 해야합니다.");
+        }
         String userId = security.getName();
         return memberRepository.findByuserId(userId)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 아이디입니다."));
@@ -190,24 +192,5 @@ public class MemberService {
         return map;
     }
 
-    // 사용자 아이디 찾기
-//    @Transactional
-//    public Object findByUserId(String userid){
-//        Optional<MemberEntity> optMemberEntity = memberRepository.findByuserid(userid);
-//        if(optMemberEntity.isPresent()){
-//            MemberEntity memberEntity = optMemberEntity.get();
-//
-//           return MemberDto.builder()
-//                    .id(memberEntity.getId())
-//                    .userid(memberEntity.getUserid())
-//                    .pswd(memberEntity.getPassword())
-//                    .role(memberEntity.getRole())
-//                    .sns(memberEntity.getSns())
-//                    .phonenum(memberEntity.getPhonenum())
-//                    .build();
-//        }else{
-//            return null;
-//        }
-//    }
 
 }

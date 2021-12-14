@@ -69,8 +69,7 @@ public class ItemController {
     public String itemDetails(@PathVariable Long id, Model model) {
 
         // 상품
-        Item item = itemRepository.findById(id)
-                .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지 않습니다. itemId = " + id));
+        Item item = itemService.findById(id);
         ItemDto itemDto = mapper.map(item, ItemDto.class);
 
         // 상품 이미지
@@ -103,11 +102,7 @@ public class ItemController {
     @ApiOperation(value = "Q&A 저장")
     public @ResponseBody String saveItemQnA(QnADto qnaDto, Long itemId) throws Exception {
 
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지 않습니다. itemId : " + itemId));
-        Member member = memberService.getCurrentMember();
-        qnaDto.setItem(item);
-        qnaDto.setMember(member);
+        qnaDto.setItem(itemService.findById(itemId));
 
         int result = qnAService.checkValidationQnA(qnaDto);
         if(result == 0){
@@ -124,9 +119,7 @@ public class ItemController {
     @PostMapping("/item/reply/send")
     public @ResponseBody String saveItemQnaReply(QnADto dto, Long itemId) throws Exception {
 
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new ItemNotFoundException("해당 상품이 존재하지 않습니다. itemId : " + itemId));
-        dto.setItem(item);
+        dto.setItem(itemService.findById(itemId));
 
         int result = qnAService.checkValidationQnA(dto);
         if(!security.checkHasRole(Role.ADMIN.getValue())){

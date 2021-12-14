@@ -45,12 +45,6 @@
                     <p class="break-all qna_title" th:text="${qna.content}"></p>
 
                     <!-- QnA 답글 -->
-<!--                    <th:block th:if="${qna.replyEmpty} == '답변대기'" sec:authorize="hasRole('ROLE_ADMIN')">-->
-<!--                    <span class="reply_write">-->
-<!--                        <input type="hidden" id="parent" th:value="${qna.id}" />-->
-<!--                        <input type="text" id="replyContent" placeholder="답글 작성" />-->
-<!--                        <input type="button" id="replySend" value="전송" />-->
-<!--                    </span>-->
                     <th:block th:if="${qna.replyEmpty} == '답변대기'" sec:authorize="hasRole('ROLE_ADMIN')">
                     <span>
                         <input type="hidden" id="parent" th:value="${qna.id}" />
