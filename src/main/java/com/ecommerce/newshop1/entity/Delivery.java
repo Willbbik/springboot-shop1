@@ -19,7 +19,7 @@ public class Delivery {
     @Column(name = "delivery_id")
     private Long id;
 
-    @OneToOne(mappedBy = "delivery", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "delivery")
     private Order order;
 
     @OneToOne(cascade = CascadeType.ALL)

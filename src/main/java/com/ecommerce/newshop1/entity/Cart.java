@@ -3,6 +3,8 @@ package com.ecommerce.newshop1.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,6 +19,9 @@ public class Cart extends TimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cart_id")
     private Long id;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "cart")
+    private List<CartItem> cartItemList = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "member_id")

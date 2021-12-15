@@ -31,7 +31,7 @@ public class QnAEntity extends TimeEntity {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 

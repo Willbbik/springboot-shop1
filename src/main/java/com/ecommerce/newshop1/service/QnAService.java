@@ -34,4 +34,6 @@ public interface QnAService  {
 
     Long getLastQnAId(List<QnADto> qnaList, Long lastQnAId);
 
+    void deleteQnaAndReply(List<Long> qnaIdList);
+
 }

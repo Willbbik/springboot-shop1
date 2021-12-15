@@ -15,6 +15,10 @@ public interface QnARepository extends JpaRepository<QnAEntity, Long>, QnAReposi
 
     Optional<QnAEntity> findByParent(Long parent);
 
+    void deleteAllByParentIn(List<Long> parent);
+
+    void deleteByParent(Long parent);
+
     Long countByItem(Item itemId);
 
     boolean existsByItem(Item item);
