@@ -1,6 +1,5 @@
 package com.ecommerce.newshop1.service;
 
-import com.ecommerce.newshop1.dto.AddressDto;
 import com.ecommerce.newshop1.dto.OrderDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.entity.Member;
@@ -27,5 +26,6 @@ public interface OrderService {
 
     void updateOrderDepositStatus(String orderId);
 
+    Long getLastOrderId(List<OrderDto> orderList, Long lastOrderId);
 
 }

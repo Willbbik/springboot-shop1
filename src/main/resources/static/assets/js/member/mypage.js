@@ -11,6 +11,7 @@ $(document).ready(function(){
         }
     });
 
+    // qna 더보기
     $(document).on("click", "#qnamore", function(){
 
         let lastQnAId = $("#lastQnAId").val();
@@ -36,8 +37,22 @@ $(document).ready(function(){
         }
     });
 
-    // qna 삭제
-    $(document).on("click", "#qnaDelete", function(){
+    // qna 보기
+    $("#mypageqna").on("click", function(){
+
+        $.ajax({
+            type : "get",
+            url  : "/mypage/qnaList"
+        }).done(function(result){
+            $(".orderpage").html(result);
+        }).fail(function(){
+            alert("에러가 발생했습니다.");
+        });
+
+    });
+
+     // qna 삭제
+     $(document).on("click", "#qnaDelete", function(){
 
         let qnaIdList = new Array();
 
@@ -74,52 +89,36 @@ $(document).ready(function(){
         }
     });
 
+    // 주문상품 보기
+    $("#orderListBtn").on("click", function(){
 
-});
-
-
-$("#orderListBtn").on("click", function(){
-
-    $.ajax({
-        type : "get",
-        url  : "/mypage/orderList",
-    }).done(function(result){
-        $(".orderpage").html(result);
-    }).fail(function(){
-        alert("에러가 발생했습니다.");
-    });
-
-});
-
-
-$("#moreOrder").on("click", function(){
-
-      let lastOrderId = $("#lastOrderId").val();
-
-      $.ajax({
+        $.ajax({
             type : "get",
-            url  : "/mypage/orderList?lastOrderId=" + lastOrderId
+            url  : "/mypage/orderList",
         }).done(function(result){
             $(".orderpage").html(result);
         }).fail(function(){
             alert("에러가 발생했습니다.");
         });
-});
-
-
-$("#mypageqna").on("click", function(){
-
-    // let lastQnAId = $("#lastQnAId").val();
-
-    $.ajax({
-        type : "get",
-        url  : "/mypage/qnaList"
-    }).done(function(result){
-
-        $(".orderpage").html(result);
-    }).fail(function(){
-        alert("에러가 발생했습니다.");
     });
+
+
+    // 주문상품 더보기 버튼
+    $(document).on("click", "#moreOrder", function(){
+
+          let lastOrderId = $("#lastOrderId").val();
+
+          $.ajax({
+                type : "get",
+                url  : "/mypage/orderList?lastOrderId=" + lastOrderId + "&more=more"
+            }).done(function(result){
+                $("#lastOrderId").remove();
+                $(".orderpage").append(result);
+            }).fail(function(){
+                alert("에러가 발생했습니다.");
+            });
+    });
+
 
 });
 

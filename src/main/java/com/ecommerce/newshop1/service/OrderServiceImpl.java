@@ -47,6 +47,19 @@ public class OrderServiceImpl implements OrderService {
     String SECRET_KEY;
 
     @Override
+    public Long getLastOrderId(List<OrderDto> orderList, Long lastOrderId){
+
+        if(orderList.size() > 1){
+            int lastIndex = orderList.size() - 1;
+            return orderList.get(lastIndex).getId();
+        }else if(orderList.size() == 1){
+            return orderList.get(0).getId();
+        }else{
+            return lastOrderId;
+        }
+    }
+
+    @Override
     public String createOrderId(String nowDate, int totalPrice) throws Exception {
         return redisService.createOrderId(nowDate, totalPrice);
     }
