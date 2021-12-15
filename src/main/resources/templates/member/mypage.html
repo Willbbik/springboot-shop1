@@ -58,46 +58,15 @@
     <div id="page-content-wrapper">
         <div class="container-fluid">
             <!--   start   -->
-
             <h1>MyPage</h1>
-
             <div>
                 <div>
                     <span><button type="button" id="orderListBtn" class="btn btn-primary">주문/배송조회</button></span>
                     <span><button type="button" id="mypageqna" class="btn btn-primary">Q & A</button></span>
                 </div>
                 <div class="orderpage frame">
-<!--                    <div class="myqna_list">-->
-<!--                        <div class="qna_tit_area">-->
-<!--                            <span class="condition">답변상태</span>-->
-<!--                            <span class="contents">내용</span>-->
-<!--                            <span class="writer">작성자</span>-->
-<!--                            <span class="date">작성일</span>-->
-<!--                        </div>-->
-<!--                        <div class="qna_content">       &lt;!&ndash; qna 제목 &ndash;&gt;-->
-<!--                            <div class="qna_title">-->
-<!--                                <span class="condition">답변대기</span>-->
-<!--                                <span class="contents">입금했습니다.</span>-->
-<!--                                <span class="writer"></span>-->
-<!--                                <span class="date">2021.12.12</span>-->
-<!--                            </div>-->
-<!--                            <div class="qna_question">  &lt;!&ndash; qna 상세 내용 &ndash;&gt;-->
-<!--                                <span class="condition"></span>-->
-<!--                                <span class="contents">입금했습니다.</span>-->
-<!--                                <span class="writer"></span>-->
-<!--                                <span class="date">2021.12.12</span>-->
-<!--                            </div>-->
-<!--                            <div class="qna_answer">  &lt;!&ndash; qna 상세 내용 &ndash;&gt;-->
-<!--                                <span class="condition"></span>-->
-<!--                                <span class="contents">감사합니다.</span>-->
-<!--                                <span class="writer">판매자</span>-->
-<!--                                <span class="date">2021.12.12</span>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-
                     <div class="mypage_orderList">
-                        <input type="hidden" id="lastOrderId" th:value="${lastOrderId}">
+                       <input type="hidden" id="lastOrderId" th:value="${lastOrderId}">
                        <div th:each="order : ${orderList}" class="mypage_order_item_wrap"> <!-- 반복 -->
                            <h2> <!-- 냘짜, 주문번호, 상세보기 -->
                                <span th:text="${#temporals.format(order.createdDate, 'yyyy.MM.dd')}"></span>
@@ -136,13 +105,10 @@
                                </dl>
                            </div>
                        </div>
+                        <button class="btn btn-primary" id="moreOrder" th:if="${lastOrderId}">주문 상품 더보기</button>
                     </div>
-                    <button clas="btn btn-primary" id="moreOrder" >주문 상품 더보기</button>
-
                 </div>
             </div>
-
-
             <!--   end     -->
         </div>
     </div>

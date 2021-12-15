@@ -68,11 +68,12 @@ public class MemberController {
         Member member = memberService.getCurrentMember();
         List<OrderDto> orderList = orderService.searchAllByMember(null, member);
 
-        // 수정 필요
         Long lastOrderId = null;
-        if(orderList.size() > 3){
+        if(orderList.size() > 1){
             int lastIndex = orderList.size() - 1;
             lastOrderId = orderList.get(lastIndex).getId();
+        }else if(orderList.size() == 1){
+            lastOrderId = orderList.get(0).getId();
         }
 
         model.addAttribute("orderList", orderList);
@@ -80,23 +81,21 @@ public class MemberController {
         return "member/mypage";
     }
 
-
     @GetMapping("/mypage/orderList")
     @ApiOperation(value = "mypage에 주문한 상품들이 담긴 html 리턴", notes = "ajax 전용")
-    public String orderList(Model model, @RequestParam(required = false) Long id){
+    public String orderListMore(Model model, @RequestParam(required = false) Long lastOrderId, @RequestParam(required = false) String more){
 
         Member member = memberService.getCurrentMember();
-        List<OrderDto> orderList = orderService.searchAllByMember(id, member);
+        List<OrderDto> orderList = orderService.searchAllByMember(lastOrderId, member);
 
-        Long lastOrderId = null;
-        if(orderList.size() > 3){
-            int lastIndex = orderList.size() - 1;
-            lastOrderId = orderList.get(lastIndex).getId();
-        }
+        lastOrderId = orderService.getLastOrderId(orderList, lastOrderId);
 
         model.addAttribute("orderList", orderList);
         model.addAttribute("lastOrderId", lastOrderId);
 
+        if(more != null && more.equals("more")){
+            return "member/tab/tab1ordermore";
+        }
         return "member/tab/tab1orderList";
     }
 
@@ -123,7 +122,7 @@ public class MemberController {
         model.addAttribute("lastQnAId", lastQnAId);
 
         if(more != null && more.equals("more")){
-            return "member/tab/tab3qnamore";
+            return "member/tab/tab2qnamore";
         }
         return "member/tab/tab2qnaList";
     }
