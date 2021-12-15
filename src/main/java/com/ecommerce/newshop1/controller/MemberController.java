@@ -6,6 +6,7 @@ import com.ecommerce.newshop1.entity.Order;
 import com.ecommerce.newshop1.exception.MemberNotFoundException;
 import com.ecommerce.newshop1.repository.MemberRepository;
 import com.ecommerce.newshop1.repository.OrderRepository;
+import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.ValidationSequence;
 import com.ecommerce.newshop1.utils.enums.Sns;
@@ -35,9 +36,7 @@ public class MemberController {
     private final QnAService qnAService;
     private final CartService cartService;
     private final OrderService orderService;
-    private final MemberRepository memberRepository;
-    private final OrderRepository orderRepository;
-    private final SecurityService security;
+    private final QnARepository qnARepository;
 
     ModelMapper mapper = new ModelMapper();
 
@@ -69,6 +68,7 @@ public class MemberController {
         Member member = memberService.getCurrentMember();
         List<OrderDto> orderList = orderService.searchAllByMember(null, member);
 
+        // 수정 필요
         Long lastOrderId = null;
         if(orderList.size() > 3){
             int lastIndex = orderList.size() - 1;
@@ -102,24 +102,31 @@ public class MemberController {
 
     @GetMapping("/mypage/qnaList")
     @ApiOperation(value = "mypage에 해당 사용자가 작성한 qna와 답변들이 담긴 html 리턴", notes = "ajax 전용")
-    public String qnaList(Model model, @RequestParam(required = false) Long lastQnAId){
+    public String qnaList(Model model, @RequestParam(required = false) Long lastQnAId, @RequestParam(required = false) String more){
 
-        List<QnADto> qnaReplyList = new ArrayList<>();
         Member member = memberService.getCurrentMember();
+        boolean result = qnARepository.existsByMember(member);
 
-        // qna 가져오고 값 수정
-        List<QnADto> qnaList = qnAService.searchAllByMember(lastQnAId, member);
+        // 댓글이 없으면 빈 배열을, 있으면 가져오기
+        List<QnADto> qnaList = (!result) ? new ArrayList<>() : qnAService.searchAllByMember(lastQnAId, member);
+        List<QnADto> qnaReplyList = qnAService.getQnAReply(qnaList);
+
+        // 값 수정
         qnaList = qnAService.editQna(qnaList);
-
-        // qna 답글 가져오고 값 수정
-        qnaReplyList = qnAService.getQnAReply(qnaList);
         qnaReplyList = qnAService.editReply(qnaReplyList);
+
+        // nooffset 페이징을 위해서 마지막 qna번호 가져오기
+        lastQnAId = qnAService.getLastQnAId(qnaList, lastQnAId);
 
         model.addAttribute("qnaList", qnaList);
         model.addAttribute("qnaReplyList", qnaReplyList);
+        model.addAttribute("lastQnAId", lastQnAId);
+
+        if(more != null && more.equals("more")){
+            return "member/tab/tab3qnamore";
+        }
         return "member/tab/tab2qnaList";
     }
-
 
     @GetMapping("/member/idConfirm")
     @ApiOperation(value = "아이디 중복검사", notes = "회원가입시 ajax로 아이디 중복검사 할 때")

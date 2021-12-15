@@ -34,7 +34,6 @@ public class QnAServiceImpl implements QnAService{
 
     ModelMapper mapper = new ModelMapper();
 
-
     @Override
     @Transactional
     public String getQnAHtml(Long itemId, Model model, int curPage) throws Exception {
@@ -67,34 +66,40 @@ public class QnAServiceImpl implements QnAService{
         return "item/tab/tab3QnA";
     }
 
+    @Override
+    public Long getLastQnAId(List<QnADto> qnaList, Long lastQnAId) {
+    // nooffset 페이징을 위해서 마지막 qna번호 가져오기
+
+        if(qnaList != null) {  // 댓글이 더 존재하다면 계산후 리턴
+
+            if (qnaList.size() > 1) {   //
+                lastQnAId = qnaList.get(qnaList.size() - 1).getId();
+            } else if (qnaList.size() == 1) {
+                lastQnAId = qnaList.get(0).getId();
+            }
+            return lastQnAId;
+        }                       // 존재하지 않을때는 파라미터로 온 id값 리턴
+        return lastQnAId;
+    }
+
 
     @Override
     @Transactional(readOnly = true)
-    public List<QnADto> editReply(List<QnADto> replyList){
+    public List<QnADto> getQnAReply(List<QnADto> qnaList) {
 
-        List<QnADto> replyResult = new ArrayList<>();
+        if(qnaList != null) {
+            List<QnADto> replyList = new ArrayList<>();
 
-        // 관리자 답글의 writer, content 수정
-        for(QnADto reply : replyList){
-            if(reply != null){
+            for (QnADto parent : qnaList) {
+                Optional<QnAEntity> reply = qnARepository.findByParent(parent.getId());
 
-                // qna 작성자 아이디값 가져오기
-                QnAEntity qnaWriter = qnARepository.findById(reply.getParent())
-                        .orElseThrow(() -> new IllegalArgumentException("해당 QnA가 존재하지 않습니다. QnA Id = " + reply.getParent()));
-
-                if(reply.getHide().equals(QnA.PRIVATE.getValue())){
-
-                    // 현재 로그인한 사람이 qna 작성자인지 아니 관리자인지 확인하기 위해서
-                    if(!security.compareName(qnaWriter.getWriter()) && !security.checkHasRole(Role.ADMIN.getValue())){
-                        reply.setContent("비밀글입니다.");
-                    }
-                }
-
-                reply.setWriter("판매자");
+                // 존재유무 확인
+                if (reply.isPresent()) replyList.add(mapper.map(reply.get(), QnADto.class));
+                else replyList.add(null);
             }
-                replyResult.add(reply);
+            return replyList;
         }
-        return replyResult;
+        return null;
     }
 
     @Override
@@ -104,32 +109,38 @@ public class QnAServiceImpl implements QnAService{
         return qnARepository.searchAllByMember(id, member);
     }
 
-
-    // QnA 답글 가져오는 메소드
     @Override
     @Transactional(readOnly = true)
-    public List<QnADto> getQnAReply(List<QnADto> qnaList) {
+    public List<QnADto> editReply(List<QnADto> replyList){
 
-        List<QnADto> replyList = new ArrayList<>();
+        List<QnADto> replyResult = new ArrayList<>();
 
-        if(qnaList == null) {
-            return null;
-        }
+        // 관리자 답글의 writer, content 수정
+        for(QnADto reply : replyList){
 
-        for (QnADto dto : qnaList) {
-            Optional<QnAEntity> reply = qnARepository.findByParent(dto.getId());
-
-            // 존재유무 확인
-            if (reply.isPresent()) {
-                replyList.add(mapper.map(reply.get(), QnADto.class));
-            } else {
-                replyList.add(null);
+            if(reply == null){
+                replyResult.add(reply);
+                continue;
             }
+
+            // qna 작성자 아이디값 가져오기
+            QnAEntity qnaWriter = qnARepository.findById(reply.getParent())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 QnA가 존재하지 않습니다. QnA Id = " + reply.getParent()));
+
+            reply.setWriter("판매자");
+
+            if(reply.getHide().equals(QnA.PRIVATE.getValue())){
+
+                // 현재 로그인한 사람이 qna 작성자인지 아니 관리자인지 확인하기 위해서
+                if(!security.compareName(qnaWriter.getWriter()) && !security.checkHasRole(Role.ADMIN.getValue())){
+                    reply.setContent("비밀글입니다.");
+                }
+            }
+            replyResult.add(reply);
         }
-        return replyList;
+        return replyResult;
     }
 
-    // view에 표시할 QnA 값들 수정
     @Override
     @Transactional(readOnly = true)
     public List<QnADto> editQna(List<QnADto> qnaList){
@@ -139,6 +150,8 @@ public class QnAServiceImpl implements QnAService{
         }
         // 값들 수정해주기
         for (QnADto dto : qnaList) {
+            // 아이디 마스킹
+            dto.setWriter(dto.getWriter().substring(0, 3) + "***");
 
             if(dto.getContent().length() > 30){
                 dto.setTitle(dto.getContent().substring(0, 30) + "...");
@@ -151,17 +164,18 @@ public class QnAServiceImpl implements QnAService{
                 }
             }
 
-            // 해당 qna의 답글 가져오기
-            Optional<QnAEntity> reply = qnARepository.findByParent(dto.getId());
-
             // 답글 유무 확인
-            if (reply.isPresent()) dto.setReplyEmpty("답변완료");
-            else dto.setReplyEmpty("답변대기");
+            boolean result = qnARepository.existsByParent(dto.getId());
 
-            dto.setWriter(dto.getWriter().substring(0, 3) + "***");
+            if (result) {
+                dto.setReplyEmpty("답변완료");
+            } else {
+                dto.setReplyEmpty("답변대기");
+            }
         }
         return qnaList;
     }
+
 
 
     @Override

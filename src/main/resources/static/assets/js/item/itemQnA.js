@@ -22,7 +22,7 @@ $(document).ready(function(){
        });
     }
 
-     $('.tab_default').click(function(){
+        $('.tab_default').click(function(){
 
             let active = $(".tab_active");
             active.attr('class', 'tab_default');
