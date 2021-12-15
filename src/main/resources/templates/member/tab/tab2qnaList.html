@@ -8,13 +8,19 @@
     <input type="hidden" th:value="${lastQnAId}" id="lastQnAId">
     <div class="myqna_list">
         <div class="qna_tit_area">
+            <span class="condition">
+                <input type="checkbox" class="qna_select_all form-check-input">
+                <button class="btn btn-warning" id="qnaDelete">삭제</button>
+            </span>
             <span class="condition">답변상태</span>
             <span class="contents">내용</span>
             <span class="writer">작성자</span>
             <span class="date">작성일</span>
         </div>
         <div class="qna_content" th:each="qna, index : ${qnaList}">       <!-- qna 제목 -->
+            <input type="hidden" th:value="${qna.id}" name="qnaId">
             <div class="qna_title">
+                <span class="condition"><input type="checkbox" class="qna_select form-check-input"></span>
                 <span class="condition" th:text="${qna.replyEmpty}"></span>
                 <span class="contents" th:text="${qna.title}"></span>
                 <span class="writer" th:text="${qna.writer}"></span>
@@ -22,12 +28,14 @@
             </div>
             <div class="qna_question">  <!-- qna 상세 내용 -->
                 <span class="condition"></span>
+                <span class="condition"></span>
                 <span class="contents" th:text="${qna.content}"></span>
                 <span class="writer"></span>
                 <span class="date" th:text="${#temporals.format(qna.createdDate, 'yyyy.MM.dd')}"></span>
             </div>
             <div class="qna_answer" th:if="${qna.replyEmpty} == '답변완료'">  <!-- qna 상세 내용 -->
                 <th:block th:with="reply = ${qnaReplyList[index.index]}">
+                    <span class="condition"></span>
                     <span class="condition"></span>
                     <span class="contents" th:text="${reply.content}"></span>
                     <span class="writer" th:text="${reply.writer}"></span>

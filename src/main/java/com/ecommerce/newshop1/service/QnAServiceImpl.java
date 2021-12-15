@@ -231,6 +231,14 @@ public class QnAServiceImpl implements QnAService{
         itemRepository.save(item);
     }
 
+    @Override
+    @Transactional
+    public void deleteQnaAndReply(List<Long> qnaIdList) {
+
+        qnARepository.deleteAllById(qnaIdList);
+        qnARepository.deleteAllByParentIn(qnaIdList);
+    }
+
 
     @Override
     public int checkValidationQnA(QnADto dto){

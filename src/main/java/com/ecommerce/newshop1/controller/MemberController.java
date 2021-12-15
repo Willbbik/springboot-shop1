@@ -128,16 +128,24 @@ public class MemberController {
         return "member/tab/tab2qnaList";
     }
 
+
+    @DeleteMapping("/mypage/qna/delete")
+    public @ResponseBody String qnaDelete(@RequestParam List<Long> qnaIdList){
+
+        qnAService.deleteQnaAndReply(qnaIdList);
+
+        return "success";
+    }
+
+
     @GetMapping("/member/idConfirm")
     @ApiOperation(value = "아이디 중복검사", notes = "회원가입시 ajax로 아이디 중복검사 할 때")
     public @ResponseBody String idConfirm(@RequestParam(name = "userId") String userId) {
 
         Optional<Member> result = memberService.findByUserId(userId);
-        if (result.isEmpty()) {
-            return "Y";
-        } else {
-            return "N";
-        }
+        if (result.isEmpty()) return "Y";
+        else return "N";
+
     }
 
     @GetMapping("/member/sendAuth")

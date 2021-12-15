@@ -5,6 +5,7 @@
     <input type="hidden" th:value="${lastQnAId}" id="lastQnAId">
     <div class="qna_content" th:each="qna, index : ${qnaList}">       <!-- qna 제목 -->
         <div class="qna_title">
+            <span class="condition"><input type="checkbox" class="qna_select form-check-input"></span>
             <span class="condition" th:text="${qna.replyEmpty}"></span>
             <span class="contents" th:text="${qna.title}"></span>
             <span class="writer" th:text="${qna.writer}"></span>
@@ -12,12 +13,14 @@
         </div>
         <div class="qna_question">  <!-- qna 상세 내용 -->
             <span class="condition"></span>
+            <span class="condition"></span>
             <span class="contents" th:text="${qna.content}"></span>
             <span class="writer"></span>
             <span class="date" th:text="${#temporals.format(qna.createdDate, 'yyyy.MM.dd')}"></span>
         </div>
         <div class="qna_answer" th:if="${qna.replyEmpty} == '답변완료'">  <!-- qna 상세 내용 -->
             <th:block th:with="reply = ${qnaReplyList[index.index]}">
+                <span class="condition"></span>
                 <span class="condition"></span>
                 <span class="contents" th:text="${reply.content}"></span>
                 <span class="writer" th:text="${reply.writer}"></span>

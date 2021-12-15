@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -66,5 +67,29 @@ class QnARepositoryTest {
     }
 
 
+    @Test
+    void deleteByParent() {
+
+        //given
+        QnAEntity qna = QnAEntity.builder()
+                .content("test")
+                .depth(1)
+                .build();
+        qna = qnARepository.save(qna);
+
+        QnAEntity reply = QnAEntity.builder()
+                .parent(qna.getId())
+                .content("testAnswer")
+                .build();
+        qnARepository.save(reply);
+
+        //when
+        qnARepository.deleteByParent(qna.getId());
+
+        //then
+        Optional<QnAEntity> result = qnARepository.findByParent(qna.getId());
+
+        assertEquals(Optional.empty(), result);
+    }
 
 }
