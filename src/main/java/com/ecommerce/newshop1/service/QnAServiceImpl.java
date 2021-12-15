@@ -87,7 +87,7 @@ public class QnAServiceImpl implements QnAService{
     @Transactional(readOnly = true)
     public List<QnADto> getQnAReply(List<QnADto> qnaList) {
 
-        if(qnaList != null) {
+        if(!qnaList.isEmpty()) {
             List<QnADto> replyList = new ArrayList<>();
 
             for (QnADto parent : qnaList) {
@@ -99,7 +99,7 @@ public class QnAServiceImpl implements QnAService{
             }
             return replyList;
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -115,65 +115,73 @@ public class QnAServiceImpl implements QnAService{
 
         List<QnADto> replyResult = new ArrayList<>();
 
-        // 관리자 답글의 writer, content 수정
-        for(QnADto reply : replyList){
+        if(!replyList.isEmpty()) {
 
-            if(reply == null){
-                replyResult.add(reply);
-                continue;
-            }
+            // 관리자 답글의 writer, content 수정
+            for (QnADto reply : replyList) {
 
-            // qna 작성자 아이디값 가져오기
-            QnAEntity qnaWriter = qnARepository.findById(reply.getParent())
-                    .orElseThrow(() -> new IllegalArgumentException("해당 QnA가 존재하지 않습니다. QnA Id = " + reply.getParent()));
-
-            reply.setWriter("판매자");
-
-            if(reply.getHide().equals(QnA.PRIVATE.getValue())){
-
-                // 현재 로그인한 사람이 qna 작성자인지 아니 관리자인지 확인하기 위해서
-                if(!security.compareName(qnaWriter.getWriter()) && !security.checkHasRole(Role.ADMIN.getValue())){
-                    reply.setContent("비밀글입니다.");
+                if (reply == null) {
+                    replyResult.add(reply);
+                    continue;
                 }
+
+                // qna 작성자 아이디값 가져오기
+                QnAEntity qnaWriter = qnARepository.findById(reply.getParent())
+                        .orElseThrow(() -> new IllegalArgumentException("해당 QnA가 존재하지 않습니다. QnA Id = " + reply.getParent()));
+
+                reply.setWriter("판매자");
+
+                if (reply.getHide().equals(QnA.PRIVATE.getValue())) {
+
+                    // 현재 로그인한 사람이 qna 작성자인지 아니 관리자인지 확인하기 위해서
+                    if (!security.compareName(qnaWriter.getWriter()) && !security.checkHasRole(Role.ADMIN.getValue())) {
+                        reply.setContent("비밀글입니다.");
+                    }
+                }
+                replyResult.add(reply);
             }
-            replyResult.add(reply);
+            return replyResult;
         }
-        return replyResult;
+        return new ArrayList<>();
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<QnADto> editQna(List<QnADto> qnaList){
 
-        if(qnaList.isEmpty()){
-            return null;
-        }
-        // 값들 수정해주기
-        for (QnADto dto : qnaList) {
-            // 아이디 마스킹
-            dto.setWriter(dto.getWriter().substring(0, 3) + "***");
+        if(!qnaList.isEmpty()) {
 
-            if(dto.getContent().length() > 30){
-                dto.setTitle(dto.getContent().substring(0, 30) + "...");
-            } else { dto.setTitle(dto.getContent()); }
+            // 값들 수정해주기
+            for (QnADto dto : qnaList) {
 
-            if (dto.getHide().equals(QnA.PRIVATE.getValue())) {
-                if (!security.compareName(dto.getWriter()) && !security.checkHasRole(Role.ADMIN.getValue())) {
-                    dto.setContent("비밀글입니다.");
-                    dto.setTitle("비밀글입니다.");
+                if (dto.getContent().length() > 30) {
+                    dto.setTitle(dto.getContent().substring(0, 30) + "...");
+                } else {
+                    dto.setTitle(dto.getContent());
                 }
-            }
 
-            // 답글 유무 확인
-            boolean result = qnARepository.existsByParent(dto.getId());
+                if (dto.getHide().equals(QnA.PRIVATE.getValue())) {
+                    if (!security.compareName(dto.getWriter()) && !security.checkHasRole(Role.ADMIN.getValue())) {
+                        dto.setContent("비밀글입니다.");
+                        dto.setTitle("비밀글입니다.");
+                    }
+                }
 
-            if (result) {
-                dto.setReplyEmpty("답변완료");
-            } else {
-                dto.setReplyEmpty("답변대기");
+                // 답글 유무 확인
+                boolean result = qnARepository.existsByParent(dto.getId());
+
+                if (result) {
+                    dto.setReplyEmpty("답변완료");
+                } else {
+                    dto.setReplyEmpty("답변대기");
+                }
+                dto.setWriter(dto.getWriter().substring(0, 3) + "***");
+
             }
+            return qnaList;
         }
-        return qnaList;
+
+        return new ArrayList<>();
     }
 
 
