@@ -19,5 +19,8 @@ public interface QnARepository extends JpaRepository<QnAEntity, Long>, QnAReposi
 
     boolean existsByItem(Item item);
 
+    boolean existsByMember(Member member);
+
+    boolean existsByParent(Long id);
 
 }

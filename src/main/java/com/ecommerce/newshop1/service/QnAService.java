@@ -14,6 +14,9 @@ public interface QnAService  {
     // QnA 관리자 답글 가져오기
     List<QnADto> getQnAReply(List<QnADto> qnaList);
 
+    // 현재 사용자가 작성한 qnA가져오기
+    List<QnADto> searchAllByMember(Long id, Member member);
+
     // QnA 관리자 답글 저장
     void saveQnAReply(QnADto dto);
 
@@ -29,6 +32,6 @@ public interface QnAService  {
     // QnA 질문 저장하기 전에 유효성 검사
     int checkValidationQnA(QnADto dto);
 
-    List<QnADto> searchAllByMember(Long id, Member member);
+    Long getLastQnAId(List<QnADto> qnaList, Long lastQnAId);
 
 }
