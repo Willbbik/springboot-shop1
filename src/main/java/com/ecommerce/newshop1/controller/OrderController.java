@@ -84,13 +84,14 @@ public class OrderController {
     @RequestMapping("/order/virtual-account/callback")
     @ResponseStatus(HttpStatus.OK)
     public void paymentCheck(@RequestBody CallbackPayload callbackPayload){
-
+        System.out.println("콜백성공");
         if(callbackPayload.getStatus().equals(TossPayments.DONE.getValue())){
             // 입금 완료일 때 처리
             orderService.updateOrderDepositStatus(callbackPayload.getOrderId());
-
+            System.out.println("완료처리");
         }else if(callbackPayload.getStatus().equals(TossPayments.CANCELED.getValue())){
             // 입금 취소일 때 처리
+            System.out.println("취소처리");
         }
     }
 

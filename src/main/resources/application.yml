@@ -31,6 +31,16 @@ spring:
     host: localhost
     port: 6379
 
+#server:
+#  port: 8080
+#  ssl:
+#    enabled: true
+#    key-store: minkeystore.p12
+#    key-store-password: alfogkd0926
+#    key-store-type: PKCS12
+#    key-alias: bns-ssl
+
+
 logging:
   level:
     org:
