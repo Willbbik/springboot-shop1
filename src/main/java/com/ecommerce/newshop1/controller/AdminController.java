@@ -167,17 +167,6 @@ public class AdminController {
         String itemCode = UUID.randomUUID().toString();
 
         // 상품 정보 저장
-//        Item item = Item.builder()
-//                .itemName(itemDto.getItemName())
-//                .itemCode(itemCode)
-//                .category(itemDto.getCategory())
-//                .color(itemDto.getColor())
-//                .size(itemDto.getSize())
-//                .price(itemDto.getPrice())
-//                .model(itemDto.getModel())
-//                .itemInfo(itemDto.getItemInfo())
-//                .saleStatus(itemDto.getSaleStatus())
-//                .build();
         Item item = mapper.map(itemDto, Item.class);
 
         // 디렉토리 만들기

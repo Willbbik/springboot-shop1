@@ -130,7 +130,7 @@ $(function(){
                     },
                     traditional: true
                 }).done(function(result){
-                    alert("QnA 삭제에 성공하셨습니다.");
+                    alert("장바구니에서 해당 아이템을 삭제하였습니다.");
                     location.reload();
                 }).fail(function(result){
                     alert("오류가 발생했습니다. 잠시후 다시 시도해보시기 바랍니다.");
