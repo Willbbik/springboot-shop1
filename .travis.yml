@@ -21,9 +21,9 @@ before_deploy:
 
 deploy:
   - provider: s3
-    access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
-    secret_access_key: $AWS_SECRET_KEY # Travis repo settings에 설정된 값
-    bucket: springboot-webservice-deploy # S3 버킷
+    access_key_id: T96aFnyxPjC-QVXu6DAjJA # Travis repo settings에 설정된 값
+    secret_access_key: T96aFnyxPjC-QVXu6DAjJA # Travis repo settings에 설정된 값
+    bucket: springboot-shop1-deploy # S3 버킷
     region: ap-northeast-2
     skip_cleanup: true
     acl: public_read
@@ -34,9 +34,9 @@ deploy:
       branch: master
 
   - provider: codedeploy
-    access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
-    secret_access_key: $AWS_SECRET_KEY # Travis repo settings에 설정된 값
-    bucket: springboot-webservice-deploy # S3 버킷
+    access_key_id: T96aFnyxPjC-QVXu6DAjJA # Travis repo settings에 설정된 값
+    secret_access_key: T96aFnyxPjC-QVXu6DAjJA # Travis repo settings에 설정된 값
+    bucket: springboot-shop1-deploy # S3 버킷
     key: springboot-shop1.zip # S3 버킷에 저장된 springboot-webservice.zip 파일을 EC2로 배포
     bundle_type: zip
     application: springboot-shop1 # 웹 콘솔에서 등록한 CodeDeploy 어플리케이션
