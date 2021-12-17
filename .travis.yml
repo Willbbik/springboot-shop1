@@ -1,3 +1,5 @@
+install: gradle wrapper --gradle-version 4.2
+
 language: java
 jdk:
   - oraclejdk11
@@ -13,8 +15,7 @@ cache:
     - '$HOME/.gradle'
 
 
-script:
-   "./gradlew clean build"
+script: "./gradlew clean build"
 
 before_deploy:
   - zip -r springboot-shop1 *
