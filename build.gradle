@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10" // querydsl
 	id 'java'
+	id 'idea'
 }
 
 group = 'com.ecommerce'
@@ -81,7 +82,7 @@ configurations {
 	querydsl.extendsFrom compileClasspath
 }
 compileQuerydsl {
-	if(file(querydslDir).exists() ) delete(file(querydslDir))
+//	if(file(querydslDir).exists() ) delete(file(querydslDir))
 	options.annotationProcessorPath = configurations.querydsl
 }
 
