@@ -81,5 +81,8 @@ configurations {
 	querydsl.extendsFrom compileClasspath
 }
 compileQuerydsl {
+	if(file(querydslDir).exists() ) delete(file(querydslDir))
 	options.annotationProcessorPath = configurations.querydsl
 }
+
+

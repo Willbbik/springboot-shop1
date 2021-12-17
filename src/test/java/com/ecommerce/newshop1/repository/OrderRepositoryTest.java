@@ -31,13 +31,14 @@ class OrderRepositoryTest {
     void searchAllByMember(){
 
         //given
-        Member member = Member.builder()
-                .userId("userid")
-                .password("password")
-                .phoneNum("01012345678")
-                .role(Role.MEMBER)
-                .sns(Sns.NONE)
-                .build();
+        Member member = new Member();
+            member.setId(3L);
+            member.setUserId("test");
+            member.setPassword("password");
+            member.setPhoneNum("01081387026");
+            member.setSns(Sns.NONE);
+            member.setRole(Role.MEMBER);
+
         member = memberRepository.save(member);
 
         for(int i = 1; i <= 30; i++){

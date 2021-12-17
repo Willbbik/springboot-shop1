@@ -33,13 +33,14 @@ class QnARepositoryTest {
     void searchAllByMember(){
 
         //given
-        Member member = Member.builder()
-                .userId("test")
-                .password("password")
-                .phoneNum("01012345678")
-                .role(Role.MEMBER)
-                .sns(Sns.NONE)
-                .build();
+        Member member = new Member();
+            member.setId(3L);
+            member.setUserId("test");
+            member.setPassword("password");
+            member.setPhoneNum("01081387026");
+            member.setSns(Sns.NONE);
+            member.setRole(Role.MEMBER);
+
         memberRepository.save(member);
 
         Item item = Item.builder()
