@@ -14,7 +14,7 @@ cache:
 
 
 script:
-   "./gradlew cleanQuerydslSourceDir clean build"
+   "./gradlew build"
 
 before_deploy:
   - zip -r springboot-shop1 *

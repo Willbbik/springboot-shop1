@@ -69,7 +69,8 @@ test {
 	useJUnitPlatform()
 }
 
-def querydslDir = "$buildDir/generated/querydsl"
+// def querydslDir = "$buildDir/generated/querydsl"
+def querydslDir = "src/main/generated"
 
 querydsl {
 	jpa = true
@@ -82,8 +83,19 @@ configurations {
 	querydsl.extendsFrom compileClasspath
 }
 compileQuerydsl {
-//	if(file(querydslDir).exists() ) delete(file(querydslDir))
 	options.annotationProcessorPath = configurations.querydsl
 }
 
+compileQuerydsl.doFirst {
 
+		if(file(querydslDir).exists())
+		delete(file(querydslDir))
+}
+
+tasks.withType(JavaCompile) {
+	options.generatedSourceOutputDirectory = file(querydslDir)
+}
+
+clean.doLast {
+	delete file(querydslDir)
+}
