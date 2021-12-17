@@ -83,3 +83,7 @@ configurations {
 compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
 }
+
+tasks.withType(JavaCompile){
+	options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
+}
