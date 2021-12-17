@@ -19,14 +19,13 @@ class MemberRepositoryTest {
     void saveMember(){
 
         // given
-        Member member = Member.builder()
-                .id(3L)
-                .userId("test")
-                .password("password")
-                .phoneNum("01081387026")
-                .sns(Sns.NONE)
-                .role(Role.MEMBER)
-                .build();
+        Member member = new Member();
+            member.setId(3L);
+            member.setUserId("test");
+            member.setPassword("password");
+            member.setPhoneNum("01081387026");
+            member.setSns(Sns.NONE);
+            member.setRole(Role.MEMBER);
 
         // when
         Member member1 = memberRepository.save(member);
