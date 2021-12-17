@@ -1,8 +1,6 @@
 language: java
 jdk:
   - openjdk11
-before_install:
-  - ./mvn clean install
 
 branches:
   only:
