@@ -14,6 +14,19 @@ cache:
 
 script: "./gradlew clean build"
 
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
+    secret_access_key: $AWS_SECRET_KEY # Travis repo settings에 설정된 값
+    bucket: springboot-shop1-deploy # 6-3-3에서 생성한 S3 버킷
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: public_read
+    wait-until-deployed: true
+    on:
+      repo: Willbbik/springboot-shop1 #Github 주소
+      branch: master
+
 # CI 실행 완료시 메일로 알람
 notifications:
   email:
