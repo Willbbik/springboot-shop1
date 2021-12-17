@@ -13,7 +13,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(name = "item", indexes = @Index(name = "idx_item", columnList = "itemName, category, saleStatus"))
