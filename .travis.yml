@@ -12,9 +12,7 @@ cache:
     - '$HOME/.m2/repository'
     - '$HOME/.gradle'
 
-script:
-  - "./gradlew cleanQuerydslSourcesDir"
-  - "./gradlew clean build"
+script: "./gradlew clean build"
 
 before_deploy:
   - zip -r springboot-shop1 *
