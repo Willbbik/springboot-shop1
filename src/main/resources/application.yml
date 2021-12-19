@@ -30,7 +30,9 @@ spring:
   redis:
     host: localhost
     port: 6379
-
+server:
+  address: 172.31.32.59
+  port: 80
 #server:
 #  port: 8080
 #  ssl:
