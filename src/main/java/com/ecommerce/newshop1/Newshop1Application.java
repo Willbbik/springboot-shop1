@@ -17,7 +17,8 @@ public class Newshop1Application {
 			"classpath:/application.yml," +
 			"classpath:/yml/coolsms.yml," +
 			"classpath:/yml/tosspayments.yml," +
-			"classpath:/yml/oauth2.yml";
+			"classpath:/yml/oauth2.yml," +
+			"/Users/min/Documents/Egemony/real-application.yml";
 
 	public static void main(String[] args) {
 

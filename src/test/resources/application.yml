@@ -1,4 +1,11 @@
 spring:
+  profiles:
+    active: local
+
+---
+
+spring:
+  profiles: local
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/shop1?characterEncoding=UTF-8
@@ -41,6 +48,11 @@ logging:
             sql:
               BasicBinder: TRACE
 
-
-
-
+#server:
+#  port: 8080
+#  ssl:
+#    enabled: true
+#    key-store: minkeystore.p12
+#    key-store-password: alfogkd0926
+#    key-store-type: PKCS12
+#    key-alias: bns-ssl
