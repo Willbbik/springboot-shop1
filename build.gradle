@@ -7,13 +7,17 @@ plugins {
 }
 
 group = 'com.ecommerce'
-version = '0.0.7'
+version = '0.0.8'
 sourceCompatibility = '11'
 
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+}
+
+jar{
+	enabled = false
 }
 
 repositories {
