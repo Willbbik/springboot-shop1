@@ -2,10 +2,6 @@ package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.Member;
-import com.ecommerce.newshop1.entity.Order;
-import com.ecommerce.newshop1.exception.MemberNotFoundException;
-import com.ecommerce.newshop1.repository.MemberRepository;
-import com.ecommerce.newshop1.repository.OrderRepository;
 import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.ValidationSequence;
@@ -20,10 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
