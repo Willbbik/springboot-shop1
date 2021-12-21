@@ -134,10 +134,12 @@ public class OrderServiceImpl implements OrderService {
 
         // 세션에서 배송 정보 가져오기
         String orderId = (String) session.getAttribute("orderId");
-        List<OrderItemDto> itemList  = (List<OrderItemDto>) session.getAttribute("orderItems");
         AddressDto addressDto = (AddressDto) session.getAttribute("addressDto");
         PayType payType = (PayType) session.getAttribute("payType");
+        String orderName = (String) session.getAttribute("orderName");
+        List<OrderItemDto> itemList  = (List<OrderItemDto>) session.getAttribute("orderItems");
         List<Long> cartItemIdList = (List<Long>) session.getAttribute("cartItemIdList");
+
         String userId = security.getName();
 
         // order객체에 저장하기 위해서
@@ -152,6 +154,7 @@ public class OrderServiceImpl implements OrderService {
         Delivery delivery = new Delivery();
         delivery.setDeliveryAddress(deliveryAddress);
         delivery.setDeliveryStatus(DeliveryStatus.DEPOSIT_READY);
+        delivery.setOrderName(orderName);
 
         Order order = Order.createOrder(member, delivery, orderItems, payType, paymentInfo, orderId);
 
@@ -166,6 +169,7 @@ public class OrderServiceImpl implements OrderService {
         // 주문완료 후 세션에서 배송정보 제거
         session.removeAttribute("orderId");
         session.removeAttribute("orderItems");
+        session.removeAttribute("orderName");
         session.removeAttribute("addressDto");
         session.removeAttribute("payType");
         session.removeAttribute("cartItemIdList");
@@ -202,6 +206,12 @@ public class OrderServiceImpl implements OrderService {
         return orderItemDtos;
     }
 
+    @Override
+    @Transactional
+    public List<OrderDto> searchByDepositSuccess(DeliveryStatus deliveryStatus, Pageable pageable) {
+        return orderRepository.searchByDepositSuccess(deliveryStatus, pageable);
+
+    }
 
 
 }

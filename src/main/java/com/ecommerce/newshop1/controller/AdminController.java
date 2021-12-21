@@ -1,9 +1,6 @@
 package com.ecommerce.newshop1.controller;
 
-import com.ecommerce.newshop1.dto.BoardDto;
-import com.ecommerce.newshop1.dto.ItemDto;
-import com.ecommerce.newshop1.dto.OrderItemDto;
-import com.ecommerce.newshop1.dto.SearchDto;
+import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.ItemImage;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
@@ -48,11 +45,11 @@ public class AdminController {
     public String adminMain(Model model){
 
         Pageable pageable = PageRequest.ofSize(3);
-
-        // 배송중 상품
-        List<OrderItemDto> ingOrderItems = orderService.searchByDeliveryStatus(DeliveryStatus.DELIVERY_ING, pageable);
+        List<OrderItemDto> ingOrderItems = orderService.searchByDeliveryStatus(DeliveryStatus.DELIVERY_ING, pageable);    // 배송중 상품
+        List<OrderDto> depositOrderItems = orderService.searchByDepositSuccess(DeliveryStatus.DEPOSIT_SUCCESS, pageable); // 입금완료된 상품
 
         model.addAttribute("ingOrderItems", ingOrderItems);
+        model.addAttribute("depositOrderItems", depositOrderItems);
 
         return "admin/admin_main";
     }

@@ -68,6 +68,7 @@ public class OrderController {
         // 주문번호와 상품 번호들 세션에 저장. ( 마지막 최종 주문할 때 사용하기 위해서 )
         session.setAttribute("orderId", orderId);
         session.setAttribute("orderItems", orderItems);
+        session.setAttribute("orderName", orderName);
 
         model.addAttribute("orderItems", orderItems);
         model.addAttribute("orderId", orderId);

@@ -1,5 +1,6 @@
 package com.ecommerce.newshop1.repository.custom;
 
+import com.ecommerce.newshop1.dto.OrderDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.Order;
@@ -45,6 +46,21 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                 .from(QOrderItem.orderItem)
                 .where(QOrderItem.orderItem.deliveryStatus.eq(deliveryStatus))
                 .orderBy(QOrderItem.orderItem.id.desc())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
+
+    @Override
+    public List<OrderDto> searchByDepositSuccess(DeliveryStatus deliveryStatus, Pageable pageable) {
+        return queryFactory
+                .select(Projections.fields(OrderDto.class,
+                        QOrder.order.delivery,
+                        QOrder.order.totalPrice,
+                        QOrder.order.depositDate
+                        ))
+                .from(QOrder.order)
+                .where(QOrder.order.delivery.deliveryStatus.eq(deliveryStatus))
+                .orderBy(QOrder.order.id.desc())
                 .limit(pageable.getPageSize())
                 .fetch();
     }

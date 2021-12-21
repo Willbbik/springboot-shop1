@@ -22,13 +22,23 @@ public class QDelivery extends EntityPathBase<Delivery> {
 
     public static final QDelivery delivery = new QDelivery("delivery");
 
+    public final QTimeEntity _super = new QTimeEntity(this);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
+
     public final QDeliveryAddress deliveryAddress;
 
     public final EnumPath<com.ecommerce.newshop1.enums.DeliveryStatus> deliveryStatus = createEnum("deliveryStatus", com.ecommerce.newshop1.enums.DeliveryStatus.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
+
     public final QOrder order;
+
+    public final StringPath orderName = createString("orderName");
 
     public QDelivery(String variable) {
         this(Delivery.class, forVariable(variable), INITS);

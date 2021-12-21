@@ -32,4 +32,6 @@ public interface OrderService {
 
     List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable);
 
+    List<OrderDto> searchByDepositSuccess(DeliveryStatus deliveryStatus, Pageable pageable);
+
 }

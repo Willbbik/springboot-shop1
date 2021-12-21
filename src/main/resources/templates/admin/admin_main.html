@@ -115,7 +115,7 @@
 
                 <div class="recent-item item">
                     <div class="item-caption">
-                        <div class="item-title">입금 완료 주문</div>
+                        <div class="item-title">입금 완료된 주문</div>
                         <div class="more" th:onclick="'location.href=\''+ @{/admin/itemList} + '\''">more +</div>
                     </div>
                     <div class="item-content">
@@ -129,17 +129,11 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="item : ${itemList}">
-                                <td>
-                                    구매자
-                                </td>
-                                <td th:text = "${item.itemName} +'<'+ ${item.color}+'>'">
-                                    소프트반팔셔츠
-                                </td>
-                                <td th:text = "${item.firstCategory}">
-                                    가격
-                                </td>
-                                <td th:text="${#numbers.formatInteger(item.price, 0, 'COMMA')} + '원'">2020.12.23</td>
+                            <tr th:each="depositItem : ${depositOrderItems}">
+                                <td th:text = "${depositItem.delivery.deliveryAddress.customerName}"></td>
+                                <td th:text = "${depositItem.delivery.orderName}"></td>
+                                <td th:text = "${#numbers.formatInteger(depositItem.totalPrice, 0, 'COMMA')} + '원'"></td>
+                                <td th:text = "${#temporals.format(depositItem.depositDate, 'yyyy.MM.dd HH:mm')}"></td>
                             </tr>
                             </tbody>
                         </table>
