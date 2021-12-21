@@ -89,17 +89,18 @@ compileQuerydsl {
 }
 
 compileQuerydsl.doFirst {
-
-		if(file(querydslDir).exists())
-			delete(file(querydslDir))
+	if(file(querydslDir).exists())
+		delete(file(querydslDir))
 }
 
 
-//
-//tasks.withType(JavaCompile) {
-//	options.generatedSourceOutputDirectory = file(querydslDir)
-//}
-//
-//clean.doLast {
-//	delete file(querydslDir)
-//}
+tasks.withType(JavaCompile) {
+
+	if(file(querydslDir).exists())
+		delete(file(querydslDir))
+	// options.generatedSourceOutputDirectory = file(querydslDir)
+}
+
+clean.doLast {
+	delete file(querydslDir)
+}
