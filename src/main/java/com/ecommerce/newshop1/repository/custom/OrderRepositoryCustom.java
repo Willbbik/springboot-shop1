@@ -6,14 +6,16 @@ import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.Order;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface OrderRepositoryCustom {
 
     List<Order> searchAllByMember(Long orderId, Member member);
 
-    List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus);
+    List<OrderDto> searchByDepositSuccess(DeliveryStatus deliveryStatus, Pageable pageable);
 
+    List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable);
 
 }
 

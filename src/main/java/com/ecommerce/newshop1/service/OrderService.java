@@ -7,6 +7,7 @@ import com.ecommerce.newshop1.entity.OrderItem;
 import com.ecommerce.newshop1.entity.OrderPaymentInformation;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpSession;
@@ -26,10 +27,12 @@ public interface OrderService {
 
     List<OrderDto> searchAllByMember(Long orderId, Member member);
 
-    void updateOrderDeliveryStatus(String orderId);
+    void updateOrderToDepositSuccess(String orderId);
 
     Long getLastOrderId(List<OrderDto> orderList, Long lastOrderId);
 
-    List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus);
+    List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable);
+
+    List<OrderDto> searchByDepositSuccess(DeliveryStatus deliveryStatus, Pageable pageable);
 
 }
