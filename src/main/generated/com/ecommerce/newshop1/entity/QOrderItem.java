@@ -22,7 +22,7 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
 
     public static final QOrderItem orderItem = new QOrderItem("orderItem");
 
-    public final EnumPath<com.ecommerce.newshop1.utils.enums.DeliveryStatus> deliveryStatus = createEnum("deliveryStatus", com.ecommerce.newshop1.utils.enums.DeliveryStatus.class);
+    public final EnumPath<com.ecommerce.newshop1.enums.DeliveryStatus> deliveryStatus = createEnum("deliveryStatus", com.ecommerce.newshop1.enums.DeliveryStatus.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 

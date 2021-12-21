@@ -5,15 +5,13 @@ import com.ecommerce.newshop1.entity.OrderPaymentInformation;
 import com.ecommerce.newshop1.exception.ParameterNotFoundException;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.service.*;
-import com.ecommerce.newshop1.utils.ValidationGroups;
 import com.ecommerce.newshop1.utils.ValidationSequence;
-import com.ecommerce.newshop1.utils.enums.PayType;
-import com.ecommerce.newshop1.utils.enums.TossPayments;
+import com.ecommerce.newshop1.enums.PayType;
+import com.ecommerce.newshop1.enums.TossPayments;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -87,7 +84,7 @@ public class OrderController {
         System.out.println("콜백성공");
         if(callbackPayload.getStatus().equals(TossPayments.DONE.getValue())){
             // 입금 완료일 때 처리
-            orderService.updateOrderDepositStatus(callbackPayload.getOrderId());
+            orderService.updateOrderDeliveryStatus(callbackPayload.getOrderId());
             System.out.println("완료처리");
         }else if(callbackPayload.getStatus().equals(TossPayments.CANCELED.getValue())){
             // 입금 취소일 때 처리

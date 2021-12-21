@@ -2,11 +2,15 @@ package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.BoardDto;
 import com.ecommerce.newshop1.dto.ItemDto;
+import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.ItemImage;
+import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.ecommerce.newshop1.repository.ItemRepository;
+import com.ecommerce.newshop1.repository.OrderRepository;
 import com.ecommerce.newshop1.service.ItemService;
+import com.ecommerce.newshop1.service.OrderService;
 import com.ecommerce.newshop1.utils.ItemPagination;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -32,15 +36,25 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminController {
 
-    private final ItemService itemService;
-    private final ItemRepository itemRepository;
     private final static Logger logger = LoggerFactory.getLogger(AdminController.class);
+    private final ItemRepository itemRepository;
+    private final ItemService itemService;
+    private final OrderService orderService;
 
     ModelMapper mapper = new ModelMapper();
 
 
     @GetMapping("/admin/main")
-    public String adminMain(){
+    public String adminMain(Model model){
+
+        // 배송중인 상품
+        List<OrderItemDto> ingOrderItems = orderService.searchByDeliveryStatus(DeliveryStatus.DELIVERY_ING);
+
+        // 입금완료된 상품
+        List<OrderItemDto> depositSuccessItems = orderService.searchByDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS);
+
+        model.addAttribute("ingItems", ingOrderItems);
+        model.addAttribute("depositSucItems", depositSuccessItems);
 
         return "admin/admin_main";
     }

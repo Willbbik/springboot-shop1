@@ -1,8 +1,8 @@
 package com.ecommerce.newshop1.entity;
 
 
-import com.ecommerce.newshop1.utils.enums.Role;
-import com.ecommerce.newshop1.utils.enums.Sns;
+import com.ecommerce.newshop1.enums.Role;
+import com.ecommerce.newshop1.enums.Sns;
 import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;

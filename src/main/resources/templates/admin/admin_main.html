@@ -96,23 +96,17 @@
                             <thead>
                             <tr>
                                 <th>구매자</th>
-                                <th>상품정보</th>
+                                <th>상품명</th>
                                 <th>결제금액</th>
                                 <th>배송상태</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="order : ${orderList}">
-                                <td th:text = "${order.name}">채창완</td>
-                                <td th:text = "${order.itemName}">홀릭 카고 조거팬츠</td>
-                                <td th:text="${#numbers.formatInteger(order.orderPrice, 0, 'COMMA')} + '원'">15,000원</td>
-                                <td th:if="${order.orderStatus.toString().equals('PAYWAITING')}">입금대기</td>
-                                <td th:if="${order.orderStatus.toString().equals('PRESHIP')}">배송준비중</td>
-                                <td th:if="${order.orderStatus.toString().equals('INSHIP')}">배송중</td>
-                                <td th:if="${order.orderStatus.toString().equals('COMPLETESHIP')}">배송완료</td>
-                                <td th:if="${order.orderStatus.toString().equals('ORDERCANCEL')}">주문취소</td>
-                                <td th:if="${order.orderStatus.toString().equals('ORDERCHANGE')}">교환</td>
-                                <td th:if="${order.orderStatus.toString().equals('ORDERREFUND')}">반품</td>
+                            <tr th:each="orderItem : ${ingItems}">
+                                <td th:text = "${orderItem.deliveryAddress.customerName}"></td>
+                                <td th:text = "${orderItem.item.itemName}"></td>
+                                <td th:text="${#numbers.formatInteger(orderItem.totalPrice, 0, 'COMMA')} + '원'"></td>
+                                <td th:text="${orderItem.deliveryStatus.getValue}"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -130,23 +124,17 @@
                             <tr>
                                 <th>구매자</th>
                                 <th>상품명</th>
-                                <th>가격</th>
+                                <th>결제금액</th>
                                 <th>입금날짜</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="item : ${itemList}">
-                                <td>
-                                    구매자
-                                </td>
-                                <td th:text = "${item.itemName} +'<'+ ${item.color}+'>'">
-                                    소프트반팔셔츠
-                                </td>
-                                <td th:text = "${item.firstCategory}">
-                                    가격
-                                </td>
-                                <td th:text="${#numbers.formatInteger(item.price, 0, 'COMMA')} + '원'">2020.12.23</td>
-                            </tr>
+                                <tr th:each="orderItem : ${depositSucItems}">
+                                    <td th:text = "${orderItem.deliveryAddress.customerName}"></td>
+                                    <td th:text = "${orderItem.item.itemName}"></td>
+                                    <td th:text="${#numbers.formatInteger(orderItem.totalPrice, 0, 'COMMA')} + '원'"></td>
+                                    <td th:text="${#temporals.format(orderItem.createdDate, 'yyyy.MM.dd')}"></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

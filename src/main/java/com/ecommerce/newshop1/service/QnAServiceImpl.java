@@ -7,8 +7,8 @@ import com.ecommerce.newshop1.entity.QnAEntity;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.utils.QnAPagination;
-import com.ecommerce.newshop1.utils.enums.QnA;
-import com.ecommerce.newshop1.utils.enums.Role;
+import com.ecommerce.newshop1.enums.QnA;
+import com.ecommerce.newshop1.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +20,6 @@ import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service

@@ -1,9 +1,8 @@
 package com.ecommerce.newshop1.repository.custom;
 
-import com.ecommerce.newshop1.dto.OrderDto;
-import com.ecommerce.newshop1.entity.Member;
-import com.ecommerce.newshop1.entity.Order;
-import com.ecommerce.newshop1.entity.QOrder;
+import com.ecommerce.newshop1.dto.OrderItemDto;
+import com.ecommerce.newshop1.entity.*;
+import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -26,6 +25,24 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                             ltOrderId(orderId)
                     )
                     .orderBy(QOrder.order.id.desc())
+                    .limit(3)
+                    .fetch();
+    }
+
+
+    @Override
+    public List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus) {
+
+            return queryFactory
+                    .select(Projections.fields(OrderItemDto.class,
+                            QOrderItem.orderItem.order,
+                            QOrderItem.orderItem.item,
+                            QOrderItem.orderItem.totalPrice,
+                            QOrderItem.orderItem.deliveryStatus
+                            ))
+                    .from(QOrderItem.orderItem)
+                    .where(QOrderItem.orderItem.deliveryStatus.eq(deliveryStatus))
+                    .orderBy(QOrderItem.orderItem.id.desc())
                     .limit(3)
                     .fetch();
     }

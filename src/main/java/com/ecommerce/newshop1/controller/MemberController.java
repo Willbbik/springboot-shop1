@@ -5,7 +5,7 @@ import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.ValidationSequence;
-import com.ecommerce.newshop1.utils.enums.Sns;
+import com.ecommerce.newshop1.enums.Sns;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

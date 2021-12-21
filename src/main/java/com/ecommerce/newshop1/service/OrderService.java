@@ -3,7 +3,9 @@ package com.ecommerce.newshop1.service;
 import com.ecommerce.newshop1.dto.OrderDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.entity.Member;
+import com.ecommerce.newshop1.entity.OrderItem;
 import com.ecommerce.newshop1.entity.OrderPaymentInformation;
+import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.ResponseEntity;
 
@@ -24,8 +26,10 @@ public interface OrderService {
 
     List<OrderDto> searchAllByMember(Long orderId, Member member);
 
-    void updateOrderDepositStatus(String orderId);
+    void updateOrderDeliveryStatus(String orderId);
 
     Long getLastOrderId(List<OrderDto> orderList, Long lastOrderId);
+
+    List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus);
 
 }

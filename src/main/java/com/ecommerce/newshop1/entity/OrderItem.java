@@ -1,6 +1,6 @@
 package com.ecommerce.newshop1.entity;
 
-import com.ecommerce.newshop1.utils.enums.DeliveryStatus;
+import com.ecommerce.newshop1.enums.DeliveryStatus;
 import lombok.*;
 
 import javax.persistence.*;

@@ -24,7 +24,7 @@ public class QDelivery extends EntityPathBase<Delivery> {
 
     public final QDeliveryAddress deliveryAddress;
 
-    public final EnumPath<com.ecommerce.newshop1.utils.enums.DepositStatus> depositStatus = createEnum("depositStatus", com.ecommerce.newshop1.utils.enums.DepositStatus.class);
+    public final EnumPath<com.ecommerce.newshop1.enums.DeliveryStatus> deliveryStatus = createEnum("deliveryStatus", com.ecommerce.newshop1.enums.DeliveryStatus.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 

@@ -1,9 +1,13 @@
 package com.ecommerce.newshop1.dto;
 
+import com.ecommerce.newshop1.entity.DeliveryAddress;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.Order;
-import com.ecommerce.newshop1.utils.enums.DeliveryStatus;
+import com.ecommerce.newshop1.enums.DeliveryStatus;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -23,5 +27,9 @@ public class OrderItemDto {
     private int quantity;
 
     private int totalPrice;
+
+    private DeliveryAddress deliveryAddress;
+
+    private LocalDateTime createdDate;
 
 }

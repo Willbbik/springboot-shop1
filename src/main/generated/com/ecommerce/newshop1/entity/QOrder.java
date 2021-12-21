@@ -36,7 +36,7 @@ public class QOrder extends EntityPathBase<Order> {
 
     public final QOrderPaymentInformation paymentInfo;
 
-    public final EnumPath<com.ecommerce.newshop1.utils.enums.PayType> payType = createEnum("payType", com.ecommerce.newshop1.utils.enums.PayType.class);
+    public final EnumPath<com.ecommerce.newshop1.enums.PayType> payType = createEnum("payType", com.ecommerce.newshop1.enums.PayType.class);
 
     public final NumberPath<Integer> totalPrice = createNumber("totalPrice", Integer.class);
 
