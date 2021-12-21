@@ -43,7 +43,7 @@ public class AdminController {
 
 
     @GetMapping("/admin/main")
-    public String adminMain(Model model){
+    public String adminMain(Model model) {
 
         Pageable pageable = PageRequest.ofSize(3);
         List<OrderItemDto> ingOrderItems = orderService.searchByDeliveryStatus(DeliveryStatus.DELIVERY_ING, pageable);    // 배송중 상품

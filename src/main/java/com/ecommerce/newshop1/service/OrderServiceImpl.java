@@ -213,11 +213,5 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
-        for(OrderItemDto dto : orderItemDtos){
-            dto.setDeliveryAddress(dto.getOrder().getDelivery().getDeliveryAddress());
-            dto.setCreatedDate(dto.getOrder().getCreatedDate());
-        }
-        return orderItemDtos;
-    }
 
 }

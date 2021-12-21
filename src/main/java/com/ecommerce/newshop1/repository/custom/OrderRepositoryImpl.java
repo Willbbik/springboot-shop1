@@ -65,24 +65,6 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                 .fetch();
     }
 
-    @Override
-    public List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus) {
-
-            return queryFactory
-                    .select(Projections.fields(OrderItemDto.class,
-                            QOrderItem.orderItem.order,
-                            QOrderItem.orderItem.item,
-                            QOrderItem.orderItem.totalPrice,
-                            QOrderItem.orderItem.deliveryStatus
-                            ))
-                    .from(QOrderItem.orderItem)
-                    .where(QOrderItem.orderItem.deliveryStatus.eq(deliveryStatus))
-                    .orderBy(QOrderItem.orderItem.id.desc())
-                    .limit(3)
-                    .fetch();
-    }
-
-
     private BooleanExpression ltOrderId(Long orderId){
         if(orderId == null){
             return null;
