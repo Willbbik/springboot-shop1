@@ -4,7 +4,9 @@ import com.ecommerce.newshop1.dto.OrderDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.OrderPaymentInformation;
+import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpSession;
@@ -27,5 +29,7 @@ public interface OrderService {
     void updateOrderToDepositSuccess(String orderId);
 
     Long getLastOrderId(List<OrderDto> orderList, Long lastOrderId);
+
+    List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable);
 
 }

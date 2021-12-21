@@ -2,11 +2,14 @@ package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.BoardDto;
 import com.ecommerce.newshop1.dto.ItemDto;
+import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.ItemImage;
+import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.service.ItemService;
+import com.ecommerce.newshop1.service.OrderService;
 import com.ecommerce.newshop1.utils.ItemPagination;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -32,15 +35,24 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminController {
 
-    private final ItemService itemService;
-    private final ItemRepository itemRepository;
     private final static Logger logger = LoggerFactory.getLogger(AdminController.class);
-
     ModelMapper mapper = new ModelMapper();
+
+    private final ItemRepository itemRepository;
+    private final ItemService itemService;
+    private final OrderService orderService;
+
 
 
     @GetMapping("/admin/main")
-    public String adminMain(){
+    public String adminMain(Model model){
+
+        Pageable pageable = PageRequest.ofSize(3);
+
+        // 배송중 상품
+        List<OrderItemDto> ingOrderItems = orderService.searchByDeliveryStatus(DeliveryStatus.DELIVERY_ING, pageable);
+
+        model.addAttribute("ingOrderItems", ingOrderItems);
 
         return "admin/admin_main";
     }

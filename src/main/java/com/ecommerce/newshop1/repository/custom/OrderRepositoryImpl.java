@@ -1,14 +1,17 @@
 package com.ecommerce.newshop1.repository.custom;
 
-import com.ecommerce.newshop1.dto.OrderDto;
+import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.Order;
 import com.ecommerce.newshop1.entity.QOrder;
+import com.ecommerce.newshop1.entity.QOrderItem;
+import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public class OrderRepositoryImpl implements OrderRepositoryCustom{
@@ -30,6 +33,21 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                     .fetch();
     }
 
+    @Override
+    public List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable) {
+        return queryFactory
+                .select(Projections.fields(OrderItemDto.class,
+                        QOrderItem.orderItem.order,
+                        QOrderItem.orderItem.item,
+                        QOrderItem.orderItem.totalPrice,
+                        QOrderItem.orderItem.deliveryStatus
+                        ))
+                .from(QOrderItem.orderItem)
+                .where(QOrderItem.orderItem.deliveryStatus.eq(deliveryStatus))
+                .orderBy(QOrderItem.orderItem.id.desc())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
 
     private BooleanExpression ltOrderId(Long orderId){
         if(orderId == null){

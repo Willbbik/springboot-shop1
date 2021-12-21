@@ -17,6 +17,7 @@ import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -190,6 +191,16 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
     }
 
+
+    @Override
+    @Transactional
+    public List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable) {
+        List<OrderItemDto> orderItemDtos = orderRepository.searchByDeliveryStatus(deliveryStatus, pageable);
+        for(OrderItemDto dto : orderItemDtos){
+            dto.setDeliveryAddress(dto.getOrder().getDelivery().getDeliveryAddress());
+        }
+        return orderItemDtos;
+    }
 
 
 
