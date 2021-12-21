@@ -13,9 +13,9 @@ cache:
     - '$HOME/.gradle'
 
 
-script: "./gradlew clean build"
-before_script:
-  - rm -rf /Users/min/Documents/쇼핑몰/newshop1/src/main/generated
+script:
+  - "rm -rf /Users/min/Documents/쇼핑몰/newshop1/src/main/generated"
+  - "./gradlew clean build"
 
 before_deploy:
   - zip -r springboot-shop1 *
