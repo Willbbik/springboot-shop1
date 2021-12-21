@@ -1,4 +1,4 @@
-package com.ecommerce.newshop1.utils.enums;
+package com.ecommerce.newshop1.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -2,6 +2,7 @@ package com.ecommerce.newshop1.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
+import com.ecommerce.newshop1.enums.PayType;
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
@@ -36,7 +37,7 @@ public class QOrder extends EntityPathBase<Order> {
 
     public final QOrderPaymentInformation paymentInfo;
 
-    public final EnumPath<com.ecommerce.newshop1.utils.enums.PayType> payType = createEnum("payType", com.ecommerce.newshop1.utils.enums.PayType.class);
+    public final EnumPath<PayType> payType = createEnum("payType", PayType.class);
 
     public final NumberPath<Integer> totalPrice = createNumber("totalPrice", Integer.class);
 

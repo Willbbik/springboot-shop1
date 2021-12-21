@@ -1,7 +1,7 @@
 package com.ecommerce.newshop1.exception;
 
 
-import com.ecommerce.newshop1.utils.enums.ErrorCode;
+import com.ecommerce.newshop1.enums.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

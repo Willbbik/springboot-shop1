@@ -2,7 +2,7 @@ package com.ecommerce.newshop1.dto;
 
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.Order;
-import com.ecommerce.newshop1.utils.enums.DeliveryStatus;
+import com.ecommerce.newshop1.enums.DeliveryStatus;
 import lombok.*;
 
 @Getter

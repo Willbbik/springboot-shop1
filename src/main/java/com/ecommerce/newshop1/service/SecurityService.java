@@ -1,7 +1,6 @@
 package com.ecommerce.newshop1.service;
 
 
-import com.ecommerce.newshop1.utils.enums.Role;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.core.Authentication;
