@@ -71,7 +71,7 @@ test {
 	useJUnitPlatform()
 }
 
-// def querydslDir = "$buildDir/generated/querydsl"
+
 def querydslDir = "src/main/generated"
 
 querydsl {
@@ -99,11 +99,3 @@ compileJava.doFirst {
 		delete(file(querydslDir))
 }
 
-//tasks.withType(JavaCompile) {
-//
-//	// options.generatedSourceOutputDirectory = file(querydslDir)
-//}
-//
-//clean.doLast {
-//	delete file(querydslDir)
-//}
