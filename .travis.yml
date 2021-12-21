@@ -4,7 +4,7 @@ jdk:
 
 branches:
   only:
-    - master
+    - release
 
 # Travis CI 서버의 Home
 cache:
@@ -21,7 +21,7 @@ before_deploy:
   - mv springboot-shop1.zip deploy/springboot-shop1.zip
 
 
-######### 추가
+########## 추가
 deploy:
   - provider: s3
     access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
@@ -34,7 +34,7 @@ deploy:
     wait-until-deployed: true
     on:
       repo: Willbbik/springboot-shop1 #Github 주소
-      branch: master
+      branch: release
 
   - provider: codedeploy
     access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
@@ -48,7 +48,7 @@ deploy:
     wait-until-deployed: true
     on:
       repo: Willbbik/springboot-shop1
-      branch: master
+      branch: release
 
 # CI 실행 완료시 메일로 알람
 notifications:
