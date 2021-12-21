@@ -12,7 +12,10 @@ cache:
     - '$HOME/.m2/repository'
     - '$HOME/.gradle'
 
+
 script: "./gradlew clean build"
+before_script:
+  - rm -rf /Users/min/Documents/쇼핑몰/newshop1/src/main/generated
 
 before_deploy:
   - zip -r springboot-shop1 *
