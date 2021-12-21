@@ -7,9 +7,8 @@ import com.ecommerce.newshop1.entity.*;
 import com.ecommerce.newshop1.exception.ItemNotFoundException;
 import com.ecommerce.newshop1.exception.MemberNotFoundException;
 import com.ecommerce.newshop1.repository.*;
-import com.ecommerce.newshop1.utils.enums.DeliveryStatus;
-import com.ecommerce.newshop1.utils.enums.DepositStatus;
-import com.ecommerce.newshop1.utils.enums.PayType;
+import com.ecommerce.newshop1.enums.DeliveryStatus;
+import com.ecommerce.newshop1.enums.PayType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
@@ -151,7 +150,7 @@ public class OrderServiceImpl implements OrderService {
 
         Delivery delivery = new Delivery();
         delivery.setDeliveryAddress(deliveryAddress);
-        delivery.setDepositStatus(DepositStatus.DEPOSIT_READY);
+        delivery.setDeliveryStatus(DeliveryStatus.DEPOSIT_READY);
 
         Order order = Order.createOrder(member, delivery, orderItems, payType, paymentInfo, orderId);
 
@@ -184,10 +183,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void updateOrderDepositStatus(String orderId) {
+    public void updateOrderToDepositSuccess(String orderId) {
 
         Order order = orderRepository.findByOrderNum(orderId);
-        order.getDelivery().setDepositStatus(DepositStatus.DEPOSIT_SUCCESS);
+        order.getDelivery().setDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS);
         orderRepository.save(order);
     }
 

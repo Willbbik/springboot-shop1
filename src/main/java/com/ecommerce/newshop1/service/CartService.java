@@ -11,7 +11,7 @@ import com.ecommerce.newshop1.repository.CartRepository;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.repository.MemberRepository;
 import com.ecommerce.newshop1.dto.CartQuantityUpdateDto;
-import com.ecommerce.newshop1.utils.enums.DeliveryStatus;
+import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.google.gson.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

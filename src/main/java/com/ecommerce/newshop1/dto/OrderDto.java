@@ -4,12 +4,9 @@ import com.ecommerce.newshop1.entity.Delivery;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.OrderItem;
 import com.ecommerce.newshop1.entity.OrderPaymentInformation;
-import com.ecommerce.newshop1.utils.enums.PayType;
+import com.ecommerce.newshop1.enums.PayType;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

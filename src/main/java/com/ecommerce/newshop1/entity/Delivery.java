@@ -1,6 +1,6 @@
 package com.ecommerce.newshop1.entity;
 
-import com.ecommerce.newshop1.utils.enums.DepositStatus;
+import com.ecommerce.newshop1.enums.DeliveryStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,7 +27,7 @@ public class Delivery {
     private DeliveryAddress deliveryAddress;
 
     @Enumerated(EnumType.STRING)
-    private DepositStatus depositStatus;
+    private DeliveryStatus deliveryStatus;
 
     public void setDeliveryAddress(DeliveryAddress deliveryAddress){
         this.deliveryAddress = deliveryAddress;

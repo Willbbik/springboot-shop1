@@ -1,7 +1,7 @@
 package com.ecommerce.newshop1.entity;
 
 
-import com.ecommerce.newshop1.utils.enums.PayType;
+import com.ecommerce.newshop1.enums.PayType;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;

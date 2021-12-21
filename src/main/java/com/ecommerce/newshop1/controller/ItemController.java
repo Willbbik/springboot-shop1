@@ -4,8 +4,6 @@ import com.ecommerce.newshop1.dto.ItemDto;
 import com.ecommerce.newshop1.dto.ItemImageDto;
 import com.ecommerce.newshop1.dto.QnADto;
 import com.ecommerce.newshop1.entity.Item;
-import com.ecommerce.newshop1.entity.Member;
-import com.ecommerce.newshop1.exception.ItemNotFoundException;
 import com.ecommerce.newshop1.repository.ItemImageRepository;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.repository.QnARepository;
@@ -13,7 +11,7 @@ import com.ecommerce.newshop1.service.ItemService;
 import com.ecommerce.newshop1.service.MemberService;
 import com.ecommerce.newshop1.service.QnAService;
 import com.ecommerce.newshop1.service.SecurityService;
-import com.ecommerce.newshop1.utils.enums.Role;
+import com.ecommerce.newshop1.enums.Role;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -21,7 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller

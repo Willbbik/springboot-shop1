@@ -1,14 +1,14 @@
-package com.ecommerce.newshop1.utils.enums;
+package com.ecommerce.newshop1.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum Role {
+public enum Sns {
 
-    ADMIN("ROLE_ADMIN"),
-    MEMBER("ROLE_MEMBER");
+    NONE("NONE"),
+    KAKAO("KAKAO");
 
     private final String value;
 
