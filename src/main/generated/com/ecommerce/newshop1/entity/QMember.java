@@ -2,8 +2,6 @@ package com.ecommerce.newshop1.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.ecommerce.newshop1.enums.Role;
-import com.ecommerce.newshop1.enums.Sns;
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
@@ -46,9 +44,9 @@ public class QMember extends EntityPathBase<Member> {
 
     public final ListPath<QnAEntity, QQnAEntity> qnaList = this.<QnAEntity, QQnAEntity>createList("qnaList", QnAEntity.class, QQnAEntity.class, PathInits.DIRECT2);
 
-    public final EnumPath<Role> role = createEnum("role", Role.class);
+    public final EnumPath<com.ecommerce.newshop1.enums.Role> role = createEnum("role", com.ecommerce.newshop1.enums.Role.class);
 
-    public final EnumPath<Sns> sns = createEnum("sns", Sns.class);
+    public final EnumPath<com.ecommerce.newshop1.enums.Sns> sns = createEnum("sns", com.ecommerce.newshop1.enums.Sns.class);
 
     public final StringPath userId = createString("userId");
 

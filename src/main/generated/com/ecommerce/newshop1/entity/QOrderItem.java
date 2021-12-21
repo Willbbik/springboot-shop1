@@ -2,7 +2,6 @@ package com.ecommerce.newshop1.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
@@ -23,7 +22,7 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
 
     public static final QOrderItem orderItem = new QOrderItem("orderItem");
 
-    public final EnumPath<DeliveryStatus> deliveryStatus = createEnum("deliveryStatus", DeliveryStatus.class);
+    public final EnumPath<com.ecommerce.newshop1.enums.DeliveryStatus> deliveryStatus = createEnum("deliveryStatus", com.ecommerce.newshop1.enums.DeliveryStatus.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
