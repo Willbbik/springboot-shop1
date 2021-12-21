@@ -5,6 +5,7 @@ import com.ecommerce.newshop1.enums.PayType;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -53,6 +54,9 @@ public class Order {
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime createdDate;
+
+    @Column
+    private LocalDateTime depositDate;
 
     public void setDelivery(Delivery delivery){
         this.delivery = delivery;

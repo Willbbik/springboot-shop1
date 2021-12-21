@@ -26,5 +26,6 @@ public class OrderDto {
     private int totalPrice;
     private String orderNum;
     private LocalDateTime createdDate;
+    private LocalDateTime depositDate;
 
 }

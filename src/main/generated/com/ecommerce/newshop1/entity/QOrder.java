@@ -26,6 +26,8 @@ public class QOrder extends EntityPathBase<Order> {
 
     public final QDelivery delivery;
 
+    public final DateTimePath<java.time.LocalDateTime> depositDate = createDateTime("depositDate", java.time.LocalDateTime.class);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QMember member;

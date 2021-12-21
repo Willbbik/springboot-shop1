@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "delivery")
-public class Delivery {
+public class Delivery extends TimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +28,9 @@ public class Delivery {
 
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
+
+    @Column(nullable = false)
+    private String orderName;
 
     public void setDeliveryAddress(DeliveryAddress deliveryAddress){
         this.deliveryAddress = deliveryAddress;
