@@ -6,6 +6,7 @@ import com.ecommerce.newshop1.entity.ItemImage;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.service.ItemService;
+import com.ecommerce.newshop1.service.MemberService;
 import com.ecommerce.newshop1.service.OrderService;
 import com.ecommerce.newshop1.utils.ItemPagination;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -38,8 +40,7 @@ public class AdminController {
     private final ItemRepository itemRepository;
     private final ItemService itemService;
     private final OrderService orderService;
-
-
+    private final MemberService memberService;
 
     @GetMapping("/admin/main")
     public String adminMain(Model model){
@@ -47,9 +48,11 @@ public class AdminController {
         Pageable pageable = PageRequest.ofSize(3);
         List<OrderItemDto> ingOrderItems = orderService.searchByDeliveryStatus(DeliveryStatus.DELIVERY_ING, pageable);    // 배송중 상품
         List<OrderDto> depositOrderItems = orderService.searchByDepositSuccess(DeliveryStatus.DEPOSIT_SUCCESS, pageable); // 입금완료된 상품
+        List<MemberDto> memberDtos = memberService.findAll(pageable);                                                     // 회원정보
 
         model.addAttribute("ingOrderItems", ingOrderItems);
         model.addAttribute("depositOrderItems", depositOrderItems);
+        model.addAttribute("memberDtos", memberDtos);
 
         return "admin/admin_main";
     }

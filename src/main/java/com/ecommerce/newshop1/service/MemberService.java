@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +24,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -66,6 +68,15 @@ public class MemberService {
                 new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+    }
+
+    // 최근회원 3명 정보 가져오기
+    public List<MemberDto> findAll(Pageable pageable){
+
+        return memberRepository.findAll(pageable).stream()
+                .map(p -> mapper.map(p, MemberDto.class))
+                .sorted(Comparator.comparing(MemberDto::getId).reversed())
+                .collect(Collectors.toList());
     }
 
     // 일반 회원가입

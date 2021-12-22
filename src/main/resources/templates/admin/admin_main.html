@@ -62,15 +62,15 @@
                                 <th>회원정보</th>
                                 <th>휴대전화</th>
                                 <th>가입일</th>
-                                <th>방문횟수</th>
+                                <th>sns</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="user:${memberList}">
-                                <td th:text = "${user.name} + '(' + ${user.loginId}+ ')'">홍길동(gildong000)</td>
-                                <td th:text = "${#strings.replace(user.phoneNumber, ',', '-')}">010-2222-6666</td>
-                                <td th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd')}">2021-06-07</td>
-                                <td th:text = "${user.visitCount}">3</td>
+                            <tr th:each="member : ${memberDtos}">
+                                <td th:text = "${member.userId}">홍길동(gildong000)</td>
+                                <td th:text = "${#strings.replace(member.phoneNum, ',', '-')}">010-2222-6666</td>
+                                <td th:text="${#temporals.format(member.createdDate, 'yyyy-MM-dd')}">2021-06-07</td>
+                                <td th:text = "${member.sns}">3</td>
                             </tr>
                             </tbody>
                         </table>
