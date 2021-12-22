@@ -27,8 +27,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
 
 @Controller
 @RequiredArgsConstructor
@@ -76,6 +74,27 @@ public class AdminController {
         return "admin/admin_registerItem";
     }
 
+    @GetMapping("/admin/send/orderItem")
+    public String sendOrderItemPage(Model model, @RequestParam(name = "page", defaultValue = "1") int page, SearchDto searchDto){
+
+        // 배달해야하는 상품 총 개수와 그걸로 페이징처리
+        Long total = orderService.searchTotalOrderItem(DeliveryStatus.DEPOSIT_SUCCESS, searchDto);
+        ItemPagination pagination = new ItemPagination(total, page);
+
+        Pageable pageable = PageRequest.of(pagination.getCurPage() - 1, 10, Sort.Direction.DESC, "id");
+        List<OrderItemDto> orderItems = orderService.searchAllByDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS, pageable, searchDto);
+
+        model.addAttribute("page", pagination);
+        model.addAttribute("curPage", pagination.getCurPage());
+        model.addAttribute("startPage", pagination.getStartPage());
+        model.addAttribute("endPage", pagination.getEndPage());
+
+        model.addAttribute("orderItems", orderItems);
+        model.addAttribute("searchDto", searchDto);
+        return "admin/admin_sendOrderItem";
+    }
+
+
     @GetMapping("/admin/itemList")
     public String itemListPage(Model model, @RequestParam(name = "page", defaultValue = "1") int page, SearchDto searchDto){
 
@@ -103,74 +122,6 @@ public class AdminController {
         return "admin/admin_itemList";
     }
 
-//    @PostMapping("/admin/register")
-//    @ApiOperation(value = "관리자페이지에서 상품 등록")
-//    public String itemSave(MultipartHttpServletRequest mtfRequest, ItemDto itemDto) throws Exception {
-//
-//        String itemCode = UUID.randomUUID().toString();
-//
-//        // 상품 정보 저장
-//        Item item = Item.builder()
-//                .itemName(itemDto.getItemName())
-//                .itemCode(itemCode)
-//                .category(itemDto.getCategory())
-//                .color(itemDto.getColor())
-//                .size(itemDto.getSize())
-//                .price(itemDto.getPrice())
-//                .model(itemDto.getModel())
-//                .itemInfo(itemDto.getItemInfo())
-//                .saleStatus(itemDto.getSaleStatus())
-//                .build();
-//
-//        itemService.saveItem(item);
-//
-//
-//        // 디렉토리 만들기
-//        String folderPath = "/Users/min/Documents/쇼핑몰/newshop1/src/main/resources/static/assets/images/Item/"
-//                + itemDto.getCategory() + "/" + itemDto.getItemName();
-//        // view에 뿌려줄 이미지 경로
-//        String getFolderPath = "/assets/images/Item/" + itemDto.getCategory() + "/" + itemDto.getItemName();
-//
-//        File newFile = new File(folderPath);
-//        if(newFile.mkdirs()){
-//            logger.info("directory make ok");
-//        }else{
-//            logger.warn("directory can't make");
-//            // 예외 던져야 할 수도
-//        }
-//
-//        // 상품 이미지 저장
-//        List<MultipartFile> fileList =  mtfRequest.getFiles("upload_image");
-//        for (int i = 0; i < fileList.size(); i++) {
-//            String uuid = UUID.randomUUID().toString();
-//
-//            String originFileName = fileList.get(i).getOriginalFilename();
-//            String finalFolderUrl = folderPath + "/" + uuid + "_" + originFileName;
-//            String localImageUrl = getFolderPath + "/" + uuid + "_" + originFileName ;
-//
-//            if(i == 0){
-//                item.setImageUrl(localImageUrl);
-//                itemService.saveItem(item);
-//            }
-//
-//            try{
-//                ItemImage itemImage = ItemImage.builder()
-//                        .item(item)
-//                        .imageUrl(localImageUrl)
-//                        .imageName(originFileName)
-//                        .build();
-//                itemService.saveItemImage(itemImage);
-//
-//                fileList.get(i).transferTo(new File(finalFolderUrl));
-//            } catch (Exception e) {
-//                logger.warn("when save ItemImage exception");
-//                throw new Exception("when save ItemImage exception");
-//            }
-//        }
-//        // 옵션 저장 해야함
-//
-//        return "redirect:/admin/itemList";
-//    }
 
     @PostMapping("/admin/register")
     @ApiOperation(value = "관리자페이지에서 상품 등록")

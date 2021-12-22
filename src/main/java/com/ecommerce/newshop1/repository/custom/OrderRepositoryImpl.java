@@ -2,6 +2,7 @@ package com.ecommerce.newshop1.repository.custom;
 
 import com.ecommerce.newshop1.dto.OrderDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
+import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.Order;
 import com.ecommerce.newshop1.entity.QOrder;
@@ -10,9 +11,13 @@ import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.CollectionUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderRepositoryImpl implements OrderRepositoryCustom{
@@ -50,6 +55,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                 .fetch();
     }
 
+
     @Override
     public List<OrderDto> searchByDepositSuccess(DeliveryStatus deliveryStatus, Pageable pageable) {
         return queryFactory
@@ -64,6 +70,76 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                 .limit(pageable.getPageSize())
                 .fetch();
     }
+
+    @Override
+    public Long searchTotalOrderItem(DeliveryStatus deliveryStatus, SearchDto searchDto) {
+
+        return queryFactory
+                .select(Projections.fields(OrderItemDto.class,
+                            QOrderItem.orderItem.id))
+                .from(QOrderItem.orderItem)
+                .where(
+                    QOrderItem.orderItem.deliveryStatus.eq(deliveryStatus),
+                    eqCustomerName(searchDto.getCustomerName()),
+                    eqOrderNum(searchDto.getOrderNum()),
+                    eqItemName(searchDto.getItemName())
+                )
+                .fetchCount();
+    }
+
+
+    @Override
+    public List<OrderItemDto> searchAllByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable, SearchDto searchDto) {
+
+        List<Long> ids = queryFactory
+                .select(QOrderItem.orderItem.id)
+                .from(QOrderItem.orderItem)
+                .where(
+                    QOrderItem.orderItem.deliveryStatus.eq(deliveryStatus),
+                    eqCustomerName(searchDto.getCustomerName()),
+                    eqOrderNum(searchDto.getOrderNum()),
+                    eqItemName(searchDto.getItemName())
+                )
+                .orderBy(QOrderItem.orderItem.id.desc())
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+
+        if(CollectionUtils.isEmpty(ids)){
+            return null;
+        }
+
+        return queryFactory.select(Projections.fields(OrderItemDto.class,
+                QOrderItem.orderItem.id,
+                QOrderItem.orderItem.order,
+                QOrderItem.orderItem.item,
+                QOrderItem.orderItem.totalPrice,
+                QOrderItem.orderItem.deliveryStatus,
+                QOrderItem.orderItem.quantity,
+                QOrderItem.orderItem.wayBillNum
+                ))
+                .from(QOrderItem.orderItem)
+                .where(QOrderItem.orderItem.id.in(ids))
+                .orderBy(QOrderItem.orderItem.id.desc())
+                .fetch();
+    }
+
+
+    private BooleanExpression eqCustomerName(String customerName){
+        if(StringUtils.isBlank(customerName)) return null;
+        return QOrderItem.orderItem.order.delivery.deliveryAddress.customerName.eq(customerName);
+    }
+
+    private BooleanExpression eqOrderNum(String orderNum){
+        if(StringUtils.isBlank(orderNum)) return null;
+        return QOrderItem.orderItem.order.orderNum.eq(orderNum);
+    }
+
+    private BooleanExpression eqItemName(String itemName){
+        if(StringUtils.isBlank(itemName)) return null;
+        return QOrderItem.orderItem.item.itemName.eq(itemName);
+    }
+
 
     private BooleanExpression ltOrderId(Long orderId){
         if(orderId == null){

@@ -30,8 +30,13 @@ public class OrderItem {
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
+    @Column
+    private String wayBillNum;
+
+    @Column
     private int quantity;
 
+    @Column
     private int totalPrice;
 
 

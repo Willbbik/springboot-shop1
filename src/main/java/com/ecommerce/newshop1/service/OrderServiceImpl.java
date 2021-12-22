@@ -3,6 +3,7 @@ package com.ecommerce.newshop1.service;
 import com.ecommerce.newshop1.dto.AddressDto;
 import com.ecommerce.newshop1.dto.OrderDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
+import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.*;
 import com.ecommerce.newshop1.exception.ItemNotFoundException;
 import com.ecommerce.newshop1.exception.MemberNotFoundException;
@@ -62,6 +63,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public String createOrderId(String nowDate, int totalPrice) throws Exception {
         return redisService.createOrderId(nowDate, totalPrice);
+    }
+
+    @Override
+    public Long searchTotalOrderItem(DeliveryStatus deliveryStatus, SearchDto searchDto) {
+        return orderRepository.searchTotalOrderItem(deliveryStatus, searchDto);
     }
 
     @Override
@@ -213,5 +219,9 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
-
+    @Override
+    @Transactional
+    public List<OrderItemDto> searchAllByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable, SearchDto searchDto) {
+        return orderRepository.searchAllByDeliveryStatus(deliveryStatus, pageable, searchDto);
+    }
 }

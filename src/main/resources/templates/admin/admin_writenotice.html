@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,51 +19,28 @@
     <div id="sidebar-wrapper">
         <ul class="sidebar-nav">
             <li class="sidebar-brand">
+                <p>관리자 페이지</p>
                 <a href="/">에게모니</a>
-                <a th:href="@{/admin/product/reg}">등록페이지</a>
-
             </li>
             <input type="text" class="form-control me-2" placeholder="검색" maxlength="20"/>
             <br/>
             <p class="acountbuttons" style="text-align: center;">
-                <span sec:authorize="isAnonymous()"><a th:href="@{/login}">로그인</a></span>
                 <span sec:authorize="isAuthenticated()"><a th:href="@{/logout}">로그아웃</a></span>
-                <span sec:authorize="isAnonymous()"><a th:href="@{/join}">회원가입</a></span>
-                <span><a href="#">Mypage</a></span>
-                <span><a href="#">Cart(0)</a></span>
             </p>
             <li>-</li>
             <br/>
-            <li><a href="#">Top</a></li>
-            <li><a href="#">Bottom</a></li>
-            <li><a href="#">Cap</a></li>
+            <li><a th:href="@{/admin/register}">상품 등록</a></li>
+            <li><a th:href="@{/admin/itemList}">상품 목록</a></li>
+            <li>-</li>
+            <br/>
+            <li><a th:href="@{/board/list/all}">상품 배송</a></li>
+            <li><a th:href="@{/admin/write/notice}">입금 완료된 상품들</a></li>
             <li>-</li>
             <br/>
             <li><a th:href="@{/board/list/all}">공지사항</a></li>
-            <li><a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/board/write/notice}">공지사항 글쓰기</a></li>
+            <li><a th:href="@{/admin/write/notice}">공지사항 글쓰기</a></li>
             <li>-</li>
             <br/>
-            <li>CS CENTER</li>
-            <li>070-4193-9293</li>
-            <li>토요일, 일요일, 공휴일 제외</li>
-            <li>평일 09:00 ~ 18:00</li>
-            <li>-</li>
-            <br/>
-            <li><a href="#">메뉴 4</a></li>
-            <li><a href="#">메뉴 5</a></li>
-            <li><a href="#">메뉴 6</a></li>
-            <li><a href="#">메뉴 7</a></li>
-            <li><a href="#">메뉴 8</a></li>
-            <li><a href="#">메뉴 9</a></li>
-            <li><a href="#">메뉴 1</a></li>
-            <li><a href="#">메뉴 2</a></li>
-            <li><a href="#">메뉴 3</a></li>
-            <li><a href="#">메뉴 4</a></li>
-            <li><a href="#">메뉴 5</a></li>
-            <li><a href="#">메뉴 6</a></li>
-            <li><a href="#">메뉴 7</a></li>
-            <li><a href="#">메뉴 8</a></li>
-            <li><a href="#">메뉴 9</a></li>
 
         </ul>
     </div>

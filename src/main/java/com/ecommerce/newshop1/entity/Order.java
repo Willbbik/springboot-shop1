@@ -31,7 +31,7 @@ public class Order {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
@@ -47,6 +47,7 @@ public class Order {
 
     @ColumnDefault("0")
     private int totalPrice;
+
 
     @Column(name = "order_num", nullable = false)
     private String orderNum;

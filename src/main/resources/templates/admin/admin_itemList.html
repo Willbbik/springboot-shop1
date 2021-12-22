@@ -21,7 +21,6 @@
             <li class="sidebar-brand">
                 <p>관리자 페이지</p>
                 <a href="/">에게모니</a>
-                <a th:href="@{/product/register}">등록페이지</a>
             </li>
             <input type="text" class="form-control me-2" placeholder="검색" maxlength="20"/>
             <br/>
@@ -34,8 +33,12 @@
             <li><a th:href="@{/admin/itemList}">상품 목록</a></li>
             <li>-</li>
             <br/>
+            <li><a th:href="@{/board/list/all}">상품 배송</a></li>
+            <li><a th:href="@{/admin/write/notice}">입금 완료된 상품들</a></li>
+            <li>-</li>
+            <br/>
             <li><a th:href="@{/board/list/all}">공지사항</a></li>
-            <li><a th:href="@{/board/write/notice}">공지사항 글쓰기</a></li>
+            <li><a th:href="@{/admin/write/notice}">공지사항 글쓰기</a></li>
             <li>-</li>
             <br/>
 
@@ -43,10 +46,9 @@
     </div>
     <!-- /사이드바 -->
 
-    <!-- 본문 -->
     <div id="page-content-wrapper">
         <div class="container-fluid">
-            <!--  여기서부터 작성하면 됨   -->
+            <!-- 본문 -->
         <section id="itemList">
             <form th:action="@{/admin/itemList}" method="get" id="search">
             <div class="form-group">

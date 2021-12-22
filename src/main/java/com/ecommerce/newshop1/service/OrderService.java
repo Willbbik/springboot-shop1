@@ -2,6 +2,7 @@ package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.OrderDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
+import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.OrderPaymentInformation;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
@@ -33,5 +34,9 @@ public interface OrderService {
     List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable);
 
     List<OrderDto> searchByDepositSuccess(DeliveryStatus deliveryStatus, Pageable pageable);
+
+    List<OrderItemDto> searchAllByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable, SearchDto searchDto);
+
+    Long searchTotalOrderItem(DeliveryStatus deliveryStatus, SearchDto searchDto);
 
 }

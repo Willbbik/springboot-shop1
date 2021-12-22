@@ -15,4 +15,8 @@ public class SearchDto {
     private String category;
     private String itemName;
 
+    private String customerName;
+    private String deliveryId;
+    private String orderNum;
+
 }
