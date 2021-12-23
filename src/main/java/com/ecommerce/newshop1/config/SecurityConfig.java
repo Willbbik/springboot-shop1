@@ -14,6 +14,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 
 @EnableWebSecurity
@@ -36,12 +42,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/mypage", "/cart", "/order/checkout").authenticated()
                     .antMatchers("/join", "/login").anonymous()
-
                      //.antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/**").permitAll()
                     .anyRequest().permitAll()
                 .and()
                     .csrf()
+                .and()
+                    .cors()
                 .and()
                     .exceptionHandling().accessDeniedPage("/")
                 .and() // 로그인 설정
@@ -58,6 +65,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .invalidateHttpSession(true)
                     .logoutSuccessUrl("/")
            ;
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Collections.singletonList("https://egemony.tk"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST", "DELETE", "PUT", "FETCH", "HEAD"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 
