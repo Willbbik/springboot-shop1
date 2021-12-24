@@ -66,10 +66,14 @@ public class ItemController {
         // 상품
         Item item = itemService.findById(id);
         ItemDto itemDto = mapper.map(item, ItemDto.class);
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
 //        itemDto.setImageUrl(awsS3Service.getS3Image(itemDto.getImageUrl()));
 >>>>>>> Stashed changes
+=======
+//        itemDto.setImageUrl(awsS3Service.getS3Image(itemDto.getImageUrl()));
+>>>>>>> 4e9a5bd (Add: s3에 파일 업로드 기능 구현)
 
         // 상품 이미지
         boolean imageExists = itemImageRepository.existsByItem(item);

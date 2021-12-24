@@ -38,7 +38,12 @@ public class AdminController {
     private final ItemRepository itemRepository;
     private final ItemService itemService;
     private final OrderService orderService;
+<<<<<<< HEAD
     private final MemberService memberService;
+=======
+    private final AwsS3Service awsS3Service;
+    // private final FileUploadService fileUploadService;
+>>>>>>> 4e9a5bd (Add: s3에 파일 업로드 기능 구현)
 
     @GetMapping("/admin/main")
     public String adminMain(Model model){
@@ -149,6 +154,7 @@ public class AdminController {
         // 상품 이미지 저장
         List<MultipartFile> fileList =  mtfRequest.getFiles("upload_image");
         List<ItemImage> itemImageList = new ArrayList<>();
+<<<<<<< HEAD
         for (int i = 0; i < fileList.size(); i++) {
             String uuid = UUID.randomUUID().toString();
 
@@ -159,9 +165,24 @@ public class AdminController {
             if(i == 0){
                 item.setImageUrl(localImageUrl);
             }
+=======
+
+        if(fileList.size() != 0) {
+            for (int i = 0; i < fileList.size(); i++) {
+
+                String originFileName = fileList.get(i).getOriginalFilename();
+                String imageName = awsS3Service.createFileName(originFileName);
+
+                String awsSavePath = "static/images/" + itemDto.getCategory() + "/" + itemDto.getItemName();
+                String dbSavePath = "static/images/" + itemDto.getCategory() + "/" + itemDto.getItemName() + imageName;
+
+                // 첫번째 사진이 대표 이미지
+                if (i == 0) item.setImageUrl(dbSavePath);
+>>>>>>> 4e9a5bd (Add: s3에 파일 업로드 기능 구현)
 
             try{
                 ItemImage itemImage = ItemImage.builder()
+<<<<<<< HEAD
                         .imageUrl(localImageUrl)
                         .imageName(originFileName)
                         .build();
@@ -170,6 +191,17 @@ public class AdminController {
             } catch (Exception e) {
                 logger.warn("when save ItemImage exception");
                 throw new Exception("when save ItemImage exception");
+=======
+                        .imageUrl(dbSavePath)
+                        .imageName(originFileName)
+                        .build();
+                itemImageList.add(itemImage);
+
+                awsS3Service.upload(fileList.get(i), awsSavePath, imageName);
+            }
+            for(ItemImage itemImage : itemImageList){
+                item.setItemImageList(itemImage);
+>>>>>>> 4e9a5bd (Add: s3에 파일 업로드 기능 구현)
             }
         }
 
