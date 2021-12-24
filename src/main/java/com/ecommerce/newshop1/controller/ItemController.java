@@ -26,8 +26,6 @@ import java.util.List;
 public class ItemController {
 
     private final ItemService itemService;
-    private final MemberService memberService;
-    private final ItemRepository itemRepository;
     private final ItemImageRepository itemImageRepository;
     private final QnARepository qnARepository;
     private final QnAService qnAService;
@@ -68,6 +66,10 @@ public class ItemController {
         // 상품
         Item item = itemService.findById(id);
         ItemDto itemDto = mapper.map(item, ItemDto.class);
+<<<<<<< Updated upstream
+=======
+//        itemDto.setImageUrl(awsS3Service.getS3Image(itemDto.getImageUrl()));
+>>>>>>> Stashed changes
 
         // 상품 이미지
         boolean imageExists = itemImageRepository.existsByItem(item);
