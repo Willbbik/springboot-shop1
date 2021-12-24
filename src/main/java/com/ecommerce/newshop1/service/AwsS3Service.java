@@ -3,7 +3,6 @@ package com.ecommerce.newshop1.service;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.ecommerce.newshop1.entity.ItemImage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,9 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -27,71 +25,50 @@ public class AwsS3Service {
     @Value("${cloud.aws.s3.bucket}")
     String bucket;
 
-//    // s3에 이미지 저장
-//    public String upload(File uploadFile, String filePath, String saveFileName){
-//        String fileName = filePath + "/" + saveFileName;
-//        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile)
-//                .withCannedAcl(CannedAccessControlList.PublicRead));
-//        return fileName;
-//    }
+    public String upload(MultipartFile multipartFile, String filePath, String fileName) throws IOException {
+        File uploadFile = convert(multipartFile)
+                .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
 
-    public String upload(MultipartFile multipartFile, String folderPath) throws IOException {
-        File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
-                .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
-
-        return upload(uploadFile, folderPath);
+        return upload(uploadFile, filePath, fileName);
     }
 
-    // s3에 이미지 저장
-    private String upload(File uploadFile, String folderPath) {
-        String uploadImageUrl = putS3(uploadFile, folderPath); // s3로 업로드
+    private String upload(File uploadFile, String filePath, String fileName) {
+        String finalSavePath = filePath + "/" + fileName;
+        String uploadImageUrl = putS3(uploadFile, finalSavePath);
+
         removeNewFile(uploadFile);
         return uploadImageUrl;
     }
 
-    // S3로 업로드
-    public String putS3(File uploadFile, String folderPath) {
+    private String putS3(File uploadFile, String fileName) {
         amazonS3Client
-                .putObject(new PutObjectRequest(bucket, folderPath, uploadFile)
-                .withCannedAcl(CannedAccessControlList.PublicRead));
-        return amazonS3Client.getUrl(bucket, folderPath).toString();
+                .putObject(new PutObjectRequest(bucket, fileName, uploadFile)
+                .withCannedAcl(CannedAccessControlList.Private));
+        return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
-    // 로컬에 저장된 이미지 지우기
+    public String createFileName(String fileName){
+        return UUID.randomUUID().toString().substring(0, 13) + "_" + fileName;
+    }
+
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
-            log.info("File delete success");
-            return;
+            log.info("파일이 삭제되었습니다.");
+        } else {
+            log.info("파일이 삭제되지 못했습니다.");
         }
-        log.info("File delete fail");
     }
 
-    // 로컬에 파일 업로드 하기
     private Optional<File> convert(MultipartFile file) throws IOException {
         File convertFile = new File(file.getOriginalFilename());
-        if (convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
-            try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
+        if(convertFile.createNewFile()) {
+            try (FileOutputStream fos = new FileOutputStream(convertFile)) {
                 fos.write(file.getBytes());
             }
             return Optional.of(convertFile);
         }
 
-        return Optional.empty();
-    }
-
-
-
-    public String getS3Image(String filePath){
-        return amazonS3Client.getUrl(bucket, filePath).toString();
-    }
-
-    public List<String> getAllS3Image(List<ItemImage> itemImageList){
-
-        List<String> itemImages = new ArrayList<>();
-        for(ItemImage itemImage : itemImageList){
-            itemImages.add(itemImage.getImageUrl());
-        }
-        return itemImages;
+        return Optional.of(convertFile);
     }
 
 

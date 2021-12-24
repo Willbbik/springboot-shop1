@@ -40,6 +40,7 @@ public class AdminController {
     private final ItemService itemService;
     private final OrderService orderService;
     private final AwsS3Service awsS3Service;
+    // private final FileUploadService fileUploadService;
 
     @GetMapping("/admin/main")
     public String adminMain(Model model) {
@@ -110,36 +111,26 @@ public class AdminController {
         // 상품 이미지 저장
         List<MultipartFile> fileList =  mtfRequest.getFiles("upload_image");
         List<ItemImage> itemImageList = new ArrayList<>();
-        List<MultipartFile> multipartFileList = new ArrayList<>();
-        List<String> folderPathList = new ArrayList<>();
-
 
         if(fileList.size() != 0) {
             for (int i = 0; i < fileList.size(); i++) {
 
-                String uuid = UUID.randomUUID().toString().substring(0, 13);
-
-                // 이미지 이름
-                String folderPath = "images" + "/" + itemDto.getCategory() + "/" + itemDto.getItemName();
                 String originFileName = fileList.get(i).getOriginalFilename();
-                String saveImageName = uuid + "_" + originFileName;
+                String imageName = awsS3Service.createFileName(originFileName);
 
-                // 폴더 경로
-                String saveImageUrl = folderPath + "/" + saveImageName;
+                String awsSavePath = "static/images/" + itemDto.getCategory() + "/" + itemDto.getItemName();
+                String dbSavePath = "static/images/" + itemDto.getCategory() + "/" + itemDto.getItemName() + imageName;
 
                 // 첫번째 사진이 대표 이미지
-                if (i == 0) item.setImageUrl(saveImageUrl);
-
+                if (i == 0) item.setImageUrl(dbSavePath);
 
                 ItemImage itemImage = ItemImage.builder()
-                        .imageUrl(saveImageUrl)
-                        .imageName(saveImageName)
+                        .imageUrl(dbSavePath)
+                        .imageName(originFileName)
                         .build();
                 itemImageList.add(itemImage);
 
-                File file = new File(fileList.get(i).getOriginalFilename());
-                awsS3Service.putS3(file, saveImageUrl);
-
+                awsS3Service.upload(fileList.get(i), awsSavePath, imageName);
             }
             for(ItemImage itemImage : itemImageList){
                 item.setItemImageList(itemImage);
@@ -150,67 +141,6 @@ public class AdminController {
 
         return "redirect:/admin/itemList";
     }
-
-
-//    @PostMapping("/admin/register")
-//    @ApiOperation(value = "관리자페이지에서 상품 등록")
-//    public String itemSave(MultipartHttpServletRequest mtfRequest, ItemDto itemDto) throws Exception {
-//
-//        String itemCode = UUID.randomUUID().toString();
-//
-//        // 상품 정보 저장
-//        Item item = mapper.map(itemDto, Item.class);
-//
-//        // 디렉토리 만들기
-//        String folderPath = "/Users/min/Documents/쇼핑몰/newshop1/src/main/resources/static/assets/images/Item/"
-//                + itemDto.getCategory() + "/" + itemDto.getItemName();
-//        // view에서 사용할 이미지 경로
-//        String getFolderPath = "/assets/images/Item/" + itemDto.getCategory() + "/" + itemDto.getItemName();
-//
-//        File newFile = new File(folderPath);
-//        if(newFile.mkdirs()){
-//            logger.info("directory make ok");
-//        }else{
-//            logger.warn("directory can't make");
-//            // 예외 던져야 할 수도
-//        }
-//
-//        // 상품 이미지 저장
-//        List<MultipartFile> fileList =  mtfRequest.getFiles("upload_image");
-//        List<ItemImage> itemImageList = new ArrayList<>();
-//        for (int i = 0; i < fileList.size(); i++) {
-//            String uuid = UUID.randomUUID().toString();
-//
-//            String originFileName = fileList.get(i).getOriginalFilename();
-//            String finalFolderUrl = folderPath + "/" + uuid + "_" + originFileName;
-//            String localImageUrl = getFolderPath + "/" + uuid + "_" + originFileName ;
-//
-//            if(i == 0){
-//                item.setImageUrl(localImageUrl);
-//            }
-//
-//            try{
-//                ItemImage itemImage = ItemImage.builder()
-//                        .imageUrl(localImageUrl)
-//                        .imageName(originFileName)
-//                        .build();
-//                itemImageList.add(itemImage);
-//                fileList.get(i).transferTo(new File(finalFolderUrl));
-//            } catch (Exception e) {
-//                logger.warn("when save ItemImage exception");
-//                throw new Exception("when save ItemImage exception");
-//            }
-//        }
-//
-//        for(ItemImage itemImage : itemImageList){
-//            item.setItemImageList(itemImage);
-//        }
-//        itemRepository.save(item);
-//
-//        return "redirect:/admin/itemList";
-//    }
-
-
 
 
     @DeleteMapping("/admin/item/delete")

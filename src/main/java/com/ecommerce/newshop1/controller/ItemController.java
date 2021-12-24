@@ -63,7 +63,7 @@ public class ItemController {
         // 상품
         Item item = itemService.findById(id);
         ItemDto itemDto = mapper.map(item, ItemDto.class);
-        itemDto.setImageUrl(awsS3Service.getS3Image(itemDto.getImageUrl()));
+//        itemDto.setImageUrl(awsS3Service.getS3Image(itemDto.getImageUrl()));
 
         // 상품 이미지
         boolean imageExists = itemImageRepository.existsByItem(item);
