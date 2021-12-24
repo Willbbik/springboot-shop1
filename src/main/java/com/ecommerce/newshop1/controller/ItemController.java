@@ -5,12 +5,8 @@ import com.ecommerce.newshop1.dto.ItemImageDto;
 import com.ecommerce.newshop1.dto.QnADto;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.repository.ItemImageRepository;
-import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.repository.QnARepository;
-import com.ecommerce.newshop1.service.ItemService;
-import com.ecommerce.newshop1.service.MemberService;
-import com.ecommerce.newshop1.service.QnAService;
-import com.ecommerce.newshop1.service.SecurityService;
+import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.enums.Role;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +21,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemController {
 
-    private final ItemService itemService;
-    private final MemberService memberService;
-    private final ItemRepository itemRepository;
     private final ItemImageRepository itemImageRepository;
     private final QnARepository qnARepository;
     private final QnAService qnAService;
+    private final ItemService itemService;
+    private final AwsS3Service awsS3Service;
     private final SecurityService security;
 
     ModelMapper mapper = new ModelMapper();
@@ -68,6 +63,7 @@ public class ItemController {
         // 상품
         Item item = itemService.findById(id);
         ItemDto itemDto = mapper.map(item, ItemDto.class);
+        itemDto.setImageUrl(awsS3Service.getS3Image(itemDto.getImageUrl()));
 
         // 상품 이미지
         boolean imageExists = itemImageRepository.existsByItem(item);

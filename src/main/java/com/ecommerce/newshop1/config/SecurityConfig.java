@@ -47,8 +47,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .anyRequest().permitAll()
                 .and()
                     .csrf()
-//                .and()
-//                    .cors()
                 .and()
                     .exceptionHandling().accessDeniedPage("/")
                 .and() // 로그인 설정
@@ -66,17 +64,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .logoutSuccessUrl("/")
            ;
     }
-
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Collections.singletonList("https://egemony.tk"));
-//        configuration.setAllowedMethods(Arrays.asList("GET","POST", "DELETE", "PUT", "FETCH", "HEAD"));
-//        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
 
 
     @Bean

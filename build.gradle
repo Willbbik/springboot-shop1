@@ -33,7 +33,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.apache.httpcomponents:httpcore:4.4.6' 	// 카카오
-	implementation 'org.apache.httpcomponents:httpclient:4.5.2' // 카카오
+	implementation 'org.apache.httpcomponents:httpclient:4.5.13' // 카카오
 	implementation 'com.google.code.gson:gson:2.8.7'
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 	implementation 'net.nurigo:javaSDK:2.2'					// Coolsms 메시지 라이브러리
@@ -43,6 +43,8 @@ dependencies {
 	implementation 'com.querydsl:querydsl-jpa'				// querydsl
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6'   //query parameter log
 	implementation 'commons-io:commons-io:2.6'				// Commons-파일 업로드
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'  // aws s3에 이미지 저장
+
 
 	//멀티 파일 업로드
 	compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.3.3'
