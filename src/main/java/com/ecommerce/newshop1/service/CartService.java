@@ -35,11 +35,10 @@ public class CartService {
 
     ModelMapper mapper = new ModelMapper();
 
-    @Transactional
-    public void createCart(Member member){
 
-        Cart cart = Cart.createCart(member);
-        cartRepository.save(cart);
+    public void createCart(Member member){
+        Cart cart = new Cart();
+        cart.createCart(member);
     }
 
     @Transactional
@@ -128,6 +127,7 @@ public class CartService {
         cartItemRepository.deleteAllById(id);
     }
 
+    // 장바구니 상품 수량 변경
     @Transactional
     public void updateQuantity(CartQuantityUpdateDto updateDto){
         CartItem cartItem = cartItemRepository.findById(updateDto.getId())

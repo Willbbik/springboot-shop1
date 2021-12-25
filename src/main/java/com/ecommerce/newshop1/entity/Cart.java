@@ -9,7 +9,7 @@ import java.util.List;
 @Entity
 @Getter
 @ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "cart")
 public class Cart extends TimeEntity {
@@ -26,10 +26,10 @@ public class Cart extends TimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public static Cart createCart(Member member){
-        Cart cart = new Cart();
-        cart.member = member;
-        return cart;
+    public void createCart(Member member){
+        this.member = member;
+        member.setCart(this);
     }
+
 
 }

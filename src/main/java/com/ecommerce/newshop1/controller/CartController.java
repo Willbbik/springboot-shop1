@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,7 +25,6 @@ import java.util.List;
 public class CartController {
 
     private final CartService cartService;
-    private final CartRepository cartRepository;
     private final MemberRepository memberRepository;
     private final SecurityService security;
 
@@ -58,7 +58,7 @@ public class CartController {
 
     @PatchMapping("/cart/update/quantity")
     @ApiOperation(value = "장바구니 상품 수량 변경")
-    public @ResponseBody String updateQuantity(@Valid CartQuantityUpdateDto updateDto){
+    public @ResponseBody String updateQuantity(@Validated CartQuantityUpdateDto updateDto){
         cartService.updateQuantity(updateDto);
         return "수량 변경 완료";
     }

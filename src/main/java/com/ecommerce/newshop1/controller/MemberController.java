@@ -199,8 +199,8 @@ public class MemberController {
         }
 
         Member member = mapper.map(joinMemberDto, Member.class);
-        member = memberService.joinNormal(member);
         cartService.createCart(member);
+        memberService.joinNormal(member);
 
         return "redirect:/";
     }
