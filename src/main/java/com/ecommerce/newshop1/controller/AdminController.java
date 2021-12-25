@@ -8,6 +8,7 @@ import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.service.ItemService;
 import com.ecommerce.newshop1.service.MemberService;
 import com.ecommerce.newshop1.service.OrderService;
+import com.ecommerce.newshop1.service.AwsS3Service;
 import com.ecommerce.newshop1.utils.ItemPagination;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -38,15 +39,11 @@ public class AdminController {
     private final ItemRepository itemRepository;
     private final ItemService itemService;
     private final OrderService orderService;
-<<<<<<< HEAD
     private final MemberService memberService;
-=======
     private final AwsS3Service awsS3Service;
-    // private final FileUploadService fileUploadService;
->>>>>>> 4e9a5bd (Add: s3에 파일 업로드 기능 구현)
 
     @GetMapping("/admin/main")
-    public String adminMain(Model model){
+    public String adminMain(Model model) {
 
         Pageable pageable = PageRequest.ofSize(3);
         List<OrderItemDto> ingOrderItems = orderService.searchByDeliveryStatus(DeliveryStatus.DELIVERY_ING, pageable);    // 배송중 상품
@@ -132,42 +129,14 @@ public class AdminController {
     @ApiOperation(value = "관리자페이지에서 상품 등록")
     public String itemSave(MultipartHttpServletRequest mtfRequest, ItemDto itemDto) throws Exception {
 
-        String itemCode = UUID.randomUUID().toString();
-
         // 상품 정보 저장
         Item item = mapper.map(itemDto, Item.class);
-
-        // 디렉토리 만들기
-        String folderPath = "/Users/min/Documents/쇼핑몰/newshop1/src/main/resources/static/assets/images/Item/"
-                + itemDto.getCategory() + "/" + itemDto.getItemName();
-        // view에서 사용할 이미지 경로
-        String getFolderPath = "/assets/images/Item/" + itemDto.getCategory() + "/" + itemDto.getItemName();
-
-        File newFile = new File(folderPath);
-        if(newFile.mkdirs()){
-            logger.info("directory make ok");
-        }else{
-            logger.warn("directory can't make");
-            // 예외 던져야 할 수도
-        }
 
         // 상품 이미지 저장
         List<MultipartFile> fileList =  mtfRequest.getFiles("upload_image");
         List<ItemImage> itemImageList = new ArrayList<>();
-<<<<<<< HEAD
-        for (int i = 0; i < fileList.size(); i++) {
-            String uuid = UUID.randomUUID().toString();
 
-            String originFileName = fileList.get(i).getOriginalFilename();
-            String finalFolderUrl = folderPath + "/" + uuid + "_" + originFileName;
-            String localImageUrl = getFolderPath + "/" + uuid + "_" + originFileName ;
-
-            if(i == 0){
-                item.setImageUrl(localImageUrl);
-            }
-=======
-
-        if(fileList.size() != 0) {
+        if (fileList.size() != 0) {
             for (int i = 0; i < fileList.size(); i++) {
 
                 String originFileName = fileList.get(i).getOriginalFilename();
@@ -178,20 +147,8 @@ public class AdminController {
 
                 // 첫번째 사진이 대표 이미지
                 if (i == 0) item.setImageUrl(dbSavePath);
->>>>>>> 4e9a5bd (Add: s3에 파일 업로드 기능 구현)
 
-            try{
                 ItemImage itemImage = ItemImage.builder()
-<<<<<<< HEAD
-                        .imageUrl(localImageUrl)
-                        .imageName(originFileName)
-                        .build();
-                itemImageList.add(itemImage);
-                fileList.get(i).transferTo(new File(finalFolderUrl));
-            } catch (Exception e) {
-                logger.warn("when save ItemImage exception");
-                throw new Exception("when save ItemImage exception");
-=======
                         .imageUrl(dbSavePath)
                         .imageName(originFileName)
                         .build();
@@ -199,27 +156,19 @@ public class AdminController {
 
                 awsS3Service.upload(fileList.get(i), awsSavePath, imageName);
             }
-            for(ItemImage itemImage : itemImageList){
+            for (ItemImage itemImage : itemImageList) {
                 item.setItemImageList(itemImage);
->>>>>>> 4e9a5bd (Add: s3에 파일 업로드 기능 구현)
             }
         }
-
-        for(ItemImage itemImage : itemImageList){
-            item.setItemImageList(itemImage);
-        }
         itemRepository.save(item);
-
         return "redirect:/admin/itemList";
     }
 
-
     @DeleteMapping("/admin/item/delete")
     @ApiOperation(value = "관리자페이지에서 단일 상품 삭제")
-    public @ResponseBody String itemDelete(@RequestParam List<Long> itemIdList){
+    public @ResponseBody String itemDelete (@RequestParam List < Long > itemIdList) {
         itemRepository.deleteAllById(itemIdList);
         return "상품 삭제 완료";
     }
-
 
 }

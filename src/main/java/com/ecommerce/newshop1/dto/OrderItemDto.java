@@ -7,6 +7,8 @@ import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Builder

@@ -23,3 +23,4 @@ public interface OrderRepositoryCustom {
     Long searchTotalOrderItem(DeliveryStatus deliveryStatus, SearchDto searchDto);
 
 }
+

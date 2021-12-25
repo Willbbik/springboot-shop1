@@ -17,11 +17,11 @@ public class Newshop1Application {
 			"classpath:/application.yml," +
 			"classpath:/yml/coolsms.yml," +
 			"classpath:/yml/tosspayments.yml," +
-			"classpath:/yml/oauth2.yml";
+			"classpath:/yml/oauth2.yml," +
+			"classpath:/yml/aws.yml";
 
 	public static void main(String[] args) {
 
-//		SpringApplication.run(Newshop1Application.class, args);
 		new SpringApplicationBuilder(Newshop1Application.class)
 				.properties(YMLS)
 				.run(args);
