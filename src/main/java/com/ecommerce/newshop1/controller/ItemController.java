@@ -21,10 +21,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemController {
 
-    private final ItemService itemService;
     private final ItemImageRepository itemImageRepository;
     private final QnARepository qnARepository;
     private final QnAService qnAService;
+    private final ItemService itemService;
+    private final AwsS3Service awsS3Service;
     private final SecurityService security;
 
     ModelMapper mapper = new ModelMapper();

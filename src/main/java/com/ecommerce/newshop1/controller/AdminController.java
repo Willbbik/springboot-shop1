@@ -58,12 +58,14 @@ public class AdminController {
     }
 
     @GetMapping("/admin/write/notice")
+    @ApiOperation(value = "공지사항 페이지")
     public String write(){
         return "admin/admin_writenotice";
     }
 
-    @ApiOperation(value = "공지사항 저장")
+
     @PostMapping("/admin/write/notice")
+    @ApiOperation(value = "공지사항 저장")
     public String writeNotice(BoardDto boardDto){
 
         System.out.println(boardDto.getSubject());
@@ -71,12 +73,14 @@ public class AdminController {
     }
 
     @GetMapping("/admin/register")
+    @ApiOperation(value = "상품 등록 페이지")
     public String itemRegister(){
 
         return "admin/admin_registerItem";
     }
 
     @GetMapping("/admin/send/orderItem")
+    @ApiOperation(value = "상품 배송 페이지")
     public String sendOrderItemPage(Model model, @RequestParam(name = "page", defaultValue = "1") int page, SearchDto searchDto){
 
         // 배달해야하는 상품 총 개수와 그걸로 페이징처리
@@ -98,6 +102,7 @@ public class AdminController {
 
 
     @GetMapping("/admin/itemList")
+    @ApiOperation(value = "등록한 상품 목록 페이지")
     public String itemListPage(Model model, @RequestParam(name = "page", defaultValue = "1") int page, SearchDto searchDto){
 
         // 상품 총 개수
@@ -139,22 +144,22 @@ public class AdminController {
         if (fileList.size() != 0) {
             for (int i = 0; i < fileList.size(); i++) {
 
-                String originFileName = fileList.get(i).getOriginalFilename();
-                String imageName = awsS3Service.createFileName(originFileName);
+                String originImageName = fileList.get(i).getOriginalFilename();
+                String imageName = awsS3Service.createFileName(originImageName);
 
-                String awsSavePath = "static/images/" + itemDto.getCategory() + "/" + itemDto.getItemName();
-                String dbSavePath = "static/images/" + itemDto.getCategory() + "/" + itemDto.getItemName() + imageName;
+                String filePath = "static/images/" + itemDto.getCategory() + "/" + itemDto.getItemName() + "/" + imageName;
 
+                // s3에 이미지 저장
+                String s3ImageUrl = awsS3Service.upload(fileList.get(i), filePath);
                 // 첫번째 사진이 대표 이미지
-                if (i == 0) item.setImageUrl(dbSavePath);
+                if (i == 0) item.setImageUrl(s3ImageUrl);
 
                 ItemImage itemImage = ItemImage.builder()
-                        .imageUrl(dbSavePath)
-                        .imageName(originFileName)
+                        .imageUrl(filePath)
+                        .imageName(originImageName)
                         .build();
                 itemImageList.add(itemImage);
 
-                awsS3Service.upload(fileList.get(i), awsSavePath, imageName);
             }
             for (ItemImage itemImage : itemImageList) {
                 item.setItemImageList(itemImage);
@@ -166,7 +171,7 @@ public class AdminController {
 
     @DeleteMapping("/admin/item/delete")
     @ApiOperation(value = "관리자페이지에서 단일 상품 삭제")
-    public @ResponseBody String itemDelete (@RequestParam List < Long > itemIdList) {
+    public @ResponseBody String itemDelete (@RequestParam List <Long> itemIdList) {
         itemRepository.deleteAllById(itemIdList);
         return "상품 삭제 완료";
     }

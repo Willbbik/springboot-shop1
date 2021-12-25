@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,7 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final ItemImageRepository itemImageRepository;
+    private final AwsS3Service awsS3Service;
 
     @Override
     @Transactional(readOnly = true)
@@ -38,8 +40,15 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public List<ItemImageDto> searchAllItemImage(Item itemId) {
-        return itemImageRepository.searchAll(itemId);
+
+        List<ItemImageDto> imageDtos = itemImageRepository.searchAll(itemId);
+
+        for(ItemImageDto itemImageDto : imageDtos){
+            itemImageDto.setImageUrl(awsS3Service.getS3FileUrl(itemImageDto.getImageUrl()));
+        }
+        return imageDtos;
     }
 
 

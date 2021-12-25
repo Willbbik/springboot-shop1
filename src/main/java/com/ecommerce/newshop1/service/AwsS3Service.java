@@ -25,52 +25,27 @@ public class AwsS3Service {
     @Value("${cloud.aws.s3.bucket}")
     String bucket;
 
-    public String upload(MultipartFile multipartFile, String filePath, String fileName) throws IOException {
-        File uploadFile = convert(multipartFile)
-                .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
-
-        return upload(uploadFile, filePath, fileName);
+    // 이미지 저장시 사용 메소드
+    public String upload(MultipartFile uploadFile, String fileName) throws IOException {
+        return putS3(uploadFile, fileName);
     }
 
-    private String upload(File uploadFile, String filePath, String fileName) {
-        String finalSavePath = filePath + "/" + fileName;
-        String uploadImageUrl = putS3(uploadFile, finalSavePath);
-
-        removeNewFile(uploadFile);
-        return uploadImageUrl;
-    }
-
-    private String putS3(File uploadFile, String fileName) {
-        amazonS3Client
-                .putObject(new PutObjectRequest(bucket, fileName, uploadFile)
-                .withCannedAcl(CannedAccessControlList.Private));
+    // s3에 이미지 저장
+    private String putS3(MultipartFile uploadFile, String fileName) throws IOException {
+            amazonS3Client
+                    .putObject(new PutObjectRequest(bucket, fileName, uploadFile.getInputStream(), null));
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
+    // 이미지 가져오기
+    public String getS3FileUrl(String filePath){
+        return amazonS3Client.getUrl(bucket, filePath).toString();
+    }
+
+    // UUID로 고유한 이미지 이름 생성
     public String createFileName(String fileName){
         return UUID.randomUUID().toString().substring(0, 13) + "_" + fileName;
     }
-
-    private void removeNewFile(File targetFile) {
-        if (targetFile.delete()) {
-            log.info("파일이 삭제되었습니다.");
-        } else {
-            log.info("파일이 삭제되지 못했습니다.");
-        }
-    }
-
-    private Optional<File> convert(MultipartFile file) throws IOException {
-        File convertFile = new File(file.getOriginalFilename());
-        if(convertFile.createNewFile()) {
-            try (FileOutputStream fos = new FileOutputStream(convertFile)) {
-                fos.write(file.getBytes());
-            }
-            return Optional.of(convertFile);
-        }
-
-        return Optional.of(convertFile);
-    }
-
 
 }
 
