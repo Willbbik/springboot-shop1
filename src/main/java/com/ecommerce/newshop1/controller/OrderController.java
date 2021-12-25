@@ -3,7 +3,6 @@ package com.ecommerce.newshop1.controller;
 import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.OrderPaymentInformation;
 import com.ecommerce.newshop1.exception.ParameterNotFoundException;
-import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.ValidationSequence;
 import com.ecommerce.newshop1.enums.PayType;
@@ -11,7 +10,6 @@ import com.ecommerce.newshop1.enums.TossPayments;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,13 +28,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final ItemRepository itemRepository;
-    private final ItemService itemService;
     private final CartService cartService;
     private final OrderService orderService;
-
-    ModelMapper mapper = new ModelMapper();
-
 
     @PostMapping("/order/checkout")
     @ApiOperation(value = "구매할 상품 선택후 주문페이지로 이동")
@@ -63,7 +56,7 @@ public class OrderController {
         }
 
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String orderId = date + orderService.createOrderId(date, totalPrice);        // 주문번호 생성
+        String orderId = date + orderService.createOrderId(date, totalPrice);  // 주문번호 생성
 
         // 주문번호와 상품 번호들 세션에 저장. ( 마지막 최종 주문할 때 사용하기 위해서 )
         session.setAttribute("orderId", orderId);
@@ -82,7 +75,7 @@ public class OrderController {
     @RequestMapping("/order/virtual-account/callback")
     @ResponseStatus(HttpStatus.OK)
     public void paymentCheck(@RequestBody CallbackPayload callbackPayload){
-        System.out.println("콜백성공");
+
         if(callbackPayload.getStatus().equals(TossPayments.DONE.getValue())){
             // 입금 완료일 때 처리
             orderService.updateOrderToDepositSuccess(callbackPayload.getOrderId());
@@ -128,8 +121,6 @@ public class OrderController {
         ResponseEntity<JsonNode> responseEntity = orderService.tossPayment(paymentKey, orderId, amount);
 
         if(responseEntity.getStatusCode() == HttpStatus.OK) {
-
-            // 로그인 검사
 
             String payType = responseEntity.getBody().get("method").asText();
 

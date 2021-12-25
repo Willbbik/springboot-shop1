@@ -198,6 +198,9 @@ public class OrderServiceImpl implements OrderService {
 
         Order order = orderRepository.findByOrderNum(orderId);
         order.getDelivery().setDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS);
+        for(OrderItem orderItem : order.getOrderItems()){
+            orderItem.setDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS);
+        }
         orderRepository.save(order);
     }
 
