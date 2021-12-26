@@ -1,7 +1,9 @@
 package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.KakaoDto;
+import com.ecommerce.newshop1.dto.KakaoPayDto;
 import com.ecommerce.newshop1.dto.OAuthToken;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Service
 public class KakaoService {
@@ -33,15 +38,96 @@ public class KakaoService {
     @Value("${kakao.redirect_uri}")
     String redirect_uri;
 
-    @Value("${kakao.logout_redirect_uri}")
-    String logout_redirect_uri;
-
     @Value("${kakao.provider.oauth_token}")
     String oauthTokenUrl;
 
     @Value("${kakao.provider.user_info}")
     String userInfoUrl;
 
+    @Value("${kakao.admin_key}")
+    String adminKey;
+
+    @Value("${kakaoPay.ready_uri}")
+    String kakaoPayReadyUri;
+
+    @Value("${kakaoPay.approve_uri}")
+    String kakaoPayApproveUri;
+
+    // 카카오페이 결제 준비
+    public String kakaoPayReady(HttpServletRequest request){
+
+        HttpSession session = request.getSession();
+
+        RestTemplate rt = new RestTemplate();
+        HttpHeaders header = new HttpHeaders();
+        header.add("Content-type", Content_type);
+        header.add("Authorization", "KakaoAK "+adminKey);
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("cid", "TC0ONETIME");
+        params.add("partner_order_id", "partner_order_id");
+        params.add("partner_user_id", "partner_user_id");
+        params.add("item_name", "초코파이");
+        params.add("quantity", "1");
+        params.add("total_amount", "2000");
+        params.add("tax_free_amount", "0");
+        params.add("approval_url", "http://localhost:8080/order/kakaoPay/success");
+        params.add("fail_url", "http://localhost:8080//order/kakaoPay/fail");
+        params.add("cancel_url", request.getHeader("Referer"));
+
+        HttpEntity<MultiValueMap<String, String>> kakaoPayRequest = new HttpEntity<>(params, header);
+        ResponseEntity<String> response = rt.exchange(
+                kakaoPayReadyUri,
+                HttpMethod.POST,
+                kakaoPayRequest,
+                String.class
+        );
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try{
+            KakaoPayDto kakaoPayDto = objectMapper.readValue(response.getBody(), KakaoPayDto.class);
+            session.setAttribute("tid", kakaoPayDto.getTid());
+            // 주문번호도 세션에 저장해야함
+
+            return kakaoPayDto.getNext_redirect_pc_url();
+        } catch (JsonMappingException e) {
+            log.info("KakaoService kakaoPayReady method error, reason  : " + e.getMessage());
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            log.info("KakaoService kakaoPayReady method error, reason : " + e.getMessage());
+            e.printStackTrace();
+        }
+        return "fail";
+    }
+
+    public void kakaoPayApprove(String pgToken, String tid){
+
+        RestTemplate rt = new RestTemplate();
+        HttpHeaders header = new HttpHeaders();
+        header.add("Content-type", Content_type);
+        header.add("Authorization", "KakaoAK "+adminKey);
+
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("cid", "TC0ONETIME");
+        params.add("tid", tid);
+        params.add("pg_token", pgToken);
+        params.add("partner_order_id", "partner_order_id");
+        params.add("partner_user_id", "partner_user_id");
+
+        HttpEntity<MultiValueMap<String, String>> kakaoPayRequest = new HttpEntity<>(params, header);
+
+        ResponseEntity<String> response = rt.exchange(
+                kakaoPayApproveUri,
+                HttpMethod.POST,
+                kakaoPayRequest,
+                String.class
+        );
+    }
+
+
+    // 액세스 토큰 가져오기
     public OAuthToken getAccessToken(String code){
 
         RestTemplate rt = new RestTemplate();

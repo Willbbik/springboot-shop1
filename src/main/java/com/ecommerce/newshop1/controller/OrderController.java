@@ -30,6 +30,7 @@ public class OrderController {
 
     private final CartService cartService;
     private final OrderService orderService;
+    private final KakaoService kakaoService;
 
     @PostMapping("/order/checkout")
     @ApiOperation(value = "구매할 상품 선택후 주문페이지로 이동")
@@ -69,6 +70,22 @@ public class OrderController {
         model.addAttribute("totalPrice", totalPrice);
 
         return "order/order_checkout";
+    }
+
+    @RequestMapping("/order/kakaoPay")
+    @ApiOperation(value = "카카오페이 결제 요청")
+    public @ResponseBody String kakaoPay(HttpServletRequest request){
+
+        return kakaoService.kakaoPayReady(request);
+    }
+
+    @RequestMapping("/order/kakaoPay/success")
+    @ApiOperation(value = "카카오페이 결제 승인", notes = "pg_token 받는곳")
+    public String kakaoPaySuccess(@RequestParam(name = "pg_token") String pgToken, HttpSession session){
+
+        String tid = session.getAttribute("tid").toString();
+        kakaoService.kakaoPayApprove(pgToken, tid);
+        return "redirect:/";
     }
 
 

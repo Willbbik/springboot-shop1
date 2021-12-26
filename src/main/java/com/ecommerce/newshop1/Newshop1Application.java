@@ -18,7 +18,9 @@ public class Newshop1Application {
 			"classpath:/yml/coolsms.yml," +
 			"classpath:/yml/tosspayments.yml," +
 			"classpath:/yml/oauth2.yml," +
-			"classpath:/yml/aws.yml";
+			"classpath:/yml/aws.yml," +
+			"classpath:/yml/kakao.yml"
+			;
 
 	public static void main(String[] args) {
 
