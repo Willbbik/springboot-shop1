@@ -10,6 +10,9 @@ public class KakaoDto {
     public Properties properties;
     public Kakao_account kakao_account;
 
+
+
+
     @Data
     public class Properties {
         public String nickname;

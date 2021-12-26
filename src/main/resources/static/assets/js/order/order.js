@@ -19,7 +19,6 @@ function calculateTotalPrice(){
     $("#totalPrice").html(totalPrice + '원')
 }
 
-
 $(document).on("click", "#order-button", function(){
 
     let tossPayments = TossPayments("test_ck_OyL0qZ4G1VO5jv2azY8oWb2MQYgm");
@@ -37,11 +36,26 @@ $(document).on("click", "#order-button", function(){
         };
 
         order(paymentData);
-
-    }else if(paymethod === '카카오페이'){
-        alert("카카오페이");
+    }else if(payMethod === '카카오페이'){
+        kakaoPay();
     }
 });
+
+// 카카오페이 결제
+function kakaoPay(){
+
+    $.ajax({
+        type : "get",
+        url  : "/order/kakaoPay",
+        success : function(result){
+            location.href(result);
+
+        },
+        error : function(){
+            alert("에러입니다.");
+        }
+    });
+}
 
 
 function order(paymentData){
