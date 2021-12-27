@@ -3,7 +3,6 @@ package com.ecommerce.newshop1.controller;
 import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.OrderPaymentInformation;
 import com.ecommerce.newshop1.exception.ParameterNotFoundException;
-import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.ValidationSequence;
 import com.ecommerce.newshop1.enums.PayType;
@@ -25,23 +24,20 @@ import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final ItemRepository itemRepository;
-    private final ItemService itemService;
     private final CartService cartService;
     private final OrderService orderService;
     private final KakaoService kakaoService;
 
-    ModelMapper mapper = new ModelMapper();
-
 
     @PostMapping("/order/checkout")
     @ApiOperation(value = "구매할 상품 선택후 주문페이지로 이동")
-    public String checkout(String itemList, String where, Model model, HttpServletRequest request) throws Exception {
+    public String checkoutPage(String itemList, String where, Model model, HttpServletRequest request) throws Exception {
 
         List<OrderItemDto> orderItems = new ArrayList<>();
         String orderName = ""; // 주문 상품명 ( 브라우저의 sessionStorage에 저장하기 위해서 )
@@ -64,7 +60,7 @@ public class OrderController {
         }
 
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String orderId = date + orderService.createOrderId(date, totalPrice);        // 주문번호 생성
+        String orderId = date + orderService.createOrderId(date, totalPrice);  // 주문번호 생성
 
         // 주문번호와 상품 번호들 세션에 저장. ( 마지막 최종 주문할 때 사용하기 위해서 )
         session.setAttribute("orderId", orderId);
@@ -79,27 +75,39 @@ public class OrderController {
         return "order/order_checkout";
     }
 
-    @RequestMapping("/order/kakaoPay")
-    @ApiOperation(value = "카카오페이 결제 요청")
-    public @ResponseBody String kakaoPay(HttpServletRequest request){
+    @PostMapping("/order/kakaoPay")
+    @ApiOperation(value = "카카오페이 결제창 띄우기", notes = "카카오쪽으로 상품 정보에 대해서 전송후, 결제창 uri 리턴")
+    public @ResponseBody String kakaoPay(@Validated(ValidationSequence.class) AddressDto addressDto, BindingResult errors, String payMethod, HttpServletRequest request){
+
+        PayType payType = PayType.findByPayType(payMethod);
+        if(payType.getTitle().equals("없음")) return "fail";
+        else if(errors.hasErrors()) return "fail";
 
         return kakaoService.kakaoPayReady(request);
     }
 
     @RequestMapping("/order/kakaoPay/success")
-    @ApiOperation(value = "카카오페이 결제 승인", notes = "pg_token 받는곳")
+    @ApiOperation(value = "카카오페이 결제 승인", notes = "사용자가 결제 인증 완료후, 결제 완료 처리하는 단계")
     public String kakaoPaySuccess(@RequestParam(name = "pg_token") String pgToken, HttpSession session){
 
         String tid = session.getAttribute("tid").toString();
         kakaoService.kakaoPayApprove(pgToken, tid);
-        return "redirect:/";
+        return "common/kakaoPaySuccess";
+    }
+
+
+    @RequestMapping("/order/kakaoPay/cancel")
+    @ApiOperation(value = "카카오페이 결제 취소 페이지")
+    public String kakaoCencel(){
+        return "common/kakaoPayClose";
     }
 
 
     @RequestMapping("/order/virtual-account/callback")
     @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "가상계좌 입금 완료시 처리", notes = "토스페이먼츠 가상계좌에 입금 완료 콜백 url")
     public void paymentCheck(@RequestBody CallbackPayload callbackPayload){
-        System.out.println("콜백성공");
+
         if(callbackPayload.getStatus().equals(TossPayments.DONE.getValue())){
             // 입금 완료일 때 처리
             orderService.updateOrderToDepositSuccess(callbackPayload.getOrderId());
@@ -111,7 +119,8 @@ public class OrderController {
     }
 
 
-    @PostMapping("/order/order")
+    @PostMapping("/order/virtualAccount")
+    @ApiOperation(value = "가상계좌 결제")
     public @ResponseBody String saveAddressDto(@Validated(ValidationSequence.class) AddressDto addressDto, BindingResult errors, String payMethod, HttpServletRequest request){
 
         HttpSession session = request.getSession();
@@ -122,7 +131,6 @@ public class OrderController {
         }else if(errors.hasErrors()){
             String message = "";
             for(FieldError error : errors.getFieldErrors()){
-
                 message = error.getDefaultMessage();
                 break;
             }

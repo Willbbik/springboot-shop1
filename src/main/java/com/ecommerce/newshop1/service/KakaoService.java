@@ -3,7 +3,6 @@ package com.ecommerce.newshop1.service;
 import com.ecommerce.newshop1.dto.KakaoDto;
 import com.ecommerce.newshop1.dto.KakaoPayDto;
 import com.ecommerce.newshop1.dto.OAuthToken;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -72,8 +71,8 @@ public class KakaoService {
         params.add("total_amount", "2000");
         params.add("tax_free_amount", "0");
         params.add("approval_url", "http://localhost:8080/order/kakaoPay/success");
-        params.add("fail_url", "http://localhost:8080//order/kakaoPay/fail");
-        params.add("cancel_url", request.getHeader("Referer"));
+        params.add("fail_url", "http://localhost:8080/order/kakaoPay/fail");
+        params.add("cancel_url", "http://localhost:8080/order/kakaoPay/cancel");
 
         HttpEntity<MultiValueMap<String, String>> kakaoPayRequest = new HttpEntity<>(params, header);
         ResponseEntity<String> response = rt.exchange(
@@ -107,7 +106,6 @@ public class KakaoService {
         HttpHeaders header = new HttpHeaders();
         header.add("Content-type", Content_type);
         header.add("Authorization", "KakaoAK "+adminKey);
-
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("cid", "TC0ONETIME");
