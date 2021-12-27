@@ -25,7 +25,6 @@ public class ItemController {
     private final QnARepository qnARepository;
     private final QnAService qnAService;
     private final ItemService itemService;
-    private final AwsS3Service awsS3Service;
     private final SecurityService security;
 
     ModelMapper mapper = new ModelMapper();
@@ -79,15 +78,13 @@ public class ItemController {
     }
 
 
-
-    @ApiOperation(value = "상품 상세보기에 QnA html 리턴", notes = "ajax 용도")
     @GetMapping("/item/get/qnaList")
+    @ApiOperation(value = "상품 상세보기에 QnA html 리턴", notes = "ajax 용도")
     public String getQnaList (@RequestParam(name = "itemId") Long itemId, Model model,
                           @RequestParam(name = "page", defaultValue = "1") int curPage) throws Exception {
 
         return qnAService.getQnAHtml(itemId, model, curPage);
     }
-
 
 
     @PostMapping("/item/qna/send")
@@ -107,8 +104,8 @@ public class ItemController {
         }
     }
 
-    @ApiOperation(value = "QnA답글 저장")
     @PostMapping("/item/reply/send")
+    @ApiOperation(value = "QnA답글 저장")
     public @ResponseBody String saveItemQnaReply(QnADto dto, Long itemId) throws Exception {
 
         dto.setItem(itemService.findById(itemId));
@@ -125,5 +122,17 @@ public class ItemController {
         qnAService.saveQnAReply(dto);
         return "success";
     }
+
+
+//    @PostMapping("/item/review/write")
+//    @ApiOperation(value = "리뷰 작성")
+//    public String reviewWrite(){
+//
+//
+//
+//    }
+
+
+
 
 }

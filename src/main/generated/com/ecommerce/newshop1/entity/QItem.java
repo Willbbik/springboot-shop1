@@ -52,6 +52,8 @@ public class QItem extends EntityPathBase<Item> {
 
     public final ListPath<QnAEntity, QQnAEntity> qnAEntityList = this.<QnAEntity, QQnAEntity>createList("qnAEntityList", QnAEntity.class, QQnAEntity.class, PathInits.DIRECT2);
 
+    public final ListPath<Review, QReview> reviewList = this.<Review, QReview>createList("reviewList", Review.class, QReview.class, PathInits.DIRECT2);
+
     public final StringPath saleStatus = createString("saleStatus");
 
     public final StringPath size = createString("size");

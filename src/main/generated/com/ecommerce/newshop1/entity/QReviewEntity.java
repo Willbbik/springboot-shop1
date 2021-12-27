@@ -13,7 +13,7 @@ import com.querydsl.core.types.Path;
  * QReviewEntity is a Querydsl query type for ReviewEntity
  */
 @Generated("com.querydsl.codegen.EntitySerializer")
-public class QReviewEntity extends EntityPathBase<ReviewEntity> {
+public class QReviewEntity extends EntityPathBase<Review> {
 
     private static final long serialVersionUID = -934936690L;
 
@@ -36,15 +36,15 @@ public class QReviewEntity extends EntityPathBase<ReviewEntity> {
     public final StringPath writer = createString("writer");
 
     public QReviewEntity(String variable) {
-        super(ReviewEntity.class, forVariable(variable));
+        super(Review.class, forVariable(variable));
     }
 
-    public QReviewEntity(Path<? extends ReviewEntity> path) {
+    public QReviewEntity(Path<? extends Review> path) {
         super(path.getType(), path.getMetadata());
     }
 
     public QReviewEntity(PathMetadata metadata) {
-        super(ReviewEntity.class, metadata);
+        super(Review.class, metadata);
     }
 
 }

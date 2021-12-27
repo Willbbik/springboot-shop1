@@ -1,6 +1,4 @@
-
 $(function(){
-
     // 옵션 합치기
     function combine_option(color, size){
 
@@ -23,7 +21,6 @@ $(function(){
        modal.html(html);
 
        return result;
-
     }
 
     $("#makeOption").on("click", function(){
@@ -39,15 +36,7 @@ $(function(){
         tmp = $("textarea[name='sizeList[]']").val();
         sizeList = tmp.split(",");
 
-//        if(Array.isArray(colorList) && colorList.length == 0){
-//            let optionModal = $("#option_check").val();
-//            optionModal.empty();
-//            alert("success");
-//        }
-
         result = combine_option(colorList, sizeList);
-
-
     });
 
 
@@ -64,8 +53,6 @@ $(function(){
             }
         }
     });
-
-
 
 
 });

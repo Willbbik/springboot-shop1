@@ -11,12 +11,18 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "item_review")
-public class ReviewEntity extends TimeEntity {
+public class Review extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_review_id")
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Item item;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
 
     @Column(nullable = false)
     private String writer;
@@ -24,7 +30,8 @@ public class ReviewEntity extends TimeEntity {
     @Column(length = 2048)
     private String content;
 
-    @Column(length = 3)
-    private int cm;
+    public void setItem(Item item){
+        this.item = item;
+    }
 
 }
