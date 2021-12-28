@@ -23,7 +23,6 @@ public class Delivery extends TimeEntity{
     private Order order;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "delivery_address")
     private DeliveryAddress deliveryAddress;
 
     @Enumerated(EnumType.STRING)

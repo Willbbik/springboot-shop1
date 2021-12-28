@@ -80,7 +80,8 @@
                     <div id="info_container_2" class="detail_info_container">
                         <div>
                             <button class="btn_write_qna">리뷰 작성</button>
-                            <input type="text" placeholder="리뷰 작성">
+                            <input type="text" placeholder="리뷰 작성" id="review_content">
+                            <button type="button" id="review_post">전송</button>
                         </div>
                         <div class="detail_review_container">
                             <ul class="detail_review_select">
@@ -181,9 +182,11 @@
 
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
     <script src="https://js.tosspayments.com/v1"></script>
-    <script src="/assets/js/item/itemQnA.js"></script>
     <script src="/assets/js/item/itemDetails.js"></script>
+    <script src="/assets/js/item/itemQnA.js"></script>
+    <script src="/assets/js/item/itemReview.js"></script>
     <script src="/assets/js/order/order.js"></script>
+
 
 <th:block sec:authorized="hasRole('ROLE_ADMIN')">
     <script>

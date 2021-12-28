@@ -1,5 +1,7 @@
 package com.ecommerce.newshop1.dto;
 
+import com.ecommerce.newshop1.entity.Item;
+import com.ecommerce.newshop1.entity.Member;
 import lombok.*;
 
 @Getter
@@ -11,8 +13,9 @@ import lombok.*;
 public class ReviewDto {
 
     private Long id;
+    private Item item;
+    private Member member;
     private String writer;
     private String content;
-    private int cm;
 
 }

@@ -19,8 +19,8 @@ public class Cart extends TimeEntity {
     @Column(name = "cart_id")
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "cart")
-    private List<CartItem> cartItemList = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "cart")
+    private List<CartItem> cartItemList = new ArrayList<CartItem>();
 
     @OneToOne
     @JoinColumn(name = "member_id")

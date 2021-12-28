@@ -50,6 +50,12 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
+    public Member findById(Long memberId){
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원 번호입니다, 회원붠호 : " + memberId));
+    }
+
+    @Transactional(readOnly = true)
     public Member getCurrentMember(){
 
         if(!security.isAuthenticated()){

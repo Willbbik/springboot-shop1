@@ -19,7 +19,7 @@ public class OrderPaymentInformation {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
     private String payType;

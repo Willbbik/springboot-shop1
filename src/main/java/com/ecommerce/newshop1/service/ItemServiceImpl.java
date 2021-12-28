@@ -61,20 +61,23 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
+    @Transactional
     public List<ItemDto> searchAllNoOffset(Long ItemId) {
 
         return itemRepository.searchAllNoOffset(ItemId);
     }
 
     @Override
-    public void saveItem(Item item) {
-        itemRepository.save(item);
+    @Transactional
+    public Item saveItem(Item item) {
+        return itemRepository.save(item);
     }
 
 
     @Override
-    public void saveItemImage(ItemImage itemImage) {
-        itemImageRepository.save(itemImage);
+    @Transactional
+    public ItemImage saveItemImage(ItemImage itemImage) {
+        return itemImageRepository.save(itemImage);
     }
 
 

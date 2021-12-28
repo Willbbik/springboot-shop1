@@ -7,6 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,19 +20,17 @@ public class Review extends TimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
     private Item item;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Column(nullable = false)
     private String writer;
 
-    @Column(length = 2048)
+    @Column(length = 2048, nullable = false)
     private String content;
-
-    public void setItem(Item item){
-        this.item = item;
-    }
 
 }

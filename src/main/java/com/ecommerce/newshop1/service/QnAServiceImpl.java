@@ -30,6 +30,7 @@ public class QnAServiceImpl implements QnAService{
     private final QnARepository qnARepository;
     private final SecurityService security;
     private final MemberService memberService;
+    private final ItemService itemService;
 
     ModelMapper mapper = new ModelMapper();
 
@@ -37,17 +38,14 @@ public class QnAServiceImpl implements QnAService{
     @Transactional
     public String getQnAHtml(Long itemId, Model model, int curPage) throws Exception {
 
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다 상품 번호 : " + itemId));
-
-        // 해당 상품의 qna 개수
+        Item item = itemService.findById(itemId);
         Long qnaSize = qnARepository.countByItem(item);
 
         // 페이징 처리
         QnAPagination page = new QnAPagination(qnaSize, curPage);
         Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxQnA());
 
-        // qna 존재유무 확인해서 값 담기
+        // qna 존재유무 확인
         boolean qnaExists = qnARepository.existsByItem(item);
 
         List<QnADto> qnaList = (!qnaExists) ? new ArrayList<>() : qnARepository.searchQnA(item, pageable);
@@ -214,6 +212,7 @@ public class QnAServiceImpl implements QnAService{
     @Transactional
     public void saveQnA(QnADto dto) {
         Member member = memberService.getCurrentMember();
+        Item item = dto.getItem();
 
         QnAEntity qnaEntity = QnAEntity.builder()
                 .member(member)
@@ -225,7 +224,6 @@ public class QnAServiceImpl implements QnAService{
                 .replyEmpty(QnA.EMPTY.getValue())
                 .build();
 
-        Item item = dto.getItem();
         item.setQnaEntityList(qnaEntity);
         itemRepository.save(item);
     }

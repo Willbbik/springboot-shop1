@@ -39,25 +39,25 @@ public class Member extends TimeEntity {
     @Column(length = 11)
     private String phoneNum;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "member")
-    @JoinColumn(name = "cart_id")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
     private Cart cart;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "member")
-    @JoinColumn(name = "item_review_id")
-    private Review review;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
+    private List<Review> reviewList = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "member")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
     private List<QnAEntity> qnaList = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "member")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
     private List<Order> orderList = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "member")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
     private List<MemberAddress> memberAddresses = new ArrayList<>();
 
-
-
+    public void addReviewList(Review review){
+        this.getReviewList().add(review);
+        review.setMember(this);
+    }
 
 
 }

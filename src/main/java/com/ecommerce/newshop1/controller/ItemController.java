@@ -3,7 +3,9 @@ package com.ecommerce.newshop1.controller;
 import com.ecommerce.newshop1.dto.ItemDto;
 import com.ecommerce.newshop1.dto.ItemImageDto;
 import com.ecommerce.newshop1.dto.QnADto;
+import com.ecommerce.newshop1.dto.ReviewDto;
 import com.ecommerce.newshop1.entity.Item;
+import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.repository.ItemImageRepository;
 import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.service.*;
@@ -24,7 +26,9 @@ public class ItemController {
     private final ItemImageRepository itemImageRepository;
     private final QnARepository qnARepository;
     private final QnAService qnAService;
+    private final ReviewService reviewService;
     private final ItemService itemService;
+    private final MemberService memberService;
     private final SecurityService security;
 
     ModelMapper mapper = new ModelMapper();
@@ -124,14 +128,14 @@ public class ItemController {
     }
 
 
-//    @PostMapping("/item/review/write")
-//    @ApiOperation(value = "리뷰 작성")
-//    public String reviewWrite(){
-//
-//
-//
-//    }
+    @PostMapping("/item/review/write")
+    @ApiOperation(value = "리뷰 작성")
+    public @ResponseBody String reviewWrite(ReviewDto reviewDto, Long itemId){
 
+        reviewService.saveReview(reviewDto, itemId);
+
+        return "success";
+    }
 
 
 

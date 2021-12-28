@@ -22,9 +22,9 @@ public interface ItemService {
 
     List<ItemImageDto> searchAllItemImage(Item item);
 
-    void saveItem(Item item);
+    Item saveItem(Item item);
 
-    void saveItemImage(ItemImage itemImage);
+    ItemImage saveItemImage(ItemImage itemImage);
 
 }
 

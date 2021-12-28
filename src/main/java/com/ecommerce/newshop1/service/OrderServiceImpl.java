@@ -145,7 +145,6 @@ public class OrderServiceImpl implements OrderService {
         String orderName = (String) session.getAttribute("orderName");
         List<OrderItemDto> itemList  = (List<OrderItemDto>) session.getAttribute("orderItems");
         List<Long> cartItemIdList = (List<Long>) session.getAttribute("cartItemIdList");
-
         String userId = security.getName();
 
         // order객체에 저장하기 위해서

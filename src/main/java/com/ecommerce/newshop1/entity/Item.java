@@ -1,18 +1,15 @@
 package com.ecommerce.newshop1.entity;
 
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(name = "item", indexes = @Index(name = "idx_item", columnList = "itemName, category, saleStatus"))
@@ -23,41 +20,49 @@ public class Item extends TimeEntity{
     @Column(name = "item_id")
     private Long id;
 
+    @Column
     private String category;
 
+    @Column
     private String itemName;
 
+    @Column
     private String itemCode;
 
+    @Column
     private String color;
 
+    @Column
     private String size;
 
+    @Column
     private int price;
 
+    @Column
     private String itemInfo;
 
+    @Column
     private String model;
 
+    @Column
     private String saleStatus;
 
+    @Column
     private String imageUrl;
 
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "item")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "item")
     private List<CartItem> cartItemList = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "item")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "item")
     private List<ItemImage> itemImageList = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "item")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "item")
     private List<QnAEntity> qnAEntityList = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "item")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "item")
     private List<Review> reviewList = new ArrayList<>();
 
     public void setItemImageList(ItemImage itemImage){
-
         itemImageList.add(itemImage);
         itemImage.setItem(this);
     }
@@ -67,10 +72,9 @@ public class Item extends TimeEntity{
         qnAEntity.setItem(this);
     }
 
-    public void setReviewList(Review review){
-        reviewList.add(review);
+    public void addReviewList(Review review){
+        this.getReviewList().add(review);
         review.setItem(this);
     }
-
 
 }

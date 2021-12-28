@@ -44,7 +44,7 @@ public class QMember extends EntityPathBase<Member> {
 
     public final ListPath<QnAEntity, QQnAEntity> qnaList = this.<QnAEntity, QQnAEntity>createList("qnaList", QnAEntity.class, QQnAEntity.class, PathInits.DIRECT2);
 
-    public final QReview review;
+    public final ListPath<Review, QReview> reviewList = this.<Review, QReview>createList("reviewList", Review.class, QReview.class, PathInits.DIRECT2);
 
     public final EnumPath<com.ecommerce.newshop1.enums.Role> role = createEnum("role", com.ecommerce.newshop1.enums.Role.class);
 
@@ -71,7 +71,6 @@ public class QMember extends EntityPathBase<Member> {
     public QMember(Class<? extends Member> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.cart = inits.isInitialized("cart") ? new QCart(forProperty("cart"), inits.get("cart")) : null;
-        this.review = inits.isInitialized("review") ? new QReview(forProperty("review"), inits.get("review")) : null;
     }
 
 }
