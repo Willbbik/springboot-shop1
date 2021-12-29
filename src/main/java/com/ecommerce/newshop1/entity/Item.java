@@ -57,7 +57,7 @@ public class Item extends TimeEntity{
     private List<ItemImage> itemImageList = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "item")
-    private List<QnAEntity> qnAEntityList = new ArrayList<>();
+    private List<QnAEntity> qnaList = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "item")
     private List<Review> reviewList = new ArrayList<>();
@@ -67,8 +67,8 @@ public class Item extends TimeEntity{
         itemImage.setItem(this);
     }
 
-    public void setQnaEntityList(QnAEntity qnAEntity){
-        qnAEntityList.add(qnAEntity);
+    public void addQnaList(QnAEntity qnAEntity){
+        this.getQnaList().add(qnAEntity);
         qnAEntity.setItem(this);
     }
 

@@ -136,6 +136,7 @@ public class ItemController {
     @ApiOperation(value = "리뷰 작성")
     public @ResponseBody String reviewWrite(@Validated(ValidationSequence.class) ReviewDto reviewDto, BindingResult errors, Long itemId){
 
+        // 유효성 검사
         if(errors.hasErrors()){
             String message = "";
             for(FieldError error : errors.getFieldErrors()){

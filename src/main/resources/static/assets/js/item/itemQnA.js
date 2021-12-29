@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+    // 상품 상세보기에 들어가면 바로 qna 가져오게끔
     getQnAList();
 
     $('.tab_default').click(function(){

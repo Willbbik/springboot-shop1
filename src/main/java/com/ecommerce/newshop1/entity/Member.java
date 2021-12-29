@@ -59,5 +59,9 @@ public class Member extends TimeEntity {
         review.setMember(this);
     }
 
+    public void addQnaList(QnAEntity qnaEntity){
+        this.getQnaList().add(qnaEntity);
+        qnaEntity.setMember(this);
+    }
 
 }

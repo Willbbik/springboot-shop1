@@ -21,7 +21,7 @@ public interface QnAService  {
     void saveQnAReply(QnADto dto);
 
     // QnA 질문 저장
-    void saveQnA(QnADto dto) throws Exception;
+    void saveQnA(QnADto dto, Long itemId) throws Exception;
 
     // view에 표시할 QnA답글 편집
     List<QnADto> editReply(List<QnADto> replyList);

@@ -210,12 +210,12 @@ public class QnAServiceImpl implements QnAService{
 
     @Override
     @Transactional
-    public void saveQnA(QnADto dto) {
+    public void saveQnA(QnADto dto, Long itemId) {
+
         Member member = memberService.getCurrentMember();
-        Item item = dto.getItem();
+        Item item = itemService.findById(itemId);
 
         QnAEntity qnaEntity = QnAEntity.builder()
-                .member(member)
                 .writer(member.getUserId())
                 .content(dto.getContent().replaceAll("\\s+", " "))
                 .hide(dto.getHide())
@@ -224,8 +224,10 @@ public class QnAServiceImpl implements QnAService{
                 .replyEmpty(QnA.EMPTY.getValue())
                 .build();
 
-        item.setQnaEntityList(qnaEntity);
-        itemRepository.save(item);
+        item.addQnaList(qnaEntity);
+        member.addQnaList(qnaEntity);
+
+        qnARepository.save(qnaEntity);
     }
 
     @Override
