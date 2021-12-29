@@ -56,6 +56,7 @@ public class MemberController {
     }
 
     @GetMapping("/mypage")
+    @ApiOperation(value = "mypage 페이지")
     public String mypage(Model model) {
 
         Member member = memberService.getCurrentMember();
@@ -76,7 +77,8 @@ public class MemberController {
 
     @GetMapping("/mypage/orderList")
     @ApiOperation(value = "mypage에 주문한 상품들이 담긴 html 리턴", notes = "ajax 전용")
-    public String orderListMore(Model model, @RequestParam(required = false) Long lastOrderId, @RequestParam(required = false) String more){
+    public String orderListMore(@RequestParam(required = false) Long lastOrderId,
+                                @RequestParam(required = false) String more, Model model){
 
         Member member = memberService.getCurrentMember();
         List<OrderDto> orderList = orderService.searchAllByMember(lastOrderId, member);

@@ -10,11 +10,15 @@ import com.ecommerce.newshop1.repository.ItemImageRepository;
 import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.enums.Role;
+import com.ecommerce.newshop1.utils.ValidationSequence;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -130,11 +134,37 @@ public class ItemController {
 
     @PostMapping("/item/review/write")
     @ApiOperation(value = "리뷰 작성")
-    public @ResponseBody String reviewWrite(ReviewDto reviewDto, Long itemId){
+    public @ResponseBody String reviewWrite(@Validated(ValidationSequence.class) ReviewDto reviewDto, BindingResult errors, Long itemId){
 
+        if(errors.hasErrors()){
+            String message = "";
+            for(FieldError error : errors.getFieldErrors()){
+                message = error.getDefaultMessage();
+            }
+            return message;
+        }
         reviewService.saveReview(reviewDto, itemId);
 
         return "success";
+    }
+
+    @GetMapping("/item/reviewList/get")
+    @ApiOperation(value = "리뷰 반환", notes = "ajax 전용")
+    public String getReviewList(@RequestParam(name = "itemId") Long itemId,
+                                @RequestParam(name = "lastReviewId", required = false) Long lastReviewId,
+                                @RequestParam(name = "reviewMore", required = false) String more, Model model){
+
+        Long reviewSize = reviewService.countByItem(itemService.findById(itemId));
+        List<ReviewDto> reviewList = reviewService.searchAll(itemId, lastReviewId);
+
+        model.addAttribute("reviewList", reviewList);
+        model.addAttribute("reviewSize", reviewSize);
+        model.addAttribute("lastReviewId", lastReviewId);
+
+        if(more != null){
+            return "item/tab/tab2ReviewMore";
+        }
+        return "item/tab/tab2Review";
     }
 
 
