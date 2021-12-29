@@ -1,10 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
+    <input type="hidden" id="lastReviewId" th:value="${lastReviewId}">
+    <div class="Detail-review-box" th:each="review : ${reviewList}">
+        <dl class="detail_review_default">
+            <dt class="review_profile">
+                <strong>
+                    <div class="user_name" th:text="${review.writer}"></div>
+                    <div class="date" th:text="${#temporals.format(review.createdDate, 'yyyy.MM.dd')}"></div>
+                </strong>
+            </dt>
+            <dd class="review_text" th:text="${review.content}"></dd>
+        </dl>
+    </div>
 
 </body>
 </html>

@@ -1,7 +1,7 @@
 $(function(){
 
     // 상품 상세보기에 들어가면 바로 리뷰 가져오게끔
-    getReviewList();
+   //  getReviewList();
 
     // csrf
     let csrfHeader = $("meta[name=_csrf_header]").attr("content");
@@ -37,6 +37,26 @@ $(function(){
             alert("리뷰 등록에 실패하였습니다. \n잠시후 다시 시도해주시기 바랍니다.");
         });
     });
+
+    // 리뷰 더보기 버튼
+    $(document).on("click", "#btn_more_review", function(){
+        let lastReviewId = $("#lastReviewId").val();
+        let itemId = $("#itemId").val();
+
+        $.ajax({
+            url : "/item/reviewList/get",
+            type : "get",
+            data : { itemId : itemId,
+                     lastReviewId : lastReviewId,
+                     more : "more" }
+        }).done(function(result){
+            $("#lastReviewId").remove();
+            $(".detail_review_container").append(result);
+        }).fail(function(result){
+            alert("에러가 발생했습니다. \n잠시후 다시 시도해보시기 바랍니다.");
+        });
+    });
+
 
 });
 

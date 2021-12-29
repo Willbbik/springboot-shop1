@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface ReviewService {
 
+    Long getLastReviewId(List<ReviewDto> reviewList, Long lastReviewId);
     void saveReview(ReviewDto reviewDto, Long itemId);
     Long countByItem(Item item);
     List<ReviewDto> searchAll(Long itemId, Long lastReviewId);

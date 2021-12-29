@@ -71,7 +71,9 @@
             <div class="row">
                 <div class="tabs_wrap">
                     <div class="tab_default tab_active" id="tab1">상품정보</div>
-                    <div class="tab_default" id="tab2">리뷰</div>
+                    <div class="tab_default" id="tab2">리뷰
+                        <span th:text="${reviewSize}"></span>
+                    </div>
                     <div class="tab_default" id="tab3">Q&A
                         <span th:text="${qnaSize}"></span>
                     </div>
@@ -91,51 +93,15 @@
                             <div class="review_head">
                                 <div>
                                     리뷰
-                                    <span>개수</span>
+                                    <span th:text="${reviewSize}"></span>
                                 </div>
                             </div>
-                            <div class="Detail-review-box">
-                                <dl class="detail_review_default">
-                                    <dt class="review_profile">
-                                        <strong>
-                                            <div class="user_name">min***</div>
-                                            <div class="date">2021.10.18</div>
-                                        </strong>
-                                    </dt>
-                                    <dd class="review_text">좋네요</dd>
-                                </dl>
-                            </div>
-                            <a class="btn_more_review">더 많은 텍스트 리뷰 보기</a>
                         </div>
+                        <button class="btn btn-primary" id="btn_more_review">더 많은 텍스트 리뷰 보기</button>
+                        <!--<a class="btn_more_review" id="btn_more_review">더 많은 텍스트 리뷰 보기</a>-->
                     </div>
-<!--                    <div id="info_container_2" class="detail_info_container">-->
-<!--                        <ul class="detail_review_select">-->
-<!--                            <li class="active_review_select col-sm">최신순</li>-->
-<!--                            <li>오래된순</li>-->
-<!--                        </ul>-->
-<!--                        <div class="detail_review_container">-->
-<!--                            <div class="review_head">-->
-<!--                                <div>-->
-<!--                                    리뷰-->
-<!--                                    <span>개수</span>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="Detail-review-box">-->
-<!--                                <dl class="detail_review_default">-->
-<!--                                    <dt class="review_profile">-->
-<!--                                        <strong>-->
-<!--                                            <div class="user_name">min***</div>-->
-<!--                                            <div class="date">2021.10.18</div>-->
-<!--                                        </strong>-->
-<!--                                    </dt>-->
-<!--                                    <dd class="review_text">좋네요</dd>-->
-<!--                                </dl>-->
-<!--                            </div>-->
-<!--                            <a class="btn_more_review">더 많은 텍스트 리뷰 보기</a>-->
-<!--                        </div>-->
-<!--                    </div>-->
-                    <div id="info_container_3" class="detail_info_container" style="display:none;">
 
+                    <div id="info_container_3" class="detail_info_container" style="display:none;">
                         <div class="details_qna_container">
                             <div class="qna_list_chk">
                                 <div>

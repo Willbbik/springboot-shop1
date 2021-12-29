@@ -17,11 +17,11 @@ public interface QnAService  {
     // 현재 사용자가 작성한 qnA가져오기
     List<QnADto> searchAllByMember(Long id, Member member);
 
-    // QnA 관리자 답글 저장
-    void saveQnAReply(QnADto dto);
-
     // QnA 질문 저장
-    void saveQnA(QnADto dto, Long itemId) throws Exception;
+    void saveQnA(QnADto dto, Long itemId) ;
+
+    // QnA 관리자 답글 저장
+    void saveQnAReply(QnADto dto, Long itemId);
 
     // view에 표시할 QnA답글 편집
     List<QnADto> editReply(List<QnADto> replyList);

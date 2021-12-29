@@ -5,7 +5,6 @@ import com.ecommerce.newshop1.dto.ItemImageDto;
 import com.ecommerce.newshop1.dto.QnADto;
 import com.ecommerce.newshop1.dto.ReviewDto;
 import com.ecommerce.newshop1.entity.Item;
-import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.repository.ItemImageRepository;
 import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.service.*;
@@ -32,7 +31,6 @@ public class ItemController {
     private final QnAService qnAService;
     private final ReviewService reviewService;
     private final ItemService itemService;
-    private final MemberService memberService;
     private final SecurityService security;
 
     ModelMapper mapper = new ModelMapper();
@@ -78,9 +76,13 @@ public class ItemController {
         // 상품 QnA 질문 개수
         Long qnaSize = qnARepository.countByItem(item);
 
+        // 상품 리뷰 개수
+        Long reviewSize = reviewService.countByItem(item);
+
         model.addAttribute("item", itemDto);     // 상품
         model.addAttribute("images", images);    // 상품 이미지
         model.addAttribute("qnaSize", qnaSize);  // qna 개수
+        model.addAttribute("reviewSize", reviewSize);
 
         return "item/itemDetails";
     }
@@ -89,7 +91,7 @@ public class ItemController {
     @GetMapping("/item/get/qnaList")
     @ApiOperation(value = "상품 상세보기에 QnA html 리턴", notes = "ajax 용도")
     public String getQnaList (@RequestParam(name = "itemId") Long itemId, Model model,
-                          @RequestParam(name = "page", defaultValue = "1") int curPage) throws Exception {
+                              @RequestParam(name = "page", defaultValue = "1") int curPage) throws Exception {
 
         return qnAService.getQnAHtml(itemId, model, curPage);
     }
@@ -97,13 +99,11 @@ public class ItemController {
 
     @PostMapping("/item/qna/send")
     @ApiOperation(value = "Q&A 저장")
-    public @ResponseBody String saveItemQnA(QnADto qnaDto, Long itemId) throws Exception {
-
-        qnaDto.setItem(itemService.findById(itemId));
+    public @ResponseBody String saveItemQnA(QnADto qnaDto, Long itemId){
 
         int result = qnAService.checkValidationQnA(qnaDto);
         if(result == 0){
-            qnAService.saveQnA(qnaDto);
+            qnAService.saveQnA(qnaDto, itemId);
             return "Y";     // 저장에 성공하면
         }else if(result == -2){
             return "login"; // 비로그인일때
@@ -112,11 +112,10 @@ public class ItemController {
         }
     }
 
+
     @PostMapping("/item/reply/send")
     @ApiOperation(value = "QnA답글 저장")
-    public @ResponseBody String saveItemQnaReply(QnADto dto, Long itemId) throws Exception {
-
-        dto.setItem(itemService.findById(itemId));
+    public @ResponseBody String saveItemQnaReply(QnADto dto, Long itemId) {
 
         int result = qnAService.checkValidationQnA(dto);
         if(!security.checkHasRole(Role.ADMIN.getValue())){
@@ -127,7 +126,7 @@ public class ItemController {
         }
 
         // 여기다 답글 저장 메소드
-        qnAService.saveQnAReply(dto);
+        qnAService.saveQnAReply(dto, itemId);
         return "success";
     }
 
@@ -153,10 +152,11 @@ public class ItemController {
     @ApiOperation(value = "리뷰 반환", notes = "ajax 전용")
     public String getReviewList(@RequestParam(name = "itemId") Long itemId,
                                 @RequestParam(name = "lastReviewId", required = false) Long lastReviewId,
-                                @RequestParam(name = "reviewMore", required = false) String more, Model model){
+                                @RequestParam(name = "more", required = false) String more, Model model){
 
         Long reviewSize = reviewService.countByItem(itemService.findById(itemId));
         List<ReviewDto> reviewList = reviewService.searchAll(itemId, lastReviewId);
+        lastReviewId = reviewService.getLastReviewId(reviewList, lastReviewId);
 
         model.addAttribute("reviewList", reviewList);
         model.addAttribute("reviewSize", reviewSize);

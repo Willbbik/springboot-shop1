@@ -4,6 +4,7 @@ import com.ecommerce.newshop1.dto.QnADto;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.QnAEntity;
+import com.ecommerce.newshop1.exception.QnaNotFoundException;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.utils.QnAPagination;
@@ -26,7 +27,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class QnAServiceImpl implements QnAService{
 
-    private final ItemRepository itemRepository;
     private final QnARepository qnARepository;
     private final SecurityService security;
     private final MemberService memberService;
@@ -181,33 +181,6 @@ public class QnAServiceImpl implements QnAService{
         return new ArrayList<>();
     }
 
-
-
-    @Override
-    @Transactional
-    public void saveQnAReply(QnADto dto){
-        Member member = memberService.getCurrentMember();
-
-        QnAEntity qnaReply = QnAEntity.builder()
-                .member(member)
-                .writer(member.getUserId())
-                .content(dto.getContent())
-                .parent(dto.getParent())
-                .hide(dto.getHide())
-                .replyEmpty(QnA.EMPTY.getValue())
-                .depth(2)
-                .build();
-
-        QnAEntity parentQna = qnARepository.findById(dto.getParent()).get();
-        // 해당 질문 답변 상태 변경. 답변없음 > 답변존재
-        parentQna.setReplyEmpty(QnA.PRESENT.getValue());
-
-        Item item = dto.getItem();
-        item.setQnaEntityList(qnaReply);
-        itemRepository.save(item);
-    }
-
-
     @Override
     @Transactional
     public void saveQnA(QnADto dto, Long itemId) {
@@ -229,6 +202,34 @@ public class QnAServiceImpl implements QnAService{
 
         qnARepository.save(qnaEntity);
     }
+
+    @Override
+    @Transactional
+    public void saveQnAReply(QnADto dto, Long itemId){
+
+        Member member = memberService.getCurrentMember();
+        Item item = itemService.findById(itemId);
+
+        QnAEntity qnaReply = QnAEntity.builder()
+                .writer(member.getUserId())
+                .content(dto.getContent())
+                .parent(dto.getParent())
+                .hide(dto.getHide())
+                .replyEmpty(QnA.EMPTY.getValue())
+                .depth(2)
+                .build();
+
+        QnAEntity parentQna = qnARepository.findById(dto.getParent()).get();
+        // 해당 질문 답변 상태 변경. 답변없음 > 답변존재
+        parentQna.setReplyEmpty(QnA.PRESENT.getValue());
+
+        item.addQnaList(qnaReply);
+        member.addQnaList(qnaReply);
+
+        qnARepository.save(qnaReply);
+    }
+
+
 
     @Override
     @Transactional

@@ -22,6 +22,17 @@ public class ReviewServiceImpl implements ReviewService{
 
     ModelMapper mapper = new ModelMapper();
 
+    public Long getLastReviewId(List<ReviewDto> reviewList, Long lastReviewId){
+        if(reviewList.size() > 1){
+            int lastIndex = reviewList.size() - 1;
+            return reviewList.get(lastIndex).getId();
+        }else if(reviewList.size() == 1){
+            return reviewList.get(0).getId();
+        }else{
+            return lastReviewId;
+        }
+    }
+
     @Override
     @Transactional
     public void saveReview(ReviewDto reviewDto, Long itemId) {
