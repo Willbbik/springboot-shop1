@@ -3,6 +3,10 @@ $(function(){
     // 상품 상세보기에 들어가면 바로 리뷰 가져오게끔
      getReviewList();
 
+     // csrf
+     let csrfHeader = $("meta[name=_csrf_header]").attr("content");
+     let csrfToken = $("meta[name=_csrf]").attr("content");
+
     // tab1 상품정보
     $("#tab1").on("click", function(){
 
@@ -25,9 +29,12 @@ $(function(){
         getReviewList();
     });
 
-    // csrf
-    let csrfHeader = $("meta[name=_csrf_header]").attr("content");
-    let csrfToken = $("meta[name=_csrf]").attr("content");
+    $(document).on("click", "ul.detail_review_select li", function(){
+
+        $(".active_review_select").attr("class", "");
+        $(this).addClass("active_review_select");
+        getReviewList();
+    });
 
     // 리뷰 작성
     $(document).on("click", "#review_post", function(){
@@ -83,7 +90,7 @@ $(function(){
                      more : "more" }
         }).done(function(result){
             $("#lastReviewId").remove();
-            $(".detail_review_container").append(result);
+            $(".review_content_main_box").append(result);
         }).fail(function(result){
             alert("에러가 발생했습니다. \n잠시후 다시 시도해보시기 바랍니다.");
         });
@@ -93,15 +100,17 @@ $(function(){
 });
 
 
-function getReviewList(){
+ function getReviewList(){
+
     let itemId = $("#itemId").val();
+    let sort = $(".active_review_select").attr("id");
 
     $.ajax({
         url : "/item/reviewList/get",
         type : "get",
-        data : { itemId : itemId },
+        data : { itemId : itemId , sort : sort },
     }).done(function(result){
-        $("#info_container_2").html(result);
+        $("#review_content_main_box").html(result);
     }).fail(function(result){
         alert("에러가 발생했습니다. \n리뷰를 가져올 수 없습니다.");
     });

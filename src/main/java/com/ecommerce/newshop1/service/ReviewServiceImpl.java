@@ -59,9 +59,9 @@ public class ReviewServiceImpl implements ReviewService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<ReviewDto> searchAll(Long itemId, Long lastReviewId) {
+    public List<ReviewDto> searchAll(Long itemId, Long lastReviewId, String sort) {
 
-        List<ReviewDto> reviewDtos = reviewRepository.searchAll(itemId, lastReviewId);
+        List<ReviewDto> reviewDtos = reviewRepository.searchAll(itemId, lastReviewId, sort);
         if(!reviewDtos.isEmpty()) {
             for (ReviewDto reviewDto : reviewDtos) editReview(reviewDto);
         }

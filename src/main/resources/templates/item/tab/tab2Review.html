@@ -2,34 +2,23 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
 
-    <div>
+    <div class="review_head">
         <input type="hidden" id="lastReviewId" th:value="${lastReviewId}">
-        <button class="btn_write_qna">리뷰 작성</button>
-        <input type="text" placeholder="리뷰 작성" id="review_content">
-        <button type="button" id="review_post">전송</button>
+        <div>
+            리뷰
+            <span th:text="${reviewSize}"></span>
+        </div>
     </div>
-    <div class="detail_review_container">
-        <ul class="detail_review_select">
-            <li class="active_review_select col-sm">최신순</li>
-            <li>오래된순</li>
-        </ul>
-        <div class="review_head">
-            <div>
-                리뷰
-                <span th:text="${reviewSize}"></span>
-            </div>
-        </div>
-        <div class="Detail-review-box" th:each="review : ${reviewList}">
-            <dl class="detail_review_default">
-                <dt class="review_profile">
-                    <strong>
-                        <div class="user_name" th:text="${review.writer}"></div>
-                        <div class="date" th:text="${#temporals.format(review.createdDate, 'yyyy.MM.dd')}"></div>
-                    </strong>
-                </dt>
-                <dd class="review_text" th:text="${review.content}"></dd>
-            </dl>
-        </div>
+    <div class="Detail-review-box" th:each="review : ${reviewList}">
+        <dl class="detail_review_default">
+            <dt class="review_profile">
+                <strong>
+                    <div class="user_name" th:text="${review.writer}"></div>
+                    <div class="date" th:text="${#temporals.format(review.createdDate, 'yyyy.MM.dd')}"></div>
+                </strong>
+            </dt>
+            <dd class="review_text" th:text="${review.content}"></dd>
+        </dl>
     </div>
     <button class="btn btn-primary" id="btn_more_review">더 많은 텍스트 리뷰 보기</button>
 </body>

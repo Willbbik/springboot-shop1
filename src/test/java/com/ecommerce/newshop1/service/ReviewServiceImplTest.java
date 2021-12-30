@@ -103,7 +103,7 @@ class ReviewServiceImplTest {
         reviewRepository.save(review);
 
         // when
-        List<ReviewDto> reviewList = reviewService.searchAll(item.getId(),null);
+        List<ReviewDto> reviewList = reviewService.searchAll(item.getId(),null, null);
 
         // then
         assertNotNull(reviewList);

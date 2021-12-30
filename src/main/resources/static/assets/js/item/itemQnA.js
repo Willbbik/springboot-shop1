@@ -61,7 +61,6 @@ $(document).ready(function(){
         let content = $("#content").val();
         let hide = $('input:radio[name="hide"]:checked').val();
 
-
         if(content == ""){
             alert("내용을 입력해주세요.");
             return false;

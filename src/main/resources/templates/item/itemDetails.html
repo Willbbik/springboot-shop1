@@ -87,20 +87,20 @@
                         </div>
                         <div class="detail_review_container">
                             <ul class="detail_review_select">
-                                <li class="active_review_select col-sm">최신순</li>
-                                <li>오래된순</li>
+                                <li class="active_review_select " id="recent">최신순</li>
+                                <li id="old">오래된순</li>
                             </ul>
-                            <div class="review_head">
-                                <div>
-                                    리뷰
-                                    <span th:text="${reviewSize}"></span>
+                            <div class="review_content_main_box">
+                                <div class="review_head">
+                                    <div>
+                                        리뷰
+                                        <span th:text="${reviewSize}"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <button class="btn btn-primary" id="btn_more_review">더 많은 텍스트 리뷰 보기</button>
-                        <!--<a class="btn_more_review" id="btn_more_review">더 많은 텍스트 리뷰 보기</a>-->
                     </div>
-
                     <div id="info_container_3" class="detail_info_container" style="display:none;">
                         <div class="details_qna_container">
                             <div class="qna_list_chk">

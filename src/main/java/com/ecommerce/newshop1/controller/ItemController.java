@@ -22,6 +22,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Pattern;
 import java.util.List;
 import java.util.Optional;
 
@@ -167,11 +168,15 @@ public class ItemController {
     @ApiOperation(value = "리뷰 반환", notes = "ajax 전용")
     public String getReviewList(@RequestParam(name = "itemId") Long itemId,
                                 @RequestParam(name = "lastReviewId", required = false) Long lastReviewId,
+                                @RequestParam(name = "sort", required = false, defaultValue = "recent") String sort,
                                 @RequestParam(name = "more", required = false) String more, Model model){
 
         Long reviewSize = reviewService.countByItem(itemService.findById(itemId));
-        List<ReviewDto> reviewList = reviewService.searchAll(itemId, lastReviewId);
-        lastReviewId = reviewService.getLastReviewId(reviewList, lastReviewId);
+        List<ReviewDto> reviewList = reviewService.searchAll(itemId, lastReviewId, sort);
+
+        if(sort.equals("recent")){
+            lastReviewId = reviewService.getLastReviewId(reviewList, lastReviewId);
+        }
 
         model.addAttribute("reviewList", reviewList);
         model.addAttribute("reviewSize", reviewSize);

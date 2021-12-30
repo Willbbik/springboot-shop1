@@ -44,7 +44,7 @@ public class MemberService {
     ModelMapper mapper = new ModelMapper();
 
 
-    public boolean existsItem(Item item){
+    public boolean existsItem(Item item) {
         Member member = getCurrentMember();
 
         return member.getItemList().stream()
