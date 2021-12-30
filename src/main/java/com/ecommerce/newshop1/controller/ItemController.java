@@ -35,6 +35,7 @@ public class ItemController {
     private final ReviewService reviewService;
     private final ItemService itemService;
     private final CommonService commonService;
+    private final MemberService memberService;
     private final SecurityService security;
 
     ModelMapper mapper = new ModelMapper();
@@ -150,13 +151,15 @@ public class ItemController {
         Item item = itemService.findById(itemId);
         Optional<Review> findReview = reviewService.findByItem(item);
 
-        if(!security.isAuthenticated()) {
-            return "login";
-        }else if(findReview.isPresent()) {
-            return "exists";
-        }else {
+        if(!security.isAuthenticated()) {       // 로그인한 상태인지
+            return "-1";
+        }else if(findReview.isPresent()) {      // 이미 리뷰를 작성했는지
+            return "-2";
+        }else if(!memberService.existsItem(item)){ // 해당 상품을 구매했는지
+            return "-3";
+        } else {
             reviewService.saveReview(reviewDto, itemId);
-            return "success";
+            return "0";
         }
     }
 

@@ -31,6 +31,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final SetPath<Item, QItem> itemList = this.<Item, QItem>createSet("itemList", Item.class, QItem.class, PathInits.DIRECT2);
+
     public final ListPath<MemberAddress, QMemberAddress> memberAddresses = this.<MemberAddress, QMemberAddress>createList("memberAddresses", MemberAddress.class, QMemberAddress.class, PathInits.DIRECT2);
 
     //inherited

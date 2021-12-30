@@ -2,6 +2,7 @@ package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.JoinMemberDto;
 import com.ecommerce.newshop1.dto.MemberDto;
+import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.exception.MemberNotFoundException;
 import com.ecommerce.newshop1.exception.NotLoginException;
@@ -33,14 +34,23 @@ public class MemberService {
 
     private static final Logger log = LoggerFactory.getLogger(MemberService.class);
 
+    private final CustomUserDetailsService customUserDetailsService;
     private final MemberRepository memberRepository;
     private final RedisService redisService;
-    private final CustomUserDetailsService customUserDetailsService;
+    private final ItemService itemService;
     private final SecurityService security;
-
     private final PasswordEncoder passwordEncoder;
 
     ModelMapper mapper = new ModelMapper();
+
+    public boolean existsItem(Item item){
+        Member member = getCurrentMember();
+
+        return member.getItemList().stream()
+                .map(p -> p.equals(item))
+                .findAny()
+                .orElse(false);
+    }
 
     // 아이디 찾기
     @Transactional(readOnly = true)

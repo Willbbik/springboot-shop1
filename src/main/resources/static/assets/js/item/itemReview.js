@@ -48,15 +48,18 @@ $(function(){
                 xhr.setRequestHeader(csrfHeader, csrfToken);
             }
         }).done(function(result){
-            if(result === "success"){
+            if(result === "0"){
                 $("#review_content").val("");
                 getReviewList();
                 alert("리뷰를 등록하였습니다.");
-            }else if(result === "login"){
+            }else if(result === "-1"){
                 alert("로그인이 필요한 서비스입니다.");
                 return false;
-            }else if(result === "exists"){
+            }else if(result === "-2"){
                 alert("리뷰는 한 상품당 하나만 작성 가능합니다.");
+                return false;
+            }else if(result === "-3"){
+                alert("상품 구매자만 리뷰 작성 가능합니다.");
                 return false;
             }else{
                 alert(result);

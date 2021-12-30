@@ -6,7 +6,9 @@ import com.ecommerce.newshop1.enums.Sns;
 import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -54,12 +56,15 @@ public class Member extends TimeEntity {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
     private List<MemberAddress> memberAddresses = new ArrayList<>();
 
-    public void addReviewList(Review review){
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private Set<Item> itemList = new HashSet<>();
+
+    public void addReviewList(Review review) {
         this.getReviewList().add(review);
         review.setMember(this);
     }
 
-    public void addQnaList(QnAEntity qnaEntity){
+    public void addQnaList(QnAEntity qnaEntity) {
         this.getQnaList().add(qnaEntity);
         qnaEntity.setMember(this);
     }

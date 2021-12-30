@@ -2,6 +2,7 @@ package com.ecommerce.newshop1.repository.custom;
 
 
 import com.ecommerce.newshop1.dto.ReviewDto;
+import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.QReview;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;

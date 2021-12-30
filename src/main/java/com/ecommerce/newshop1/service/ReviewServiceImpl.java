@@ -77,11 +77,15 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<Review> findByItem(Item item) {
-
         return reviewRepository.findByItem(item);
     }
+
+
+
+
+
 }
 
 
