@@ -14,26 +14,6 @@ $(document).ready(function(){
         $(this).attr('class', 'tab_default tab_active');
     });
 
-    // tab1 상품정보
-    $("#tab1").on("click", function(){
-
-        let info2 = $("#info_container_2");
-        let info3 = $("#info_container_3");
-
-        info2.css("display", "");
-        info3.css("display", "none");
-    });
-
-    // tab2 Review
-    $("#tab2").on("click", function(){
-
-        let info2 = $("#info_container_2");
-        let info3 = $("#info_container_3");
-
-        info2.css("display", "");
-        info3.css("display", "none");
-    });
-
     // tab3 QnA
     $(document).on("click", "#tab3", function(){
 
@@ -42,8 +22,7 @@ $(document).ready(function(){
 
         info2.css("display", "none");
         info3.css("display", "");
-
-//        getQnAList();
+        getQnAList();
     });
 
 
@@ -75,7 +54,7 @@ $(document).ready(function(){
     });
 
 
-    // QnA 질문 전송
+    // QnA 질문 등록
     $(document).on("click", "#qna_post", function(){
 
         let itemId = $("#itemId").val();
@@ -102,7 +81,7 @@ $(document).ready(function(){
                xhr.setRequestHeader(header, token);
            },
            success : function(result){
-                if(result === "Y"){
+                if(result === "success"){
                    $(".qna_write").css('display', 'none');
                    $("#content").val("");
                    getQnAList();
@@ -112,8 +91,8 @@ $(document).ready(function(){
                    alert("로그인이 필요한 서비스입니다.");
                    return false;
                 }else{
-                   alert("내용을 다시 확인해주세요.");
-                   return false;
+                    alert(result);
+                    return false;
                 }
            },
            error : function(result){

@@ -22,6 +22,7 @@ public class ReviewServiceImpl implements ReviewService{
 
     ModelMapper mapper = new ModelMapper();
 
+
     public Long getLastReviewId(List<ReviewDto> reviewList, Long lastReviewId){
         if(reviewList.size() > 1){
             int lastIndex = reviewList.size() - 1;

@@ -186,18 +186,18 @@
                 success : function(result){
                     if(result === "success"){
                       span.find("#replyContent").val("");
-                      alert("답변 작성에 성공하셨습니다.");
                       getQnAList();
-                    }else if(result === "N"){
-                      alert("값을 정확히 입력해주세요 ( 최대길이 2048자 )");
+                      alert("답변 작성에 성공하셨습니다.");
+                    }else if(result === "login"){
+                      alert("권한이 없습니다");
                       return false;
                     } else{
-                      alert("권한이 없습니다");
+                      alert(result);
                       return false;
                     }
                 },
                 error : function(result){
-                    alert("답변 작성에 실패했습니다.\n잠시후에 다시 시도해보시고 안된다면\n고객센터에 문의해주시기 바랍니다.");
+                    alert("답변 작성에 실패했습니다.\n잠시후 다시 시도해보시기 바랍니다");
                 }
             });
         });

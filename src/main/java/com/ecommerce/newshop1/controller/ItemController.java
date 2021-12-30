@@ -9,6 +9,7 @@ import com.ecommerce.newshop1.repository.ItemImageRepository;
 import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.enums.Role;
+import com.ecommerce.newshop1.utils.CommonService;
 import com.ecommerce.newshop1.utils.ValidationSequence;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class ItemController {
     private final QnAService qnAService;
     private final ReviewService reviewService;
     private final ItemService itemService;
+    private final CommonService commonService;
     private final SecurityService security;
 
     ModelMapper mapper = new ModelMapper();
@@ -99,35 +101,38 @@ public class ItemController {
 
     @PostMapping("/item/qna/send")
     @ApiOperation(value = "Q&A 저장")
-    public @ResponseBody String saveItemQnA(QnADto qnaDto, Long itemId){
+    public @ResponseBody String saveItemQnA(@Validated(ValidationSequence.class) QnADto qnaDto, BindingResult errors, Long itemId){
 
-        int result = qnAService.checkValidationQnA(qnaDto);
-        if(result == 0){
+        // 유효성 검사
+        if(errors.hasErrors()){
+            return commonService.getErrorMessage(errors);
+        }
+
+        if(security.isAuthenticated()){
             qnAService.saveQnA(qnaDto, itemId);
-            return "Y";     // 저장에 성공하면
-        }else if(result == -2){
-            return "login"; // 비로그인일때
+            return "success";
         }else{
-            return "N";     // 유효성 검사에 실패했을때
+            return "login";
         }
     }
 
 
     @PostMapping("/item/reply/send")
     @ApiOperation(value = "QnA답글 저장")
-    public @ResponseBody String saveItemQnaReply(QnADto dto, Long itemId) {
+    public @ResponseBody String saveItemQnaReply(@Validated(ValidationSequence.class) QnADto dto, BindingResult errors, Long itemId) {
 
-        int result = qnAService.checkValidationQnA(dto);
-        if(!security.checkHasRole(Role.ADMIN.getValue())){
-            return "fail";
-        }
-        else if(result != 0){
-            return "N";
+        // 유효성 검사
+        if(errors.hasErrors()){
+            return commonService.getErrorMessage(errors);
         }
 
-        // 여기다 답글 저장 메소드
-        qnAService.saveQnAReply(dto, itemId);
-        return "success";
+        // 로그인 검사
+        if(security.isAuthenticated() && security.checkHasRole(Role.ADMIN.getValue())){
+            qnAService.saveQnAReply(dto, itemId);
+            return "success";
+        }else{
+            return "login";
+        }
     }
 
 
@@ -137,15 +142,15 @@ public class ItemController {
 
         // 유효성 검사
         if(errors.hasErrors()){
-            String message = "";
-            for(FieldError error : errors.getFieldErrors()){
-                message = error.getDefaultMessage();
-            }
-            return message;
+            return commonService.getErrorMessage(errors);
         }
-        reviewService.saveReview(reviewDto, itemId);
 
-        return "success";
+        if(security.isAuthenticated()){
+            reviewService.saveReview(reviewDto, itemId);
+            return "success";
+        }else{
+            return "login";
+        }
     }
 
     @GetMapping("/item/reviewList/get")

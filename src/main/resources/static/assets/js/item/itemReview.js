@@ -1,7 +1,29 @@
 $(function(){
 
     // 상품 상세보기에 들어가면 바로 리뷰 가져오게끔
-   //  getReviewList();
+     getReviewList();
+
+    // tab1 상품정보
+    $("#tab1").on("click", function(){
+
+        let info2 = $("#info_container_2");
+        let info3 = $("#info_container_3");
+
+        info2.css("display", "");
+        info3.css("display", "none");
+        getReviewList();
+    });
+
+    // tab2 Review
+    $("#tab2").on("click", function(){
+
+        let info2 = $("#info_container_2");
+        let info3 = $("#info_container_3");
+
+        info2.css("display", "");
+        info3.css("display", "none");
+        getReviewList();
+    });
 
     // csrf
     let csrfHeader = $("meta[name=_csrf_header]").attr("content");
@@ -26,12 +48,16 @@ $(function(){
                 xhr.setRequestHeader(csrfHeader, csrfToken);
             }
         }).done(function(result){
-            if(result == "success"){
+            if(result === "success"){
                 $("#review_content").val("");
                 getReviewList();
                 alert("리뷰를 등록하였습니다.");
+            }else if(result === "login"){
+                 alert("로그인이 필요한 서비스입니다.");
+                 return false;
             }else{
                 alert(result);
+                return false;
             }
         }).fail(function(result){
             alert("리뷰 등록에 실패하였습니다. \n잠시후 다시 시도해주시기 바랍니다.");
@@ -59,6 +85,7 @@ $(function(){
 
 
 });
+
 
 function getReviewList(){
     let itemId = $("#itemId").val();
