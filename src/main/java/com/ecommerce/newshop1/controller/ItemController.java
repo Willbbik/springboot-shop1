@@ -5,6 +5,7 @@ import com.ecommerce.newshop1.dto.ItemImageDto;
 import com.ecommerce.newshop1.dto.QnADto;
 import com.ecommerce.newshop1.dto.ReviewDto;
 import com.ecommerce.newshop1.entity.Item;
+import com.ecommerce.newshop1.entity.Review;
 import com.ecommerce.newshop1.repository.ItemImageRepository;
 import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.service.*;
@@ -22,6 +23,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -145,11 +147,16 @@ public class ItemController {
             return commonService.getErrorMessage(errors);
         }
 
-        if(security.isAuthenticated()){
+        Item item = itemService.findById(itemId);
+        Optional<Review> findReview = reviewService.findByItem(item);
+
+        if(!security.isAuthenticated()) {
+            return "login";
+        }else if(findReview.isPresent()) {
+            return "exists";
+        }else {
             reviewService.saveReview(reviewDto, itemId);
             return "success";
-        }else{
-            return "login";
         }
     }
 

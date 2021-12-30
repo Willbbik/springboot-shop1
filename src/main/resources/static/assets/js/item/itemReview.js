@@ -53,8 +53,11 @@ $(function(){
                 getReviewList();
                 alert("리뷰를 등록하였습니다.");
             }else if(result === "login"){
-                 alert("로그인이 필요한 서비스입니다.");
-                 return false;
+                alert("로그인이 필요한 서비스입니다.");
+                return false;
+            }else if(result === "exists"){
+                alert("리뷰는 한 상품당 하나만 작성 가능합니다.");
+                return false;
             }else{
                 alert(result);
                 return false;

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -62,8 +63,7 @@ public class ReviewServiceImpl implements ReviewService{
 
         List<ReviewDto> reviewDtos = reviewRepository.searchAll(itemId, lastReviewId);
         if(!reviewDtos.isEmpty()) {
-            for (ReviewDto reviewDto : reviewDtos)
-                editReview(reviewDto);
+            for (ReviewDto reviewDto : reviewDtos) editReview(reviewDto);
         }
         return reviewDtos;
     }
@@ -76,6 +76,12 @@ public class ReviewServiceImpl implements ReviewService{
         return reviewDto;
     }
 
+    @Override
+    @Transactional
+    public Optional<Review> findByItem(Item item) {
+
+        return reviewRepository.findByItem(item);
+    }
 }
 
 
