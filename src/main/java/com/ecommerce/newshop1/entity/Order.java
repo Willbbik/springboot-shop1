@@ -80,7 +80,9 @@ public class Order {
 
         for(OrderItem orderItem : orderItems){
             order.setOrderItems(orderItem);
+            member.getItemList().add(orderItem.getItem());
         }
+
         order.setPayType(payType);
         order.setOrderNum(orderId);
         order.setTotalPrice(getOrderTotalPrice(orderItems));

@@ -56,7 +56,7 @@ public class Member extends TimeEntity {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
     private List<MemberAddress> memberAddresses = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Item> itemList = new HashSet<>();
 
     public void addReviewList(Review review) {

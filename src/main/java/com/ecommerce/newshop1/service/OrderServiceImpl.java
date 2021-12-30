@@ -153,11 +153,6 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItem> orderItems = itemList.stream()
                 .map(p -> mapper.map(p, OrderItem.class)).collect(Collectors.toList());
 
-        // member에서 주문한 상품 확인하기 위해서
-        for(OrderItem orderItem : orderItems){
-            member.getItemList().add(orderItem.getItem());
-        }
-
         // 배송지
         DeliveryAddress deliveryAddress = mapper.map(addressDto, DeliveryAddress.class);
 

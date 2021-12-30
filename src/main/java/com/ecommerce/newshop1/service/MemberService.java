@@ -43,11 +43,12 @@ public class MemberService {
 
     ModelMapper mapper = new ModelMapper();
 
+
     public boolean existsItem(Item item){
         Member member = getCurrentMember();
 
         return member.getItemList().stream()
-                .map(p -> p.equals(item))
+                .map(p -> p.getId().equals(item.getId()))
                 .findAny()
                 .orElse(false);
     }
