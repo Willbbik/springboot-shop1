@@ -40,6 +40,7 @@ public class OrderServiceImpl implements OrderService {
     private final ItemRepository itemRepository;
     private final RedisService redisService;
     private final CartService cartService;
+    private final MemberService memberService;
     private final SecurityService security;
 
     ModelMapper mapper = new ModelMapper();
@@ -145,11 +146,9 @@ public class OrderServiceImpl implements OrderService {
         String orderName = (String) session.getAttribute("orderName");
         List<OrderItemDto> itemList  = (List<OrderItemDto>) session.getAttribute("orderItems");
         List<Long> cartItemIdList = (List<Long>) session.getAttribute("cartItemIdList");
-        String userId = security.getName();
 
         // order객체에 저장하기 위해서
-        Member member = memberRepository.findByuserId(userId)
-                .orElseThrow(() -> new MemberNotFoundException("해당 아이디가 존재하지 않습니다. 아이디 : " + userId));
+        Member member = memberService.getCurrentMember();
         List<OrderItem> orderItems = itemList.stream()
                 .map(p -> mapper.map(p, OrderItem.class)).collect(Collectors.toList());
 

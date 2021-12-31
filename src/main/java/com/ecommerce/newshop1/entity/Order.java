@@ -80,7 +80,6 @@ public class Order {
 
         for(OrderItem orderItem : orderItems){
             order.setOrderItems(orderItem);
-            member.addItemList(orderItem.getItem());
         }
 
         order.setPayType(payType);

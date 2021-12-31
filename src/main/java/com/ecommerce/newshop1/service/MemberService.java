@@ -37,7 +37,6 @@ public class MemberService {
     private final CustomUserDetailsService customUserDetailsService;
     private final MemberRepository memberRepository;
     private final RedisService redisService;
-    private final ItemService itemService;
     private final SecurityService security;
     private final PasswordEncoder passwordEncoder;
 
@@ -45,12 +44,13 @@ public class MemberService {
 
 
     public boolean existsItem(Item item) {
+
         Member member = getCurrentMember();
 
-        return member.getItemList().stream()
-                .map(p -> p.getId().equals(item.getId()))
-                .findAny()
-                .orElse(false);
+        return member.getOrderList().stream()
+                .anyMatch(i -> i.getOrderItems().stream()
+                        .anyMatch(p -> p.getItem().getId().equals(item.getId()))
+                );
     }
 
     // 아이디 찾기

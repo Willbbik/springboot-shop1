@@ -156,9 +156,9 @@ public class ItemController {
         Member member = memberService.getCurrentMember();
         boolean result = reviewRepository.existsByItemAndMember(item, member);
 
-        if(!security.isAuthenticated()) {       // 로그인한 상태인지
+        if(!security.isAuthenticated()) {        // 로그인한 상태인지
             return "-1";
-        }else if(result) {      // 이미 리뷰를 작성했는지
+        }else if(result) {                       // 이미 리뷰를 작성했는지
             return "-2";
         }else if(!memberService.existsItem(item)){ // 해당 상품을 구매했는지
             return "-3";
@@ -186,9 +186,7 @@ public class ItemController {
         model.addAttribute("reviewSize", reviewSize);
         model.addAttribute("lastReviewId", lastReviewId);
 
-        if(more != null){
-            return "item/tab/tab2ReviewMore";
-        }
+        if(more != null) return "item/tab/tab2ReviewMore";
         return "item/tab/tab2Review";
     }
 
