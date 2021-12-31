@@ -110,7 +110,7 @@ $(function(){
         type : "get",
         data : { itemId : itemId , sort : sort },
     }).done(function(result){
-        $("#review_content_main_box").html(result);
+        $(".review_content_main_box").html(result);
     }).fail(function(result){
         alert("에러가 발생했습니다. \n리뷰를 가져올 수 없습니다.");
     });
