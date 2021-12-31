@@ -45,9 +45,6 @@ public class Member extends TimeEntity {
     private Cart cart;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
-    private List<Review> reviewList = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
     private List<QnAEntity> qnaList = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
@@ -55,6 +52,9 @@ public class Member extends TimeEntity {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
     private List<MemberAddress> memberAddresses = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
+    private Set<Review> reviewList = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Item> itemList = new HashSet<>();
@@ -67,6 +67,15 @@ public class Member extends TimeEntity {
     public void addQnaList(QnAEntity qnaEntity) {
         this.getQnaList().add(qnaEntity);
         qnaEntity.setMember(this);
+    }
+
+    public void addItemList(Item item){
+
+        boolean result = this.getItemList().stream()
+                .anyMatch(i -> i.getId().equals(item.getId()));
+        if(!result){
+            this.getItemList().add(item);
+        }
     }
 
 }

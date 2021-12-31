@@ -46,7 +46,7 @@ public class QMember extends EntityPathBase<Member> {
 
     public final ListPath<QnAEntity, QQnAEntity> qnaList = this.<QnAEntity, QQnAEntity>createList("qnaList", QnAEntity.class, QQnAEntity.class, PathInits.DIRECT2);
 
-    public final ListPath<Review, QReview> reviewList = this.<Review, QReview>createList("reviewList", Review.class, QReview.class, PathInits.DIRECT2);
+    public final SetPath<Review, QReview> reviewList = this.<Review, QReview>createSet("reviewList", Review.class, QReview.class, PathInits.DIRECT2);
 
     public final EnumPath<com.ecommerce.newshop1.enums.Role> role = createEnum("role", com.ecommerce.newshop1.enums.Role.class);
 

@@ -5,9 +5,11 @@ import com.ecommerce.newshop1.dto.ItemImageDto;
 import com.ecommerce.newshop1.dto.QnADto;
 import com.ecommerce.newshop1.dto.ReviewDto;
 import com.ecommerce.newshop1.entity.Item;
+import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.Review;
 import com.ecommerce.newshop1.repository.ItemImageRepository;
 import com.ecommerce.newshop1.repository.QnARepository;
+import com.ecommerce.newshop1.repository.ReviewRepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.enums.Role;
 import com.ecommerce.newshop1.utils.CommonService;
@@ -32,6 +34,7 @@ public class ItemController {
 
     private final ItemImageRepository itemImageRepository;
     private final QnARepository qnARepository;
+    private final ReviewRepository reviewRepository;
     private final QnAService qnAService;
     private final ReviewService reviewService;
     private final ItemService itemService;
@@ -150,11 +153,12 @@ public class ItemController {
         }
 
         Item item = itemService.findById(itemId);
-        Optional<Review> findReview = reviewService.findByItem(item);
+        Member member = memberService.getCurrentMember();
+        boolean result = reviewRepository.existsByItemAndMember(item, member);
 
         if(!security.isAuthenticated()) {       // 로그인한 상태인지
             return "-1";
-        }else if(findReview.isPresent()) {      // 이미 리뷰를 작성했는지
+        }else if(result) {      // 이미 리뷰를 작성했는지
             return "-2";
         }else if(!memberService.existsItem(item)){ // 해당 상품을 구매했는지
             return "-3";

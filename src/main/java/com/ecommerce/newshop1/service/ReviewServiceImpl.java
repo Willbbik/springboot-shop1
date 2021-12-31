@@ -76,15 +76,6 @@ public class ReviewServiceImpl implements ReviewService{
         return reviewDto;
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Review> findByItem(Item item) {
-        return reviewRepository.findByItem(item);
-    }
-
-
-
-
 
 }
 
