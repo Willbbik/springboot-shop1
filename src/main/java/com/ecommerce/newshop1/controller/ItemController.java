@@ -175,12 +175,9 @@ public class ItemController {
                                 @RequestParam(name = "sort", required = false, defaultValue = "recent") String sort,
                                 @RequestParam(name = "more", required = false) String more, Model model){
 
-        Long reviewSize = reviewService.countByItem(itemService.findById(itemId));
         List<ReviewDto> reviewList = reviewService.searchAll(itemId, lastReviewId, sort);
-
-        if(sort.equals("recent")){
-            lastReviewId = reviewService.getLastReviewId(reviewList, lastReviewId);
-        }
+        Long reviewSize = reviewService.countByItem(itemService.findById(itemId));
+        lastReviewId = reviewService.getLastReviewId(reviewList, lastReviewId, sort);
 
         model.addAttribute("reviewList", reviewList);
         model.addAttribute("reviewSize", reviewSize);

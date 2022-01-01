@@ -10,8 +10,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,14 +26,18 @@ public class ReviewServiceImpl implements ReviewService{
     ModelMapper mapper = new ModelMapper();
 
 
-    public Long getLastReviewId(List<ReviewDto> reviewList, Long lastReviewId){
-        if(reviewList.size() > 1){
-            int lastIndex = reviewList.size() - 1;
-            return reviewList.get(lastIndex).getId();
-        }else if(reviewList.size() == 1){
-            return reviewList.get(0).getId();
-        }else{
+    public Long getLastReviewId(List<ReviewDto> reviewList, Long lastReviewId, String sort){
+
+        if(reviewList.isEmpty()){
             return lastReviewId;
+        }else if(sort.equals("old")){   // 오래된순일 때
+            return reviewList.stream()
+                    .max(Comparator.comparingLong(ReviewDto::getId))
+                    .get().getId();
+        }else {                         // 최신순일 때 혹은 sort값이 조작됐을 때
+            return reviewList.stream()
+                    .min(Comparator.comparingLong(ReviewDto::getId))
+                    .get().getId();
         }
     }
 

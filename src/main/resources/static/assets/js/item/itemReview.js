@@ -79,17 +79,22 @@ $(function(){
 
     // 리뷰 더보기 버튼
     $(document).on("click", "#btn_more_review", function(){
+
         let lastReviewId = $("#lastReviewId").val();
         let itemId = $("#itemId").val();
+        let sort = $(".active_review_select").attr("id");
 
         $.ajax({
             url : "/item/reviewList/get",
             type : "get",
             data : { itemId : itemId,
                      lastReviewId : lastReviewId,
-                     more : "more" }
+                     more : "more",
+                     sort : sort
+                   }
         }).done(function(result){
             $("#lastReviewId").remove();
+            $("#btn_more_review").remove();
             $(".review_content_main_box").append(result);
         }).fail(function(result){
             alert("에러가 발생했습니다. \n잠시후 다시 시도해보시기 바랍니다.");

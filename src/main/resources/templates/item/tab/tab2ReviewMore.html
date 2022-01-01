@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
+
     <input type="hidden" id="lastReviewId" th:value="${lastReviewId}">
     <div class="Detail-review-box" th:each="review : ${reviewList}">
         <dl class="detail_review_default">
@@ -13,6 +14,6 @@
             <dd class="review_text" th:text="${review.content}"></dd>
         </dl>
     </div>
-
+    <button class="btn btn-primary" id="btn_more_review">더 많은 텍스트 리뷰 보기</button>
 </body>
 </html>
