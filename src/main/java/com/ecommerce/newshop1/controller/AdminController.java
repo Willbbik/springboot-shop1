@@ -10,6 +10,7 @@ import com.ecommerce.newshop1.service.MemberService;
 import com.ecommerce.newshop1.service.OrderService;
 import com.ecommerce.newshop1.service.AwsS3Service;
 import com.ecommerce.newshop1.utils.ItemPagination;
+import com.ecommerce.newshop1.utils.ValidationSequence;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -20,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -132,7 +135,7 @@ public class AdminController {
 
     @PostMapping("/admin/register")
     @ApiOperation(value = "관리자페이지에서 상품 등록")
-    public String itemSave(MultipartHttpServletRequest mtfRequest, ItemDto itemDto) throws Exception {
+    public String itemSave(MultipartHttpServletRequest mtfRequest, @Validated(ValidationSequence.class) ItemDto itemDto, BindingResult errors) throws Exception {
 
         // 상품 정보 저장
         Item item = mapper.map(itemDto, Item.class);

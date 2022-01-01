@@ -23,6 +23,7 @@ $(function(){
        return result;
     }
 
+
     $("#makeOption").on("click", function(){
 
         let result = new Array();

@@ -35,8 +35,6 @@ public class QItem extends EntityPathBase<Item> {
 
     public final StringPath imageUrl = createString("imageUrl");
 
-    public final StringPath itemCode = createString("itemCode");
-
     public final ListPath<ItemImage, QItemImage> itemImageList = this.<ItemImage, QItemImage>createList("itemImageList", ItemImage.class, QItemImage.class, PathInits.DIRECT2);
 
     public final StringPath itemInfo = createString("itemInfo");

@@ -3,6 +3,7 @@ package com.ecommerce.newshop1.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,31 +21,29 @@ public class Item extends TimeEntity{
     @Column(name = "item_id")
     private Long id;
 
-    @Column
+    @Column(length = 10)
     private String category;
 
-    @Column
+    @Column(length = 100)
     private String itemName;
 
-    @Column
-    private String itemCode;
-
-    @Column
+    @Column(length = 100)
     private String color;
 
-    @Column
+    @Column(length = 100)
     private String size;
 
     @Column
+    @Min(0)
     private int price;
 
     @Column(length = 2048)
     private String itemInfo;
 
-    @Column
+    @Column(length = 100)
     private String model;
 
-    @Column
+    @Column(length = 10)
     private String saleStatus;
 
     @Column
@@ -63,7 +62,7 @@ public class Item extends TimeEntity{
     private List<Review> reviewList = new ArrayList<>();
 
     public void setItemImageList(ItemImage itemImage){
-        itemImageList.add(itemImage);
+        this.getItemImageList().add(itemImage);
         itemImage.setItem(this);
     }
 

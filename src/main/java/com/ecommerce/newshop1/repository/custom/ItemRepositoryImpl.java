@@ -1,7 +1,6 @@
 package com.ecommerce.newshop1.repository.custom;
 
 import com.ecommerce.newshop1.dto.ItemDto;
-import com.ecommerce.newshop1.dto.QItemDto;
 import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.QItem;
 import com.querydsl.core.types.Projections;
@@ -23,7 +22,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
     public Long searchTotal(SearchDto searchDto) {
 
             return queryFactory
-                .select(new QItemDto(
+                .select(Projections.fields(ItemDto.class,
                         QItem.item.id
                 ))
                 .from(QItem.item)
