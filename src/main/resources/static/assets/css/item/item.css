@@ -226,152 +226,18 @@
     padding-left: 0px;
 }
 
-/*
-
-*/
-/* QnA 헤드 부분  *//*
-
-.qna_list_head {
-
-    display: flex;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    border: 1px solid black;
-    border-left-color: white;
-    border-right-color: white;
-    font-weight: 700;
-}
-
-    */
-/*  QnA head 기본 크기  *//*
-
-    .qna_list_head div {
-
-        width : 150px;
-    }
-
-
-    */
-/*  QnA 답변 상태   *//*
-
-    .qna_list_head > .qna_head_status {
-
-       margin-left: 20px;
-    }
-
-    */
-/*  QnA 내용  *//*
-
-    .qna_list_head > .qna_head_content {
-
-        width : 500px;
-        padding-left: 13px;
-    }
-
-    */
-/*  QnA 작성일   *//*
-
-    .qna_list_head > .qna_head_created {
-
-        padding-left: 13px;
-    }
-
-
-*/
-/* QnA 바디 부분  *//*
-
-*/
-/* .qna_list_body {
-
-    display: flex;
-    border: 1px solid #dadada;
-    border-top-color : white;
-    border-left-color: white;
-    border-right-color: white;
-    padding-top: 10px;
-    padding-bottom: 10px;
-
-} *//*
-
-
-
-    */
-/*  QnA Body 기본 크기  *//*
-
-    .qna_list li div {
-
-        float: flex;
-        padding: 10px 0px;
-        text-align: center;
-
-    }
-
-
-    .qna_list_body div {
-
-        display: flex;
-        width : 150px;
-    }
-
-    */
-/*  QnA Body 기본 크기  *//*
-
-    */
-/* .qna_list_body div {
-
-        width : 150px;
-    } *//*
-
-
-
-    */
-/* 작성자의 QnA 내용  *//*
-
-    .qna_list_body > .qna_text {
-
-        width : 500px;
-        cursor: pointer;
-
-    }
-
-    */
-/*  답변 대기  *//*
-
-    .qna_list_body > .qna_status {
-
-        margin-left: 20px;
-    }
-
-    .qna_list_body p {
-
-        display: block;
-    }
-
-    .qna_list li p {
-
-        clear: both;
-        border-bottom: 1px solid #e5e5e5;
-        border-top: 1px solid #e5e5e5;
-        padding: 15px 10px 15px 17%;
-        margin: 0px;
-        display: none;
-
-    }
-
-*/
-
 
 
 /*  Review    //////////////////////////////////////////////////////////////////////////////////////////// */
 
-.review_head {
+/*.review_head {
 
     margin-bottom: 30px;
     font-size: 20px;
     font-weight: 700;
 }
 
-/*  더 많은 리뷰보기 버튼   */
+*//*  더 많은 리뷰보기 버튼   *//*
 .btn_more_review {
 
     border: 1px solid black;
@@ -401,7 +267,7 @@
 
 }
 
-/*  리뷰 기본 크기   */
+*//*  리뷰 기본 크기   *//*
 .detail_review_default {
 
     border: 1px solid black;
@@ -413,7 +279,7 @@
     padding-left: 10px;
 }
 
-/*  리뷰 사용자 프로필  */
+*//*  리뷰 사용자 프로필  *//*
 .review_profile {
 
     padding-bottom: 40px;
@@ -456,4 +322,4 @@
     border-left: 1px solid #c5c5c5;
     cursor: pointer;
 
-}
+}*/

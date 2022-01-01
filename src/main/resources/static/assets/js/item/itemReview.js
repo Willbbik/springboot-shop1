@@ -29,6 +29,16 @@ $(function(){
         getReviewList();
     });
 
+    // 리뷰 취소하기 버튼 클릭
+    $("#review_write_cancel").on("click", function(){
+        $(".review_write").css("display", "none");
+    });
+
+    // 리뷰 작성하기 버튼 클릭
+    $(".btn_write_review").on("click", function(){
+        $(".review_write").css("display", "");
+    });
+
     $(document).on("click", "ul.detail_review_select li", function(){
 
         $(".active_review_select").attr("class", "");
@@ -56,6 +66,7 @@ $(function(){
             }
         }).done(function(result){
             if(result === "0"){
+                $('#review_modal').modal('toggle');
                 $("#review_content").val("");
                 getReviewList();
                 alert("리뷰를 등록하였습니다.");

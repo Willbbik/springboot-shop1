@@ -79,12 +79,25 @@
                     </div>
                 </div>
                 <div class="tab_container">
-                    <div id="info_container_2" class="detail_info_container">
-                        <div>
-                            <button class="btn_write_qna">리뷰 작성</button>
-                            <input type="text" placeholder="리뷰 작성" id="review_content" maxlength="2048">
-                            <button type="button" id="review_post">전송</button>
-                        </div>
+                    <div id="info_container_2" class="detail_info_container">   <!-- 리뷰 -->
+                        <button type="button" class="btn_write_review" data-bs-toggle="modal" data-bs-target="#review_modal">리뷰 작성</button>
+                        <div class="modal" tabindex="-1" id="review_modal">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">리뷰 남기기</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <textarea class="review_textarea" id="review_content" placeholder="내용을 입력해 주세요." maxlength="2048"></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="button" value="취소하기" data-bs-dismiss="modal" id="review_write_cancel"/>
+                                        <input type="submit" value="등록하기" id="review_post" />
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
                         <div class="detail_review_container">
                             <ul class="detail_review_select">
                                 <li class="active_review_select " id="recent">최신순</li>
@@ -100,7 +113,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="info_container_3" class="detail_info_container" style="display:none;">
+                    <div id="info_container_3" class="detail_info_container" style="display:none;"> <!-- qna -->
                         <div class="details_qna_container">
                             <div class="qna_list_chk">
                                 <div>

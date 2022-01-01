@@ -151,14 +151,15 @@ public class ItemController {
         if(errors.hasErrors()){
             return commonService.getErrorMessage(errors);
         }
+        if(!security.isAuthenticated()) {        // 로그인한 상태인지
+            return "-1";
+        }
 
         Item item = itemService.findById(itemId);
         Member member = memberService.getCurrentMember();
         boolean result = reviewRepository.existsByItemAndMember(item, member);
 
-        if(!security.isAuthenticated()) {        // 로그인한 상태인지
-            return "-1";
-        }else if(result) {                       // 이미 리뷰를 작성했는지
+        if(result) {                       // 이미 리뷰를 작성했는지
             return "-2";
         }else if(!memberService.existsItem(item)){ // 해당 상품을 구매했는지
             return "-3";
