@@ -6,6 +6,26 @@ $(document).ready(function(){
         calculateTotalPrice();
     });
 
+    $('.tab_default').click(function(){
+
+        let active = $(".tab_active");
+        active.attr('class', 'tab_default');
+
+        $(this).attr('class', 'tab_default tab_active');
+    });
+
+    // tab1 상품정보
+    $("#tab1").on("click", function(){
+
+        let info1 = $("#info_container_1");
+        let info2 = $("#info_container_2");
+        let info3 = $("#info_container_3");
+
+        info1.css("display", "");
+        info2.css("display", "none");
+        info3.css("display", "none");
+    });
+
 });
 
 function sendorder(){

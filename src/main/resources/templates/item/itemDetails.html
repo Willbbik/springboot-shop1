@@ -78,7 +78,28 @@
                     </div>
                 </div>
                 <div class="tab_container">
-                    <div id="info_container_2" class="detail_info_container">   <!-- 리뷰 -->
+                    <div id="info_container_1" class="detail_info_container">
+                        <div class="item_box">
+                            <div class="item_explanation" th:text="${item.itemInfo}">
+                            </div>
+                            <div class="item_details_info">
+                                <div class="item_model_box">
+                                    <div class="item_model_tag">모델 정보</div>
+                                    <div class="item_model" th:text="${item.model}"></div>
+                                </div>
+                                <div class="item_option_box">
+                                    <div class="item_option_tag">색상 & 사이즈</div>
+                                    <div class="item_option" th:text="${item.color} + '/' + ${item.size}"></div>
+                                </div>
+                            </div>
+                            <div class="item_image_box">
+                                <div th:each="image : ${images}">
+                                    <img th:src="${image.imageUrl}" class="item_image">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="info_container_2" class="detail_info_container" style="display:none;">   <!-- 리뷰 -->
                         <button type="button" class="btn_write_review" data-bs-toggle="modal" data-bs-target="#review_modal">리뷰 작성</button>
                         <div class="modal" tabindex="-1" id="review_modal">
                             <div class="modal-dialog modal-dialog-centered">

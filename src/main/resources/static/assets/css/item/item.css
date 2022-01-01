@@ -89,9 +89,55 @@
 }
 
 
-
 /* 옵션  */
 .detail_options select {
 
     display : block;
+}
+
+/* 상품정보 */
+
+.item_box {
+
+    text-align: center;
+}
+
+.item_explanation {
+
+    width: 600px;
+    font-size: 22px;
+    display: inline-block;
+    padding-top: 150px;
+    padding-bottom: 70px;
+}
+
+.item_details_info{
+
+    padding-bottom: 150px;
+}
+
+/* 모델 정보 */
+.item_model_tag {
+
+    font-size: 20px;
+}
+.item_model {
+
+    font-size: 15px;
+}
+
+/* 옵션 정보 */
+.item_option_tag {
+    font-size: 20px;
+}
+
+.item_option {
+
+    font-size: 15px;
+}
+
+.item_image{
+
+    width: 600px;
+    height : 600px;
 }

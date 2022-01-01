@@ -1,27 +1,17 @@
-$(document).ready(function(){
+$(function(){
 
     // 상품 상세보기에 들어가면 바로 qna 가져오게끔
     getQnAList();
 
-    let token = $("meta[name='_csrf']").attr("content");
-    let header = $("meta[name='_csrf_header']").attr("content");
-
-    $('.tab_default').click(function(){
-
-        let active = $(".tab_active");
-        active.attr('class', 'tab_default');
-
-        $(this).attr('class', 'tab_default tab_active');
-    });
+    // csrf
+    let csrfToken = $("meta[name='_csrf']").attr("content");
+    let csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
     // tab3 QnA
     $(document).on("click", "#tab3", function(){
-
-        let info2 = $("#info_container_2");
-        let info3 = $("#info_container_3");
-
-        info2.css("display", "none");
-        info3.css("display", "");
+        $("#info_container_1").css("display", "none");
+        $("#info_container_2").css("display", "none");
+        $("#info_container_3").css("display", "");
         getQnAList();
     });
 
@@ -77,7 +67,7 @@ $(document).ready(function(){
            url  : "/item/qna/send",
            data : param,
            beforeSend : function(xhr){
-               xhr.setRequestHeader(header, token);
+               xhr.setRequestHeader(csrfHeader, csrfToken);
            }
         }).done(function(result){
              if(result === "success"){
@@ -117,7 +107,7 @@ $(document).ready(function(){
 
 });
 
-// QnA 리스트 가져오기
+    // QnA 리스트 가져오기
     function getQnAList(){
 
        let itemId = $("#itemId").val();
@@ -131,4 +121,4 @@ $(document).ready(function(){
       }).fail(function(result){
          alert("에러가 발생하였습니다. \n잠시후 다시 시도해주시기 바랍니다.");
       });
-   }
+    }

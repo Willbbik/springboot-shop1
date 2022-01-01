@@ -38,7 +38,7 @@ public class Item extends TimeEntity{
     @Column
     private int price;
 
-    @Column
+    @Column(length = 2048)
     private String itemInfo;
 
     @Column
