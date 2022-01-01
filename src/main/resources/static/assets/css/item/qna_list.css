@@ -77,7 +77,6 @@
 .qna_list li dd:nth-child(1) {width:calc(17% + 55px); padding:15px 10px; text-align: right; font-weight: 700;}
 .qna_list li dd:nth-child(2) {width:calc(53% - 55px); padding:10px 0px; }
 .qna_list li dd:nth-child(3) {width: 15%; text-align: center; padding: 15px 0px}
-/*.qna_list li dd:nth-child(4) {width: 15%; text-align: center;  padding: 13.5px 0px}*/
 .qna_list li dd:nth-child(4) { text-align: left; padding: 13.5px 0px;}
 .qna_list li dl {display: none}
 .qna_list li dd:nth-child(1) span {border: 1px solid #000; font-size: 0.8em; padding: 2px 5px; background: #ffffff}
