@@ -13,10 +13,13 @@ import com.ecommerce.newshop1.repository.ReviewRepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.enums.Role;
 import com.ecommerce.newshop1.utils.CommonService;
+import com.ecommerce.newshop1.utils.QnAPagination;
 import com.ecommerce.newshop1.utils.ValidationSequence;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -82,10 +85,8 @@ public class ItemController {
         boolean imageExists = itemImageRepository.existsByItem(item);
         List<ItemImageDto> images = (!imageExists) ? null : itemService.searchAllItemImage(item);
 
-        // 상품 QnA 질문 개수
-        Long qnaSize = qnARepository.countByItem(item);
-
-        // 상품 리뷰 개수
+        // qna, 리뷰 개수
+        Long qnaSize = qnAService.countQnAByItem(item);
         Long reviewSize = reviewService.countByItem(item);
 
         model.addAttribute("item", itemDto);     // 상품
@@ -96,13 +97,31 @@ public class ItemController {
         return "item/itemDetails";
     }
 
-
     @GetMapping("/item/get/qnaList")
     @ApiOperation(value = "상품 상세보기에 QnA html 리턴", notes = "ajax 용도")
     public String getQnaList (@RequestParam(name = "itemId") Long itemId, Model model,
-                              @RequestParam(name = "page", defaultValue = "1") int curPage) throws Exception {
+                              @RequestParam(name = "page", defaultValue = "1") int curPage){
 
-        return qnAService.getQnAHtml(itemId, model, curPage);
+        Item item = itemService.findById(itemId);
+        Long qnaSize = qnARepository.countQnAByItem(item);
+
+        // 페이징
+        QnAPagination page = new QnAPagination(qnaSize, curPage);
+        Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxQnA());
+
+        // qna와 답글 가져오고 값 편집
+        List<QnADto> qnaList = qnARepository.searchQnA(item, pageable); // qna
+        List<QnADto> qnaReplyList = qnAService.getQnAReply(qnaList);    // qna 답글
+
+        qnaList = qnAService.editQna(qnaList);               // QnA 편집
+        qnaReplyList = qnAService.editReply(qnaReplyList);   // QnA 답글 편집
+
+        model.addAttribute("page", page);
+        model.addAttribute("qnaSize", qnaSize);
+        model.addAttribute("qnaList", qnaList);
+        model.addAttribute("qnaReplyList", qnaReplyList);
+
+        return "item/tab/tab3QnA";
     }
 
 

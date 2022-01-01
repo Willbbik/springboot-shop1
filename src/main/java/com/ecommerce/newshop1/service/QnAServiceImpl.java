@@ -34,33 +34,17 @@ public class QnAServiceImpl implements QnAService{
 
     ModelMapper mapper = new ModelMapper();
 
+
+    @Override
+    @Transactional(readOnly = true)
+    public Long countQnAByItem(Item item) {
+        return qnARepository.countQnAByItem(item);
+    }
+
     @Override
     @Transactional
-    public String getQnAHtml(Long itemId, Model model, int curPage) throws Exception {
-
-        Item item = itemService.findById(itemId);
-        Long qnaSize = qnARepository.countByItem(item);
-
-        // 페이징 처리
-        QnAPagination page = new QnAPagination(qnaSize, curPage);
-        Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxQnA());
-
-        // qna 존재유무 확인
-        boolean qnaExists = qnARepository.existsByItem(item);
-
-        List<QnADto> qnaList = (!qnaExists) ? new ArrayList<>() : qnARepository.searchQnA(item, pageable);
-        List<QnADto> qnaReplyList = getQnAReply(qnaList);
-
-        // 값 편집 ( 비공개 글 일 때는 내용을 숨겨야 하기 때문에 )
-        qnaList = editQna(qnaList);               // QnA 편집
-        qnaReplyList = editReply(qnaReplyList);   // QnA 답글 편집
-
-        model.addAttribute("page", page);
-        model.addAttribute("qnaSize", qnaSize);
-        model.addAttribute("qnaList", qnaList);
-        model.addAttribute("qnaReplyList", qnaReplyList);
-
-        return "item/tab/tab3QnA";
+    public List<QnADto> searchQnA(Item item, Pageable pageable) {
+        return qnARepository.searchQnA(item, pageable);
     }
 
     @Override
@@ -237,27 +221,6 @@ public class QnAServiceImpl implements QnAService{
 
         qnARepository.deleteAllById(qnaIdList);
         qnARepository.deleteAllByParentIn(qnaIdList);
-    }
-
-
-    @Override
-    public int checkValidationQnA(QnADto dto){
-        // 정상 = 0
-        // 공백 or 길이초과 or 값 조작 있을시 = -1
-        // 비로그인 = -2
-
-        String content = dto.getContent();
-
-        if(content.isEmpty() || content.isBlank() || content.length() > 2048){
-            return -1;
-        }
-        if(!security.isAuthenticated()){
-            return -2;
-        }
-
-        if(dto.getHide().equals(QnA.PRIVATE.getValue())) return 0;
-        else if(dto.getHide().equals(QnA.PUBLIC.getValue())) return 0;
-        else return -1;
     }
 
 

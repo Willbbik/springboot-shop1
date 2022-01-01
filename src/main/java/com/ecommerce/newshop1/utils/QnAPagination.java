@@ -21,8 +21,8 @@ public class QnAPagination {
 
     public QnAPagination(Long totalQnA, int curPage){
 
-        // QnA 총 개수
         this.totalQnA = totalQnA;
+        this.curPage = curPage;
 
         // 페이지 버튼 총 개수
         this.totalPage = (this.totalQnA % showMaxQnA == 0) ?
@@ -31,7 +31,7 @@ public class QnAPagination {
         this.totalPage = Math.max(this.totalPage, 1);
 
         // 현재 페이지 번호
-        this.curPage = Math.min(curPage, this.totalPage);
+        this.curPage = Math.min(this.curPage, this.totalPage);
         this.curPage = Math.max(this.curPage, 1);
 
         // 현재 페이지의 시작 버튼

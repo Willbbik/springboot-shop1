@@ -1,15 +1,19 @@
 package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.QnADto;
+import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.Member;
+import org.springframework.data.domain.Pageable;
 import org.springframework.ui.Model;
 
 import java.util.List;
 
 public interface QnAService  {
 
-    // QnA 가져오기
-    String getQnAHtml(Long itemId, Model model, int page) throws Exception;
+
+    List<QnADto> searchQnA(Item item, Pageable pageable);
+
+    Long countQnAByItem(Item item);
 
     // QnA 관리자 답글 가져오기
     List<QnADto> getQnAReply(List<QnADto> qnaList);
@@ -28,9 +32,6 @@ public interface QnAService  {
 
     // view에 표시할 QnA질문 편집
     List<QnADto> editQna(List<QnADto> qnaList);
-
-    // QnA 질문 저장하기 전에 유효성 검사
-    int checkValidationQnA(QnADto dto);
 
     Long getLastQnAId(List<QnADto> qnaList, Long lastQnAId);
 

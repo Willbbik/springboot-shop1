@@ -22,7 +22,7 @@ public class ItemPagination {
 
 
     public ItemPagination(Long total, int curPage){
-        // 현재 페이지 번호 가져올때 -1 해서 curPage에 적용됨
+        // 현재 페이지 번호에서 -1 해서 curPage에 적용
 
         this.totalPost = total;
         this.curPage = curPage;

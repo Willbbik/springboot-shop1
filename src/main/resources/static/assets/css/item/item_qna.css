@@ -198,3 +198,27 @@
 .qna_list li dl {display: none}
 .qna_list li dd:nth-child(1) span {border: 1px solid #000; font-size: 0.8em; padding: 2px 5px; background: #ffffff}
 
+
+/* 페이지 버튼 */
+.paging {
+    text-align: center;
+}
+
+.paging a{
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 1.1em;
+    color: #000;
+    border: 1px solid #fff;
+    text-decoration: none;
+}
+
+.paging a:hover {
+    color: #808080;
+    border: 1px solid black;
+}
+
+.paging a.here{
+    color: #fff;
+    background: #000;
+}

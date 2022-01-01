@@ -13,4 +13,6 @@ public interface QnARepositoryCustom {
 
     List<QnADto> searchAllByMember(Long id, Member member);
 
+    Long countQnAByItem(Item item);
+
 }

@@ -78,27 +78,43 @@ $(document).ready(function(){
            data : param,
            beforeSend : function(xhr){
                xhr.setRequestHeader(header, token);
-           },
-           success : function(result){
-                if(result === "success"){
-                   $(".qna_write").css('display', 'none');
-                   $("#content").val("");
-                   getQnAList();
-
-                   alert("등록되었습니다.");
-                }else if(result === "login"){
-                   alert("로그인이 필요한 서비스입니다.");
-                   return false;
-                }else{
-                    alert(result);
-                    return false;
-                }
-           },
-           error : function(result){
-                alert("에러가 발생하였습니다. \n잠시후 다시 시도해주시기 바랍니다.");
            }
+        }).done(function(result){
+             if(result === "success"){
+                $(".qna_write").css('display', 'none');
+                $("#content").val("");
+                getQnAList();
+                alert("등록되었습니다.");
+             }else if(result === "login"){
+                alert("로그인이 필요한 서비스입니다.");
+                return false;
+             }else{
+                alert(result);
+                return false;
+             }
+       }).fail(function(result){
+           alert("에러가 발생하였습니다. \n잠시후 다시 시도해주시기 바랍니다.");
+       });
+    });
+
+    // 페이지 버튼
+    $(document).on("click", ".paging a", function(){
+        let itemId = $("#itemId").val();
+        let page = $(this).data("num");
+
+        $.ajax({
+            url : "/item/get/qnaList",
+            type : "get",
+            data : { itemId : itemId, page : page },
+        }).done(function(result){
+            $(".details_qna_container").html(result);
+        }).fail(function(result){
+            alert("에러가 발생하였습니다. \n잠시후 다시 시도해주시기 바랍니다.");
         });
     });
+
+
+
 });
 
 // QnA 리스트 가져오기
@@ -106,17 +122,13 @@ $(document).ready(function(){
 
        let itemId = $("#itemId").val();
 
-       $.ajax({
+      $.ajax({
           type : "get",
           url  : "/item/get/qnaList",
-          data : { itemId : itemId,
-                   page : 1
-                 },
-          success : function(result){
-              $("#info_container_3").html(result);
-          },
-          error : function(result){
-               alert("QnA 에러입니다. 잠시후에 다시 시도해보고 안되면 문의사항에 남겨주시면 감사하겠습니다.");
-          }
-       });
-    }
+          data : { itemId : itemId, page : 1 }
+      }).done(function(result){
+         $(".details_qna_container").html(result);
+      }).fail(function(result){
+         alert("에러가 발생하였습니다. \n잠시후 다시 시도해주시기 바랍니다.");
+      });
+   }

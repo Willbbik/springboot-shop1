@@ -59,6 +59,19 @@ public class QnARepositoryImpl implements QnARepositoryCustom{
                 .fetch();
     }
 
+    @Override
+    public Long countQnAByItem(Item item) {
+
+        return queryFactory
+                .select(Projections.fields(QnADto.class,
+                        QQnAEntity.qnAEntity.id
+                ))
+                .from(QQnAEntity.qnAEntity)
+                .where(
+                      QQnAEntity.qnAEntity.item.eq(item),
+                      QQnAEntity.qnAEntity.depth.eq(1)
+                ).fetchCount();
+    }
 
     private BooleanExpression ltQnAId(Long qnaId){
 

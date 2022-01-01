@@ -102,7 +102,7 @@ public class AdminController {
 
 
     @GetMapping("/admin/itemList")
-    @ApiOperation(value = "등록한 상품 목록 페이지")
+    @ApiOperation(value = "상품 목록 페이지")
     public String itemListPage(Model model, @RequestParam(name = "page", defaultValue = "1") int page, SearchDto searchDto){
 
         // 상품 총 개수
