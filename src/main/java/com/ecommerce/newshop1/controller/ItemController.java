@@ -6,14 +6,13 @@ import com.ecommerce.newshop1.dto.QnADto;
 import com.ecommerce.newshop1.dto.ReviewDto;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.Member;
-import com.ecommerce.newshop1.entity.Review;
 import com.ecommerce.newshop1.repository.ItemImageRepository;
 import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.repository.ReviewRepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.enums.Role;
 import com.ecommerce.newshop1.utils.CommonService;
-import com.ecommerce.newshop1.utils.QnAPagination;
+import com.ecommerce.newshop1.utils.PaginationShowSizeThree;
 import com.ecommerce.newshop1.utils.ValidationSequence;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +22,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Pattern;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -107,8 +103,8 @@ public class ItemController {
         Long qnaSize = qnARepository.countQnAByItem(item);
 
         // 페이징
-        QnAPagination page = new QnAPagination(qnaSize, curPage);
-        Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxQnA());
+        PaginationShowSizeThree page = new PaginationShowSizeThree(qnaSize, curPage);
+        Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxSize());
 
         // qna와 답글 가져오고 값 편집
         List<QnADto> qnaList = qnARepository.searchQnA(item, pageable); // qna

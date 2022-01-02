@@ -8,7 +8,7 @@ import com.ecommerce.newshop1.enums.Role;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.CommonService;
-import com.ecommerce.newshop1.utils.ItemPagination;
+import com.ecommerce.newshop1.utils.PaginationShowSizeTen;
 import com.ecommerce.newshop1.utils.ValidationSequence;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +26,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -107,21 +105,19 @@ public class AdminController {
 
     @GetMapping("/admin/itemList")
     @ApiOperation(value = "상품 목록 페이지")
-    public String itemListPage(Model model, @RequestParam(name = "page", defaultValue = "1") int page, SearchDto searchDto){
+    public String itemListPage(Model model, @RequestParam(name = "page", defaultValue = "1") int curPage, SearchDto searchDto){
 
         // 상품 총 개수
         Long totalPost = itemService.searchTotal(searchDto);
 
         // 페이징기능. 상품 개수와 현재 페이지 저장 후 계산
-        ItemPagination pagination = new ItemPagination(totalPost, page);
-        int curPage = pagination.getCurPage();
+        PaginationShowSizeTen page = new PaginationShowSizeTen(totalPost, curPage);
 
         // 상품 가져오기
-        Pageable pageable = PageRequest.of(curPage - 1, 10, Sort.Direction.DESC, "createdDate");
+        Pageable pageable = PageRequest.of(page.getCurPage(), page.getShowMaxSize());
         List<ItemDto> items = itemService.searchAll(searchDto, pageable);
 
-        model.addAttribute("page", pagination);
-        
+        model.addAttribute("page", page);
         model.addAttribute("items", items);
         model.addAttribute("itemName", searchDto.getItemName());
         model.addAttribute("category", searchDto.getCategory());

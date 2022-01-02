@@ -41,8 +41,14 @@
                             <input type="hidden" name="itemList">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-                            <h2 th:text="${item.itemName}"></h2>
-                            <h4 th:text="${item.price} + '원'"></h4>
+                            <div>
+                                <div>
+                                    <h2 th:text="${item.itemName}"></h2>
+                                </div>
+                                <div>
+                                    <h4 th:text="${item.price} + '원'"></h4>
+                                </div>
+                            </div>
                             <div>
                                 <label for="color"><h5>색상 : </h5></label>
                                 <span id="color"><h5 th:text="${item.color}"></h5></span>
