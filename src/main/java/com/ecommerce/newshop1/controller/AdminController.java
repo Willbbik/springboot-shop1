@@ -121,9 +121,6 @@ public class AdminController {
         List<ItemDto> items = itemService.searchAll(searchDto, pageable);
 
         model.addAttribute("page", pagination);
-        model.addAttribute("curPage", curPage);
-        model.addAttribute("startPage", pagination.getStartPage());
-        model.addAttribute("endPage", pagination.getEndPage());
         
         model.addAttribute("items", items);
         model.addAttribute("itemName", searchDto.getItemName());
@@ -135,7 +132,7 @@ public class AdminController {
 
     @PostMapping("/admin/item/register")
     @ApiOperation(value = "관리자페이지에서 상품 등록")
-    public @ResponseBody String itemSave(MultipartHttpServletRequest mtfRequest, @ModelAttribute("item") @Validated(ValidationSequence.class) ItemDto itemDto, BindingResult errors) throws Exception {
+    public @ResponseBody String itemSave(MultipartHttpServletRequest mtfRequest, @Validated(ValidationSequence.class) ItemDto itemDto, BindingResult errors) throws Exception {
 
         // 상품 유효성 검사 && 권한 검사
         if(errors.hasErrors()){
@@ -179,50 +176,6 @@ public class AdminController {
         itemRepository.save(item);
         return "success";
     }
-
-//    @PostMapping("/admin/register")
-//    @ApiOperation(value = "관리자페이지에서 상품 등록")
-//    public String itemSave(MultipartHttpServletRequest mtfRequest, @ModelAttribute("item") @Validated(ValidationSequence.class) ItemDto itemDto, BindingResult errors) throws Exception {
-//
-//        // 상품 유효성 검사
-//        if(errors.hasErrors()){
-//            return commonService.getErrorMessage(errors);
-//        }
-//
-//        // 상품 정보 저장
-//        Item item = mapper.map(itemDto, Item.class);
-//
-//        // 상품 이미지 저장
-//        List<MultipartFile> fileList =  mtfRequest.getFiles("upload_image");
-//        List<ItemImage> itemImageList = new ArrayList<>();
-//
-//        if (fileList.size() != 0) {
-//            for (int i = 0; i < fileList.size(); i++) {
-//
-//                String originImageName = fileList.get(i).getOriginalFilename();
-//                String imageName = awsS3Service.createFileName(originImageName);
-//
-//                String filePath = "static/images/" + itemDto.getCategory() + "/" + itemDto.getItemName() + "/" + imageName;
-//
-//                // s3에 이미지 저장
-//                String s3ImageUrl = awsS3Service.upload(fileList.get(i), filePath);
-//                // 첫번째 사진이 대표 이미지
-//                if (i == 0) item.setImageUrl(s3ImageUrl);
-//
-//                ItemImage itemImage = ItemImage.builder()
-//                        .imageUrl(filePath)
-//                        .imageName(originImageName)
-//                        .build();
-//                itemImageList.add(itemImage);
-//
-//            }
-//            for (ItemImage itemImage : itemImageList) {
-//                item.setItemImageList(itemImage);
-//            }
-//        }
-//        itemRepository.save(item);
-//        return "redirect:/admin/itemList";
-//    }
 
     @DeleteMapping("/admin/item/delete")
     @ApiOperation(value = "관리자페이지에서 단일 상품 삭제")

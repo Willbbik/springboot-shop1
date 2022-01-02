@@ -3,10 +3,6 @@ $(function(){
     let token = $("meta[name=_csrf]").attr("content");
     let header = $("meta[name=_csrf_header]").attr("content");
 
-    $(document).on("click", "#pageBtn", function(){
-        pageBtn();
-    });
-
     // 단일 상품 삭제
     $(".item_delete").on("click", function(){
 
@@ -85,34 +81,3 @@ $(function(){
     });
 
 });
-
-
-// 페이징
-function pageBtn(){
-
-    let itemName = $("input[name='itemName']").val();
-    let category = $("input[name='category']:checked").val();
-    let saleStatus = $("input[name='saleStatus']:checked").val();
-    category = (category === "whole") ? null : category;
-    itemName = (itemName === "") ? null : itemName;
-
-    let param = {
-            itemName : itemName,
-            category : category,
-            saleStatus : saleStatus
-    }
-
-    $.ajax({
-        type : "get",
-        url  : "/admin/get/itemList",
-        data : param,
-        success : function(result){
-            $("#itemList").html(result);
-            alert("good");
-        },
-        error : function(error){
-            alert(error);
-        }
-    });
-}
-
