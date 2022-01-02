@@ -40,7 +40,6 @@
                             <input type="hidden" name="where" value="product">
                             <input type="hidden" name="itemList">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-
                             <div>
                                 <div>
                                     <h2 th:text="${item.itemName}"></h2>
@@ -49,16 +48,26 @@
                                     <h4 th:text="${item.price} + '원'"></h4>
                                 </div>
                             </div>
-                            <div>
-                                <label for="color"><h5>색상 : </h5></label>
-                                <span id="color"><h5 th:text="${item.color}"></h5></span>
+                            <div class="item_select_box">
+                                <select id="color" class="form-select">
+                                    <option disabled="disabled" selected>[색상]옵션을 선택하세요.</option>
+                                    <option th:value="${item.color}" th:text="${item.color}"></option>
+                                </select>
+                                <select id="size" class="form-select">
+                                    <option disabled="disabled" selected>[사이즈]사이즈를 선택하세요.</option>
+                                    <option th:value="${item.size}" th:text="${item.size}"></option>
+                                </select>
                             </div>
-                            <div>
-                                <label for="size"><h5>사이즈 : </h5></label>
-                                <span id="size"><h5 th:text="${item.size}"></h5></span>
-                            </div>
-                            <div>
-                                <input type="number" name="quantity" id="quantity" value="1" min="1">
+                            <div class="detail_selected-options">
+                                <strong class="goods">아이보리 / M</strong>
+                                <div class="wrap_quantity_price">
+                                    <div class="quantity">
+                                        <input type="button" class="quantity_minus" value="-">
+                                        <input type="text" class="input_quantity" value="1">
+                                        <input type="button" class="quantity_plus" value="+">
+                                    </div>
+                                    <div class="price_text">8,800원</div>
+                                </div>
                             </div>
                             <div class="details_price">
                                 <h5>총 상품 금액</h5>

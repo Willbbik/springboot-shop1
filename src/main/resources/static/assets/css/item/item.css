@@ -89,10 +89,76 @@
 }
 
 
-/* 옵션  */
-.detail_options select {
+/* 상품 옵션  */
+.item_select_box {
 
-    display : block;
+    padding-top: 130px;
+}
+
+
+/* 선택한 상품 정보 */
+.detail_selected-options {
+    position: relative;
+    padding: 20px 16px;
+    background: #f3f3f7;
+    margin-top: 36px;
+}
+
+.detail_selected-options .wrap_quantity_price {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    margin-top: 32px;
+}
+
+/* 상품 수량 버튼 */
+.detail_selected-options .wrap_quantity_price .quantity input {
+    display: block;
+    float: left;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    font-size: 16px;
+    text-align: center;
+    background-color: #fff;
+    border: 1px solid #ebeef2;
+    border-radius: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+
+.detail_selected-options .goods {
+    display: block;
+    margin-right: 34px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    word-break: break-all;
+}
+
+.detail_selected-options .goods {
+    font-size: 18px;
+    line-height: 27px;
+}
+
+/* 상품 옵션 가격 */
+.detail_selected-options .wrap_quantity_price .price_text {
+    font-size: 22px;
+    line-height: 24px;
+}
+
+.detail_selected-options .wrap_quantity_price .price_text {
+    display: table-cell;
+    width: auto;
+    padding: 5px 0 5px 10px;
+    max-width: calc(100% - 110px);
+    font-weight: 700;
+    font-style: normal;
+    text-align: right;
+    word-break: break-all;
+    vertical-align: middle;
 }
 
 /* 상품정보 */

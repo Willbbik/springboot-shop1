@@ -83,19 +83,16 @@ public class AdminController {
 
     @GetMapping("/admin/send/orderItem")
     @ApiOperation(value = "상품 배송 페이지")
-    public String sendOrderItemPage(Model model, @RequestParam(name = "page", defaultValue = "1") int page, SearchDto searchDto){
+    public String sendOrderItemPage(Model model, @RequestParam(name = "page", defaultValue = "1") int curPage, SearchDto searchDto){
 
         // 배달해야하는 상품 총 개수와 그걸로 페이징처리
         Long total = orderService.searchTotalOrderItem(DeliveryStatus.DEPOSIT_SUCCESS, searchDto);
-        ItemPagination pagination = new ItemPagination(total, page);
+        PaginationShowSizeTen page = new PaginationShowSizeTen(total, curPage);
 
-        Pageable pageable = PageRequest.of(pagination.getCurPage() - 1, 10, Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxSize());
         List<OrderItemDto> orderItems = orderService.searchAllByDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS, pageable, searchDto);
 
-        model.addAttribute("page", pagination);
-        model.addAttribute("curPage", pagination.getCurPage());
-        model.addAttribute("startPage", pagination.getStartPage());
-        model.addAttribute("endPage", pagination.getEndPage());
+        model.addAttribute("page", page);
 
         model.addAttribute("orderItems", orderItems);
         model.addAttribute("searchDto", searchDto);
