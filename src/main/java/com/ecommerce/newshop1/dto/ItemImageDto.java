@@ -8,6 +8,7 @@ import lombok.*;
 @Setter
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class ItemImageDto {
 
     private Long id;
@@ -18,11 +19,4 @@ public class ItemImageDto {
 
     private String imageName;
 
-    @QueryProjection
-    public ItemImageDto(Long id, Item item, String imageUrl, String imageName) {
-        this.id = id;
-        this.item = item;
-        this.imageUrl = imageUrl;
-        this.imageName = imageName;
-    }
 }

@@ -20,7 +20,7 @@ $(function(){
     // 상품 등록
     $(document).on("click", "#itemPost", function(){
 
-        let form = $("itemForm")[0];
+        let form = $("#itemForm")[0];
         let formData = new FormData(form);
 
         $.ajax({

@@ -1,7 +1,6 @@
 package com.ecommerce.newshop1.dto;
 
 import com.ecommerce.newshop1.utils.ValidationGroups;
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -30,9 +29,8 @@ public class ItemDto {
     @Length(max = 100, message = "상품 이름은 최대 100자 입니다.", groups = ValidationGroups.LengthGroup.class)
     private String itemName;
 
-    @NotNull(message = "가격을 입력해주세요.")
-    @Pattern(regexp = "[0-9]", message = "숫자만 입력 가능합니다.", groups = ValidationGroups.PatternGroup.class)
-    @PositiveOrZero(message = "0원 이상만 가능합니다.", groups = ValidationGroups.PatternGroup.class)
+    @NotNull(message = "가격을 입력해주세요.", groups = ValidationGroups.NotBlankGroup.class)
+    @PositiveOrZero(message = "0원 이상만 가능합니다.", groups = ValidationGroups.PositiveOrZero.class)
     private Integer price;
 
     @NotBlank(message = "색상을 입력해주세요.", groups = ValidationGroups.NotBlankGroup.class)
