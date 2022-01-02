@@ -58,8 +58,7 @@ public class OrderController {
             throw new ParameterNotFoundException("주문 페이지 이동시 필수 파라미터 'where'가 정상적인 값이 아님");
         }
 
-        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String orderId = date + orderService.createOrderId(date, totalPrice);  // 주문번호 생성
+        String orderId = orderService.createOrderId();  // 주문번호 생성
 
         // 주문번호와 상품 번호들 세션에 저장. ( 마지막 최종 주문할 때 사용하기 위해서 )
         session.setAttribute("orderId", orderId);

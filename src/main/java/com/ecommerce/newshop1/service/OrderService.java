@@ -4,7 +4,6 @@ import com.ecommerce.newshop1.dto.OrderDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.Member;
-import com.ecommerce.newshop1.entity.OrderItem;
 import com.ecommerce.newshop1.entity.OrderPaymentInformation;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -16,7 +15,7 @@ import java.util.List;
 
 public interface OrderService {
 
-    String createOrderId(String nowDate, int totalPrice) throws Exception;
+    String createOrderId();
 
     List<OrderItemDto> itemToPayment(String itemList);
 

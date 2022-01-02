@@ -49,31 +49,21 @@
                                 </div>
                             </div>
                             <div class="item_select_box">
-                                <select id="color" class="form-select item_select">
-                                    <option disabled="disabled" selected>[색상]옵션을 선택하세요.</option>
+                                <select name="color" id="color" class="form-select item_select">
+                                    <option value="colorNone" selected>[색상]옵션을 선택하세요.</option>
                                     <option th:value="${item.color}" th:text="${item.color}"></option>
                                 </select>
-                                <select id="size" class="form-select item_select">
-                                    <option disabled="disabled" selected>[사이즈]사이즈를 선택하세요.</option>
+                                <select name="size" id="size" class="form-select item_select">
+                                    <option value="sizeNone" selected>[사이즈]사이즈를 선택하세요.</option>
                                     <option th:value="${item.size}" th:text="${item.size}"></option>
                                 </select>
                             </div>
                             <div class="detail_selected-options">
-                                <strong class="goods">아이보리 / M</strong>
-                                <div class="wrap_quantity_price">
-                                    <div class="quantity">
-                                        <input type="button" class="quantity_minus" value="-">
-                                        <input type="text" class="input_quantity" value="1">
-                                        <input type="button" class="quantity_plus" value="+">
-                                    </div>
-                                    <div class="price_text">8,800원</div>
-                                </div>
-                                <button type="button" class="btn_del_option" aria-label="옵션삭제 버튼">X</button>
                             </div>
                             <div class="details_price">
                                 <dl>
                                     <dt>총 상품 금액</dt>
-                                    <dd id="totalPrice"></dd>
+                                    <dd id="totalPrice" class="totalPrice"></dd>
                                 </dl>
                             </div>
                             <div class="details_btns">
@@ -202,7 +192,7 @@
     <script src="/assets/js/item/itemDetails.js"></script>
     <script src="/assets/js/item/itemQnA.js"></script>
     <script src="/assets/js/item/itemReview.js"></script>
-    <script src="/assets/js/order/order.js"></script>
+    <script src="/assets/js/cart/cart.js"></script>
 
 
 <th:block sec:authorized="hasRole('ROLE_ADMIN')">

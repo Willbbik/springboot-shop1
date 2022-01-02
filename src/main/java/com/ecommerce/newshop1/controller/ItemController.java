@@ -78,8 +78,6 @@ public class ItemController {
         ItemDto itemDto = mapper.map(item, ItemDto.class);
 
         // 상품 이미지
-//        boolean imageExists = itemImageRepository.existsByItem(item);
-//        List<ItemImageDto> images = (!imageExists) ? null : itemService.searchAllItemImage(item);
         List<ItemImageDto> images = itemService.searchAllItemImage(item);
 
         // qna, 리뷰 개수

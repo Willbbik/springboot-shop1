@@ -1,9 +1,61 @@
-$(document).ready(function(){
+//let price = 0;
+//
+//$(document).ready(function(){
+//
+//
+//    $("#quantity").blur(function(){
+//        quantityCheck();
+//        calculateTotalPrice();
+//    }).keyup(function(event) {
+//      	quantityCheck();
+//      	calculateTotalPrice();
+//    }).keypress(function(event){
+//        quantityCheck();
+//        calculateTotalPrice();
+//    }).keydown(function(event) {
+//        quantityCheck();
+//        calculateTotalPrice();
+//    });
+//});
+//
+//
+//
+//
+//function quantityCheck(){
+//
+//    let quantity = $("#quantity").val();
+//    let regQuantity = /^[0-9]/;
+//
+//    let result = regQuantity.test(quantity);
+//    if(!result){
+//        $("#quantity").val(1);
+//    }
+//}
+//
+//
+//
 
-    calculateTotalPrice();
+let price = 0;
 
-    $("#quantity").change(function(){
-        calculateTotalPrice();
+$(function(){
+
+    $(".totalPrice").html("0원");
+
+//    $("#quantity").change(function(){
+//        quantityChange();
+//    });
+
+    $("#quantity").on("change", function(){
+        quantityChange();
+        alert("g");
+    });
+
+    $("#color").on("change", function(){
+        makeOption();
+    });
+
+    $("#size").on("change", function(){
+        makeOption();
     });
 
     $('.tab_default').click(function(){
@@ -17,16 +69,34 @@ $(document).ready(function(){
     // tab1 상품정보
     $("#tab1").on("click", function(){
 
-        let info1 = $("#info_container_1");
-        let info2 = $("#info_container_2");
-        let info3 = $("#info_container_3");
-
-        info1.css("display", "");
-        info2.css("display", "none");
-        info3.css("display", "none");
+        $("#info_container_1").css("display", "");
+        $("#info_container_2").css("display", "none");
+        $("#info_container_3").css("display", "none");
     });
 
+    $(document).on("click", ".quantity_plus", function(){
+
+         let quantity = $("#quantity").val();
+         if(quantity === 100){
+             alert("상품 구매가능 최대 수량은 100개 입니다.");
+             return false;
+         }
+
+         $("#quantity").val(Number(quantity) + 1);
+    });
+
+    $(document).on("click", ".quantity_minus", function(){
+
+         let quantity = $("#quantity").val();
+         if(quantity == 1){
+            alert("상품 구매가능 최소 수량은 1개 입니다.")
+            return false;
+         }
+         $("#quantity").val(Number(quantity) - 1);
+    });
 });
+
+
 
 function sendorder(){
 
@@ -37,57 +107,45 @@ function sendorder(){
     $("input[name='itemList']").val(JSON.stringify(itemList));
 }
 
-// 최종 금액 계산
-function calculateTotalPrice(){
 
-    let quantity = $("#quantity").val();
-    let price = $("#price").val();
-    let totalPrice = (quantity * price).toString();
+function quantityChange(){
 
+    let totalPrice = price * parseInt($("#quantity").val());
     totalPrice = totalPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    $("#totalPrice").html(totalPrice + '원')
+
+    $('.price_text').html(totalPrice + "원");
+    $('.totalPrice').html(totalPrice + "원");
 }
 
-function addCart(){
+function makeOption(){
 
-    let param = {
-        itemId : $("#itemId").val(),
-        quantity : $("#quantity").val()
-    };
+    let optionSize = $(".detail_selected-options div").length;
+    const colorValue = $("select[name=color]").val();
+    const sizeValue = $("select[name=size]").val();
+    let totalPrice = $("#price").val().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    let html = "";
 
-    let token = $("meta[name='_csrf']").attr("content");
-    let header = $("meta[name='_csrf_header']").attr("content");
+    if(colorValue != 'colorNone' &&  sizeValue != 'sizeNone'){
+         if(optionSize == 0){
+            price = parseInt($('#price').val());
 
-    $.ajax({
-        type : "POST",
-        url : "/cart/add",
-        data : param,
-        beforeSend : function(xhr){
-            xhr.setRequestHeader(header, token);
-        },
-        success : function(result){
-         switch(result){
-            case 200 :
-                alert("상품을 장바구니에 담았습니다.");
-                break;
-            case 403 :
-                let result = confirm("로그인이 필요한 서비스입니다. \n로그인 페이지로 이동하시겠습니까?");
-                if(result){
-                    window.location.href = "https://egemony.tk/login";
-                    break;
-                }else{
-                    break;
-                }
-            case 401 :
-                alert("상품과 옵션을 정확히 입력해주세요.");
-                break;
-            default:
+            html += '<strong class="goods">' + colorValue + " / " + sizeValue + '</strong>';
+            html += '<div class="wrap_quantity_price">';
+            html += '<div class="quantity">';
+            html += '<input type="button" class="quantity_minus" value="-">';
+            html += '<input type="text" class="input_quantity" id="quantity" name="quantity" value="1">';
+            html += '<input type="button" class="quantity_plus" value="+">';
+            html += '</div>';
+            html += '<div class="price_text">' + totalPrice.toString() + '원</div>';
+            html += '</div>';
+            html += '<button type="button" class="btn_del_option" aria-label="옵션삭제 버튼">X</button>';
+
+            $(".detail_selected-options").append(html);
+            $("select[name=color] option:eq(0)").prop("selected", true);
+            $("select[name=size] option:eq(0)").prop("selected", true);
+            $(".totalPrice").html(price.toString() + "원");
+         }else{
+            return false;
          }
-        },
-        error : function(error){
-            alert("에러가 발생했습니다. 불편을 드려 죄송합니다.\n잠시후에 다시 시도해보시기 바랍니다.")
-        }
-    })
+    }
 }
-
-

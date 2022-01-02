@@ -1,15 +1,12 @@
 package com.ecommerce.newshop1.service;
 
-import com.ecommerce.newshop1.dto.AddressDto;
-import com.ecommerce.newshop1.dto.OrderDto;
-import com.ecommerce.newshop1.dto.OrderItemDto;
-import com.ecommerce.newshop1.dto.SearchDto;
+import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.*;
 import com.ecommerce.newshop1.exception.ItemNotFoundException;
-import com.ecommerce.newshop1.exception.MemberNotFoundException;
 import com.ecommerce.newshop1.repository.*;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.ecommerce.newshop1.enums.PayType;
+import com.ecommerce.newshop1.utils.CommonService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
@@ -25,10 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,12 +32,10 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
-    private final RedisService redisService;
     private final CartService cartService;
     private final MemberService memberService;
-    private final SecurityService security;
+    private final CommonService commonService;
 
     ModelMapper mapper = new ModelMapper();
 
@@ -62,11 +56,24 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public String createOrderId(String nowDate, int totalPrice) throws Exception {
-        return redisService.createOrderId(nowDate, totalPrice);
+    @Transactional(readOnly = true)
+    public String createOrderId() {
+
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String random = String.valueOf(commonService.randomNum());
+
+        String orderId = date + random;
+        boolean result = orderRepository.existsByOrderNum(orderId);
+
+        if(!result){
+            return orderId;
+        }else{
+            return createOrderId();
+        }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Long searchTotalOrderItem(DeliveryStatus deliveryStatus, SearchDto searchDto) {
         return orderRepository.searchTotalOrderItem(deliveryStatus, searchDto);
     }
