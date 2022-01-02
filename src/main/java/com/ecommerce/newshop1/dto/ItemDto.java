@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
@@ -29,9 +30,10 @@ public class ItemDto {
     @Length(max = 100, message = "상품 이름은 최대 100자 입니다.", groups = ValidationGroups.LengthGroup.class)
     private String itemName;
 
-    @NotBlank(message = "가격을 입력해주세요.", groups = ValidationGroups.NotBlankGroup.class)
+    @NotNull(message = "가격을 입력해주세요.")
+    @Pattern(regexp = "[0-9]", message = "숫자만 입력 가능합니다.", groups = ValidationGroups.PatternGroup.class)
     @PositiveOrZero(message = "0원 이상만 가능합니다.", groups = ValidationGroups.PatternGroup.class)
-    private int price;
+    private Integer price;
 
     @NotBlank(message = "색상을 입력해주세요.", groups = ValidationGroups.NotBlankGroup.class)
     @Length(max = 100, message = "색상 이름은 최대 100자 입니다.", groups = ValidationGroups.LengthGroup.class)

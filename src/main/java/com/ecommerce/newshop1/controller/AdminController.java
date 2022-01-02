@@ -4,11 +4,10 @@ import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.ItemImage;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
+import com.ecommerce.newshop1.enums.Role;
 import com.ecommerce.newshop1.repository.ItemRepository;
-import com.ecommerce.newshop1.service.ItemService;
-import com.ecommerce.newshop1.service.MemberService;
-import com.ecommerce.newshop1.service.OrderService;
-import com.ecommerce.newshop1.service.AwsS3Service;
+import com.ecommerce.newshop1.service.*;
+import com.ecommerce.newshop1.utils.CommonService;
 import com.ecommerce.newshop1.utils.ItemPagination;
 import com.ecommerce.newshop1.utils.ValidationSequence;
 import io.swagger.annotations.ApiOperation;
@@ -44,6 +43,8 @@ public class AdminController {
     private final OrderService orderService;
     private final MemberService memberService;
     private final AwsS3Service awsS3Service;
+    private final CommonService commonService;
+    private final SecurityService security;
 
     @GetMapping("/admin/main")
     public String adminMain(Model model) {
@@ -132,10 +133,17 @@ public class AdminController {
         return "admin/admin_itemList";
     }
 
-
-    @PostMapping("/admin/register")
+    @PostMapping("/admin/item/register")
     @ApiOperation(value = "관리자페이지에서 상품 등록")
-    public String itemSave(MultipartHttpServletRequest mtfRequest, @Validated(ValidationSequence.class) ItemDto itemDto, BindingResult errors) throws Exception {
+    public @ResponseBody String itemSave(MultipartHttpServletRequest mtfRequest, @ModelAttribute("item") @Validated(ValidationSequence.class) ItemDto itemDto, BindingResult errors) throws Exception {
+
+        // 상품 유효성 검사 && 권한 검사
+        if(errors.hasErrors()){
+            return commonService.getErrorMessage(errors);
+        }
+        if(!security.checkHasRole(Role.ADMIN.getValue())){
+            return "관리자 권한이 필요합니다";
+        }
 
         // 상품 정보 저장
         Item item = mapper.map(itemDto, Item.class);
@@ -169,8 +177,52 @@ public class AdminController {
             }
         }
         itemRepository.save(item);
-        return "redirect:/admin/itemList";
+        return "success";
     }
+
+//    @PostMapping("/admin/register")
+//    @ApiOperation(value = "관리자페이지에서 상품 등록")
+//    public String itemSave(MultipartHttpServletRequest mtfRequest, @ModelAttribute("item") @Validated(ValidationSequence.class) ItemDto itemDto, BindingResult errors) throws Exception {
+//
+//        // 상품 유효성 검사
+//        if(errors.hasErrors()){
+//            return commonService.getErrorMessage(errors);
+//        }
+//
+//        // 상품 정보 저장
+//        Item item = mapper.map(itemDto, Item.class);
+//
+//        // 상품 이미지 저장
+//        List<MultipartFile> fileList =  mtfRequest.getFiles("upload_image");
+//        List<ItemImage> itemImageList = new ArrayList<>();
+//
+//        if (fileList.size() != 0) {
+//            for (int i = 0; i < fileList.size(); i++) {
+//
+//                String originImageName = fileList.get(i).getOriginalFilename();
+//                String imageName = awsS3Service.createFileName(originImageName);
+//
+//                String filePath = "static/images/" + itemDto.getCategory() + "/" + itemDto.getItemName() + "/" + imageName;
+//
+//                // s3에 이미지 저장
+//                String s3ImageUrl = awsS3Service.upload(fileList.get(i), filePath);
+//                // 첫번째 사진이 대표 이미지
+//                if (i == 0) item.setImageUrl(s3ImageUrl);
+//
+//                ItemImage itemImage = ItemImage.builder()
+//                        .imageUrl(filePath)
+//                        .imageName(originImageName)
+//                        .build();
+//                itemImageList.add(itemImage);
+//
+//            }
+//            for (ItemImage itemImage : itemImageList) {
+//                item.setItemImageList(itemImage);
+//            }
+//        }
+//        itemRepository.save(item);
+//        return "redirect:/admin/itemList";
+//    }
 
     @DeleteMapping("/admin/item/delete")
     @ApiOperation(value = "관리자페이지에서 단일 상품 삭제")

@@ -23,7 +23,7 @@ public class ReviewDto {
     private String writer;
 
     @NotBlank(message = "내용을 입력해주세요.", groups = ValidationGroups.NotBlankGroup.class)
-    @Length(max = 2048, message = "최대 길이는 2048자 입니다.", groups = ValidationGroups.MaxGroup.class)
+    @Length(max = 2048, message = "최대 길이는 2048자 입니다.", groups = ValidationGroups.LengthGroup.class)
     private String content;
 
     private LocalDateTime createdDate;
