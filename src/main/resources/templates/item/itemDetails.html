@@ -49,11 +49,11 @@
                                 </div>
                             </div>
                             <div class="item_select_box">
-                                <select id="color" class="form-select">
+                                <select id="color" class="form-select item_select">
                                     <option disabled="disabled" selected>[색상]옵션을 선택하세요.</option>
                                     <option th:value="${item.color}" th:text="${item.color}"></option>
                                 </select>
-                                <select id="size" class="form-select">
+                                <select id="size" class="form-select item_select">
                                     <option disabled="disabled" selected>[사이즈]사이즈를 선택하세요.</option>
                                     <option th:value="${item.size}" th:text="${item.size}"></option>
                                 </select>
@@ -68,10 +68,13 @@
                                     </div>
                                     <div class="price_text">8,800원</div>
                                 </div>
+                                <button type="button" class="btn_del_option" aria-label="옵션삭제 버튼">X</button>
                             </div>
                             <div class="details_price">
-                                <h5>총 상품 금액</h5>
-                                <h5 id="totalPrice"></h5>
+                                <dl>
+                                    <dt>총 상품 금액</dt>
+                                    <dd id="totalPrice"></dd>
+                                </dl>
                             </div>
                             <div class="details_btns">
                                 <button type="button" class="cart_add_btn" onclick="addCart();">장바구니</button>
