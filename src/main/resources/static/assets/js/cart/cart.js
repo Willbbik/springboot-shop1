@@ -142,6 +142,11 @@ $(function(){
 
 function addCart(){
 
+    if($(".detail_selected-options div").length == 0){
+        alert("상품을 선택해주세요.");
+        return false;
+    }
+
     let param = {
         itemId : $("#itemId").val(),
         quantity : $("#quantity").val()

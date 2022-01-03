@@ -45,15 +45,33 @@ public class MemberController {
         return "member/join";
     }
 
-    // 로그인 페이지
     @RequestMapping("/login")
+    @ApiOperation(value = "로그인 페이지")
     public String login(HttpServletRequest request) {
 
         String referer = request.getHeader("Referer");
         request.getSession().setAttribute("prevPage", referer);
 
-        return "member/login";
+        return "member/member_login";
     }
+
+    @GetMapping("/member/findId")
+    @ApiOperation(value = "아이디 찾기 페이지")
+    public String findId(){
+
+        return "member/member_findId";
+    }
+
+    @PostMapping("/member/findId/sendMessage")
+    @ApiOperation(value = "아이디 찾기에서 입력한 전화번호로 인증번호 전송", notes = "아이디 찾기")
+    public String findIdPost(@Validated(ValidationSequence.class) FindIdDto findIdDto){
+
+            String phoneNum = findIdDto.getPhone1()+findIdDto.getPhone2()+findIdDto.getPhone3();
+            messageService.sendMessage(phoneNum);
+
+            return "success";
+    }
+
 
     @GetMapping("/mypage")
     @ApiOperation(value = "mypage 페이지")
@@ -72,7 +90,7 @@ public class MemberController {
 
         model.addAttribute("orderList", orderList);
         model.addAttribute("lastOrderId", lastOrderId);
-        return "member/mypage";
+        return "member/member_mypage";
     }
 
     @GetMapping("/mypage/orderList")
@@ -188,7 +206,7 @@ public class MemberController {
             for(String key : errorMsgMap.keySet()){
                 model.addAttribute(key, errorMsgMap.get(key));
             }
-            return "member/join";
+            return "member/member_join";
         }
 
         // 유효성 문제가 없으면 중복검사
@@ -197,7 +215,7 @@ public class MemberController {
 
             model.addAttribute(memberService.createJoinDtoErrorMsg(joinMemberDto, model));            // 에러 메시지
             model.addAttribute("member", memberService.joinDtoLengthEdit(joinMemberDto)); // input 값 유지
-            return "member/join";
+            return "member/member_join";
         }
 
         Member member = mapper.map(joinMemberDto, Member.class);

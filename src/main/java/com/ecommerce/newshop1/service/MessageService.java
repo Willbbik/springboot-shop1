@@ -26,10 +26,10 @@ public class MessageService {
     String fromNumber;
 
 
-    public void sendMessage(String toNumber, int randomNumber){
+    public void sendMessage(String toNumber){
 
         Message coolsms = new Message(apiKey, apiSecret);
-
+        int randomNumber = randomNum();
         HashMap<String, String> params = new HashMap<String, String>();
 
         params.put("to", toNumber);

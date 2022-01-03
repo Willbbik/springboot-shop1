@@ -1,0 +1,266 @@
+.account-container {
+    padding: 80px 0 110px;
+}
+
+.account-container[data-v-cab04386] {
+    padding: 42px 16px 30px;
+}
+
+.account-container .inner {
+    max-width: 566px;
+}
+
+.account-container .inner {
+    margin: 0 auto;
+}
+
+.account-container .inner h1 {
+    font-size: 32px;
+    line-height: 36px;
+    text-align: center;
+}
+
+.account-container .inner h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #202429;
+    line-height: 28px;
+}
+
+.account-container .account-contents {
+    margin-top: 40px;
+}
+
+.account-container .inner .account-contents .tab-certification{
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+}
+
+.account-container .inner .account-contents .tab-certification li.active {
+    border: 1px solid #505762;
+    border-width: 1px 1px 0;
+}
+
+.account-container .inner .account-contents .tab-certification li{
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex: 1 1 25%;
+    flex: 1 1 25%;
+    -ms-flex-align: center;
+    align-items: center;
+    border-bottom: 1px solid #505762;
+}
+
+.account-container .inner .account-contents .tab-certification li a {
+    padding: 16px;
+    font-size: 18px;
+    line-height: 22px;
+}
+
+.account-container .inner .account-contents .tab-certification li a {
+    display: block;
+    width: 100%;
+    padding: 12px 8px;
+    font-size: 13px;
+    color: #5f6773;
+    line-height: 18px;
+    text-align: center;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+.account-container .inner .account-contents .tab-contents.active {
+    display: block;
+}
+
+.account-container .inner .account-contents .tab-contents {
+    padding: 40px 0 0;
+}
+
+.visually-hidden {
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    width: 1px;
+}
+
+.visually-hidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    margin: -1px;
+    padding: 0;
+}
+
+.account-container .inner .account-contents .tab-contents .certification-info {
+    font-size: 18px;
+}
+
+.account-container .inner .account-contents .tab-contents .certification-info {
+    margin: 0;
+    font-size: 13px;
+}
+
+/* 이부분 마지막 + 부분 이상 */
+.account-container .inner .account-contents .tab-contents .certification-info+.artc {
+    margin-top: 48px;
+}
+
+.account-container .inner .account-contents .tab-contents h3 {
+    font-size: 18px;
+    line-height: 20px;
+}
+
+.account-container .inner .account-contents .tab-contents h3 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    color: #202429;
+    line-height: 18px;
+}
+
+.flex-form {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+}
+
+.flex-form .flex-input-area {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+}
+
+.flex-form .flex-input-area>.input-wrap {
+    -ms-flex: 1 1 30%;
+    flex: 1 1 30%;
+    position: relative;
+}
+
+.flex-form .flex-input-area.phone-area .input-wrap input[type=tel] {
+    padding: 0 12px;
+    text-align: center;
+}
+
+.input-wrap input[type=tel] {
+    height: 50px;
+}
+
+.input-wrap input[type=tel] {
+
+    width: 100%;
+    height: 44px;
+    padding: 0 16px;
+    font-size: 16px;
+    color: #202429;
+    line-height: 1.4em;
+    border: 1px solid #d3d7df;
+}
+
+[type=button], [type=email], [type=password], [type=submit], [type=tel], [type=text], textarea {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0;
+}
+
+.flex-form .flex-btn-area {
+    -ms-flex: 0 0 108px;
+    flex: 0 0 108px;
+    margin-left: 10px;
+}
+
+.flex-form .flex-btn-area .btn {
+    height: 50px;
+    font-size: 16px;
+    line-height: 48px;
+}
+
+.flex-form .flex-btn-area .btn {
+    width: 100%;
+    height: 44px;
+    padding: 0;
+    font-size: 13px;
+    color: #000;
+    line-height: 42px;
+    border: 1px solid #202429;
+    background-color: #fff;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+}
+
+[type=button], [type=email], [type=password], [type=submit], [type=tel], [type=text], textarea {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0;
+}
+
+button, textarea {
+    font-size: 13px;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.tab-contents .btn-area{
+    margin-top: 40px;
+}
+
+.tab-contents .btn-area {
+    margin-top: 22px;
+}
+
+.account-container .inner .account-contents .btn-area .btn.btn-primary {
+    color: #fff;
+    border: 1px solid #000;
+    background-color: #000;
+}
+
+.account-container .inner .account-contents .btn-area .btn {
+    padding: 16px 0;
+    font-size: 18px;
+    line-height: 24px;
+}
+
+.account-container .inner .account-contents .btn-area .btn {
+    display: block;
+    width: 100%;
+    padding: 14px 0;
+    font-size: 16px;
+    text-align: center;
+    line-height: 20px;
+    border: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+}
+
+/* 인증번호 폼 */
+.flex-form+.flex-form {
+    margin-top: 8px;
+}
+
+.flex-form .flex-input-area {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+}
+
+.flex-form .flex-input-area>.input-wrap{
+    -ms-flex: 1 1 30%;
+    flex: 1 1 30%;
+    position: relative;
+}
+
+

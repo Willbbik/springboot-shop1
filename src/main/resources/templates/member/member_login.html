@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <link rel="stylesheet" href="/assets/css/common/sidebar.css">
-    <link rel="stylesheet" href="/assets/css/member/login.css">
+    <link rel="stylesheet" href="/assets/css/member/member_login.css">
 </head>
 <body>
 
@@ -66,8 +66,7 @@
                         <p id="pswdMsg" class="error_next_box" th:text="${pswdMsg}"></p>
                         <p id="errorMsg" class="error_next_box" th:text="${#request.getAttribute('LoginFailureMessage')}"></p>
                         <button type="button" id="loginbtn" >로그인</button>
-
-                        <span class="message"><a href="#">아이디 찾기</a></span>
+                        <span class="message"><a th:href="@{/member/findId}">아이디 찾기</a></span>
                         <span class="message"><a href="#">비밀번호 찾기</a></span>
                         <span class="message"><a th:href="@{/join}">회원가입</a></span>
                     </form>
@@ -87,7 +86,6 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
-<script src="/assets/js/member/login.js"></script>
-
+<script src="/assets/js/member/member_login.js"></script>
 </body>
 </html>

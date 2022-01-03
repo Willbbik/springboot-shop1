@@ -1,53 +1,15 @@
-//let price = 0;
-//
-//$(document).ready(function(){
-//
-//
-//    $("#quantity").blur(function(){
-//        quantityCheck();
-//        calculateTotalPrice();
-//    }).keyup(function(event) {
-//      	quantityCheck();
-//      	calculateTotalPrice();
-//    }).keypress(function(event){
-//        quantityCheck();
-//        calculateTotalPrice();
-//    }).keydown(function(event) {
-//        quantityCheck();
-//        calculateTotalPrice();
-//    });
-//});
-//
-//
-//
-//
-//function quantityCheck(){
-//
-//    let quantity = $("#quantity").val();
-//    let regQuantity = /^[0-9]/;
-//
-//    let result = regQuantity.test(quantity);
-//    if(!result){
-//        $("#quantity").val(1);
-//    }
-//}
-//
-//
-//
-
 let price = 0;
 
 $(function(){
 
-    $(".totalPrice").html("0원");
-
-//    $("#quantity").change(function(){
-//        quantityChange();
-//    });
-
-    $("#quantity").on("change", function(){
+    $("#quantity").blur(function(){
         quantityChange();
-        alert("g");
+    }).keyup(function(event) {
+        quantityChange();
+    }).keypress(function(event){
+        quantityChange();
+    }).keydown(function(event) {
+        quantityChange();
     });
 
     $("#color").on("change", function(){
@@ -57,6 +19,7 @@ $(function(){
     $("#size").on("change", function(){
         makeOption();
     });
+
 
     $('.tab_default').click(function(){
 
@@ -74,31 +37,54 @@ $(function(){
         $("#info_container_3").css("display", "none");
     });
 
+
+
     $(document).on("click", ".quantity_plus", function(){
 
          let quantity = $("#quantity").val();
-         if(quantity === 100){
-             alert("상품 구매가능 최대 수량은 100개 입니다.");
-             return false;
-         }
-
          $("#quantity").val(Number(quantity) + 1);
+         quantityChange();
     });
 
     $(document).on("click", ".quantity_minus", function(){
 
          let quantity = $("#quantity").val();
-         if(quantity == 1){
+         if(quantity <= 1){
             alert("상품 구매가능 최소 수량은 1개 입니다.")
             return false;
          }
          $("#quantity").val(Number(quantity) - 1);
+         quantityChange();
     });
+
+    $(document).on("click", ".btn_del_option", function(){
+
+        $(".selected_options_box").html("");
+        price = 0;
+    });
+
+    $(document).on("change", "#quantity", function() {
+        quantityChange();
+    });
+
 });
 
+// 수량 변경
+function quantityChange(){
+
+    let totalPrice = price * parseInt($("#quantity").val());
+
+    $('.price_text').html(totalPrice.toString() + "원");
+    $('.totalPrice').html(totalPrice.toString() + "원");
+}
 
 
 function sendorder(){
+
+    if($(".selected_options_box div").length == 0){
+        alert("상품을 선택해주세요.");
+        return false;
+    }
 
     const itemId = $("#itemId").val();
     const quantity = $("#quantity").val();
@@ -107,16 +93,7 @@ function sendorder(){
     $("input[name='itemList']").val(JSON.stringify(itemList));
 }
 
-
-function quantityChange(){
-
-    let totalPrice = price * parseInt($("#quantity").val());
-    totalPrice = totalPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-    $('.price_text').html(totalPrice + "원");
-    $('.totalPrice').html(totalPrice + "원");
-}
-
+// 옵션 모두 선택시 선택한 옵션목록 띄워주기
 function makeOption(){
 
     let optionSize = $(".detail_selected-options div").length;
@@ -129,6 +106,7 @@ function makeOption(){
          if(optionSize == 0){
             price = parseInt($('#price').val());
 
+            html += '<div class="detail_selected_options">';
             html += '<strong class="goods">' + colorValue + " / " + sizeValue + '</strong>';
             html += '<div class="wrap_quantity_price">';
             html += '<div class="quantity">';
@@ -139,8 +117,9 @@ function makeOption(){
             html += '<div class="price_text">' + totalPrice.toString() + '원</div>';
             html += '</div>';
             html += '<button type="button" class="btn_del_option" aria-label="옵션삭제 버튼">X</button>';
+            html += '</div>';
 
-            $(".detail_selected-options").append(html);
+            $(".selected_options_box").html(html);
             $("select[name=color] option:eq(0)").prop("selected", true);
             $("select[name=size] option:eq(0)").prop("selected", true);
             $(".totalPrice").html(price.toString() + "원");

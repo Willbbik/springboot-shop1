@@ -14,12 +14,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 
 @EnableWebSecurity
@@ -29,7 +23,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final CustomLoginFailureHandler failureHandler;
-
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -88,23 +81,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
     }
-
-
-//    @Bean
-//    public ClientRegistrationRepository clientRegistrationRepository(@Value("${kakao.secret}") String secret, @Value("${kakao.client_id}") String kakaoClientId){
-//
-//        List<ClientRegistration> registrations = new ArrayList<>();
-//        registrations.add(
-//                CustomOAuth2Provider.KAKAO.getBuilder("kakao")
-//                .clientId(kakaoClientId)
-//                .clientSecret(secret)
-//                .jwkSetUri("temp")
-//                .build()
-//        );
-//        return new InMemoryClientRegistrationRepository(registrations);
-//    }
-
-
 
 }
 
