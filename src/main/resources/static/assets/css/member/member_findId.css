@@ -263,4 +263,17 @@ button, textarea {
     position: relative;
 }
 
+/* 카운트다운 초 */
+.flex-form .flex-input-area>.input-wrap .countdown {
+    font-size: 15px;
+}
 
+.flex-form .flex-input-area>.input-wrap .countdown {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    font-size: 13px;
+    color: #ff2c2c;
+    text-align: right;
+}
