@@ -197,6 +197,12 @@ a:link {
     cursor: pointer;
 }
 
+.flex-form .flex-btn-area .btn:disabled {
+    color: #acb3bd;
+    border-color: #acb3bd;
+    cursor: default;
+}
+
 [type=button], [type=email], [type=password], [type=submit], [type=tel], [type=text], textarea {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -243,6 +249,7 @@ button, textarea {
     cursor: pointer;
 }
 
+
 /* 인증번호 폼 */
 .flex-form+.flex-form {
     margin-top: 8px;
@@ -262,6 +269,12 @@ button, textarea {
     flex: 1 1 30%;
     position: relative;
 }
+
+.input-wrap input[type=tel][readonly] {
+    color: #acb3bd;
+    background-color: #fff;
+}
+
 
 /* 카운트다운 초 */
 .flex-form .flex-input-area>.input-wrap .countdown {

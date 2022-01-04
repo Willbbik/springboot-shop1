@@ -22,6 +22,7 @@ $(function(){
           }
     });
 
+    // 인증번호 전송
     $("#sendMessage").on("click", function(){
 
         let phone1 = $("#phone1").val();
@@ -61,6 +62,7 @@ $(function(){
         }
     });
 
+    // 인증번호 확인
     $(document).on("click", "#checkAuthNum", function(){
 
         let phone1 = $("#phone1").val();
@@ -81,7 +83,8 @@ $(function(){
             }
         }).done(function(result){
             if(result === "success"){
-                alert("인증번호이 완료되었습니다.");
+                alert("인증이 완료되었습니다.");
+                confirmSuccess();
             }else if(result === "fail"){
                 alert("인증번호가 유효하지 않습니다.");
                 return false;
@@ -93,7 +96,6 @@ $(function(){
             alert("에러가 발생했습니다. \n잠시후 다시 시도해주세요.");
             return false;
         });
-
 
     });
 
@@ -175,3 +177,27 @@ function timer(){
     }
 
 }
+
+function confirmSuccess(){
+
+    readOnly($("#phone1"));
+    readOnly($("#phone2"));
+    readOnly($("#phone3"));
+    readOnly($("#authNum"));
+
+    disabled($("#sendMessage"));
+    disabled($("#checkAuthNum"));
+
+    clearInterval(x);
+    $(".countdown").remove();
+}
+
+
+function readOnly(obj){
+    obj.attr("readonly", true);
+}
+
+function disabled(obj){
+    obj.attr("disabled", true);
+}
+

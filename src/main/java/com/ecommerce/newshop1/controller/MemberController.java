@@ -111,6 +111,7 @@ public class MemberController {
         boolean result = redisService.confirmPhoneCheck(phoneNum);
 
         if(result){
+            // 여기다 아이디와 페이지 제공
             return "success";
         }else{
             return "fail";
