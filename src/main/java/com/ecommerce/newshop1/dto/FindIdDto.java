@@ -27,5 +27,12 @@ public class FindIdDto {
     @Pattern(regexp = "[0-9]{4}", message = "입력하신 번호를 다시 확인해주세요.", groups = ValidationGroups.PatternGroup.class)
     private String phone3;
 
+    @Pattern(regexp = "[0-9]{6}", message = "인증번호를 정확히 입력해주세요.", groups = ValidationGroups.PatternGroup.class)
+    private String authNum;
+
+    public String getPhoneNum(){
+
+        return this.phone1 + this.getPhone2() + this.getPhone3();
+    }
 
 }

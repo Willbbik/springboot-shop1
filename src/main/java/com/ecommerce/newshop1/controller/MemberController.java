@@ -4,6 +4,7 @@ import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.service.*;
+import com.ecommerce.newshop1.utils.CommonService;
 import com.ecommerce.newshop1.utils.ValidationSequence;
 import com.ecommerce.newshop1.enums.Sns;
 import io.swagger.annotations.ApiOperation;
@@ -16,6 +17,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.constraints.Pattern;
 import java.util.*;
 
 @Controller
@@ -29,6 +32,7 @@ public class MemberController {
     private final QnAService qnAService;
     private final CartService cartService;
     private final OrderService orderService;
+    private final CommonService commonService;
     private final QnARepository qnARepository;
 
     ModelMapper mapper = new ModelMapper();
@@ -42,7 +46,8 @@ public class MemberController {
     // 회원가입 페이지
     @GetMapping("/join")
     public String join() {
-        return "member/join";
+
+        return "member/member_join";
     }
 
     @RequestMapping("/login")
@@ -63,15 +68,54 @@ public class MemberController {
     }
 
     @PostMapping("/member/findId/sendMessage")
-    @ApiOperation(value = "아이디 찾기에서 입력한 전화번호로 인증번호 전송", notes = "아이디 찾기")
-    public String findIdPost(@Validated(ValidationSequence.class) FindIdDto findIdDto){
+    @ApiOperation(value = "아이디 찾기", notes = "인증번호 전송")
+    public @ResponseBody String findIdPost(@Validated(ValidationSequence.class) FindIdDto findIdDto, BindingResult errors) throws Exception {
 
-            String phoneNum = findIdDto.getPhone1()+findIdDto.getPhone2()+findIdDto.getPhone3();
-            messageService.sendMessage(phoneNum);
+            if(errors.hasErrors()) {
+                return commonService.getErrorMessage(errors);
+            }
 
+            String phoneNum = findIdDto.getPhoneNum();
+            int authNum = commonService.randomAuthNum();
+
+            redisService.setAuthNo(phoneNum, authNum);
+            // messageService.sendMessage(phoneNum, authNum);
             return "success";
     }
 
+    @PostMapping("/member/findId/authNum")
+    @ApiOperation(value = "인증번호 받아서 비교", notes = "인증번호 확인 버튼")
+    public @ResponseBody String findIdAuth(@Validated(ValidationSequence.class) FindIdDto findIdDto, BindingResult errors, HttpSession session) throws Exception {
+
+            if(errors.hasErrors()){
+                return commonService.getErrorMessage(errors);
+            }
+
+            boolean result = memberService.checkAuthNum(findIdDto.getPhoneNum(), findIdDto.getAuthNum());
+
+            if(result){ // 인증번호가 일치하다면
+                // 세션에 전화번호 저장 && redis 서버에 인증번호 확인했다고 설정
+                session.setAttribute("phoneNum", findIdDto.getPhoneNum());
+                memberService.setAuthCheck(findIdDto.getPhoneNum());
+                return "success";
+            }else{
+                return "fail";
+            }
+    }
+
+    @PostMapping("/member/findId")
+    @ApiOperation(value = "인증했는지 확인 후 아이디 제공", notes = "아이디 확인 버튼")
+    public @ResponseBody String findId(HttpSession session){
+
+        String phoneNum = (String)session.getAttribute("phoneNum");
+        boolean result = redisService.confirmPhoneCheck(phoneNum);
+
+        if(result){
+            return "success";
+        }else{
+            return "fail";
+        }
+    }
 
     @GetMapping("/mypage")
     @ApiOperation(value = "mypage 페이지")

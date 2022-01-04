@@ -23,16 +23,20 @@ public class RedisService {
         ValueOperations<String, Object> vop = redisTemplate.opsForValue();
         Duration time = Duration.ofMinutes(3);
 
+        String check = phoneNum+"_check";
+
         try {
             vop.set(phoneNum, authNum, time);
+            vop.set(check, false, time);
         } catch (Exception e) {
-            log.info("RedisService exception : 28 line : " + e.getMessage());
+            log.info("RedisService exception : setAuthNo method error : " + e.getMessage());
+            throw new Exception("인증번호 저장 로직에서 에러 발생");
         }
     }
 
 
     // 인증번호 가져오기
-    public int getAuthNum(String phoneNum) throws Exception {
+    public int getAuthNum(String phoneNum){
         ValueOperations<String, Object> vop = redisTemplate.opsForValue();
         Object result = vop.get(phoneNum);
 
@@ -42,6 +46,34 @@ public class RedisService {
             return (int)result;
         }
     }
+
+    // 인증번호 검사후 확인했다고 설정
+    public void setAuthCheck(String phoneNum) throws Exception{
+
+        ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+
+        String check = phoneNum+"_check";
+        try{
+            vop.set(check, true);
+        }catch (Exception e){
+            log.error("redisService, setAuthCheck 메소드 에러");
+            throw new Exception("redisService, setAuthCheck 메소드 에러");
+        }
+    }
+
+    // 인증번호 검사 했는지 확인 메소드
+    public boolean confirmPhoneCheck(String phoneNum){
+
+        ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+        Object result = vop.get(phoneNum+"_check");
+
+        if(result instanceof Boolean){
+            return (Boolean) result;
+        }else{
+            return false;
+        }
+    }
+
 
     // 인증번호 비교하기
     public int authNumCheck(String phoneNum, String dtoAuthNum){

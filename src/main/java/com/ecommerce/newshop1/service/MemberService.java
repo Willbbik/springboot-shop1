@@ -42,7 +42,7 @@ public class MemberService {
 
     ModelMapper mapper = new ModelMapper();
 
-
+    // 해당 상품을 사용자가 구매했는지 확인
     public boolean existsItem(Item item) {
 
         Member member = getCurrentMember();
@@ -51,6 +51,24 @@ public class MemberService {
                 .anyMatch(i -> i.getOrderItems().stream()
                         .anyMatch(p -> p.getItem().getId().equals(item.getId()))
                 );
+    }
+
+    // 인증번호 비교
+    public boolean checkAuthNum(String phoneNum, String authNum){
+
+        try{
+            int paramAuthNum = Integer.parseInt(authNum);
+            int findAuthNum = redisService.getAuthNum(phoneNum);
+
+            return paramAuthNum == findAuthNum;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    // 인증번호 확인 했다고 설정
+    public void setAuthCheck(String phoneNum) throws Exception {
+        redisService.setAuthCheck(phoneNum);
     }
 
     // 아이디 찾기
@@ -88,6 +106,7 @@ public class MemberService {
     }
 
     // 최근회원 3명 정보 가져오기
+    @Transactional(readOnly = true)
     public List<MemberDto> findAll(Pageable pageable){
 
         return memberRepository.findAll(pageable).stream()

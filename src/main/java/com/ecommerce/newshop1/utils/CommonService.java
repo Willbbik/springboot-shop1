@@ -19,11 +19,20 @@ public class CommonService {
 
     // 랜덤 번호 생성
     public int randomNum(){
-        int min_num = 100005000;
-        int max_num = 912315500;
+        int minNum = 100005000;
+        int maxNum = 912315500;
 
-        int random_num = (int) (Math.random() * (max_num - min_num) + min_num);
-        return random_num;
+        int randomNum = (int) (Math.random() * (maxNum - minNum) + minNum);
+        return randomNum;
+    }
+
+    public int randomAuthNum(){
+
+        int minNum = 100000;
+        int maxNum = 999999;
+
+        int authNum = (int) (Math.random() * (maxNum - minNum) + minNum);
+        return authNum;
     }
 
 }
