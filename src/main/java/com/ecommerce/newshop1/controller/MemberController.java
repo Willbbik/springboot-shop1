@@ -100,10 +100,9 @@ public class MemberController {
 
             if(result){ // 인증번호가 일치하다면
 
-                // 아이디 확인 클릭시 인증번호 확인받았는지 확인하기 위해서
+                // 아이디 확인 클릭시 인증번호 확인받았는지 검사하기 위해서
                 session.setAttribute("phoneNum", findIdDto.getPhoneNum());
                 memberService.setAuthCheck(findIdDto.getPhoneNum());
-
 
                 return "success";
             }else{
