@@ -112,6 +112,8 @@ public class MemberController {
 
         if(result){
             // 여기다 아이디와 페이지 제공
+
+            session.removeAttribute("phoneNum");
             return "success";
         }else{
             return "fail";

@@ -50,7 +50,7 @@ $(function(){
                 if(result === "success"){
                     alert("인증번호를 발송했습니다. \n인증번호가 오지 않는 경우 정보를 다시 확인해 주세요. ");
                     makeAuthInput();
-                    timer();
+                    timer() ;
                 }else{
                     alert(result);
                     return false;
@@ -99,7 +99,7 @@ $(function(){
 
     });
 
-
+    // 아이디 확인 버튼
     $(document).on("click", "#findId", function(){
 
         $.ajax({
@@ -112,14 +112,13 @@ $(function(){
             if(result === "success"){
                 alert("성공 ㅋㅋ");
             }else{
-                alert("실패 ㅠㅠ");
+                alert("인증을 완료해주세요.");
             }
         }).fail(function(result){
             alert("에러가 발생했습니다. \n잠시후 다시 시도해주세요.");
             return false
         });
     });
-
 
 });
 
@@ -168,14 +167,12 @@ function timer(){
         }, 1000);
     }
 
-
     if(!x){
         startTimer();
     }else{
         clearInterval(x);
         startTimer();
     }
-
 }
 
 function confirmSuccess(){
