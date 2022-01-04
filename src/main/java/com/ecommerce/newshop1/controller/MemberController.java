@@ -10,6 +10,7 @@ import com.ecommerce.newshop1.enums.Sns;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.constraints.Pattern;
 import java.util.*;
 
 @Controller
@@ -48,6 +48,11 @@ public class MemberController {
     public String join() {
 
         return "member/member_join";
+    }
+
+    @PostMapping("/test/test")
+    public String qwe(String test){
+        return "/";
     }
 
     @RequestMapping("/login")
@@ -94,18 +99,21 @@ public class MemberController {
             boolean result = memberService.checkAuthNum(findIdDto.getPhoneNum(), findIdDto.getAuthNum());
 
             if(result){ // 인증번호가 일치하다면
-                // 세션에 전화번호 저장 && redis 서버에 인증번호 확인했다고 설정
+
+                // 아이디 확인 클릭시 인증번호 확인받았는지 확인하기 위해서
                 session.setAttribute("phoneNum", findIdDto.getPhoneNum());
                 memberService.setAuthCheck(findIdDto.getPhoneNum());
+
+
                 return "success";
             }else{
                 return "fail";
             }
     }
 
-    @PostMapping("/member/findId")
+    @PostMapping("/member/findId/findIdResult")
     @ApiOperation(value = "인증했는지 확인 후 아이디 제공", notes = "아이디 확인 버튼")
-    public @ResponseBody String findId(HttpSession session){
+    public String findId(HttpSession session, Model model){
 
         String phoneNum = (String)session.getAttribute("phoneNum");
         boolean result = redisService.confirmPhoneCheck(phoneNum);
@@ -113,10 +121,13 @@ public class MemberController {
         if(result){
             // 여기다 아이디와 페이지 제공
 
+            List<String> userIdList = memberService.findAllByPhoneNum(phoneNum);
+            model.addAttribute("userIdList", userIdList);
             session.removeAttribute("phoneNum");
-            return "success";
+
+            return "member/member_findIdResult";
         }else{
-            return "fail";
+            return null;
         }
     }
 
@@ -201,11 +212,11 @@ public class MemberController {
     @ApiOperation(value = "아이디 중복검사", notes = "회원가입시 ajax로 아이디 중복검사 할 때")
     public @ResponseBody String idConfirm(@RequestParam(name = "userId") String userId) {
 
-        Optional<Member> result = memberService.findByUserId(userId);
-        if (result.isEmpty()) return "Y";
+        boolean result = memberService.existsByUserId(userId);
+        if(result) return "Y";
         else return "N";
-
     }
+
 
     @GetMapping("/member/sendAuth")
     @ApiOperation(value = "인증번호", notes = "인증번호를 전송해주고 redis에 저장")

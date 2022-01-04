@@ -71,6 +71,23 @@ public class MemberService {
         redisService.setAuthCheck(phoneNum);
     }
 
+    @Transactional(readOnly = true)
+    public List<String> findAllByPhoneNum(String phoneNum){
+
+        List<String> userIdList = new ArrayList<>();
+        List<Member> memberList = memberRepository.findAllByPhoneNum(phoneNum);
+
+        for(Member member : memberList){
+            userIdList.add(member.getUserId());
+        }
+        return userIdList;
+    }
+
+    @Transactional(readOnly = true)
+    public boolean existsByUserId(String userId){
+        return memberRepository.existsByUserId(userId);
+    }
+
     // 아이디 찾기
     @Transactional(readOnly = true)
     public Optional<Member> findByUserId(String userId){

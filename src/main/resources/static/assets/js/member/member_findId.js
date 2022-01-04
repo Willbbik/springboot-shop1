@@ -103,19 +103,20 @@ $(function(){
     $(document).on("click", "#findId", function(){
 
         $.ajax({
-            url : "/member/findId",
+            url : "/member/findId/findIdResult",
             type : "post",
             beforeSend : function(xhr){
                 xhr.setRequestHeader(csrfHeader, csrfToken);
             }
         }).done(function(result){
-            if(result === "success"){
-                alert("성공 ㅋㅋ");
-            }else{
+            if(result == null){
                 alert("인증을 완료해주세요.");
+                return false;
+            }else{
+                $(".container-fluid").html(result);
             }
         }).fail(function(result){
-            alert("에러가 발생했습니다. \n잠시후 다시 시도해주세요.");
+            alert("인증을 완료해주세요.");
             return false
         });
     });

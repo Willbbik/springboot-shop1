@@ -290,3 +290,36 @@ button, textarea {
     color: #ff2c2c;
     text-align: right;
 }
+
+
+/* 아이디 찾기 결과 페이지  */
+
+.account-container .inner .account-contents .btn-area {
+    text-align: center;
+}
+
+.account-container .inner .account-contents .btn-area {
+    margin-top: 60px;
+}
+
+
+.account-container .inner .account-contents .idpw-info .info-box {
+    padding: 24px;
+    margin-top: 20px;
+    font-size: 22px;
+    line-height: 26px;
+}
+
+.account-container .inner .account-contents .idpw-info .info-box {
+    margin-top: 18px;
+    padding: 13px 20px;
+    font-weight: 700;
+    font-size: 18px;
+    color: #000;
+    text-align: center;
+    line-height: 22px;
+    word-wrap: break-word;
+    background-color: #f8f9fb;
+}
+
+

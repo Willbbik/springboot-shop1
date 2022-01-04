@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+
+<th:block th:if="${userIdList}">
+    <div class="account-container">
+        <div class="inner">
+            <h1>아이디찾기</h1>
+            <div class="account-contents">
+                <div class="idpw-info">
+                    <th:block th:each="userId : ${userIdList}">
+                        <div class="info-box" th:text="${userId}">
+                        </div>
+                    </th:block>
+                </div>
+                <div class="btn-area">
+                    <a th:href="@{/login}" class="btn btn-primary">로그인</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:unless="${userIdList}">
+    <div class="account-container" th:if="${userIdList}">
+        <div class="inner">
+            <h1>아이디찾기</h1>
+            <div class="account-contents">
+                <div class="idpw-info">
+                    <div class="info-box">
+                        해당 번호로 가입한 아이디가 존재하지 않습니다.
+                    </div>
+                </div>
+                <div class="btn-area">
+                    <a th:href="@{/login}" class="btn btn-primary">로그인</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+</body>
+</html>
