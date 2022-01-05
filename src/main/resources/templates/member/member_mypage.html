@@ -63,26 +63,28 @@
                 <div>
                     <span><button type="button" id="orderListBtn" class="btn btn-primary">주문/배송조회</button></span>
                     <span><button type="button" id="mypageqna" class="btn btn-primary">Q & A</button></span>
-                    <span><button type="button" class="btn btn-primary">리뷰</button></span>
+                    <span><button type="button" id="review" class="btn btn-primary">리뷰</button></span>
+                    <span><a th:href="@{/member/withdrawal}"><button type="button" id="withdrawal" class="btn btn-danger">회원탈퇴</button></a></span>
+
                 </div>
                 <div class="orderpage frame">
                     <div class="mypage_orderList">
-                       <input type="hidden" id="lastOrderId" th:value="${lastOrderId}">
-                       <div th:each="order : ${orderList}" class="mypage_order_item_wrap"> <!-- 반복 -->
-                           <h2> <!-- 냘짜, 주문번호, 상세보기 -->
-                               <span th:text="${#temporals.format(order.createdDate, 'yyyy.MM.dd')}"></span>
-                               <span>ㅣ</span>
-                               <span th:text="${order.orderNum}"></span>
-                               <a href="#" class="btn_showdetailorder">주문상세보기></a>
-                           </h2>
-                           <div th:each="orderItem : ${order.orderItems}" class="order_item"> <!-- 주문 상품 정보 --> <!-- order의 orderitem만큼 반복 -->
+                        <input type="hidden" id="lastOrderId" th:value="${lastOrderId}">
+                        <div th:each="order : ${orderList}" class="mypage_order_item_wrap"> <!-- 반복 -->
+                            <h2> <!-- 냘짜, 주문번호, 상세보기 -->
+                                <span th:text="${#temporals.format(order.createdDate, 'yyyy.MM.dd')}"></span>
+                                <span>ㅣ</span>
+                                <span th:text="${order.orderNum}"></span>
+                                <a href="#" class="btn_showdetailorder">주문상세보기></a>
+                            </h2>
+                            <div th:each="orderItem : ${order.orderItems}" class="order_item"> <!-- 주문 상품 정보 --> <!-- order의 orderitem만큼 반복 -->
                                 <dl>
                                     <dt>주문 상품 정보</dt>
                                     <dt></dt>
                                     <dt>주문 금액</dt>
                                     <dt>진행상황</dt>
                                 </dl>
-                               <dl>
+                                <dl>
                                     <dd>    <!-- 상품 이미지 -->
                                         <a th:href="@{'/items/' + ${orderItem.item.id}}">
                                             <img th:src="@{${orderItem.item.imageUrl}}">
@@ -95,17 +97,17 @@
                                         <span th:text="${orderItem.item.color} + '/' + ${orderItem.item.size}"></span>
                                         <span th:text="${orderItem.quantity} + '개'"></span>
                                     </dd>
-                                   <dd>     <!-- 주문금액 -->
-                                       <strong th:text="${#numbers.formatDecimal(orderItem.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'"></strong>
-                                   </dd>
-                                   <dd>     <!-- 진행상황 -->
-                                       <span class="status_name">
+                                    <dd>     <!-- 주문금액 -->
+                                        <strong th:text="${#numbers.formatDecimal(orderItem.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'"></strong>
+                                    </dd>
+                                    <dd>     <!-- 진행상황 -->
+                                        <span class="status_name">
                                            <strong th:text="${orderItem.deliveryStatus.getValue}"></strong>
                                        </span>
-                                   </dd>
-                               </dl>
-                           </div>
-                       </div>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
                         <button class="btn btn-primary" id="moreOrder" th:if="${lastOrderId}">주문 상품 더보기</button>
                     </div>
                 </div>

@@ -1,0 +1,163 @@
+.container {
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+.nav, .withdrawal-tit {
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+.nav {
+    position: relative;
+    height: 56px;
+    border-bottom: 1px solid #e1e1e1;
+    background: #fff;
+}
+
+.back-icon {
+    position: absolute;
+    left: 16px;
+    top: 16px;
+}
+
+.back-icon a {
+    display: block;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+.skip, .visually-hidden {
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    width: 1px;
+}
+
+.visually-hidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    margin: -1px;
+    padding: 0;
+}
+
+.withdrawal-tit {
+    width: 70%;
+    height: 56px;
+    margin: 0 auto;
+    line-height: 56px;
+    text-align: center;
+}
+
+.withdrawal-tit span {
+    color: #111;
+    display: inline-block;
+    height: 56px;
+    font-size: 16px;
+    letter-spacing: -.1em;
+    font-weight: 700;
+}
+
+/* 진행 상황 바 */
+.progress {
+    height: 2px;
+    background: #e4e6e9;
+}
+
+.progress .bar {
+    top: 0;
+    left: 0;
+    display: block;
+    width: 0;
+    height: 2px;
+    background-color: #202429;
+    transition: width .5s;
+}
+
+.progress progress {
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* 회원탈퇴 본문 */
+
+.withdrawal-wrap {
+    padding: 48px 24px 0;
+}
+
+.main-title-wrap {
+    padding-bottom: 52px;
+}
+
+.main-title h3 {
+    font-size: 24px;
+    line-height: 34px;
+    color: #202429;
+    margin: 0;
+}
+
+.main-title p {
+    font-size: 14px;
+    color: #7a7f86;
+    margin: 0;
+    padding-top: 20px;
+}
+
+/* 계속 진행하기 버튼 */
+.withdrawl-btn-wrap {
+    margin-top: 26px;
+    margin-bottom: calc(24px + constant(safe-area-inset-bottom));
+    margin-bottom: calc(24px + env(safe-area-inset-bottom));
+}
+
+.withdrawl-btn-wrap .withdrawl-btn--border {
+    border: 1px solid #e4e6e9;
+    color: #202429;
+}
+
+.withdrawl-btn-wrap .withdrawl-btn {
+    display: block;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 18px 40px 20px;
+    border-radius: 6px;
+}
+
+.withdrawl-btn-wrap button {
+    overflow: visible;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: inherit;
+    cursor: pointer;
+}
+
+[type=button], [type=email], [type=password], [type=submit], [type=tel], [type=text], textarea {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0;
+}
+
+/* 비밀번호 입력 인풋 */
+
+.input-wrap input[type=password] {
+    height: 50px;
+}
+
+.input-wrap input[type=password] {
+    width: 100%;
+    height: 44px;
+    padding: 0 16px;
+    font-size: 16px;
+    color: #202429;
+    line-height: 1.4em;
+    border: 1px solid #d3d7df;
+}

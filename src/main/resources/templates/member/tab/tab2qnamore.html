@@ -4,6 +4,7 @@
 <body>
     <input type="hidden" th:value="${lastQnAId}" id="lastQnAId">
     <div class="qna_content" th:each="qna, index : ${qnaList}">       <!-- qna 제목 -->
+        <input type="hidden" th:value="${qna.id}" name="qnaId">
         <div class="qna_title">
             <span class="condition"><input type="checkbox" class="qna_select form-check-input"></span>
             <span class="condition" th:text="${qna.replyEmpty}"></span>

@@ -47,6 +47,11 @@ public class RedisService {
         }
     }
 
+    public void deleteKey(String key){
+
+        redisTemplate.delete(key);
+    }
+
     // 인증번호 검사후 확인했다고 설정
     public void setAuthCheck(String phoneNum) throws Exception{
 

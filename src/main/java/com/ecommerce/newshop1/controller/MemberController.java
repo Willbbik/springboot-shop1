@@ -7,10 +7,12 @@ import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.CommonService;
 import com.ecommerce.newshop1.utils.ValidationSequence;
 import com.ecommerce.newshop1.enums.Sns;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,26 +36,25 @@ public class MemberController {
     private final OrderService orderService;
     private final CommonService commonService;
     private final QnARepository qnARepository;
+    private final PasswordEncoder passwordEncoder;
 
     ModelMapper mapper = new ModelMapper();
 
-    // 기본 페이지
     @GetMapping("/")
+    @ApiOperation(value = "웹 기본 페이지")
     public String index() {
+
         return "index";
     }
 
-    // 회원가입 페이지
+
     @GetMapping("/join")
+    @ApiOperation(value = "회원가입 페이지")
     public String join() {
 
         return "member/member_join";
     }
 
-    @PostMapping("/test/test")
-    public String qwe(String test){
-        return "/";
-    }
 
     @RequestMapping("/login")
     @ApiOperation(value = "로그인 페이지")
@@ -72,62 +73,18 @@ public class MemberController {
         return "member/member_findId";
     }
 
-    @PostMapping("/member/findId/sendMessage")
-    @ApiOperation(value = "아이디 찾기", notes = "인증번호 전송")
-    public @ResponseBody String findIdPost(@Validated(ValidationSequence.class) FindIdDto findIdDto, BindingResult errors) throws Exception {
+    @GetMapping("/member/withdrawal")
+    @ApiOperation(value = "회원탈퇴 페이지")
+    public String withdrawal(){
 
-            if(errors.hasErrors()) {
-                return commonService.getErrorMessage(errors);
-            }
-
-            String phoneNum = findIdDto.getPhoneNum();
-            int authNum = commonService.randomAuthNum();
-
-            redisService.setAuthNo(phoneNum, authNum);
-            // messageService.sendMessage(phoneNum, authNum);
-            return "success";
+        return "member/member_withdrawal";
     }
 
-    @PostMapping("/member/findId/authNum")
-    @ApiOperation(value = "인증번호 받아서 비교", notes = "인증번호 확인 버튼")
-    public @ResponseBody String findIdAuth(@Validated(ValidationSequence.class) FindIdDto findIdDto, BindingResult errors, HttpSession session) throws Exception {
+    @GetMapping("/member/withdrawal/finalCheck")
+    @ApiOperation(value = "회원탈퇴시 비밀번호 검사 페이지")
+    public String withdrawalFinalCheck(){
 
-            if(errors.hasErrors()){
-                return commonService.getErrorMessage(errors);
-            }
-
-            boolean result = memberService.checkAuthNum(findIdDto.getPhoneNum(), findIdDto.getAuthNum());
-
-            if(result){ // 인증번호가 일치하다면
-
-                // 아이디 확인 클릭시 인증번호 확인받았는지 검사하기 위해서
-                session.setAttribute("phoneNum", findIdDto.getPhoneNum());
-                memberService.setAuthCheck(findIdDto.getPhoneNum());
-
-                return "success";
-            }else{
-                return "fail";
-            }
-    }
-
-    @PostMapping("/member/findId/findIdResult")
-    @ApiOperation(value = "인증했는지 확인 후 아이디 제공", notes = "아이디 확인 버튼")
-    public String findId(HttpSession session, Model model){
-
-        String phoneNum = (String)session.getAttribute("phoneNum");
-        boolean result = redisService.confirmPhoneCheck(phoneNum);
-
-        if(result){
-            // 여기다 아이디와 페이지 제공
-
-            List<String> userIdList = memberService.findAllByPhoneNum(phoneNum);
-            model.addAttribute("userIdList", userIdList);
-            session.removeAttribute("phoneNum");
-
-            return "member/member_findIdResult";
-        }else{
-            return null;
-        }
+        return "member/member_withdrawalPswd";
     }
 
     @GetMapping("/mypage")
@@ -149,6 +106,26 @@ public class MemberController {
         model.addAttribute("lastOrderId", lastOrderId);
         return "member/member_mypage";
     }
+
+    @DeleteMapping("/member/withdrawal")
+    @ApiOperation(value = "비밀번호 확인 후 회원탈퇴 처리", notes = "회원탈퇴")
+    public String withdrawalPost(HttpSession session, @RequestParam(name = "password") String password){
+
+        Member member = memberService.getCurrentMember();
+
+        boolean result = passwordEncoder.matches(password, member.getPassword());
+
+        if(result){
+
+            memberService.withdrawal(member.getUserId());
+            memberService.saveWithdrawalMember(member.getUserId());
+            session.invalidate();;
+            return "success";
+        }else{
+            return "fail";
+        }
+    }
+
 
     @GetMapping("/mypage/orderList")
     @ApiOperation(value = "mypage에 주문한 상품들이 담긴 html 리턴", notes = "ajax 전용")
@@ -211,8 +188,10 @@ public class MemberController {
     @ApiOperation(value = "아이디 중복검사", notes = "회원가입시 ajax로 아이디 중복검사 할 때")
     public @ResponseBody String idConfirm(@RequestParam(name = "userId") String userId) {
 
-        boolean result = memberService.existsByUserId(userId);
-        if(result) return "Y";
+        boolean member = memberService.existsByUserId(userId);
+        boolean withdrawalMember = memberService.existsWithdrawalByUserId(userId);
+
+        if(!member && !withdrawalMember) return "Y";
         else return "N";
     }
 
@@ -253,9 +232,8 @@ public class MemberController {
         return "cnt";
     }
 
-
-    @ApiOperation(value = "일반 회원가입")
     @PostMapping("/join")
+    @ApiOperation(value = "일반 회원가입")
     public String join(@ModelAttribute("member") @Validated(ValidationSequence.class) JoinMemberDto joinMemberDto, BindingResult errors, Model model) throws Exception {
 
         if(errors.hasErrors()){
@@ -270,8 +248,7 @@ public class MemberController {
         int checkResult = memberService.joinValidationCheck(joinMemberDto);
         if(checkResult == -1){
 
-            model.addAttribute(memberService.createJoinDtoErrorMsg(joinMemberDto, model));            // 에러 메시지
-            model.addAttribute("member", memberService.joinDtoLengthEdit(joinMemberDto)); // input 값 유지
+            model.addAttribute(memberService.createJoinDtoErrorMsg(joinMemberDto, model));
             return "member/member_join";
         }
 
@@ -280,6 +257,66 @@ public class MemberController {
         memberService.joinNormal(member);
 
         return "redirect:/";
+    }
+
+    @PostMapping("/member/findId/sendMessage")
+    @ApiOperation(value = "아이디 찾기", notes = "인증번호 전송")
+    public @ResponseBody String findIdPost(@Validated(ValidationSequence.class) FindIdDto findIdDto, BindingResult errors) throws Exception {
+
+        if(errors.hasErrors()) {
+            return commonService.getErrorMessage(errors);
+        }
+
+        String phoneNum = findIdDto.getPhoneNum();
+        int authNum = commonService.randomAuthNum();
+
+        redisService.setAuthNo(phoneNum, authNum);
+        // messageService.sendMessage(phoneNum, authNum);
+        return "success";
+    }
+
+    @PostMapping("/member/findId/authNum")
+    @ApiOperation(value = "아이디 찾기시 인증번호 비교", notes = "아이디 찾기")
+    public @ResponseBody String findIdAuth(@Validated(ValidationSequence.class) FindIdDto findIdDto, BindingResult errors, HttpSession session) throws Exception {
+
+        if(errors.hasErrors()){
+            return commonService.getErrorMessage(errors);
+        }
+
+        boolean result = memberService.checkAuthNum(findIdDto.getPhoneNum(), findIdDto.getAuthNum());
+
+        if(result){ // 인증번호가 일치하다면
+
+            // 아이디 확인 클릭시 인증번호 확인받았는지 검사하기 위해서
+            session.setAttribute("phoneNum", findIdDto.getPhoneNum());
+            memberService.setAuthCheck(findIdDto.getPhoneNum());
+
+            return "success";
+        }else{
+            return "fail";
+        }
+    }
+
+    @PostMapping("/member/findId/findIdResult")
+    @ApiOperation(value = "인증했는지 확인 후 아이디 제공", notes = "아이디 찾기")
+    public String findId(HttpSession session, Model model){
+
+        String phoneNum = (String)session.getAttribute("phoneNum");
+        boolean result = redisService.confirmPhoneCheck(phoneNum);
+
+        if(result){
+
+            List<String> userIdList = memberService.findAllByPhoneNum(phoneNum);
+            redisService.deleteKey(phoneNum);
+            redisService.deleteKey(phoneNum+"_check");
+
+            model.addAttribute("userIdList", userIdList);
+            session.removeAttribute("phoneNum");
+
+            return "member/member_findIdResult";
+        }else{
+            return null;
+        }
     }
 
 

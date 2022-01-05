@@ -4,11 +4,13 @@ import com.ecommerce.newshop1.dto.JoinMemberDto;
 import com.ecommerce.newshop1.dto.MemberDto;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.Member;
+import com.ecommerce.newshop1.entity.WithdrawalMember;
 import com.ecommerce.newshop1.exception.MemberNotFoundException;
 import com.ecommerce.newshop1.exception.NotLoginException;
 import com.ecommerce.newshop1.repository.MemberRepository;
 import com.ecommerce.newshop1.enums.Role;
 import com.ecommerce.newshop1.enums.Sns;
+import com.ecommerce.newshop1.repository.WithdrawalMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -35,6 +37,7 @@ public class MemberService {
     private static final Logger log = LoggerFactory.getLogger(MemberService.class);
 
     private final CustomUserDetailsService customUserDetailsService;
+    private final WithdrawalMemberRepository withdrawalMemberRepository;
     private final MemberRepository memberRepository;
     private final RedisService redisService;
     private final SecurityService security;
@@ -71,6 +74,22 @@ public class MemberService {
         redisService.setAuthCheck(phoneNum);
     }
 
+    @Transactional
+    public void saveWithdrawalMember(String userId){
+
+        WithdrawalMember member = WithdrawalMember.builder()
+                .userId(userId)
+                .build();
+
+        withdrawalMemberRepository.save(member);
+    }
+
+    @Transactional
+    public void withdrawal(String userId){
+
+        memberRepository.deleteByUserId(userId);
+    }
+
     @Transactional(readOnly = true)
     public List<String> findAllByPhoneNum(String phoneNum){
 
@@ -87,6 +106,13 @@ public class MemberService {
     public boolean existsByUserId(String userId){
         return memberRepository.existsByUserId(userId);
     }
+
+    @Transactional(readOnly = true)
+    public boolean existsWithdrawalByUserId(String userId){
+        return withdrawalMemberRepository.existsByUserId(userId);
+    }
+
+
 
     // 아이디 찾기
     @Transactional(readOnly = true)
@@ -162,15 +188,18 @@ public class MemberService {
 
 
     // 회원가입 객체 유효성 검사 메소드
-    public int joinValidationCheck(JoinMemberDto dto) throws Exception {
+    @Transactional(readOnly = true)
+    public int joinValidationCheck(JoinMemberDto dto) {
 
-        // 아이디 중복검사 && 인증번호 검사
-        Optional<Member> memberEntity = memberRepository.findByuserId(dto.getUserId());
+        // 아이디 중복검사
+        boolean findMember = memberRepository.existsByUserId(dto.getUserId());
+        boolean findWithdrawalMember = withdrawalMemberRepository.existsByUserId(dto.getUserId());
+
+        // 인증번호 검사
         int authNum = redisService.getAuthNum(dto.getPhoneNum());
         int authNumCheckResult = redisService.authNumCheck(dto.getPhoneNum(), dto.getAuthNum());
 
-        // 문제가 있으면
-        if(memberEntity.isPresent() || !dto.getPassword().equals(dto.getPswdCheck()) || authNum == 1 || authNumCheckResult != 1) {
+        if(findMember || findWithdrawalMember || !dto.getPassword().equals(dto.getPswdCheck()) || authNum == 1 || authNumCheckResult != 1) {
 
             log.info("MemberService : join validation check failed");
             return -1;
@@ -182,20 +211,19 @@ public class MemberService {
 
     // 회원가입 에러 메시지 담기
     @Transactional(readOnly = true)
-    public Model createJoinDtoErrorMsg(JoinMemberDto dto,  Model model) throws Exception {
+    public Model createJoinDtoErrorMsg(JoinMemberDto dto,  Model model) {
 
-        String userid   = dto.getUserId();
         String pswd1    = dto.getPassword();
         String pswd2    = dto.getPswdCheck();
         String phoneNum = dto.getPhoneNum();
         String dtoAuthNum  = dto.getAuthNum();
 
-        // realAuthNum가 1이면 일치, 2면 다름, 3이면 db에 인증번호가 존재하지 않음
-        int realAuthNum = redisService.authNumCheck(phoneNum, dtoAuthNum);        // 인증번호 검사
-        Optional<Member> memberEntity = memberRepository.findByuserId(userid);
+        int authNumResult = redisService.authNumCheck(phoneNum, dtoAuthNum);        // 인증번호 검사
+        boolean findMember = memberRepository.existsByUserId(dto.getUserId());
+        boolean findWithdrawalMember = withdrawalMemberRepository.existsByUserId(dto.getUserId());
 
         // 아이디 검사
-        if (memberEntity.isPresent()) {	 // 아이디가 존재할때
+        if (findMember || findWithdrawalMember) {	 // 아이디가 존재할때
             model.addAttribute("valid_userId", "이미 사용중이거나 탈퇴한 아이디입니다.");
         }
         // 비밀번호 비교
@@ -204,39 +232,13 @@ public class MemberService {
         }
 
         // 인증번호 검사
-        if (realAuthNum == 3) {          // 인증번호가 시간이 지나서 사라졌거나 db에 인증번호가 없을때
+        if (authNumResult == 3) {          // 인증번호가 시간이 지나서 사라졌거나 db에 인증번호가 없을때
             model.addAttribute("valid_authNum", "인증번호를 다시 확인해주세요.");
-        }else if(realAuthNum == 2){      // 인증번호가 다를 때
+        }else if(authNumResult == 2){      // 인증번호가 다를 때
             model.addAttribute("valid_authNum", "인증을 다시 진행해주세요.");
         }
 
         return model;
-    }
-
-
-    // view에 띄워줄 회원가입 객체 길이 조정 메소드
-    public JoinMemberDto joinDtoLengthEdit(JoinMemberDto memberDto){
-
-        String[] dtoBefore = {memberDto.getUserId(), memberDto.getPassword(), memberDto.getPswdCheck(), memberDto.getPhoneNum(), memberDto.getAuthNum()};
-        int[] maxlength = {20, 25, 25, 11, 6};
-
-        String[] dtoAfter = new String[5];
-
-        for(int i = 0; i < 5; i++){
-            if(dtoBefore[i].length() > maxlength[i]){
-                dtoAfter[i] = dtoBefore[i].substring(0, maxlength[i]);
-            }else{
-                dtoAfter[i] = dtoBefore[i];
-            }
-        }
-
-        return JoinMemberDto.builder()
-                .userId(dtoAfter[0])
-                .password(dtoAfter[1])
-                .pswdCheck(dtoAfter[2])
-                .phoneNum(dtoAfter[3])
-                .authNum(dtoAfter[4])
-                .build();
     }
 
     // 회원 가입 실패시 에러메시지 생성

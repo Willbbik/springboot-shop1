@@ -5,9 +5,10 @@ let submitFlag = false;
 
 // input이 포커스됐다가 취소되면 함수실행
 $(document).ready(function(){
+
 	$("#userId").blur(function(){
 		idFlag = false;
-		checkId("first");
+		checkId();
 	});
 
 	$("#pswd1").blur(function(){
@@ -89,7 +90,7 @@ function mainSubmit(){
 
 // 가입하기 클릭시 모든 input 검사
 function checkUnrealInput() {
-    if (checkId('join')
+    if (checkId()
         & checkPswd1()
         & checkPswd2()
         & checkPhoneNum()
@@ -116,7 +117,7 @@ function submitClose(){
 
 
 // 아이디 유효성검사
-function checkId(event){
+function checkId(){
 
 	if(idFlag) return true;
 
@@ -140,19 +141,16 @@ function checkId(event){
 	idFlag = false;
 	$.ajax({
 		type : "GET",
-		url : "/member/idConfirm?userId=" + userId,
-		encoding: "UTF-8",
+		url : "/member/idConfirm",
+		data : { userId : userId },
 		success : function(result){
 			if(result == "Y"){
-				if(event == "first"){
-					showSuccessMsg(oMsg, "");
-				} else{
-					hideMsg(oMsg);
-				}
+				showSuccessMsg(oMsg, "");
 				idFlag = true;
 			}
 			else{
 				showErrorMsg(oMsg, "이미 사용중이거나 탈퇴한 아이디입니다.");
+				return false;
 			}
 		},
 		error : function(error){
