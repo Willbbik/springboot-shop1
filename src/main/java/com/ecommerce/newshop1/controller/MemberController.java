@@ -2,6 +2,8 @@ package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.Member;
+import com.ecommerce.newshop1.entity.Order;
+import com.ecommerce.newshop1.entity.OrderItem;
 import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.CommonService;
@@ -47,10 +49,6 @@ public class MemberController {
         return "index";
     }
 
-    @GetMapping("/test")
-    public String test(){
-        return "order/order_success";
-    }
 
     @GetMapping("/join")
     @ApiOperation(value = "회원가입 페이지")
@@ -110,6 +108,27 @@ public class MemberController {
         model.addAttribute("lastOrderId", lastOrderId);
         return "member/member_mypage";
     }
+
+    @GetMapping("/member/orderDetails/{id}")
+    public String memberOrderDetails(@PathVariable(name = "id") Long orderId, Model model){
+
+        Order order = orderService.findById(orderId);
+
+        OrderDto orderInfo = mapper.map(order, OrderDto.class);
+        OrderPaymentInfoDto payInfo = mapper.map(order.getPaymentInfo(), OrderPaymentInfoDto.class);
+        List<OrderItemDto> orderItems = OrderItem.toDtoList(order.getOrderItems());
+        AddressDto address = mapper.map(order.getDelivery().getDeliveryAddress(), AddressDto.class);
+
+        model.addAttribute("method", payInfo.getPayType());
+        model.addAttribute("payInfo", payInfo);
+        model.addAttribute("orderInfo", orderInfo);
+        model.addAttribute("orderItems",  orderItems);
+        model.addAttribute("address", address);
+
+        return "member/member_orderDetails";
+    }
+
+
 
     @DeleteMapping("/member/withdrawal")
     @ApiOperation(value = "비밀번호 확인 후 회원탈퇴 처리", notes = "회원탈퇴")

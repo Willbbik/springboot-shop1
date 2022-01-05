@@ -49,14 +49,12 @@
             <br/>
         </ul>
     </div>
-
-
     <!-- /사이드바 -->
 
-    <!-- 본문 -->
+
     <div id="page-content-wrapper">
         <div class="container-fluid">
-            <!--   start   -->
+            <!-- 본문 -->
             <div class="pagetitle">
                 <h1>주문 성공</h1>
             </div>
@@ -64,13 +62,13 @@
                 <h2>주문정보</h2>
                 <dl class="order_member">
                     <dt>주문번호</dt>
-                    <dd>123912039</dd> <!---->
+                    <dd th:text="${orderInfo.orderNum}"></dd>
                     <dt>주문일자</dt>
-                    <dd>2021.12.12</dd> <!---->
+                    <dd th:text="${#temporals.format(orderInfo.createdDate, 'yyyy.MM.dd HH:mm')}"></dd>
                     <dt>주문자</dt>
-                    <dd>고민수</dd> <!---->
+                    <dd th:text="${address.customerName}"></dd>
                     <dt>결제금액</dt>
-                    <dd>20000원</dd> <!---->
+                    <dd th:text="${orderInfo.totalPrice}"></dd>
                 </dl>
                 <h2>주문상품</h2>
                 <div class="order_item">
@@ -82,60 +80,75 @@
                         <dt>주문금액</dt>
                         <dt>진행상황</dt>
                     </dl>
-                    <dl>
+                    <dl th:each="orderItem : ${orderItems}">
                         <dd>
-                            <img src="#">
+                            <img th:src="@{${orderItem.item.imageUrl}}">
                         </dd>
                         <dd>
-                            <span class="itemname">상품 제목</span>
-                            <span>색상과 사이즈</span>
-                            <span>개수</span>
+                            <span class="itemname" th:text="${orderItem.item.itemName}"></span>
+                            <span th:text="${orderItem.item.color} + '/' + ${orderItem.item.size}"></span>
+                            <span th:text="${orderItem.quantity} + '개'"></span>
                         </dd>
-                        <dd>가격</dd>
-                        <dd>배송중(진행상황)</dd>
+                        <dd th:text="${#numbers.formatDecimal(orderItem.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'"></dd>
+                        <dd th:text="${orderItem.deliveryStatus.getValue}"></dd>
                     </dl>
                 </div>
                 <h2>결제정보</h2>
+<!--                <dl class="order_totalpay">-->
+<!--                    <dt>결제수단</dt>-->
+<!--                    <dd>가상계좌</dd> &lt;!&ndash;&ndash;&gt;-->
+<!--                    <dt>입금은행</dt>-->
+<!--                    <dd>국민은행</dd> &lt;!&ndash;&ndash;&gt;-->
+<!--                    <dt>입금계좌</dt>-->
+<!--                    <dd>123123098123098</dd> &lt;!&ndash;&ndash;&gt;-->
+<!--                    <dt>입금자</dt>-->
+<!--                    <dd>고민수</dd> &lt;!&ndash;&ndash;&gt;-->
+<!--                    <dt>입금기한</dt>-->
+<!--                    <dd>2021.11.27</dd>&lt;!&ndash;&ndash;&gt;-->
+<!--                    <dt>총 상품금액</dt>-->
+<!--                    <dd>23,444원</dd>&lt;!&ndash;&ndash;&gt;-->
+<!--                    <dt class="large">총 주문금액</dt>-->
+<!--                    <dd class="red large">23,444원</dd>&lt;!&ndash;&ndash;&gt;-->
+<!--                </dl>-->
+
                 <dl class="order_totalpay">
-                    <dt>결제수단</dt>
-                    <dd>무통장입금</dd> <!---->
-                    <dt>입금은행</dt>
-                    <dd>국민은행</dd> <!---->
-                    <dt>입금계좌</dt>
-                    <dd>123123098123098</dd> <!---->
-                    <dt>예금주</dt>
-                    <dd>몰러</dd> <!---->
-                    <dt>입금기한</dt>
-                    <dd>2021.11.27</dd><!---->
-                    <dt>총 상품금액</dt>
-                    <dd>23,444원</dd><!---->
-                    <dt class="large">총 주문금액</dt>
-                    <dd class="red large">23,444원</dd><!---->
+                    <th:block th:if="${method} == '가상계좌'">
+                        <dt>결제수단</dt>
+                        <dd th:text="${payInfo.payType}"></dd>
+                        <dt>입금은행</dt>
+                        <dd th:text="${payInfo.bank}"></dd>
+                        <dt>입금계좌</dt>
+                        <dd th:text="${payInfo.accountNumber}"></dd>
+                        <dt>입금자명</dt>
+                        <dd th:text="${payInfo.customerName}"></dd>
+                        <dt>입금기한</dt>
+                        <dd th:text="${#strings.substring(payInfo.dueDate, 0, 10)}"></dd>
+                        <dt>총 상품금액</dt>
+                        <dd th:text="${#numbers.formatDecimal(orderInfo.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'"></dd>
+                        <dt class="large">총 주문금액</dt>
+                        <dd class="red large" th:text="${#numbers.formatDecimal(orderInfo.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'"></dd>
+                    </th:block>
                 </dl>
                 <h2>배송지 정보</h2>
                 <dl class="order_member">
                     <dt>수령인</dt>
-                    <dd>고민수</dd> <!---->
-                    <dt>휴대폰</dt>
-                    <dd>01012341234</dd> <!---->
+                    <dd th:text="${address.recipientName}"></dd>
+                    <dt>수령인 휴대폰</dt>
+                    <dd th:text="${address.recipientPhoneNum}"></dd>
                     <dt>우편번호</dt>
-                    <dd>18014</dd> <!---->
+                    <dd th:text="${address.zipcode} ? '없음' : ${address.zipcode}"></dd>
                     <dt>배송주소</dt>
-                    <dd>평택 경기도 인천</dd> <!---->
+                    <dd th:text="${address.address}"></dd>
                     <dt>나머지주소</dt>
-                    <dd>88888호</dd><!---->
+                    <dd th:text="${address.detailAddress} ? '없음' : ${address.detailAddress}"></dd>
                 </dl>
                 <div>
                     <a href="#" class="btn_order_order">주문/배송조회로 이동</a>
                 </div>
             </div>
-
-
-
-
+            <!-- /본문 -->
         </div>
     </div>
-    <!-- /본문 -->
 
 </div>
 

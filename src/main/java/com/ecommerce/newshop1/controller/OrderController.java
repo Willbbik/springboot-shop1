@@ -1,6 +1,7 @@
 package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.*;
+import com.ecommerce.newshop1.entity.OrderItem;
 import com.ecommerce.newshop1.entity.OrderPaymentInformation;
 import com.ecommerce.newshop1.exception.ParameterNotFoundException;
 import com.ecommerce.newshop1.service.*;
@@ -10,6 +11,7 @@ import com.ecommerce.newshop1.enums.TossPayments;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,10 +22,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -32,6 +33,8 @@ public class OrderController {
     private final CartService cartService;
     private final OrderService orderService;
     private final KakaoService kakaoService;
+
+    ModelMapper mapper = new ModelMapper();
 
 
     @PostMapping("/order/checkout")
@@ -144,6 +147,7 @@ public class OrderController {
 
 
     @RequestMapping("/success")
+    @ApiOperation(value = "토스페이먼츠의 가상계좌 결제", notes = "가상계좌 결제")
     public String confirmPayment(@RequestParam String paymentKey, @RequestParam String orderId,
                                  @RequestParam int amount, Model model, HttpServletRequest request) throws Exception {
 
@@ -159,9 +163,19 @@ public class OrderController {
             if(payType.equals("가상계좌")){
 
                 OrderPaymentInformation paymentInfo = orderService.getVirtualAccountInfo(responseEntity.getBody());
-                orderService.doOrder(request.getSession(), paymentInfo);
+                orderService.doOrder(request.getSession(), paymentInfo);    // 주문
 
-                model.addAttribute("payInfo", paymentInfo);
+                OrderPaymentInfoDto payInfo = mapper.map(paymentInfo, OrderPaymentInfoDto.class);
+                OrderDto orderInfo = mapper.map(paymentInfo.getOrder(), OrderDto.class);
+                List<OrderItemDto> orderItems = OrderItem.toDtoList(paymentInfo.getOrder().getOrderItems());
+                AddressDto address = mapper.map(paymentInfo.getOrder().getDelivery().getDeliveryAddress(), AddressDto.class);
+
+                model.addAttribute("method", "virtualAccount");
+                model.addAttribute("payInfo", payInfo);
+                model.addAttribute("orderInfo", orderInfo);
+                model.addAttribute("orderItems",  orderItems);
+                model.addAttribute("address", address);
+
                 return "order/order_success";
             }
             return "order/order_fail";

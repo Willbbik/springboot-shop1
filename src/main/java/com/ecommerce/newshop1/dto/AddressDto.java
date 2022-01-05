@@ -1,5 +1,6 @@
 package com.ecommerce.newshop1.dto;
 
+import com.ecommerce.newshop1.entity.Delivery;
 import com.ecommerce.newshop1.utils.ValidationGroups;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
@@ -38,5 +39,7 @@ public class AddressDto {
 
     @Length(max = 200, message = "상세주소의 최대 길이는 200자입니다.", groups = ValidationGroups.LengthGroup.class)
     private String detailAddress;
+
+    private Delivery delivery;
 
 }

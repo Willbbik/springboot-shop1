@@ -57,6 +57,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(readOnly = true)
+    public Order findById(Long id) {
+
+        return orderRepository.findById(id).get();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public String createOrderId() {
 
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
@@ -136,6 +143,7 @@ public class OrderServiceImpl implements OrderService {
 
         return OrderPaymentInformation.builder()
                 .payType(PayType.VIRTUAL_ACCOUNT.getTitle())
+                .customerName(virtualAccount.get("customerName").asText())
                 .accountNumber(virtualAccount.get("accountNumber").asText())
                 .bank(virtualAccount.get("bank").asText())
                 .dueDate(virtualAccount.get("dueDate").asText())
@@ -184,7 +192,6 @@ public class OrderServiceImpl implements OrderService {
         session.removeAttribute("orderName");
         session.removeAttribute("addressDto");
         session.removeAttribute("payType");
-        session.removeAttribute("cartItemIdList");
     }
 
 

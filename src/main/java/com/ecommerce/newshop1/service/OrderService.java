@@ -4,6 +4,7 @@ import com.ecommerce.newshop1.dto.OrderDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.Member;
+import com.ecommerce.newshop1.entity.Order;
 import com.ecommerce.newshop1.entity.OrderPaymentInformation;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -16,6 +17,8 @@ import java.util.List;
 public interface OrderService {
 
     String createOrderId();
+
+    Order findById(Long id);
 
     List<OrderItemDto> itemToPayment(String itemList);
 

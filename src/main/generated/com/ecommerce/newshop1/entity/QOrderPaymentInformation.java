@@ -28,6 +28,8 @@ public class QOrderPaymentInformation extends EntityPathBase<OrderPaymentInforma
 
     public final StringPath company = createString("company");
 
+    public final StringPath customerName = createString("customerName");
+
     public final StringPath dueDate = createString("dueDate");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);

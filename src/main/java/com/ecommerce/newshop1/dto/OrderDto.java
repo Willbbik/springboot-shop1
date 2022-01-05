@@ -8,7 +8,6 @@ import com.ecommerce.newshop1.enums.PayType;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -20,7 +19,7 @@ public class OrderDto {
     private Long id;
     private Member member;
     private Delivery delivery;
-    private List<OrderItem> orderItems = new ArrayList<>();
+    private List<OrderItem> orderItems;
     private OrderPaymentInformation paymentInfo;
     private PayType payType;
     private int totalPrice;

@@ -11,7 +11,6 @@ public enum PayType {
 
     VIRTUAL_ACCOUNT("가상계좌"),
     KAKAO_PAY("카카오페이"),
-    CARD("신용카드"),
     EMPTY("없음");
 
     private String title;
