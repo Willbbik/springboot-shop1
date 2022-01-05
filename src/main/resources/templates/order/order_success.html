@@ -68,7 +68,7 @@
                     <dt>주문자</dt>
                     <dd th:text="${address.customerName}"></dd>
                     <dt>결제금액</dt>
-                    <dd th:text="${orderInfo.totalPrice}"></dd>
+                    <dd th:text="${#numbers.formatDecimal(orderInfo.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'"></dd>
                 </dl>
                 <h2>주문상품</h2>
                 <div class="order_item">
