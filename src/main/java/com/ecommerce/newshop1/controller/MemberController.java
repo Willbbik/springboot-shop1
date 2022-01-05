@@ -109,7 +109,7 @@ public class MemberController {
 
     @DeleteMapping("/member/withdrawal")
     @ApiOperation(value = "비밀번호 확인 후 회원탈퇴 처리", notes = "회원탈퇴")
-    public String withdrawalPost(HttpSession session, @RequestParam(name = "password") String password){
+    public @ResponseBody String withdrawalPost(HttpSession session, @RequestParam(name = "password") String password){
 
         Member member = memberService.getCurrentMember();
 

@@ -104,10 +104,7 @@ public class AdminController {
     @ApiOperation(value = "상품 목록 페이지")
     public String itemListPage(Model model, @RequestParam(name = "page", defaultValue = "1") int curPage, SearchDto searchDto){
 
-        // 상품 총 개수
         Long totalPost = itemService.searchTotal(searchDto);
-
-        // 페이징기능. 상품 개수와 현재 페이지 저장 후 계산
         PaginationShowSizeTen page = new PaginationShowSizeTen(totalPost, curPage);
 
         // 상품 가져오기
