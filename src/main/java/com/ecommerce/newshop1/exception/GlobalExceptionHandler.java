@@ -25,7 +25,7 @@ public class GlobalExceptionHandler{
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleException(Exception e){
         log.error("Exception {}",  e.getMessage());
-        log.error("Exception reason : {}", (Object) e.getStackTrace());
+        log.error("Exception reason : {}", e.getCause());
         return "error/400";
     }
 

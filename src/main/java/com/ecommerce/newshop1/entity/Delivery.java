@@ -22,7 +22,8 @@ public class Delivery extends TimeEntity{
     @OneToOne(mappedBy = "delivery")
     private Order order;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "delivery_address_id")
     private DeliveryAddress deliveryAddress;
 
     @Enumerated(EnumType.STRING)

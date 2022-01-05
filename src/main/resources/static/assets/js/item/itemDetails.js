@@ -38,7 +38,6 @@ $(function(){
     });
 
 
-
     $(document).on("click", ".quantity_plus", function(){
 
          let quantity = $("#quantity").val();

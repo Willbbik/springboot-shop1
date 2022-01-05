@@ -66,4 +66,9 @@ public class Member extends TimeEntity {
         qnaEntity.setMember(this);
     }
 
+    public void addOrderList(Order order){
+        this.getOrderList().add(order);
+    }
+
+
 }

@@ -171,6 +171,7 @@ public class OrderServiceImpl implements OrderService {
 
         // 주문
         orderRepository.save(order);
+
         // 장바구니에서 지우기
         if(cartItemIdList != null) {
             cartService.deleteCartItemAllById(cartItemIdList);

@@ -32,12 +32,11 @@ public class Order {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "order")
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "payment_info_id")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "order")
     private OrderPaymentInformation paymentInfo;
 
     @Enumerated(EnumType.STRING)
@@ -61,14 +60,19 @@ public class Order {
         delivery.setOrder(this);
     }
 
-    public void setOrderItems(OrderItem orderItem){
-        orderItems.add(orderItem);
-        orderItem.setOrder(this);
-    }
-
     public void setPaymentInfo(OrderPaymentInformation paymentInfo){
         this.paymentInfo = paymentInfo;
         paymentInfo.setOrder(this);
+    }
+
+    public void setOrderItems(OrderItem orderItem){
+        this.getOrderItems().add(orderItem);
+        orderItem.setOrder(this);
+    }
+
+    public void setMember(Member member){
+        member.addOrderList(this);
+        this.member = member;
     }
 
     public static Order createOrder(Member member, Delivery delivery, List<OrderItem> orderItems, PayType payType, OrderPaymentInformation paymentInfo, String orderId){
