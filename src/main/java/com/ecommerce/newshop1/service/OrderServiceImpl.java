@@ -148,11 +148,11 @@ public class OrderServiceImpl implements OrderService {
 
         // 세션에서 배송 정보 가져오기
         String orderId = (String) session.getAttribute("orderId");
-        AddressDto addressDto = (AddressDto) session.getAttribute("addressDto");
-        PayType payType = (PayType) session.getAttribute("payType");
         String orderName = (String) session.getAttribute("orderName");
         List<OrderItemDto> itemList  = (List<OrderItemDto>) session.getAttribute("orderItems");
         List<Long> cartItemIdList = (List<Long>) session.getAttribute("cartItemIdList");
+        AddressDto addressDto = (AddressDto) session.getAttribute("addressDto");
+        PayType payType = (PayType) session.getAttribute("payType");
 
         // order객체에 저장하기 위해서
         Member member = memberService.getCurrentMember();
@@ -172,7 +172,7 @@ public class OrderServiceImpl implements OrderService {
         // 주문
         orderRepository.save(order);
 
-        // 장바구니에서 지우기
+        // 장바구니에 같은 상품이 있다면 지우기
         if(cartItemIdList != null) {
             cartService.deleteCartItemAllById(cartItemIdList);
             session.removeAttribute("cartItemIdList");

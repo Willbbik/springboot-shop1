@@ -47,6 +47,10 @@ public class MemberController {
         return "index";
     }
 
+    @GetMapping("/test")
+    public String test(){
+        return "order/order_success";
+    }
 
     @GetMapping("/join")
     @ApiOperation(value = "회원가입 페이지")

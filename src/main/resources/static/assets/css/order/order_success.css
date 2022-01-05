@@ -1,0 +1,259 @@
+.pagetitle {
+    padding-bottom: 0;
+}
+
+.pagetitle {
+    text-align: center;
+    padding: 40px 0px 20px 0px;
+    clear: both;
+}
+
+.pagetitle h1 {
+     font-size: 2.2em;
+     font-weight: normal;
+     text-align: center;
+     margin-bottom: 20px;
+ }
+
+ .frame {
+     width: 100%;
+     max-width: 1300px;
+     margin: 0px auto;
+     clear: both;
+     overflow: hidden;
+}
+
+.orderpage h2 {
+    margin-bottom: 0px;
+}
+
+.orderpage h2 {
+    font-weight: 300;
+    font-size: 2em;
+    border-bottom: 1px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    margin-top: 50px;
+}
+
+.order_member {
+    border-bottom: 1px solid #000;
+    overflow: hidden;
+    font-size: 1.2em;
+    margin-bottom: 50px;
+}
+
+ul, li, dl, dt, dd {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+
+.order_member dt {
+    width: 20%;
+    font-weight: 700;
+}
+
+.order_member dd, .order_member dt {
+    border-bottom: 1px solid #cccccc;
+    padding: 15px;
+    float: left;
+}
+
+.order_member dd {
+    width: 80%;
+}
+
+.order_item {
+    display: table;
+    width: 100%;
+}
+
+.order_item dl {
+    width: 100%;
+    display: table-row;
+}
+
+.order_item dl dt:first-child {
+    padding: 20px 10px;
+}
+
+.order_item dl dt:first-child {
+    text-align: left;
+}
+
+.order_item dl dt {
+    padding-bottom: 10px;
+    font-size: 1.3em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.order_item dd, .order_item dt {
+    display: table-cell;
+    vertical-align: middle;
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+}
+
+.order_item .order-seller {
+    overflow: hidden;
+    display: block;
+    width: 120px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.order_item dl dt:nth-child(3), .order_item dl dt:nth-child(4) {
+    font-weight: 400;
+    font-size: 1.2em;
+}
+
+.order_item dl dd:first-child {
+    width: 15%;
+}
+
+.order_item dl dd {
+    font-size: 1.25em;
+}
+
+.order_item .itemname {
+    font-weight: 400;
+    font-size: 1.2em;
+}
+
+.order_item .itemname {
+    font-size: 1.3em;
+    font-weight: 500;
+    color: #000;
+}
+
+.order_item dd span {
+    color: #767676;
+    font-weight: 300;
+    font-size: 1em;
+    display: block;
+}
+
+.order_item dl dd:nth-child(3) {
+    font-size: 1.3em;
+    font-weight: 500;
+}
+
+.order_item dl dd:nth-child(3) {
+    width: 20%;
+    text-align: center;
+}
+
+.order_item dl dd:nth-child(4) {
+    width: 15%;
+    text-align: center;
+}
+
+.orderpage h2 {
+    margin-bottom: 0px;
+}
+
+.orderpage h2 {
+    font-weight: 300;
+    font-size: 2em;
+    border-bottom: 1px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    margin-top: 50px;
+}
+
+.order_totalpay {
+    padding: 20px 0;
+}
+
+.order_totalpay {
+    border-bottom: 1px solid #000;
+    overflow: hidden;
+    font-size: 1.2em;
+    margin-bottom: 50px;
+    padding-bottom: 20px;
+}
+
+.order_totalpay dt {
+    font-weight: bold;
+}
+
+.order_totalpay dt, .order_totalpay dd {
+    float: left;
+    width: 50%;
+    padding: 10px 20px;
+}
+
+.order_totalpay dd {
+    text-align: right;
+}
+
+.order_totalpay .large {
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.order_totalpay .large {
+    font-size: 1.4em;
+}
+
+.order_totalpay .large {
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.order_totalpay .red {
+    color: #d60303;
+    font-weight: bold;
+}
+
+
+
+.order_member {
+    border-bottom: 1px solid #000;
+    overflow: hidden;
+    font-size: 1.2em;
+    margin-bottom: 50px;
+}
+
+.order_member dt {
+    width: 20%;
+    font-weight: 700;
+}
+
+.order_member dd, .order_member dt {
+    border-bottom: 1px solid #cccccc;
+    padding: 15px;
+    float: left;
+}
+
+.order_member dd {
+    width: 80%;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+.btn_order_order, .btn_orderinfo_1, .btn_orderinfo_3 {
+    cursor: pointer;
+}
+
+.btn_order_order {
+    max-width: 290px;
+}
+
+.btn_order_order {
+    padding: 25px;
+    width: 100%;
+    max-width: 260px;
+    text-align: center;
+    margin: 0px auto;
+    display: block;
+    background: #000000;
+    color: #ffffff;
+    font-size: 1.5em;
+}
+
+

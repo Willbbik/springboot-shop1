@@ -157,8 +157,11 @@ public class OrderController {
             String payType = responseEntity.getBody().get("method").asText();
 
             if(payType.equals("가상계좌")){
+
                 OrderPaymentInformation paymentInfo = orderService.getVirtualAccountInfo(responseEntity.getBody());
                 orderService.doOrder(request.getSession(), paymentInfo);
+
+                model.addAttribute("payInfo", paymentInfo);
                 return "order/order_success";
             }
             return "order/order_fail";
@@ -169,7 +172,6 @@ public class OrderController {
             model.addAttribute("code", failNode.get("code").asText());
             return "order/order_fail";
         }
-
     }
 
 }
