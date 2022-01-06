@@ -1,8 +1,10 @@
 package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.*;
-import com.ecommerce.newshop1.entity.OrderItem;
+import com.ecommerce.newshop1.entity.Delivery;
+import com.ecommerce.newshop1.entity.Order;
 import com.ecommerce.newshop1.entity.OrderPaymentInformation;
+import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.ecommerce.newshop1.exception.ParameterNotFoundException;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.CommonService;
@@ -12,12 +14,10 @@ import com.ecommerce.newshop1.enums.TossPayments;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,9 +34,6 @@ public class OrderController {
     private final CartService cartService;
     private final OrderService orderService;
     private final CommonService commonService;
-    private final KakaoService kakaoService;
-
-    ModelMapper mapper = new ModelMapper();
 
 
     @PostMapping("/order/checkout")
@@ -95,8 +92,9 @@ public class OrderController {
 
     @PostMapping("/order/virtualAccount")
     @ApiOperation(value = "가상계좌 결제")
-    public @ResponseBody String saveAddressDto(@Validated(ValidationSequence.class) AddressDto addressDto, BindingResult errors, String payMethod, HttpSession session){
+    public @ResponseBody String saveAddressDto(@Validated(ValidationSequence.class) AddressDto addressDto, BindingResult errors, String payMethod, HttpServletRequest request){
 
+        HttpSession session = request.getSession();
         PayType payType = PayType.findByPayType(payMethod);
 
         if(payType.getTitle().equals("없음")){
@@ -128,18 +126,15 @@ public class OrderController {
             if(payType.equals("가상계좌")){
 
                 OrderPaymentInformation paymentInfo = orderService.getVirtualAccountInfo(responseEntity.getBody());
-                orderService.doOrder(session, paymentInfo);    // 주문
+                Delivery delivery = new Delivery();
+                delivery.setDeliveryStatus(DeliveryStatus.DEPOSIT_READY);
 
-                OrderPaymentInfoDto payInfo = mapper.map(paymentInfo, OrderPaymentInfoDto.class);
-                OrderDto orderInfo = mapper.map(paymentInfo.getOrder(), OrderDto.class);
-                List<OrderItemDto> orderItems = OrderItem.toDtoList(paymentInfo.getOrder().getOrderItems());
-                AddressDto address = mapper.map(paymentInfo.getOrder().getDelivery().getDeliveryAddress(), AddressDto.class);
+                // 주문
+                String orderNum = orderService.doOrder(session, paymentInfo, delivery);
 
-                model.addAttribute("method", "virtualAccount");
-                model.addAttribute("payInfo", payInfo);
-                model.addAttribute("orderInfo", orderInfo);
-                model.addAttribute("orderItems",  orderItems);
-                model.addAttribute("address", address);
+                // 주문 후 주문성공페이지에 정보 띄워주기 위해서
+                Order order = orderService.findByOrderNum(orderNum);
+                model.addAttribute(orderService.getModelPayInfo(order, model));
 
                 return "order/order_success";
             }

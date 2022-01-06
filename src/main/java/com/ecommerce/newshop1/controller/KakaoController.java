@@ -1,10 +1,8 @@
 package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.*;
-import com.ecommerce.newshop1.entity.Member;
-import com.ecommerce.newshop1.entity.Order;
-import com.ecommerce.newshop1.entity.OrderItem;
-import com.ecommerce.newshop1.entity.OrderPaymentInformation;
+import com.ecommerce.newshop1.entity.*;
+import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.ecommerce.newshop1.enums.PayType;
 import com.ecommerce.newshop1.enums.Sns;
 import com.ecommerce.newshop1.service.CartService;
@@ -44,7 +42,10 @@ public class KakaoController {
         if(payType.getTitle().equals("없음")) return "fail";
         else if(errors.hasErrors()) return "fail";
 
-        return kakaoService.kakaoPayReady(addressDto, session);
+        session.setAttribute("addressDto", addressDto);
+        session.setAttribute("payType", payType);
+
+        return kakaoService.kakaoPayReady(session);
     }
 
     @RequestMapping("/kakaoPay/order/success")
@@ -54,26 +55,23 @@ public class KakaoController {
         String tid = session.getAttribute("tid").toString();
         String orderNum = session.getAttribute("orderNum").toString();
 
+        // 결제 승인 요청
         kakaoService.kakaoPayApprove(pgToken, tid, orderNum);
 
-        OrderPaymentInformation orderPaymentInformation = OrderPaymentInformation.builder()
-                        .payType(PayType.KAKAO_PAY.getTitle())
-                        .build();
-        orderNum = orderService.doOrder(session, orderPaymentInformation); // 주문
+        // 결제 정보
+        OrderPaymentInformation orderPaymentInformation = new OrderPaymentInformation();
+        orderPaymentInformation.setPayType(PayType.KAKAO_PAY.getTitle());
+
+        // 배송 정보
+        Delivery delivery = new Delivery();
+        delivery.setDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS);
+
+        // 주문
+        orderNum = orderService.doOrder(session, orderPaymentInformation, delivery);
 
         // 주문 후 결제성공 페이지에 띄워주기 위해서
         Order order = orderService.findByOrderNum(orderNum);
-
-        OrderDto orderInfo = mapper.map(order, OrderDto.class);
-        OrderPaymentInfoDto payInfo = mapper.map(order.getPaymentInfo(), OrderPaymentInfoDto.class);
-        List<OrderItemDto> orderItems = OrderItem.toDtoList(order.getOrderItems());
-        AddressDto address = mapper.map(order.getDelivery().getDeliveryAddress(), AddressDto.class);
-
-        model.addAttribute("method", payInfo.getPayType());
-        model.addAttribute("payInfo", payInfo);
-        model.addAttribute("orderInfo", orderInfo);
-        model.addAttribute("orderItems",  orderItems);
-        model.addAttribute("address", address);
+        model.addAttribute(orderService.getModelPayInfo(order, model));
 
         return "order/order_success";
     }

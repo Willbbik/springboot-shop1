@@ -1,5 +1,6 @@
 package com.ecommerce.newshop1.entity;
 
+import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.ecommerce.newshop1.enums.PayType;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -83,6 +84,7 @@ public class Order {
         order.setPaymentInfo(paymentInfo);
 
         for(OrderItem orderItem : orderItems){
+            if(payType.equals(PayType.KAKAO_PAY)) orderItem.setDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS);
             order.setOrderItems(orderItem);
         }
 

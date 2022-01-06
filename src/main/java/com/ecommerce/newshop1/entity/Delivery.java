@@ -32,6 +32,7 @@ public class Delivery extends TimeEntity{
     @Column(nullable = false)
     private String orderName;
 
+
     public void setDeliveryAddress(DeliveryAddress deliveryAddress){
         this.deliveryAddress = deliveryAddress;
         deliveryAddress.setDelivery(this);

@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpSession;
@@ -158,7 +159,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public String doOrder(HttpSession session, OrderPaymentInformation paymentInfo) {
+    public String doOrder(HttpSession session, OrderPaymentInformation paymentInfo, Delivery delivery) {
 
         // 세션에서 배송 정보 가져오기
         String orderNum = (String) session.getAttribute("orderNum");
@@ -173,12 +174,8 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItem> orderItems = itemList.stream()
                 .map(p -> mapper.map(p, OrderItem.class)).collect(Collectors.toList());
 
-        // 배송지
-        DeliveryAddress deliveryAddress = mapper.map(addressDto, DeliveryAddress.class);
-
-        Delivery delivery = new Delivery();
-        delivery.setDeliveryAddress(deliveryAddress);
-        delivery.setDeliveryStatus(DeliveryStatus.DEPOSIT_READY);
+        // 배송 정보
+        delivery.setDeliveryAddress(mapper.map(addressDto, DeliveryAddress.class));
         delivery.setOrderName(orderName);
 
         // 주문
@@ -199,6 +196,25 @@ public class OrderServiceImpl implements OrderService {
         session.removeAttribute("payType");
 
         return orderNum;
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public Model getModelPayInfo(Order order, Model model){
+
+        OrderDto orderInfo = mapper.map(order, OrderDto.class);
+        OrderPaymentInfoDto payInfo = mapper.map(order.getPaymentInfo(), OrderPaymentInfoDto.class);
+        List<OrderItemDto> orderItems = OrderItem.toDtoList(order.getOrderItems());
+        AddressDto address = mapper.map(order.getDelivery().getDeliveryAddress(), AddressDto.class);
+
+        model.addAttribute("method", payInfo.getPayType());
+        model.addAttribute("payInfo", payInfo);
+        model.addAttribute("orderInfo", orderInfo);
+        model.addAttribute("orderItems",  orderItems);
+        model.addAttribute("address", address);
+
+        return model;
     }
 
 

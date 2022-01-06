@@ -7,6 +7,7 @@ import com.ecommerce.newshop1.dto.OAuthToken;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,7 +64,7 @@ public class KakaoService {
 
 
     // 카카오페이 결제 준비
-    public String kakaoPayReady(AddressDto addressDto, HttpSession session){
+    public String kakaoPayReady(HttpSession session){
 
         String orderNum = session.getAttribute("orderNum").toString();
 
@@ -97,7 +98,6 @@ public class KakaoService {
         try{
             KakaoPayDto kakaoPayDto = objectMapper.readValue(response.getBody(), KakaoPayDto.class);
             session.setAttribute("tid", kakaoPayDto.getTid());
-            // 주문번호도 세션에 저장해야함
 
             return kakaoPayDto.getNext_redirect_pc_url();
         } catch (JsonMappingException e) {
@@ -110,6 +110,7 @@ public class KakaoService {
         return "fail";
     }
 
+    // 카카오 결제 요청
     public void kakaoPayApprove(String pgToken, String tid, String orderNum){
 
         RestTemplate rt = new RestTemplate();
@@ -176,7 +177,7 @@ public class KakaoService {
         return oAuthToken;
     }
 
-    // AccessToken으로 사용자 정보 가져오기
+    // 액세스토큰으로 사용자 정보 가져오기
     public KakaoDto getUserKakaoProfile(String access_token){
 
         RestTemplate rt = new RestTemplate();
