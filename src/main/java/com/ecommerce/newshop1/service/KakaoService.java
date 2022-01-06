@@ -1,5 +1,6 @@
 package com.ecommerce.newshop1.service;
 
+import com.ecommerce.newshop1.dto.AddressDto;
 import com.ecommerce.newshop1.dto.KakaoDto;
 import com.ecommerce.newshop1.dto.KakaoPayDto;
 import com.ecommerce.newshop1.dto.OAuthToken;
@@ -18,7 +19,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Service
@@ -46,16 +46,26 @@ public class KakaoService {
     @Value("${kakao.admin_key}")
     String adminKey;
 
-    @Value("${kakaoPay.ready_uri}")
-    String kakaoPayReadyUri;
+    @Value("${kakaoPay.ready_url}")
+    String kakaoPayReadyUrl;
 
-    @Value("${kakaoPay.approve_uri}")
-    String kakaoPayApproveUri;
+    @Value("${kakaoPay.approve_url}")
+    String kakaoPayApproveUrl;
+
+    @Value("${kakaoPay.approval_url}")
+    String kakaoPayApprovalUrl;
+
+    @Value("${kakaoPay.fail_url}")
+    String kakaoPayFailUrl;
+
+    @Value("${kakaoPay.cancel_url}")
+    String kakaoPayCancelUrl;
+
 
     // 카카오페이 결제 준비
-    public String kakaoPayReady(HttpServletRequest request){
+    public String kakaoPayReady(AddressDto addressDto, HttpSession session){
 
-        HttpSession session = request.getSession();
+        String orderNum = session.getAttribute("orderNum").toString();
 
         RestTemplate rt = new RestTemplate();
         HttpHeaders header = new HttpHeaders();
@@ -64,19 +74,19 @@ public class KakaoService {
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("cid", "TC0ONETIME");
-        params.add("partner_order_id", "partner_order_id");
+        params.add("partner_order_id", orderNum);
         params.add("partner_user_id", "partner_user_id");
         params.add("item_name", "초코파이");
         params.add("quantity", "1");
         params.add("total_amount", "2000");
         params.add("tax_free_amount", "0");
-        params.add("approval_url", "http://localhost:8080/order/kakaoPay/success");
-        params.add("fail_url", "http://localhost:8080/order/kakaoPay/fail");
-        params.add("cancel_url", "http://localhost:8080/order/kakaoPay/cancel");
+        params.add("approval_url", kakaoPayApprovalUrl);
+        params.add("fail_url", kakaoPayFailUrl);
+        params.add("cancel_url", kakaoPayCancelUrl);
 
         HttpEntity<MultiValueMap<String, String>> kakaoPayRequest = new HttpEntity<>(params, header);
         ResponseEntity<String> response = rt.exchange(
-                kakaoPayReadyUri,
+                kakaoPayReadyUrl,
                 HttpMethod.POST,
                 kakaoPayRequest,
                 String.class
@@ -100,7 +110,7 @@ public class KakaoService {
         return "fail";
     }
 
-    public void kakaoPayApprove(String pgToken, String tid){
+    public void kakaoPayApprove(String pgToken, String tid, String orderNum){
 
         RestTemplate rt = new RestTemplate();
         HttpHeaders header = new HttpHeaders();
@@ -111,13 +121,13 @@ public class KakaoService {
         params.add("cid", "TC0ONETIME");
         params.add("tid", tid);
         params.add("pg_token", pgToken);
-        params.add("partner_order_id", "partner_order_id");
+        params.add("partner_order_id", orderNum);
         params.add("partner_user_id", "partner_user_id");
 
         HttpEntity<MultiValueMap<String, String>> kakaoPayRequest = new HttpEntity<>(params, header);
 
         ResponseEntity<String> response = rt.exchange(
-                kakaoPayApproveUri,
+                kakaoPayApproveUrl,
                 HttpMethod.POST,
                 kakaoPayRequest,
                 String.class

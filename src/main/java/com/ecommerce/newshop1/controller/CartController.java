@@ -47,7 +47,7 @@ public class CartController {
 
         if(!security.isAuthenticated()){        // 권한 체크
             return 403;
-        } else if(bindingResult.hasErrors()){   // cartItemDto객체 유효성 검사
+        } else if(bindingResult.hasErrors()){   // cartItemDto 유효성 검사
             return 401;
         } else{
             cartService.addCart(cartDto);

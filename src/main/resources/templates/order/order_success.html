@@ -111,6 +111,14 @@
                         <dt class="large">총 주문금액</dt>
                         <dd class="red large" th:text="${#numbers.formatDecimal(orderInfo.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'"></dd>
                     </th:block>
+                    <th:block th:if="${method} == '카카오페이'">
+                        <dt>결제수단</dt>
+                        <dd th:text="${payInfo.payType}"></dd>
+                        <dt>총 상품금액</dt>
+                        <dd th:text="${#numbers.formatDecimal(orderInfo.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'"></dd>
+                        <dt class="large">총 주문금액</dt>
+                        <dd class="red large" th:text="${#numbers.formatDecimal(orderInfo.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'"></dd>
+                    </th:block>
                 </dl>
                 <h2>배송지 정보</h2>
                 <dl class="order_member">

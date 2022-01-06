@@ -64,18 +64,24 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(readOnly = true)
-    public String createOrderId() {
+    public Order findByOrderNum(String orderNum) {
+        return orderRepository.findByOrderNum(orderNum);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public String createOrderNum() {
 
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String random = String.valueOf(commonService.randomNum());
 
-        String orderId = date + random;
-        boolean result = orderRepository.existsByOrderNum(orderId);
+        String orderNum = date + random;
+        boolean result = orderRepository.existsByOrderNum(orderNum);
 
         if(!result){
-            return orderId;
+            return orderNum;
         }else{
-            return createOrderId();
+            return createOrderNum();
         }
     }
 
@@ -113,7 +119,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<JsonNode> tossPayment(String paymentKey, String orderId, int amount) throws Exception {
+    public ResponseEntity<JsonNode> tossPayment(String paymentKey, String orderNum, int amount) throws Exception {
 
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -125,7 +131,7 @@ public class OrderServiceImpl implements OrderService {
 
         // body 만들기
         Map<String, String> payloadMap = new HashMap<>();
-        payloadMap.put("orderId", orderId);
+        payloadMap.put("orderNum", orderNum);
         payloadMap.put("amount", String.valueOf(amount));
 
         // http header와 body 합치기
@@ -152,17 +158,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void doOrder(HttpSession session, OrderPaymentInformation paymentInfo) {
+    public String doOrder(HttpSession session, OrderPaymentInformation paymentInfo) {
 
         // 세션에서 배송 정보 가져오기
-        String orderId = (String) session.getAttribute("orderId");
+        String orderNum = (String) session.getAttribute("orderNum");
         String orderName = (String) session.getAttribute("orderName");
         List<OrderItemDto> itemList  = (List<OrderItemDto>) session.getAttribute("orderItems");
         List<Long> cartItemIdList = (List<Long>) session.getAttribute("cartItemIdList");
         AddressDto addressDto = (AddressDto) session.getAttribute("addressDto");
         PayType payType = (PayType) session.getAttribute("payType");
 
-        // order객체에 저장하기 위해서
+        // order에 저장하기 위해서
         Member member = memberService.getCurrentMember();
         List<OrderItem> orderItems = itemList.stream()
                 .map(p -> mapper.map(p, OrderItem.class)).collect(Collectors.toList());
@@ -175,23 +181,24 @@ public class OrderServiceImpl implements OrderService {
         delivery.setDeliveryStatus(DeliveryStatus.DEPOSIT_READY);
         delivery.setOrderName(orderName);
 
-        Order order = Order.createOrder(member, delivery, orderItems, payType, paymentInfo, orderId);
-
         // 주문
+        Order order = Order.createOrder(member, delivery, orderItems, payType, paymentInfo, orderNum);
         orderRepository.save(order);
 
-        // 장바구니에 같은 상품이 있다면 지우기
+        // 장바구니에서 주문시 해당 상품 지우기 위해서
         if(cartItemIdList != null) {
             cartService.deleteCartItemAllById(cartItemIdList);
             session.removeAttribute("cartItemIdList");
         }
 
         // 주문완료 후 세션에서 배송정보 제거
-        session.removeAttribute("orderId");
+        session.removeAttribute("orderNum");
         session.removeAttribute("orderItems");
         session.removeAttribute("orderName");
         session.removeAttribute("addressDto");
         session.removeAttribute("payType");
+
+        return orderNum;
     }
 
 

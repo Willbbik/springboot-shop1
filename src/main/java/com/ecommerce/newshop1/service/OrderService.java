@@ -16,9 +16,11 @@ import java.util.List;
 
 public interface OrderService {
 
-    String createOrderId();
+    String createOrderNum();
 
     Order findById(Long id);
+
+    Order findByOrderNum(String orderNum);
 
     List<OrderItemDto> itemToPayment(String itemList);
 
@@ -26,7 +28,7 @@ public interface OrderService {
 
     OrderPaymentInformation getVirtualAccountInfo(JsonNode successNode);
 
-    void doOrder(HttpSession session, OrderPaymentInformation paymentInfo);
+    String doOrder(HttpSession session, OrderPaymentInformation paymentInfo);
 
     List<OrderDto> searchAllByMember(Long orderId, Member member);
 

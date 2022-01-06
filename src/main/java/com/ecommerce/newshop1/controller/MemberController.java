@@ -343,33 +343,4 @@ public class MemberController {
     }
 
 
-    @GetMapping("/kakao/login")
-    @ApiOperation(value = "카카오 로그인 & 회원가입", notes = "여기서 한번에 회원가입과 로그인을 진행한다")
-    public String kakaoLogin(String code) throws Exception {
-
-        // code로 AccessToken을 받아오고 그 토큰으로 사용자 정보 가져오기
-        OAuthToken oAuthToken = kakaoService.getAccessToken(code);
-        KakaoDto kakaoDto = kakaoService.getUserKakaoProfile(oAuthToken.getAccess_token());
-
-        // oauth2 회원가입시 해당 포털을 구분하기 위해서. @k = kakao
-        String userId = kakaoDto.getId().toString() + "@k";
-
-        Optional<Member> memberEntity = memberService.findByUserId(userId);
-        Member member = new Member();
-
-        // 존재하지 않으면 가입
-        if (memberEntity.isEmpty()) {
-            member = memberService.joinOAuth(userId, Sns.KAKAO);
-            cartService.createCart(member);
-        }else{
-            member = memberEntity.get();
-        }
-
-        // 로그인
-        memberService.login(member.getUserId());
-
-        return "redirect:/";
-    }
-
-
 }
