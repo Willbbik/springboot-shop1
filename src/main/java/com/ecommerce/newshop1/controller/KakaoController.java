@@ -9,6 +9,7 @@ import com.ecommerce.newshop1.service.CartService;
 import com.ecommerce.newshop1.service.KakaoService;
 import com.ecommerce.newshop1.service.MemberService;
 import com.ecommerce.newshop1.service.OrderService;
+import com.ecommerce.newshop1.utils.CommonService;
 import com.ecommerce.newshop1.utils.ValidationSequence;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class KakaoController {
     private final CartService cartService;
     private final KakaoService kakaoService;
     private final OrderService orderService;
+    private final CommonService commonService;
 
     ModelMapper mapper = new ModelMapper();
 
@@ -39,8 +41,11 @@ public class KakaoController {
     public @ResponseBody String kakaoPay(@Validated(ValidationSequence.class) AddressDto addressDto, BindingResult errors, String payMethod, HttpSession session){
 
         PayType payType = PayType.findByPayType(payMethod);
-        if(payType.getTitle().equals("없음")) return "fail";
-        else if(errors.hasErrors()) return "fail";
+        if(!PayType.KAKAO_PAY.equals(payType)) {
+            return "fail";
+        } else if(errors.hasErrors()) {
+            return commonService.getErrorMessage(errors);
+        }
 
         session.setAttribute("addressDto", addressDto);
         session.setAttribute("payType", payType);

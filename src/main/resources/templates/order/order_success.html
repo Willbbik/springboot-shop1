@@ -127,11 +127,11 @@
                     <dt>수령인 휴대폰</dt>
                     <dd th:text="${address.recipientPhoneNum}"></dd>
                     <dt>우편번호</dt>
-                    <dd th:text="${address.zipcode} ? '없음' : ${address.zipcode}"></dd>
+                    <dd th:text="${address.zipcode} ? ${address.zipcode} : '없음' "></dd>
                     <dt>배송주소</dt>
                     <dd th:text="${address.address}"></dd>
                     <dt>나머지주소</dt>
-                    <dd th:text="${address.detailAddress} ? '없음' : ${address.detailAddress}"></dd>
+                    <dd th:text="${address.detailAddress} ? ${address.detailAddress} : '없음' "></dd>
                 </dl>
                 <div>
                     <a href="#" class="btn_order_order">주문/배송조회로 이동</a>
