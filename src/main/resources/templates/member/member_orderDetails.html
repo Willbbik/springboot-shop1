@@ -112,6 +112,14 @@
             <dt class="large">총 주문금액</dt>
             <dd class="red large" th:text="${#numbers.formatDecimal(orderInfo.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'"></dd>
           </th:block>
+          <th:block th:if="${method} == '카카오페이'">
+            <dt>결제수단</dt>
+            <dd th:text="${payInfo.payType}"></dd>
+            <dt>총 상품금액</dt>
+            <dd th:text="${#numbers.formatDecimal(orderInfo.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'"></dd>
+            <dt class="large">총 주문금액</dt>
+            <dd class="red large" th:text="${#numbers.formatDecimal(orderInfo.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'"></dd>
+          </th:block>
         </dl>
         <h2>배송지 정보</h2>
         <dl class="order_member">
@@ -120,11 +128,11 @@
           <dt>수령인 휴대폰</dt>
           <dd th:text="${address.recipientPhoneNum}"></dd>
           <dt>우편번호</dt>
-          <dd th:text="${address.zipcode} ? ${address.zipcode} : '없음' "></dd>
+          <dd th:text="${address.zipcode} == '' ? '없음' : ${address.zipcode}"></dd>
           <dt>배송주소</dt>
           <dd th:text="${address.address}"></dd>
           <dt>나머지주소</dt>
-          <dd th:text="${address.detailAddress} ? ${address.detailAddress} : '없음' "></dd>
+          <dd th:text="${address.detailAddress} == '' ? '없음' : ${address.detailAddress} "></dd>
         </dl>
         <div>
           <a href="#" class="btn_order_order">주문/배송조회로 이동</a>

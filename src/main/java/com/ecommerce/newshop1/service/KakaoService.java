@@ -63,7 +63,7 @@ public class KakaoService {
     String kakaoPayCancelUrl;
 
 
-    // 카카오페이 결제 준비 
+    // 카카오페이 결제 준비
     public String kakaoPayReady(HttpSession session){
 
         String orderNum = session.getAttribute("orderNum").toString();

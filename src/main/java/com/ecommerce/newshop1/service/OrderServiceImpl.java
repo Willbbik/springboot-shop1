@@ -3,6 +3,7 @@ package com.ecommerce.newshop1.service;
 import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.*;
 import com.ecommerce.newshop1.exception.ItemNotFoundException;
+import com.ecommerce.newshop1.exception.OrderNotFoundException;
 import com.ecommerce.newshop1.repository.*;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.ecommerce.newshop1.enums.PayType;
@@ -60,13 +61,16 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(readOnly = true)
     public Order findById(Long id) {
 
-        return orderRepository.findById(id).get();
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException("해당 주문번호의 주문이 존재하지 않습니다." + id));
     }
 
     @Override
     @Transactional(readOnly = true)
     public Order findByOrderNum(String orderNum) {
-        return orderRepository.findByOrderNum(orderNum);
+
+        return orderRepository.findByOrderNum(orderNum)
+                .orElseThrow(() -> new OrderNotFoundException("해당 주문번호의 주문이 존재하지 않습니다." + orderNum));
     }
 
     @Override
@@ -230,9 +234,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void updateOrderToDepositSuccess(String orderId) {
+    public void updateOrderToDepositSuccess(String orderNum) {
 
-        Order order = orderRepository.findByOrderNum(orderId);
+        Order order = findByOrderNum(orderNum);
         order.getDelivery().setDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS);
         orderRepository.save(order);
     }

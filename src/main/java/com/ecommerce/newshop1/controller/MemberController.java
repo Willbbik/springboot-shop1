@@ -106,6 +106,7 @@ public class MemberController {
     }
 
     @GetMapping("/member/orderDetails/{id}")
+    @ApiOperation(value = "주문한 상품 주문정보 페이지")
     public String memberOrderDetails(@PathVariable(name = "id") Long orderId, Model model){
 
         Order order = orderService.findById(orderId);

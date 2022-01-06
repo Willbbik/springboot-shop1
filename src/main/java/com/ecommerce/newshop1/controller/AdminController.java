@@ -3,6 +3,8 @@ package com.ecommerce.newshop1.controller;
 import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.ItemImage;
+import com.ecommerce.newshop1.entity.Order;
+import com.ecommerce.newshop1.entity.OrderItem;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.ecommerce.newshop1.enums.Role;
 import com.ecommerce.newshop1.repository.ItemRepository;
@@ -39,6 +41,7 @@ public class AdminController {
     private final ItemRepository itemRepository;
     private final ItemService itemService;
     private final OrderService orderService;
+    private final OrderItemService orderItemService;
     private final MemberService memberService;
     private final AwsS3Service awsS3Service;
     private final CommonService commonService;
@@ -119,6 +122,27 @@ public class AdminController {
 
         return "admin/admin_itemList";
     }
+
+    @PostMapping("/admin/delivery/item")
+    @ApiOperation(value = "운송장 번호 입력 후 상품 배송처리", notes = "상품 배송")
+    public @ResponseBody String deliveryItem(Long orderItemId, String orderNum, String wayBillNum){
+
+        Order order = orderService.findByOrderNum(orderNum);
+        OrderItem orderItem = orderItemService.findById(orderItemId);
+        Boolean result = order.getOrderItems().stream()
+                                .anyMatch(p -> p.getId().equals(orderItem.getId()));
+
+        if(result){
+
+            orderItem.setDeliveryStatus(DeliveryStatus.DELIVERY_ING);
+            orderItemService.save(orderItem);
+
+            return "success";
+        }
+
+        return "fail";
+    }
+
 
     @PostMapping("/admin/item/register")
     @ApiOperation(value = "관리자페이지에서 상품 등록")

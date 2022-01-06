@@ -12,15 +12,6 @@ import org.springframework.web.bind.annotation.*;
 public class GlobalExceptionHandler{
 
 
-    @ExceptionHandler(CustomException.class)
-    @ResponseBody
-    public ResponseEntity<ErrorResponse> handleRuntimeException(CustomException e){
-        log.error("Custom Exception {}",  e.getMessage());
-        return ResponseEntity
-                .status(ErrorCode.POSTS_NOT_FOUND.getStatus().value())
-                .body(new ErrorResponse(e.getErrorCode()));
-    }
-
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleException(Exception e){
@@ -62,6 +53,13 @@ public class GlobalExceptionHandler{
     public String qnaNotFound(QnaNotFoundException e){
         log.error("qnaNotFoundException {} :", e.getMessage());
         log.error("qnaNotFoundException reason {} :", e.getCause());
+        return "error/400";
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public String orderNotFound(OrderNotFoundException e){
+        log.error("orderNotFoundException {} : ", e.getMessage());
+        log.error("orderNotFoundException reason {} :", e.getCause());
         return "error/400";
     }
 
