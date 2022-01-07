@@ -3,6 +3,8 @@ package com.ecommerce.newshop1.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 @AllArgsConstructor
 public enum DeliveryStatus {
@@ -13,7 +15,17 @@ public enum DeliveryStatus {
     DELIVERY_READY("배송준비중"),
     DELIVERY_ING("배송중"),
     DELIVERY_COMPLETION("배송완료"),
-    ORDER_CANCEL("주문취소");
+    ORDER_CANCEL("주문취소"),
+    EMPTY("없음");
 
     private String value;
+
+    public static DeliveryStatus findByDeliveryStatus(String deliveryStatus){
+        return Arrays.stream(DeliveryStatus.values())
+                .filter(d -> d.getValue().equals(deliveryStatus))
+                .findAny()
+                .orElse(EMPTY);
+    }
+
+
 }

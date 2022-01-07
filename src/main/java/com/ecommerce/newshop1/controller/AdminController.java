@@ -84,28 +84,9 @@ public class AdminController {
         return "admin/admin_registerItem";
     }
 
-    @GetMapping("/admin/send/orderItem")
-    @ApiOperation(value = "상품 배송 페이지")
-    public String sendOrderItemPage(Model model, @RequestParam(name = "page", defaultValue = "1") int curPage, SearchDto searchDto){
-
-        // 배달해야하는 상품 총 개수와 그걸로 페이징처리
-        Long total = orderService.searchTotalOrderItem(DeliveryStatus.DEPOSIT_SUCCESS, searchDto);
-        PaginationShowSizeTen page = new PaginationShowSizeTen(total, curPage);
-
-        Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxSize());
-        List<OrderItemDto> orderItems = orderService.searchAllByDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS, pageable, searchDto);
-
-        model.addAttribute("page", page);
-
-        model.addAttribute("orderItems", orderItems);
-        model.addAttribute("searchDto", searchDto);
-        return "admin/admin_sendOrderItem";
-    }
-
-
     @GetMapping("/admin/itemList")
     @ApiOperation(value = "상품 목록 페이지")
-    public String itemListPage(Model model, @RequestParam(name = "page", defaultValue = "1") int curPage, SearchDto searchDto){
+    public String itemListPage(@RequestParam(name = "page", defaultValue = "1") int curPage, SearchDto searchDto, Model model){
 
         Long totalPost = itemService.searchTotal(searchDto);
         PaginationShowSizeTen page = new PaginationShowSizeTen(totalPost, curPage);
@@ -123,6 +104,43 @@ public class AdminController {
         return "admin/admin_itemList";
     }
 
+    @GetMapping("/admin/send/orderItem")
+    @ApiOperation(value = "상품 배송 페이지")
+    public String sendOrderItemPage(Model model, @RequestParam(name = "page", defaultValue = "1") int curPage, SearchDto searchDto){
+
+        // 배달해야하는 상품 총 개수와 그걸로 페이징처리
+        Long total = orderService.searchTotalOrderItem(DeliveryStatus.DELIVERY_READY, searchDto);
+        PaginationShowSizeTen page = new PaginationShowSizeTen(total, curPage);
+
+        Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxSize());
+        List<OrderItemDto> orderItems = orderService.searchAllByDeliveryStatus(DeliveryStatus.DELIVERY_READY, pageable, searchDto);
+
+        model.addAttribute("page", page);
+        model.addAttribute("orderItems", orderItems);
+        model.addAttribute("searchDto", searchDto);
+        return "admin/admin_sendOrderItem";
+    }
+
+
+    @GetMapping("/admin/orderList")
+    @ApiOperation(value = "주문 목록", notes = "여기서 상품 배송상태를 입금완료 > 배송중으로 변경")
+    public String depositItemList(@RequestParam(name = "page", defaultValue = "1") int curPage, SearchDto searchDto, Model model){
+
+        DeliveryStatus deliveryStatus = DeliveryStatus.findByDeliveryStatus(searchDto.getDeliveryStatus());
+
+        Long total = orderService.searchTotalOrderItem(deliveryStatus, searchDto);
+        PaginationShowSizeTen page = new PaginationShowSizeTen(total, curPage);
+
+        Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxSize());
+        List<OrderItemDto> orderItems = orderService.searchAllByDeliveryStatus(deliveryStatus, pageable, searchDto);
+
+        model.addAttribute("page", page);
+        model.addAttribute("orderItems", orderItems);
+        model.addAttribute("searchDto", searchDto);
+        return "admin/admin_orderList";
+    }
+
+
     @PostMapping("/admin/delivery/item")
     @ApiOperation(value = "운송장 번호 입력 후 상품 배송처리", notes = "상품 배송")
     public @ResponseBody String deliveryItem(Long orderItemId, String orderNum, String wayBillNum){
@@ -133,8 +151,8 @@ public class AdminController {
                                 .anyMatch(p -> p.getId().equals(orderItem.getId()));
 
         if(result){
-
             orderItem.setDeliveryStatus(DeliveryStatus.DELIVERY_ING);
+            orderItem.setWayBillNum(wayBillNum);
             orderItemService.save(orderItem);
 
             return "success";

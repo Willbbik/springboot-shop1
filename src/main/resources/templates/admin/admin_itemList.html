@@ -30,12 +30,11 @@
             <li>-</li>
             <br/>
             <li><a th:href="@{/admin/register}">상품 등록</a></li>
-            <li><a th:href="@{/admin/itemList}">상품 목록</a></li>
+            <li><a th:href="@{/admin/itemList}">등록된 상품 목록</a></li>
             <li>-</li>
             <br/>
             <li><a th:href="@{/admin/send/orderItem}">상품 배송</a></li>
-            <li><a th:href="@{/admin/write/notice}">입금 완료된 상품들</a></li>
-            <li><a th:href="@{/admin/delivery/itemList}">배송 상품들</a></li>
+            <li><a th:href="@{/admin/orderList}">주문 목록</a></li>
             <li>-</li>
             <br/>
             <li><a th:href="@{/board/list/all}">공지사항</a></li>
@@ -51,6 +50,7 @@
         <div class="container-fluid">
             <!-- 본문 -->
         <section id="itemList">
+            <h1>상품 목록</h1>
             <form th:action="@{/admin/itemList}" method="get" id="search">
             <div class="form-group">
                 <label class="form-label">판매상태</label>

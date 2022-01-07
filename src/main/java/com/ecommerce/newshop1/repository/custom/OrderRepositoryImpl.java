@@ -8,6 +8,8 @@ import com.ecommerce.newshop1.entity.Order;
 import com.ecommerce.newshop1.entity.QOrder;
 import com.ecommerce.newshop1.entity.QOrderItem;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -17,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class OrderRepositoryImpl implements OrderRepositoryCustom{
@@ -49,7 +50,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                         QOrderItem.orderItem.deliveryStatus
                         ))
                 .from(QOrderItem.orderItem)
-                .where(QOrderItem.orderItem.deliveryStatus.eq(deliveryStatus))
+                .where(eqDeliveryStatus(deliveryStatus))
                 .orderBy(QOrderItem.orderItem.id.desc())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -79,7 +80,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                             QOrderItem.orderItem.id))
                 .from(QOrderItem.orderItem)
                 .where(
-                    QOrderItem.orderItem.deliveryStatus.eq(deliveryStatus),
+                    eqDeliveryStatus(deliveryStatus),
                     eqCustomerName(searchDto.getCustomerName()),
                     eqOrderNum(searchDto.getOrderNum()),
                     eqItemName(searchDto.getItemName())
@@ -95,7 +96,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                 .select(QOrderItem.orderItem.id)
                 .from(QOrderItem.orderItem)
                 .where(
-                    QOrderItem.orderItem.deliveryStatus.eq(deliveryStatus),
+                    eqDeliveryStatus(deliveryStatus),
                     eqCustomerName(searchDto.getCustomerName()),
                     eqOrderNum(searchDto.getOrderNum()),
                     eqItemName(searchDto.getItemName())
@@ -124,6 +125,11 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                 .fetch();
     }
 
+
+    private BooleanExpression eqDeliveryStatus(DeliveryStatus deliveryStatus){
+        if(deliveryStatus.equals(DeliveryStatus.EMPTY)) return null;
+        return QOrderItem.orderItem.deliveryStatus.eq(deliveryStatus);
+    }
 
     private BooleanExpression eqCustomerName(String customerName){
         if(StringUtils.isBlank(customerName)) return null;
