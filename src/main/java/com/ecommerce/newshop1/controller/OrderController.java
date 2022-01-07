@@ -122,7 +122,6 @@ public class OrderController {
         if(responseEntity.getStatusCode() == HttpStatus.OK) {
 
             // 로그인 검사
-
             String payType = responseEntity.getBody().get("method").asText();
 
             if(payType.equals("가상계좌")){
