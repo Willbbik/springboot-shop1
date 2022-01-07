@@ -51,30 +51,31 @@
             <!-- 본문 -->
             <section>
                 <h1>주문 목록</h1>
-                <form class= "search-form" id="search-form" method="get" action="#">
+                <form th:action="@{/admin/orderList}" id="search-form" method="get">
                     <div class="form-group">
                         <label class="form-label">주문상태</label>
                         <span>
                             <select name="deliveryStatus">
                                 <option value="whole">전체</option>
-                                <option value="DEPOSIT_READY" th:selected="${#strings.equals( searchDto.deliveryStatus, '입금대기' )}">입금대기</option>
-                                <option value="DEPOSIT_PRICE_LACK" th:selected="${#strings.equals( searchDto.deliveryStatus, '입금금액부족' )}">입금금액부족</option>
-                                <option value="DEPOSIT_SUCCESS" th:selected="${#strings.equals( searchDto.deliveryStatus, '입금완료' )}">입금완료</option>
-                                <option value="DELIVERY_READY" th:selected="${#strings.equals( searchDto.deliveryStatus, '배송준비중' )}">배송준비중</option>
-                                <option value="DELIVERY_ING" th:selected="${#strings.equals( searchDto.deliveryStatus, '배송중' )}">배송중</option>
-                                <option value="DELIVERY_COMPLETION" th:selected="${#strings.equals( searchDto.deliveryStatus, '배송완료' )}">배송완료</option>
-                                <option value="ORDER_CANCEL" th:selected="${#strings.equals( searchDto.deliveryStatus, '주문취소' )}">주문취소</option>
+                                <option value="입금대기" th:selected="${#strings.equals( searchDto.deliveryStatus, '입금대기' )}">입금대기</option>
+                                <option value="입금금액부족" th:selected="${#strings.equals( searchDto.deliveryStatus, '입금금액부족' )}">입금금액부족</option>
+                                <option value="입금완료" th:selected="${#strings.equals( searchDto.deliveryStatus, '입금완료' )}">입금완료</option>
+                                <option value="배송준비중" th:selected="${#strings.equals( searchDto.deliveryStatus, '배송준비중' )}">배송준비중</option>
+                                <option value="배송중" th:selected="${#strings.equals( searchDto.deliveryStatus, '배송중' )}">배송중</option>
+                                <option value="배송완료" th:selected="${#strings.equals( searchDto.deliveryStatus, '배송완료' )}">배송완료</option>
+                                <option value="주문취소" th:selected="${#strings.equals( searchDto.deliveryStatus, '주문취소' )}">주문취소</option>
                             </select>
                         </span>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">구매자</label>
+                        <label class="form-label">선택</label>
                         <span>
-                            <select name="smode">
-                                <option value="buyer">구매자명</option>
+                            <select name="keyType">
+                                <option value="whole">전체</option>
+                                <option value="customerName">구매자명</option>
                                 <option value="orderNum">주문번호</option>
                             </select>
-                            <input type="text" name="sinput" class="search-input">
+                            <input type="text" name="keyValue" class="search-input">
                         </span>
                     </div>
                     <div class="search-submit-box">
@@ -105,20 +106,20 @@
                         </thead>
                         <tbody>
                             <tr th:each="order : ${orderItems}">
-                                <td th:text="${order.order.delivery.deliveryAddress.customerName}">채창완(sejchae)</td>
-                                <td th:text="${order.item.itemName}">베이직 카고팬츠</td>
-                                <td th:text="${order.totalPrice}">14000원</td>
-                                <td th:text="${order.order.payType.getTitle}">카드결제</td>
-                                <td th:text="${order.order.depositDate}">2021-05-03</td>
+                                <td th:text="${order.order.delivery.deliveryAddress.customerName}"></td>
+                                <td th:text="${order.item.itemName}"></td>
+                                <td th:text="${order.totalPrice}"></td>
+                                <td th:text="${order.order.payType.getTitle}"></td>
+                                <td th:text="${order.order.depositDate}"></td>
                                 <td>
                                     <select name="change-deliveryStatus" class="omode">
-                                        <option value="DEPOSIT_READY" th:selected="${#strings.equals( order.deliveryStatus.getValue, '입금대기' )}">입금대기</option>
-                                        <option value="DEPOSIT_PRICE_LACK" th:selected="${#strings.equals( order.deliveryStatus.getValue, '입금금액부족' )}">입금금액부족</option>
-                                        <option value="DEPOSIT_SUCCESS" th:selected="${#strings.equals( order.deliveryStatus.getValue, '입금완료' )}">입금완료</option>
-                                        <option value="DELIVERY_READY" th:selected="${#strings.equals( order.deliveryStatus.getValue, '배송준비중' )}">배송준비중</option>
-                                        <option value="DELIVERY_ING" th:selected="${#strings.equals( order.deliveryStatus.getValue, '배송중' )}">배송중</option>
-                                        <option value="DELIVERY_COMPLETION" th:selected="${#strings.equals( order.deliveryStatus.getValue, '배송완료' )}">배송완료</option>
-                                        <option value="ORDER_CANCEL" th:selected="${#strings.equals( order.deliveryStatus.getValue, '주문취소' )}">주문취소</option>
+                                        <option value="입금대기" th:selected="${#strings.equals( order.deliveryStatus.getValue, '입금대기' )}">입금대기</option>
+                                        <option value="입금금액부족" th:selected="${#strings.equals( order.deliveryStatus.getValue, '입금금액부족' )}">입금금액부족</option>
+                                        <option value="입금완료" th:selected="${#strings.equals( order.deliveryStatus.getValue, '입금완료' )}">입금완료</option>
+                                        <option value="배송준비중" th:selected="${#strings.equals( order.deliveryStatus.getValue, '배송준비중' )}">배송준비중</option>
+                                        <option value="배송중" th:selected="${#strings.equals( order.deliveryStatus.getValue, '배송중' )}">배송중</option>
+                                        <option value="배송완료" th:selected="${#strings.equals( order.deliveryStatus.getValue, '배송완료' )}">배송완료</option>
+                                        <option value="주문취소" th:selected="${#strings.equals( order.deliveryStatus.getValue, '주문취소' )}">주문취소</option>
                                     </select>
                                 </td>
                                 <td>

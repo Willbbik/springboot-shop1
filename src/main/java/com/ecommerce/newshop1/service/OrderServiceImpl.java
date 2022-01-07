@@ -136,7 +136,7 @@ public class OrderServiceImpl implements OrderService {
 
         // body 만들기
         Map<String, String> payloadMap = new HashMap<>();
-        payloadMap.put("orderNum", orderNum);
+        payloadMap.put("orderId", orderNum);
         payloadMap.put("amount", String.valueOf(amount));
 
         // http header와 body 합치기

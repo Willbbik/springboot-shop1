@@ -60,7 +60,13 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
     public List<OrderItemDto> searchBySearchDtoAndDeliveryStatus(SearchDto searchDto, DeliveryStatus deliveryStatus, Pageable pageable) {
 
         return queryFactory
-                .select(Projections.constructor(OrderItemDto.class))
+                .select(Projections.fields(OrderItemDto.class,
+                        QOrderItem.orderItem.id,
+                        QOrderItem.orderItem.order,
+                        QOrderItem.orderItem.item,
+                        QOrderItem.orderItem.totalPrice,
+                        QOrderItem.orderItem.deliveryStatus
+                ))
                 .from(QOrderItem.orderItem)
                 .where( eqSearchDto(searchDto),
                         eqDeliveryStatus(deliveryStatus))
@@ -142,11 +148,11 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
         if(StringUtils.isBlank(searchDto.getKeyType())) return null;
 
         if(searchDto.getKeyType().equals("orderNum")){              // 주문번호
-            return QOrderItem.orderItem.order.orderNum.eq(searchDto.getKeyValue());
+            return QOrderItem.orderItem.order.orderNum.contains(searchDto.getKeyValue());
         } else if (searchDto.getKeyType().equals("customerName")){  // 구매자
-            return QOrderItem.orderItem.order.delivery.deliveryAddress.customerName.eq(searchDto.getKeyValue());
-        } else {                                                    // 상품 이름
-            return QOrderItem.orderItem.item.itemName.eq(searchDto.getKeyValue());
+            return QOrderItem.orderItem.order.delivery.deliveryAddress.customerName.contains(searchDto.getKeyValue());
+        } else {
+            return null;
         }
     }
 

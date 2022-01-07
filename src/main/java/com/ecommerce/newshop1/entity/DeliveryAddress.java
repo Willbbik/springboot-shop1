@@ -16,8 +16,8 @@ public class DeliveryAddress {
     private Long id;
 
     @OneToOne
+    @JoinColumn(name = "delivery_id")
     private Delivery delivery;
-
     private String customerName;
     private String customerPhoneNum;
     private String recipientName;

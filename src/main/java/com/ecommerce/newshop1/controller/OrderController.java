@@ -60,13 +60,16 @@ public class OrderController {
             throw new ParameterNotFoundException("주문 페이지 이동시 필수 파라미터 'where'가 정상적인 값이 아님");
         }
 
-        // 주문번호와 상품 번호들 세션에 저장. ( 마지막 최종 주문할 때 사용하기 위해서 )
-        session.setAttribute("orderNum", orderService.createOrderNum());  // 주문번호
+        // 주문번호
+        String orderNum = orderService.createOrderNum();
+
+        // 마지막 최종 주문할 때 사용하기 위해서
+        session.setAttribute("orderNum", orderNum);
         session.setAttribute("orderItems", orderItems);
         session.setAttribute("orderName", orderName);
 
         model.addAttribute("orderItems", orderItems);
-        model.addAttribute("orderNum", orderService.createOrderNum());  // 주문번호
+        model.addAttribute("orderNum", orderNum);
         model.addAttribute("orderName", orderName);
         model.addAttribute("totalPrice", totalPrice);
 
@@ -92,9 +95,8 @@ public class OrderController {
 
     @PostMapping("/order/virtualAccount")
     @ApiOperation(value = "가상계좌 결제")
-    public @ResponseBody String saveAddressDto(@Validated(ValidationSequence.class) AddressDto addressDto, BindingResult errors, String payMethod, HttpServletRequest request){
+    public @ResponseBody String saveAddressDto(@Validated(ValidationSequence.class) AddressDto addressDto, BindingResult errors, String payMethod, HttpSession session){
 
-        HttpSession session = request.getSession();
         PayType payType = PayType.findByPayType(payMethod);
 
         if(payType.getTitle().equals("없음")){
@@ -114,7 +116,7 @@ public class OrderController {
     public String confirmPayment(@RequestParam String paymentKey, @RequestParam String orderId,
                                  @RequestParam int amount, Model model, HttpSession session) throws Exception {
 
-        // 결제 승인 요청
+        // 토스 가상계좌 결제 승인 요청
         ResponseEntity<JsonNode> responseEntity = orderService.tossPayment(paymentKey, orderId, amount);
 
         if(responseEntity.getStatusCode() == HttpStatus.OK) {
