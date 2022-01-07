@@ -56,6 +56,18 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                 .fetch();
     }
 
+    @Override
+    public List<OrderItemDto> searchBySearchDtoAndDeliveryStatus(SearchDto searchDto, DeliveryStatus deliveryStatus, Pageable pageable) {
+
+        return queryFactory
+                .select(Projections.constructor(OrderItemDto.class))
+                .from(QOrderItem.orderItem)
+                .where( eqSearchDto(searchDto),
+                        eqDeliveryStatus(deliveryStatus))
+                .orderBy(QOrderItem.orderItem.id.desc())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
 
     @Override
     public List<OrderDto> searchByDepositSuccess(DeliveryStatus deliveryStatus, Pageable pageable) {
@@ -125,6 +137,18 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                 .fetch();
     }
 
+
+    private BooleanExpression eqSearchDto(SearchDto searchDto){
+        if(StringUtils.isBlank(searchDto.getKeyType())) return null;
+
+        if(searchDto.getKeyType().equals("orderNum")){              // 주문번호
+            return QOrderItem.orderItem.order.orderNum.eq(searchDto.getKeyValue());
+        } else if (searchDto.getKeyType().equals("customerName")){  // 구매자
+            return QOrderItem.orderItem.order.delivery.deliveryAddress.customerName.eq(searchDto.getKeyValue());
+        } else {                                                    // 상품 이름
+            return QOrderItem.orderItem.item.itemName.eq(searchDto.getKeyValue());
+        }
+    }
 
     private BooleanExpression eqDeliveryStatus(DeliveryStatus deliveryStatus){
         if(deliveryStatus.equals(DeliveryStatus.EMPTY)) return null;

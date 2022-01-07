@@ -241,9 +241,22 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrderDto> searchByDepositSuccess(DeliveryStatus deliveryStatus, Pageable pageable) {
+        return orderRepository.searchByDepositSuccess(deliveryStatus, pageable);
+
+    }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
+    public List<OrderItemDto> searchBySearchDtoAndDeliveryStatus(SearchDto searchDto, DeliveryStatus deliveryStatus, Pageable pageable) {
+        return orderRepository.searchBySearchDtoAndDeliveryStatus(searchDto, deliveryStatus, pageable);
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
     public List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable) {
         List<OrderItemDto> orderItemDtos = orderRepository.searchByDeliveryStatus(deliveryStatus, pageable);
         for(OrderItemDto dto : orderItemDtos){
@@ -253,15 +266,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
-    public List<OrderDto> searchByDepositSuccess(DeliveryStatus deliveryStatus, Pageable pageable) {
-        return orderRepository.searchByDepositSuccess(deliveryStatus, pageable);
-
-    }
-
-    @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<OrderItemDto> searchAllByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable, SearchDto searchDto) {
         return orderRepository.searchAllByDeliveryStatus(deliveryStatus, pageable, searchDto);
     }
+
 }

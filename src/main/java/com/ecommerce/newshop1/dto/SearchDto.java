@@ -19,5 +19,7 @@ public class SearchDto {
     private String customerName;
     private String deliveryId;
     private String orderNum;
+    private String keyType;
+    private String keyValue;
 
 }

@@ -123,7 +123,7 @@ public class AdminController {
 
 
     @GetMapping("/admin/orderList")
-    @ApiOperation(value = "주문 목록", notes = "여기서 상품 배송상태를 입금완료 > 배송중으로 변경")
+    @ApiOperation(value = "주문 상품 목록", notes = "여기서 상품 배송상태를 입금완료 > 배송중으로 변경")
     public String depositItemList(@RequestParam(name = "page", defaultValue = "1") int curPage, SearchDto searchDto, Model model){
 
         DeliveryStatus deliveryStatus = DeliveryStatus.findByDeliveryStatus(searchDto.getDeliveryStatus());
@@ -132,7 +132,7 @@ public class AdminController {
         PaginationShowSizeTen page = new PaginationShowSizeTen(total, curPage);
 
         Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxSize());
-        List<OrderItemDto> orderItems = orderService.searchAllByDeliveryStatus(deliveryStatus, pageable, searchDto);
+        List<OrderItemDto> orderItems = orderService.searchBySearchDtoAndDeliveryStatus(searchDto, deliveryStatus, pageable);
 
         model.addAttribute("page", page);
         model.addAttribute("orderItems", orderItems);
