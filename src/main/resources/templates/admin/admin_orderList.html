@@ -53,6 +53,13 @@
                 <h1>주문 목록</h1>
                 <form th:action="@{/admin/orderList}" id="search-form" method="get">
                     <div class="form-group">
+                        <label class="form-label">주문일자</label>
+                        <span>
+                            <input type="date" name="firstDate">~
+                            <input type="date" name="lastDate">
+                      </span>
+                    </div>
+                    <div class="form-group">
                         <label class="form-label">주문상태</label>
                         <span>
                             <select name="deliveryStatus">

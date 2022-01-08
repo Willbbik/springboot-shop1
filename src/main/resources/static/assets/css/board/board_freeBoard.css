@@ -1,0 +1,96 @@
+
+.board_list {
+    border: none;
+}
+
+.board_list {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+
+    border-bottom: 1px solid #ccc;
+}
+
+.board_list .board_tit_area span {
+    display: table-cell;
+    padding: 20px 10px;
+    font-weight: 700;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+.board_list .board_tit_area {
+    display: table-row;
+}
+
+.board_list .board_tit_area span.condition {
+    width: 18%;
+}
+
+.board_list .board_tit_area span.contents {
+     width: auto;
+ }
+
+.board_list .board_tit_area span.date, .board_list .board_tit_area span.writer {
+    width: 18%;
+}
+
+
+
+/* 질문 타이틀  */
+.board_content.board_content_on {
+    background: #f7f8fa;
+}
+
+.board_content {
+    display: table-row-group;
+    border-top: 0;
+    cursor: pointer;
+}
+
+.board_content .board_title {
+    display: table-row;
+    padding: 12px 16px;
+}
+
+.board_content .board_title>span.condition {
+    font-weight: 700;
+}
+
+.board_content .board_title>span {
+    padding: 14px 0 18px;
+    font-size: 16px;
+    text-align: center;
+    border-top: 1px solid #e1e1e1;
+    cursor: pointer;
+}
+
+.board_content .board_title>span {
+    display: block;
+    font-size: 12px;
+}
+
+.board_content .board_title>span.date, .board_content .board_title>span.writer {
+    display: none;
+}
+
+.board_content .board_title>span.contents {
+    display: table-cell;
+    width: auto;
+    text-align: left;
+}
+
+.board_content .board_title>span.contents {
+    margin-top: 12px;
+    word-break: break-all;
+}
+
+.board_content .board_title>span.condition, .board_content .board_title>span.date, .board_content .board_title>span.writer {
+    display: table-cell;
+    width: 18%;
+}
+
+
+
+
+

@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class OrderRepositoryImpl implements OrderRepositoryCustom{
@@ -80,7 +83,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                     QOrderItem.orderItem.deliveryStatus.eq(deliveryStatus),
                     eqCustomerName(searchDto.getCustomerName()),
                     eqOrderNum(searchDto.getOrderNum()),
-                    eqItemName(searchDto.getItemName())
+                    eqItemName(searchDto.getItemName()),
+                    betweenDate(searchDto.getFirstDate(), searchDto.getLastDate())
                 )
                 .fetchCount();
     }
@@ -135,7 +139,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                 ))
                 .from(QOrderItem.orderItem)
                 .where( eqSearchDto(searchDto),
-                        eqDeliveryStatus(deliveryStatus))
+                        eqDeliveryStatus(deliveryStatus),
+                        betweenDate(searchDto.getFirstDate(), searchDto.getLastDate()))
                 .orderBy(QOrderItem.orderItem.id.desc())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -149,6 +154,31 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
             return QOrderItem.orderItem.order.orderNum.contains(searchDto.getKeyValue());
         } else {
             return null;
+        }
+    }
+
+    private BooleanExpression betweenDate(String firstDate, String lastDate){
+
+        if(StringUtils.isBlank(firstDate) && StringUtils.isBlank(lastDate)){
+            LocalDateTime start = LocalDateTime.now().minusYears(5L);
+            LocalDateTime end = LocalDateTime.now();
+            return QOrderItem.orderItem.order.createdDate.between(start, end);
+
+        }else if(StringUtils.isNotBlank(firstDate) && StringUtils.isBlank(lastDate)){
+            LocalDateTime start = LocalDateTime.parse(firstDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDateTime end = LocalDateTime.now();
+            return QOrderItem.orderItem.order.createdDate.between(start, end);
+
+        }else if(StringUtils.isBlank(firstDate) && StringUtils.isNotBlank(lastDate)) {
+
+            LocalDateTime start = LocalDateTime.parse(LocalDateTime.now().minusYears(5L).toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDateTime end = LocalDateTime.parse(lastDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            return QOrderItem.orderItem.order.createdDate.between(start, end);
+
+        }else{
+            LocalDateTime start = LocalDateTime.parse(firstDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDateTime end = LocalDateTime.parse(lastDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            return QOrderItem.orderItem.order.createdDate.between(start, end);
         }
     }
 

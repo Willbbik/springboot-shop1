@@ -55,23 +55,28 @@
             <section id="itemList">
                 <form th:action="@{/admin/itemList}" method="get" id="search">
                     <div class="form-group">
-                        <label class="form-label">상품명</label>
-                        <span><input type="text" name="itemName" th:value="${searchDto.itemName}"></span>
+                        <label class="form-label">주문일자</label>
+                        <span>
+                            <input type="date" name="firstdate" class="date">&nbsp;~
+                            <input type="date" name="lastdate" class="date">
+                      </span>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">주문번호</label>
-                        <span><input type="text" name="orderNum" th:value="${searchDto.orderNum}"></span>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">구매자</label>
-                        <span><input type="text" name="customerName" th:value="${searchDto.customerName}"></span>
+                        <label class="form-label">선택</label>
+                        <span>
+                            <select name="keyType">
+                                <option value="whole">전체</option>
+                                <option value="itemName" th:selected="${searchDto.keyType} == 'itemName'">상품 이름</option>
+                                <option value="orderNum" th:selected="${searchDto.keyType} == 'orderNum'">주문번호</option>
+                                <option value="customerName" th:selected="${searchDto.keyType} == 'customerName'">주문자 이름</option>
+                            </select>
+                            <input type="text" name="keyValue" th:value="${searchDto.keyValue}" class="search-input">
+                        </span>
                     </div>
                     <div class="search-submit-box">
-                        <input type="submit" class="search-submit" value="검색" />
+                        <input type="submit" class="search-submit" value="검색">
                     </div>
                 </form>
-                <input type="checkbox" class="checkbox-selectall">
-
                 <table class="item-table">
                     <colgroup>
                         <col width="10%"/>
@@ -98,9 +103,9 @@
                     </thead>
                     <tbody>
                         <tr th:each="orderItem : ${orderItems}" th:attr="data-orderItemId=${orderItem.id}" class="item_box">
-                            <td th:text="${#temporals.format(orderItem.order.createdDate, 'yyyy.MM.dd HH:mm')}">2021.12.22</td>
-                            <td th:text="${orderItem.order.orderNum}" id="orderNum" th:attr="data-orderNum=${orderItem.order.orderNum}">202112210120212</td>
-                            <td th:text="${orderItem.order.delivery.deliveryAddress.customerName}">고민수</td>
+                            <td th:text="${#temporals.format(orderItem.order.createdDate, 'yyyy.MM.dd HH:mm')}"></td>
+                            <td th:text="${orderItem.order.orderNum}" id="orderNum" th:attr="data-orderNum=${orderItem.order.orderNum}"></td>
+                            <td th:text="${orderItem.order.delivery.deliveryAddress.customerName}"></td>
                             <td><input type="text" id="wayBillNum" placeholder="운송장"></td>
                             <td>
                                 <span>
@@ -108,13 +113,13 @@
                                 </span>
                                 <span>
                                     <a th:href="@{'/items/' + ${orderItem.item.id}}">
-                                        <div class="item-color" th:text="${orderItem.item.color}">아이보리</div>
-                                        <div class="item-name" th:text="${orderItem.item.size}">L</div>
+                                        <div class="item-color" th:text="${orderItem.item.color}"></div>
+                                        <div class="item-name" th:text="${orderItem.item.size}"></div>
                                     </a>
                                 </span>
                             </td>
-                            <td th:text="${orderItem.quantity + '개'}">1개</td>
-                            <td th:text="${orderItem.totalPrice}">20,000원</td>
+                            <td th:text="${orderItem.quantity + '개'}"></td>
+                            <td th:text="${#numbers.formatDecimal(orderItem.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'"></td>
                             <td th:text="${orderItem.deliveryStatus.getValue}"></td>
                             <td>
                                 <button type="button" class="startDelivery">배송</button>
