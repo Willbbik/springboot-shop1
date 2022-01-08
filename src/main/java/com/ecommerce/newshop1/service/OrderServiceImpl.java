@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
     private final ItemRepository itemRepository;
     private final CartService cartService;
     private final MemberService memberService;
@@ -271,4 +272,15 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.searchAllByDeliveryStatus(deliveryStatus, pageable, searchDto);
     }
 
+    @Override
+    @Transactional
+    public boolean changeOrderItemStatus(Long orderItemId, DeliveryStatus deliveryStatus) {
+
+        Optional<OrderItem> orderItem = orderItemRepository.findById(orderItemId);
+        if(orderItem.isPresent()){
+            orderItem.get().setDeliveryStatus(deliveryStatus);
+            return true;
+        }
+        return false;
+    }
 }

@@ -30,15 +30,14 @@ public class Order {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "order")
-    private List<OrderItem> orderItems = new ArrayList<>();
-
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "delivery_id")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "order")
     private Delivery delivery;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "order")
     private OrderPaymentInformation paymentInfo;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "order")
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private PayType payType;

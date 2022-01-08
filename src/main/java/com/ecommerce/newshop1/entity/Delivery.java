@@ -19,7 +19,8 @@ public class Delivery extends TimeEntity{
     @Column(name = "delivery_id")
     private Long id;
 
-    @OneToOne(mappedBy = "delivery")
+    @OneToOne
+    @JoinColumn(name = "order_id")
     private Order order;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "delivery")

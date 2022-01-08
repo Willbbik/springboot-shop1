@@ -140,6 +140,19 @@ public class AdminController {
         return "admin/admin_orderList";
     }
 
+    @PatchMapping("/admin/deliveryStatus/change")
+    @ApiOperation(value = "주문 상태 변경")
+    public @ResponseBody String deliveryStatusChange(@RequestParam Long orderItemId, @RequestParam DeliveryStatus deliveryStatus){
+
+        boolean result = orderService.changeOrderItemStatus(orderItemId, deliveryStatus);
+
+        if (result) {
+            return "success";
+        } else {
+            return "fail";
+        }
+    }
+
 
     @PostMapping("/admin/delivery/item")
     @ApiOperation(value = "운송장 번호 입력 후 상품 배송처리", notes = "상품 배송")
@@ -147,7 +160,7 @@ public class AdminController {
 
         Order order = orderService.findByOrderNum(orderNum);
         OrderItem orderItem = orderItemService.findById(orderItemId);
-        Boolean result = order.getOrderItems().stream()
+        boolean result = order.getOrderItems().stream()
                                 .anyMatch(p -> p.getId().equals(orderItem.getId()));
 
         if(result){

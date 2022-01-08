@@ -50,4 +50,6 @@ public interface OrderService {
 
     Long searchTotalOrderItem(DeliveryStatus deliveryStatus, SearchDto searchDto);
 
+    boolean changeOrderItemStatus(Long orderItemId, DeliveryStatus deliveryStatus);
+
 }

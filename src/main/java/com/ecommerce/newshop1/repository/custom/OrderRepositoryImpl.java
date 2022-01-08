@@ -3,10 +3,7 @@ package com.ecommerce.newshop1.repository.custom;
 import com.ecommerce.newshop1.dto.OrderDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.dto.SearchDto;
-import com.ecommerce.newshop1.entity.Member;
-import com.ecommerce.newshop1.entity.Order;
-import com.ecommerce.newshop1.entity.QOrder;
-import com.ecommerce.newshop1.entity.QOrderItem;
+import com.ecommerce.newshop1.entity.*;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Predicate;
@@ -129,13 +126,13 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
         }
 
         return queryFactory.select(Projections.fields(OrderItemDto.class,
-                QOrderItem.orderItem.id,
-                QOrderItem.orderItem.order,
-                QOrderItem.orderItem.item,
-                QOrderItem.orderItem.totalPrice,
-                QOrderItem.orderItem.deliveryStatus,
-                QOrderItem.orderItem.quantity,
-                QOrderItem.orderItem.wayBillNum
+                    QOrderItem.orderItem.id,
+                    QOrderItem.orderItem.order,
+                    QOrderItem.orderItem.item,
+                    QOrderItem.orderItem.totalPrice,
+                    QOrderItem.orderItem.deliveryStatus,
+                    QOrderItem.orderItem.quantity,
+                    QOrderItem.orderItem.wayBillNum
                 ))
                 .from(QOrderItem.orderItem)
                 .where(QOrderItem.orderItem.id.in(ids))
@@ -147,10 +144,11 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
     private BooleanExpression eqSearchDto(SearchDto searchDto){
         if(StringUtils.isBlank(searchDto.getKeyType())) return null;
 
-        if(searchDto.getKeyType().equals("orderNum")){              // 주문번호
+        if (searchDto.getKeyType().equals("customerName")){    // 구매자
+            return QDeliveryAddress.deliveryAddress.customerName.contains(searchDto.getKeyValue());
+            // return QOrderItem.orderItem.order.delivery.deliveryAddress.customerName.contains(searchDto.getKeyValue());
+        } else if(searchDto.getKeyType().equals("orderNum")){  // 주문번호
             return QOrderItem.orderItem.order.orderNum.contains(searchDto.getKeyValue());
-        } else if (searchDto.getKeyType().equals("customerName")){  // 구매자
-            return QOrderItem.orderItem.order.delivery.deliveryAddress.customerName.contains(searchDto.getKeyValue());
         } else {
             return null;
         }
