@@ -57,13 +57,13 @@
                         <span>
                             <select name="deliveryStatus">
                                 <option value="whole">전체</option>
-                                <option value="DEPOSIT_READY" th:selected="${#strings.equals( searchDto.deliveryStatus, '입금대기' )}">입금대기</option>
-                                <option value="DEPOSIT_PRICE_LACK" th:selected="${#strings.equals( searchDto.deliveryStatus, '입금금액부족' )}">입금금액부족</option>
-                                <option value="DEPOSIT_SUCCESS" th:selected="${#strings.equals( searchDto.deliveryStatus, '입금완료' )}">입금완료</option>
-                                <option value="DELIVERY_READY" th:selected="${#strings.equals( searchDto.deliveryStatus, '배송준비중' )}">배송준비중</option>
-                                <option value="DELIVERY_ING" th:selected="${#strings.equals( searchDto.deliveryStatus, '배송중' )}">배송중</option>
-                                <option value="DELIVERY_COMPLETION" th:selected="${#strings.equals( searchDto.deliveryStatus, '배송완료' )}">배송완료</option>
-                                <option value="ORDER_CANCEL" th:selected="${#strings.equals( searchDto.deliveryStatus, '주문취소' )}">주문취소</option>
+                                <option value="DEPOSIT_READY" th:selected="${#strings.equals( searchDto.deliveryStatus, 'DEPOSIT_READY' )}">입금대기</option>
+                                <option value="DEPOSIT_PRICE_LACK" th:selected="${#strings.equals( searchDto.deliveryStatus, 'DEPOSIT_PRICE_LACK' )}">입금금액부족</option>
+                                <option value="DEPOSIT_SUCCESS" th:selected="${#strings.equals( searchDto.deliveryStatus, 'DEPOSIT_SUCCESS' )}">입금완료</option>
+                                <option value="DELIVERY_READY" th:selected="${#strings.equals( searchDto.deliveryStatus, 'DELIVERY_READY' )}">배송준비중</option>
+                                <option value="DELIVERY_ING" th:selected="${#strings.equals( searchDto.deliveryStatus, 'DELIVERY_ING' )}">배송중</option>
+                                <option value="DELIVERY_COMPLETION" th:selected="${#strings.equals( searchDto.deliveryStatus, 'DELIVERY_COMPLETION' )}">배송완료</option>
+                                <option value="ORDER_CANCEL" th:selected="${#strings.equals( searchDto.deliveryStatus, 'ORDER_CANCEL' )}">주문취소</option>
                             </select>
                         </span>
                     </div>
@@ -72,10 +72,9 @@
                         <span>
                             <select name="keyType">
                                 <option value="whole">전체</option>
-                                <option value="customerName">구매자명</option>
-                                <option value="orderNum">주문번호</option>
+                                <option value="orderNum" th:selected="${searchDto.keyType} == 'orderNum'">주문번호</option>
                             </select>
-                            <input type="text" name="keyValue" class="search-input">
+                            <input type="text" name="keyValue" th:value="${searchDto.keyValue}" class="search-input">
                         </span>
                     </div>
                     <div class="search-submit-box">
@@ -131,20 +130,13 @@
                             </tr>
                         </tbody>
                     </table>
-<!--                    <div class="paginate">-->
-<!--                        <ul class="pagination justify-content-center">-->
-<!--                            <li class="page-item" th:classappend="${1 == orderList.pageable.pageNumber + 1} ? 'disabled'">-->
-<!--                                <a class="page-link" href="#" th:href="@{/admin/orderList(page=${orderList.pageable.pageNumber - 1},firstdate=${firstDate},lastdate=${lastDate},omode=${oMode},smode=${sMode},sinput=${sInput})}" tabindex="-1" aria-disabled="true">Previous</a>-->
-<!--                            </li>-->
-
-<!--                            <li class="page-item" th:classappend="${i == orderList.pageable.pageNumber + 1} ? 'disabled'" th:each="i : ${#numbers.sequence(startPage, endPage)}">-->
-<!--                                <a class="page-link" href="#" th:href="@{/admin/orderList(page=${i - 1},firstdate=${firstDate},lastdate=${lastDate},omode=${oMode},smode=${sMode},sinput=${sInput})}" th:text="${i}">1</a></li>-->
-
-<!--                            <li class="page-item" th:classappend="${orderList.totalPages == orderList.pageable.pageNumber + 1} ? 'disabled'">-->
-<!--                                <a class="page-link" href="#" th:href="@{/admin/orderList(page=${orderList.pageable.pageNumber + 1},firstdate=${firstDate},lastdate=${lastDate},omode=${oMode},smode=${sMode},sinput=${sInput})}">Next</a>-->
-<!--                            </li>-->
-<!--                        </ul>-->
-<!--                    </div>-->
+                    <div class="paging">
+                        <a th:href="@{/admin/orderList(page=${page.prevPage},deliveryStatus=${searchDto.deliveryStatus},keyType=${searchDto.keyType},keyValue=${searchDto.keyValue})}">이전</a>
+                        <th:block th:each="i : ${#numbers.sequence(page.startPage, page.endPage)}">
+                            <a th:href="@{/admin/orderList(page=${i},deliveryStatus=${searchDto.deliveryStatus},keyType=${searchDto.keyType},keyValue=${searchDto.keyValue})}" th:classappend="${page.curPage} == ${i} ? 'here'" th:text="${i}"></a>
+                        </th:block>
+                        <a th:href="@{/admin/orderList(page=${page.nextPage},deliveryStatus=${searchDto.deliveryStatus},keyType=${searchDto.keyType},keyValue=${searchDto.keyValue})}">다음</a>
+                    </div>
                 </div>
             </section>
             <!-- /본문 -->

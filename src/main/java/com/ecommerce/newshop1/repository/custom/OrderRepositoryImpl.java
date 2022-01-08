@@ -53,24 +53,6 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                 .fetch();
     }
 
-    @Override
-    public List<OrderItemDto> searchBySearchDtoAndDeliveryStatus(SearchDto searchDto, DeliveryStatus deliveryStatus, Pageable pageable) {
-
-        return queryFactory
-                .select(Projections.fields(OrderItemDto.class,
-                        QOrderItem.orderItem.id,
-                        QOrderItem.orderItem.order,
-                        QOrderItem.orderItem.item,
-                        QOrderItem.orderItem.totalPrice,
-                        QOrderItem.orderItem.deliveryStatus
-                ))
-                .from(QOrderItem.orderItem)
-                .where( eqSearchDto(searchDto),
-                        eqDeliveryStatus(deliveryStatus))
-                .orderBy(QOrderItem.orderItem.id.desc())
-                .limit(pageable.getPageSize())
-                .fetch();
-    }
 
     @Override
     public List<OrderDto> searchByDepositSuccess(DeliveryStatus deliveryStatus, Pageable pageable) {
@@ -95,7 +77,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                             QOrderItem.orderItem.id))
                 .from(QOrderItem.orderItem)
                 .where(
-                    eqDeliveryStatus(deliveryStatus),
+                    QOrderItem.orderItem.deliveryStatus.eq(deliveryStatus),
                     eqCustomerName(searchDto.getCustomerName()),
                     eqOrderNum(searchDto.getOrderNum()),
                     eqItemName(searchDto.getItemName())
@@ -140,14 +122,30 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                 .fetch();
     }
 
+    @Override
+    public List<OrderItemDto> searchBySearchDtoAndDeliveryStatus(SearchDto searchDto, DeliveryStatus deliveryStatus, Pageable pageable) {
+
+        return queryFactory
+                .select(Projections.fields(OrderItemDto.class,
+                        QOrderItem.orderItem.id,
+                        QOrderItem.orderItem.order,
+                        QOrderItem.orderItem.item,
+                        QOrderItem.orderItem.totalPrice,
+                        QOrderItem.orderItem.deliveryStatus
+                ))
+                .from(QOrderItem.orderItem)
+                .where( eqSearchDto(searchDto),
+                        eqDeliveryStatus(deliveryStatus))
+                .orderBy(QOrderItem.orderItem.id.desc())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
+
 
     private BooleanExpression eqSearchDto(SearchDto searchDto){
         if(StringUtils.isBlank(searchDto.getKeyType())) return null;
 
-        if (searchDto.getKeyType().equals("customerName")){    // 구매자
-            return QDeliveryAddress.deliveryAddress.customerName.contains(searchDto.getKeyValue());
-            // return QOrderItem.orderItem.order.delivery.deliveryAddress.customerName.contains(searchDto.getKeyValue());
-        } else if(searchDto.getKeyType().equals("orderNum")){  // 주문번호
+        if(searchDto.getKeyType().equals("orderNum")){  // 주문번호
             return QOrderItem.orderItem.order.orderNum.contains(searchDto.getKeyValue());
         } else {
             return null;
