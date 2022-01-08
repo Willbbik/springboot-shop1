@@ -116,9 +116,10 @@ public class MemberService {
 
     // 아이디 찾기
     @Transactional(readOnly = true)
-    public Optional<Member> findByUserId(String userId){
+    public Member findByUserId(String userId){
 
-        return memberRepository.findByuserId(userId);
+        return memberRepository.findByuserId(userId)
+                .orElseThrow(() -> new MemberNotFoundException("해당 아이디는 존재하지 않습니다." + userId));
     }
 
     @Transactional(readOnly = true)

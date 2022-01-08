@@ -24,6 +24,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final QTimeEntity _super = new QTimeEntity(this);
 
+    public final ListPath<Board, QBoard> boardList = this.<Board, QBoard>createList("boardList", Board.class, QBoard.class, PathInits.DIRECT2);
+
     public final QCart cart;
 
     //inherited

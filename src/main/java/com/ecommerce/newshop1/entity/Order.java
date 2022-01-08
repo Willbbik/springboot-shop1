@@ -71,7 +71,7 @@ public class Order {
     }
 
     public void setMember(Member member){
-        member.addOrderList(this);
+        member.getOrderList().add(this);
         this.member = member;
     }
 

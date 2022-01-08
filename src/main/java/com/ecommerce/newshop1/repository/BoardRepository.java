@@ -1,2 +1,7 @@
-package com.ecommerce.newshop1.repository;public interface BoardRepository {
+package com.ecommerce.newshop1.repository;
+
+import com.ecommerce.newshop1.entity.Board;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BoardRepository extends JpaRepository<Board, Long> {
 }

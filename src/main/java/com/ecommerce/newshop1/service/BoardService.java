@@ -1,4 +1,9 @@
 package com.ecommerce.newshop1.service;
 
-public class BoardService {
+import com.ecommerce.newshop1.dto.BoardDto;
+
+public interface BoardService {
+
+    Long save(BoardDto boardDto, String userId);
+
 }

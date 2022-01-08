@@ -56,6 +56,9 @@
         <div class="container-fluid">
             <!-- 본문 -->
             <h1>공지사항</h1>
+            <a th:href="@{/board/write}">
+                <button type="button" class="btn btn-primary">글쓰기</button>
+            </a>
             <th:block th:if="${qnaList}">
                 <input type="hidden" th:value="${lastQnAId}" id="lastQnAId">
                 <div class="board_list">
@@ -90,7 +93,7 @@
                     <div class="board_content">
                         <div class="board_title">
                             <span class="condition">x</span>
-                            <span class="contents">등록된 공지사항이 없습니다.</span>
+                            <span class="contents">등록된 게시물이 없습니다.</span>
                             <span class="writer">x</span>
                             <span class="date">x</span>
                         </div>

@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -60,21 +59,6 @@ public class AdminController {
         model.addAttribute("memberDtos", memberDtos);
 
         return "admin/admin_main";
-    }
-
-    @GetMapping("/admin/write/notice")
-    @ApiOperation(value = "공지사항 페이지")
-    public String write(){
-        return "admin/admin_writenotice";
-    }
-
-
-    @PostMapping("/admin/write/notice")
-    @ApiOperation(value = "공지사항 저장")
-    public String writeNotice(BoardDto boardDto){
-
-        System.out.println(boardDto.getSubject());
-        return "redirect:/admin/write/notice";
     }
 
     @GetMapping("/admin/register")

@@ -100,15 +100,15 @@ public class KakaoController {
         // oauth2 회원가입시 해당 포털을 구분하기 위해서. @k = kakao
         String userId = kakaoDto.getId().toString() + "@k";
 
-        Optional<Member> memberEntity = memberService.findByUserId(userId);
+        boolean result = memberService.existsByUserId(userId);
         Member member = new Member();
 
         // 존재하지 않으면 가입
-        if (memberEntity.isEmpty()) {
+        if (!result) {
             member = memberService.joinOAuth(userId, Sns.KAKAO);
             cartService.createCart(member);
         }else{
-            member = memberEntity.get();
+            member = memberService.findByUserId(userId);
         }
 
         // 로그인

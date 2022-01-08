@@ -5,35 +5,37 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
-@Entity
+
 @Getter
+@Setter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
+@Entity
 @Table(name = "board")
-public class BoardEntity extends TimeEntity {
+public class Board extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 100, nullable = false)
-    @Size(max = 200)
-    private String subject;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    @Column(length = 2048, nullable = false)
-    @Size(max = 2048)
+    @Column(length = 100, nullable = false)
+    @Size(max = 100)
+    private String title;
+
+    @Column(length = 4096, nullable = false)
+    @Size(max = 4096)
     private String content;
 
-    @Column(nullable = false)
-    @Size(max = 100)
-    private String category;
-
-    @Column(nullable = false)
-    @Size(max = 100)
+    @Column(length = 20, nullable = false)
+    @Size(max = 20)
     private String writer;
 
-    @Column(nullable = false)
+    @Column(length = 10, nullable = false)
     @Size(max = 10)
     private String hide;
 

@@ -24,7 +24,7 @@ public class Member extends TimeEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(length = 20, nullable = false)
+    @Column(nullable = false)
     private String userId;
 
     @Column(length = 100)
@@ -54,6 +54,9 @@ public class Member extends TimeEntity {
     private List<MemberAddress> memberAddresses = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
+    private List<Board> boardList = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
     private Set<Review> reviewList = new HashSet<>();
 
     public void addReviewList(Review review) {
@@ -66,9 +69,9 @@ public class Member extends TimeEntity {
         qnaEntity.setMember(this);
     }
 
-    public void addOrderList(Order order){
-        this.getOrderList().add(order);
+    public void addBoardList(Board board){
+        this.getBoardList().add(board);
+        board.setMember(this);
     }
-
 
 }
