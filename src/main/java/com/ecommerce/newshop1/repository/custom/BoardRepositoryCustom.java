@@ -1,15 +1,12 @@
-package com.ecommerce.newshop1.service;
+package com.ecommerce.newshop1.repository.custom;
 
 import com.ecommerce.newshop1.dto.BoardDto;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface BoardService {
-
-    Long save(BoardDto boardDto, String userId);
-
-    Long count();
+public interface BoardRepositoryCustom {
 
     List<BoardDto> searchAll(Pageable pageable);
+
 }

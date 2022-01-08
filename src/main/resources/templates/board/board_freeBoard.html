@@ -10,6 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="/assets/css/common/sidebar.css">
+    <link rel="stylesheet" href="/assets/css/common/paging.css">
     <link rel="stylesheet" href="/assets/css/board/board_freeBoard.css">
 </head>
 <body>
@@ -59,8 +60,7 @@
             <a th:href="@{/board/write}">
                 <button type="button" class="btn btn-primary">글쓰기</button>
             </a>
-            <th:block th:if="${qnaList}">
-                <input type="hidden" th:value="${lastQnAId}" id="lastQnAId">
+            <th:block th:if="${boardList}">
                 <div class="board_list">
                     <div class="board_tit_area">
                         <span class="condition">번호</span>
@@ -68,21 +68,18 @@
                         <span class="writer">작성자</span>
                         <span class="date">작성일</span>
                     </div>
-                    <div class="board_content" th:each="qna, index : ${qnaList}">       <!-- qna 제목 -->
-                        <input type="hidden" th:value="${qna.id}" name="qnaId">
+                    <div class="board_content" th:each="board, index : ${boardList}" th:attr="data-boardId=${board.id}">
                         <div class="board_title">
-                            <span class="condition"><input type="checkbox" class="qna_select form-check-input"></span>
-                            <span class="condition" th:text="${qna.replyEmpty}"></span>
-                            <span class="contents" th:text="${qna.title}"></span>
-                            <span class="writer" th:text="${qna.writer}"></span>
-                            <span class="date" th:text="${#temporals.format(qna.createdDate, 'yyyy.MM.dd')}"></span>
+                            <span class="condition" th:text="${board.id}"></span>
+                            <span class="contents" th:text="${board.title}"></span>
+                            <span class="writer" th:text="${board.writer}"></span>
+                            <span class="date" th:text="${#temporals.format(board.createdDate, 'yyyy.MM.dd')}"></span>
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-primary" id="qnamore" th:if="${lastQnAId}">더보기</button>
             </th:block>
 
-            <th:block th:unless="${qnaList}">   <!-- 존재하지 않을 때 -->
+            <th:block th:unless="${boardList}">   <!-- 존재하지 않을 때 -->
                 <div class="board_list">
                     <div class="board_tit_area">
                         <span class="condition">번호</span>
@@ -100,6 +97,13 @@
                     </div>
                 </div>
             </th:block>
+            <div class="paging">
+                <a th:href="@{/board/freeBoard(page=${page.prevPage})}">이전</a>
+                <th:block th:each="i : ${#numbers.sequence(page.startPage, page.endPage)}">
+                    <a th:href="@{/board/freeBoard(page=${i})}" th:text="${i}"></a>
+                </th:block>
+                <a th:href="@{/board/freeBoard(page=${page.nextPage})}">다음</a>
+            </div>
             <!-- /본문 -->        
         </div>
     </div>
