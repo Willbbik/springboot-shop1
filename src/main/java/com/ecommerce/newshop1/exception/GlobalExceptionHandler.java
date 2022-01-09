@@ -1,16 +1,13 @@
 package com.ecommerce.newshop1.exception;
 
 
-import com.ecommerce.newshop1.enums.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @ControllerAdvice(basePackages = "com.ecommerce.newshop1.controller")
 public class GlobalExceptionHandler{
-
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -30,14 +27,14 @@ public class GlobalExceptionHandler{
     @ExceptionHandler(ItemNotFoundException.class)
     public String itemNotFound(ItemNotFoundException e){
         log.error("ItemNotFoundException {}", e.getMessage());
-        log.error("ItemNotFoundException reason : {}", (Object) e.getStackTrace());
+        log.error("ItemNotFoundException reason : {}", e.getCause());
         return "error/500";
     }
 
     @ExceptionHandler(MemberNotFoundException.class)
     public String memberNotFound(MemberNotFoundException e){
         log.error("MemberNotFoundException {}", e.getMessage());
-        log.error("MemberNotFoundException reason : {}", (Object) e.getStackTrace());
+        log.error("MemberNotFoundException reason : {}", e.getCause());
         return "error/500";
     }
 
@@ -63,11 +60,18 @@ public class GlobalExceptionHandler{
         return "error/400";
     }
 
-    @ExceptionHandler(OrderNotFoundException.class)
-    public String orderNotFound(BoardCommentNotFoundException e){
+    @ExceptionHandler(BoardNotFoundException.class)
+    public String boardNotFoundException(BoardNotFoundException e){
+        log.error("BoardNotFoundException {} : ", e.getMessage());
+        log.error("BoardNotFoundException reason {} :", e.getCause());
+        return "error/404";
+    }
+
+    @ExceptionHandler(BoardCommentNotFoundException.class)
+    public String BoardCommentNotFound(BoardCommentNotFoundException e){
         log.error("BoardCommentNotFoundException {} : ", e.getMessage());
         log.error("BoardCommentNotFoundException reason {} :", e.getCause());
-        return "error/400";
+        return "error/boardCommentError";
     }
 
     @ExceptionHandler(NotLoginException.class)

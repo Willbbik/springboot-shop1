@@ -71,7 +71,7 @@
                     <div class="board_content" th:each="board, index : ${boardList}" th:attr="data-boardId=${board.id}">
                         <div class="board_title">
                             <span class="condition" th:text="${board.id}"></span>
-                            <span class="contents" th:text="${board.title}"></span>
+                            <span class="contents boardView" th:text="${board.title}" th:attr="data-num=${board.id}"></span>
                             <span class="writer" th:text="${board.writer}"></span>
                             <span class="date" th:text="${#temporals.format(board.createdDate, 'yyyy.MM.dd')}"></span>
                         </div>
@@ -113,5 +113,6 @@
 
 
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<script src="/assets/js/board/board_freeBoard.js"></script>
 </body>
 </html>

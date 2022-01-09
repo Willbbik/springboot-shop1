@@ -1,6 +1,7 @@
 package com.ecommerce.newshop1.service;
 
-import com.ecommerce.newshop1.dto.BoardCommentDto;
+import com.ecommerce.newshop1.entity.BoardComment;
+import com.ecommerce.newshop1.exception.BoardCommentNotFoundException;
 import com.ecommerce.newshop1.repository.BoardCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,10 +15,11 @@ public class BoardCommentServiceImpl implements BoardCommentService{
 
     @Override
     @Transactional(readOnly = true)
-    public BoardCommentDto findById(Long commentId) {
+    public BoardComment findById(Long commentId) {
 
-        boardCommentRepository.findById(commentId)
-
-
+        return boardCommentRepository.findById(commentId)
+                    .orElseThrow(() -> new BoardCommentNotFoundException("존재하지 않는 댓글 번호입니다."));
     }
+
+
 }

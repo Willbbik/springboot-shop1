@@ -37,7 +37,7 @@
 
 
 
-/* 질문 타이틀  */
+/*  게시글 타이틀  */
 .board_content.board_content_on {
     background: #f7f8fa;
 }
@@ -45,7 +45,6 @@
 .board_content {
     display: table-row-group;
     border-top: 0;
-    cursor: pointer;
 }
 
 .board_content .board_title {
@@ -62,6 +61,9 @@
     font-size: 16px;
     text-align: center;
     border-top: 1px solid #e1e1e1;
+}
+
+.board_content .board_title>.contents {
     cursor: pointer;
 }
 

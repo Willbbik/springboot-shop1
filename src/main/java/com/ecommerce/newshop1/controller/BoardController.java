@@ -1,6 +1,10 @@
 package com.ecommerce.newshop1.controller;
 
+import com.ecommerce.newshop1.dto.BoardCommentDto;
 import com.ecommerce.newshop1.dto.BoardDto;
+import com.ecommerce.newshop1.entity.Board;
+import com.ecommerce.newshop1.entity.BoardComment;
+import com.ecommerce.newshop1.service.BoardCommentService;
 import com.ecommerce.newshop1.service.BoardService;
 import com.ecommerce.newshop1.service.SecurityService;
 import com.ecommerce.newshop1.utils.CommonService;
@@ -8,6 +12,7 @@ import com.ecommerce.newshop1.utils.PaginationShowSizeTen;
 import com.ecommerce.newshop1.utils.ValidationSequence;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -24,9 +29,11 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
+    private final BoardCommentService boardCommentService;
     private final CommonService commonService;
     private final SecurityService security;
 
+    ModelMapper mapper = new ModelMapper();
 
     @GetMapping("/board/freeBoard")
     @ApiOperation(value = "자유게시판 목록 페이지")
@@ -50,18 +57,29 @@ public class BoardController {
         return "board/board_write";
     }
 
-    @GetMapping("/board/view")
+    @GetMapping("/board/view/{boardId}")
     @ApiOperation(value = "게시글 상세보기 페이지")
-    public String boardDetails(){
+    public String boardDetails(@PathVariable(name = "boardId") Long boardId, Model model){
+
+        Board board = boardService.findById(boardId);
+        BoardDto boardDto = mapper.map(board, BoardDto.class);
+
+        boardDto = boardService.editBoardDto(boardDto);
+
+        model.addAttribute("board", boardDto);
 
         return "board/board_view";
     }
 
     @GetMapping("/board/comment/manage/{commentId}")
-    public String boardComment(@PathVariable(name = "commentId") Long commentId){
+    @ApiOperation(value = "댓글 수정 팝업 페이지", notes = "팝업에 띄워줄 페이지")
+    public String boardComment(@PathVariable(name = "commentId") Long commentId, Model model){
 
+        BoardComment boardComment = boardCommentService.findById(commentId);
+        BoardCommentDto boardCommentDto = mapper.map(boardComment, BoardCommentDto.class);
 
-
+        model.addAttribute("content", boardCommentDto.getContent());
+        return "board/board_commentUpdate";
     }
 
 

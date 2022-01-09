@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width">
@@ -13,7 +13,7 @@
         <fieldset>
             <div class="wrap_content">
                 <label class="screen_out" for="comment">내용</label>
-                <textarea id="comment" name="comment"  cols="45" rows="9" placeholder="수정할 댓글 내용을 입력해주세요.">
+                <textarea id="comment" name="comment" th:value="${content}" cols="45" rows="9" placeholder="수정할 댓글 내용을 입력해주세요.">
                 </textarea>
             </div>
             <div class="wrap_btn">

@@ -3,6 +3,7 @@ package com.ecommerce.newshop1.service;
 import com.ecommerce.newshop1.dto.BoardDto;
 import com.ecommerce.newshop1.entity.Board;
 import com.ecommerce.newshop1.entity.Member;
+import com.ecommerce.newshop1.exception.BoardNotFoundException;
 import com.ecommerce.newshop1.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -28,6 +29,14 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Board findById(Long boardId) {
+
+        return boardRepository.findById(boardId)
+                .orElseThrow(() -> new BoardNotFoundException("존재하지 않는 게시물입니다."));
+    }
+
+    @Override
     @Transactional
     public Long save(BoardDto boardDto, String userId) {
 
@@ -46,6 +55,14 @@ public class BoardServiceImpl implements BoardService{
     }
 
 
+    @Override
+    public BoardDto editBoardDto(BoardDto boardDto) {
+
+        String writer = boardDto.getWriter().substring(0, 3) + "***";
+        boardDto.setWriter(writer);
+
+        return boardDto;
+    }
 
 
 }

@@ -1,9 +1,9 @@
 package com.ecommerce.newshop1.service;
 
-import com.ecommerce.newshop1.dto.BoardCommentDto;
+import com.ecommerce.newshop1.entity.BoardComment;
 
 public interface BoardCommentService {
 
-    BoardCommentDto findById(Long commentId);
+    BoardComment findById(Long commentId);
 
 }
