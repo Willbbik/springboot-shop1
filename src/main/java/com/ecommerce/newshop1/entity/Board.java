@@ -42,6 +42,6 @@ public class Board extends TimeEntity {
     private String hide;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "board")
-    private List<BoardReply> boardReplyList = new ArrayList<>();
+    private List<BoardComment> boardCommentList = new ArrayList<>();
 
 }

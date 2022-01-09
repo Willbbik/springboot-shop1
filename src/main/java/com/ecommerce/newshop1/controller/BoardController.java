@@ -14,10 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -54,10 +51,19 @@ public class BoardController {
     }
 
     @GetMapping("/board/view")
+    @ApiOperation(value = "게시글 상세보기 페이지")
     public String boardDetails(){
 
         return "board/board_view";
     }
+
+    @GetMapping("/board/comment/manage/{commentId}")
+    public String boardComment(@PathVariable(name = "commentId") Long commentId){
+
+
+
+    }
+
 
 
     @PostMapping("/board/write")

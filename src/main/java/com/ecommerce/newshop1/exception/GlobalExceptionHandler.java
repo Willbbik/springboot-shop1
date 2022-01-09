@@ -63,6 +63,12 @@ public class GlobalExceptionHandler{
         return "error/400";
     }
 
+    @ExceptionHandler(OrderNotFoundException.class)
+    public String orderNotFound(BoardCommentNotFoundException e){
+        log.error("BoardCommentNotFoundException {} : ", e.getMessage());
+        log.error("BoardCommentNotFoundException reason {} :", e.getCause());
+        return "error/400";
+    }
 
     @ExceptionHandler(NotLoginException.class)
     public String notLogin(NotLoginException e){

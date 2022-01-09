@@ -1,0 +1,110 @@
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background-color: #F0F3F7;
+}
+
+header .header_title {
+    line-height: 50px;
+    font-weight: normal;
+    font-size: 20px;
+    padding-left: 28px;
+}
+
+.comment_form fieldset {
+    border: 0;
+    text-align: center;
+    padding: 30px 28px;
+    font-size: 14px;
+    max-width: 294px;
+    margin: 0 auto;
+}
+
+.screen_out {
+    overflow: hidden;
+    position: absolute;
+    width: 0;
+    height: 0;
+    line-height: 0;
+    text-indent: -9999px;
+}
+
+.comment_form .wrap_content textarea {
+    padding: 12px;
+    min-height: 84px;
+    border: 1px solid #DBDFE5;
+    width: 100%;
+    font-size: 14px;
+    font-family: '맑은 고딕','Malgun Gothic',sans-serif;
+    color: #9199A4;
+    background-color: #FFF;
+    resize: vertical;
+}
+
+button, input, select, textarea {
+    outline: none;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body, th, td, input, select, textarea, button {
+    font-size: 12px;
+    line-height: 1.5;
+    font-family: "Noto Sans DemiLight","Malgun Gothic",sans-serif;
+    color: #333;
+    -webkit-font-smoothing: antialiased;
+}
+
+input, select, textarea, button {
+    vertical-align: middle;
+}
+
+.comment_form .wrap_btn {
+    float: right;
+}
+
+.comment_form .btn_reset {
+    border: 1px solid #DBDFE5;
+    color: #000;
+    background-color: #FFF;
+}
+
+.comment_form .btn {
+    width: 70px;
+    height: 32px;
+    border-radius: 32px;
+    font-size: 14px;
+    line-height: 31px;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.comment_form .btn_submit {
+    border: 0;
+    color: #FFF;
+    background-color: #EC5621;
+}
+
+.comment_form .edit_message {
+    padding: 10px 0 13px;
+    color: #000;
+}
+
+.comment_form .wrap_btn_confirm {
+    margin-top: 20px;
+    float: none;
+}
+
+.comment_form .btn_reset {
+    border: 1px solid #DBDFE5;
+    color: #000;
+    background-color: #FFF;
+}
+
+

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>댓글 관리</title>
+    <link rel="stylesheet" href="/assets/css/error/board_commentError.css" />
+</head>
+<body>
+    <header>
+        <h1 class="header_title">댓글 관리</h1>
+    </header>
+
+    <form class="comment_form">
+        <fieldset>
+            <p class="edit_message">뭔가 잘못되었습니다.<br>다시 시도해주세요.</p>
+
+            <div class="wrap_btn wrap_btn_confirm">
+                <button type="reset" class="btn btn_reset">닫기</button>
+            </div>
+        </fieldset>
+    </form>
+
+    <script>
+        (function($) {
+            function action() {
+                            window.close();
+                        }
+
+            $(".comment_form")
+                .on("reset", action)
+                .on("submit", action)
+        })(jQuery);
+    </script>
+</body>
+</html>

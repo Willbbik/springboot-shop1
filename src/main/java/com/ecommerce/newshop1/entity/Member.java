@@ -57,7 +57,7 @@ public class Member extends TimeEntity {
     private List<Board> boardList = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
-    private List<BoardReply> boardReplyList = new ArrayList<>();
+    private List<BoardComment> boardCommentList = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
     private Set<Review> reviewList = new HashSet<>();

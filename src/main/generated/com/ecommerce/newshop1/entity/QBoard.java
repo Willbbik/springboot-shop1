@@ -24,7 +24,7 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final QTimeEntity _super = new QTimeEntity(this);
 
-    public final ListPath<BoardReply, QBoardReply> boardReplyList = this.<BoardReply, QBoardReply>createList("boardReplyList", BoardReply.class, QBoardReply.class, PathInits.DIRECT2);
+    public final ListPath<BoardComment, QBoardReply> boardReplyList = this.<BoardComment, QBoardReply>createList("boardReplyList", BoardComment.class, QBoardReply.class, PathInits.DIRECT2);
 
     public final StringPath content = createString("content");
 
