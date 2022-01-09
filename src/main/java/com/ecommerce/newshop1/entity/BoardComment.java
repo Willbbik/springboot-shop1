@@ -1,6 +1,7 @@
 package com.ecommerce.newshop1.entity;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -18,11 +19,11 @@ public class BoardComment extends TimeEntity{
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id", nullable = false)
+    @JoinColumn(name = "board_id")
     private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Column(nullable = false)
@@ -30,6 +31,12 @@ public class BoardComment extends TimeEntity{
 
     @Column(nullable = false)
     private String hide;
+
+    @Column
+    private Long parent;
+
+    @ColumnDefault("1")
+    private int depth;
 
 
 }

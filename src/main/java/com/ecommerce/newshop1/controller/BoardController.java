@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,12 +51,14 @@ public class BoardController {
         return "board/board_freeBoard";
     }
 
+
     @GetMapping("/board/write")
     @ApiOperation(value = "게시글 작성 페이지")
     public String boardWritePage(){
 
         return "board/board_write";
     }
+
 
     @GetMapping("/board/view/{boardId}")
     @ApiOperation(value = "게시글 상세보기 페이지")
@@ -83,7 +86,6 @@ public class BoardController {
     }
 
 
-
     @PostMapping("/board/write")
     @ApiOperation(value = "게시글 작성")
     public @ResponseBody String boardWrite(@Validated(ValidationSequence.class) BoardDto boardDto, BindingResult errors, Principal principal){
@@ -96,6 +98,20 @@ public class BoardController {
 
         return "success";
     }
+
+    @PostMapping("/board/comment/write")
+    @ApiOperation(value = "게시글 댓글 저장")
+    public @ResponseBody String boardCommentWrite(@Validated(ValidationSequence.class) BoardCommentDto boardCommentDto, BindingResult errors, Long boardId, Principal principal){
+
+        if(!security.isAuthenticated()) return "login";
+        if(errors.hasErrors()) return commonService.getErrorMessage(errors);
+
+        boardCommentService.saveComment(boardCommentDto, boardId, principal.getName());
+        return "success";
+
+    }
+
+
 
 
 

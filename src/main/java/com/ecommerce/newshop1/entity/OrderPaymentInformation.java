@@ -22,12 +22,25 @@ public class OrderPaymentInformation {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
+    @Column
     private String payType;
+
+    @Column
     private String bank;
+
+    @Column
     private String customerName;
+
+    @Column
     private String accountNumber;
+
+    @Column
     private String dueDate;
+
+    @Column
     private String company;
+
+    @Column
     private String number;
 
 }

@@ -31,6 +31,8 @@ public class QBoardComment extends EntityPathBase<BoardComment> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
 
+    public final NumberPath<Integer> depth = createNumber("depth", Integer.class);
+
     public final StringPath hide = createString("hide");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
@@ -39,6 +41,8 @@ public class QBoardComment extends EntityPathBase<BoardComment> {
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
+
+    public final NumberPath<Long> parent = createNumber("parent", Long.class);
 
     public QBoardComment(String variable) {
         this(BoardComment.class, forVariable(variable), INITS);

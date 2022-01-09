@@ -17,6 +17,7 @@ public class WithdrawalMember extends TimeEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
+    @Column(nullable = false)
     public String userId;
 
 }

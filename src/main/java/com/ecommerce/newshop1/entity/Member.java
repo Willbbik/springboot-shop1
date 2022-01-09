@@ -77,4 +77,9 @@ public class Member extends TimeEntity {
         board.setMember(this);
     }
 
+    public void addBoardCommentList(BoardComment boardComment){
+        this.getBoardCommentList().add(boardComment);
+        boardComment.setMember(this);
+    }
+
 }

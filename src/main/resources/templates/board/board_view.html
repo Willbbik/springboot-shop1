@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
     <title>에게모니</title>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
@@ -124,15 +127,32 @@
                                     </div>
                                 </li>
                             </ul>
-                            <form method="post" action="#" onsubmit="return false" style="margin: 0">
+                            <form method="post" action="#" onsubmit="return false" style="margin: 0" name="commentForm">
+                                <input type="hidden" id="boardId" th:value="${board.id}">
                                 <fieldset class="fld_reply">
                                     <legend class="screen_out">댓글쓰기 폼</legend>
+                                    <div>
+                                        <span>
+                                            <input type="radio" id="public" name="hide" checked="checked" value="public">
+                                            <label for="public">
+                                                <span>
+                                                    공개
+                                                </span>
+                                            </label>
+                                            <input type="radio" id="private" name="hide" value="private">
+                                            <label for="private">
+                                                <span>
+                                                    비공개
+                                                </span>
+                                            </label>
+                                        </span>
+                                    </div>
                                     <div class="reply_write">
-                                        <label for="comment" class="lab_write screen_out">내용</label>
-                                        <textarea name="comment" id="comment" class="tf_reply" placeholder="댓글 내용" tabindex="3"></textarea>
+                                        <label for="content" class="lab_write screen_out">내용</label>
+                                        <textarea name="content" id="content" class="tf_reply" placeholder="댓글 내용" tabindex="3"></textarea>
                                     </div>
                                     <div class="writer_btn">
-                                        <button type="submit" class="btn_enter" tabindex="5">Send</button>
+                                        <button type="submit" class="btn_enter" tabindex="5">작성</button>
                                     </div>
                                 </fieldset>
                             </form>
