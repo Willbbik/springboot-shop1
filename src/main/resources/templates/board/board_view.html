@@ -81,17 +81,17 @@
                     <div class="area_etc"></div>
                     <div class="area_reply"> <!-- 댓글 -->
                         <strong class="tit_reply">
-                            <span id="commentCount141_0">0</span> <!-- 게시글번호와 댓글 개수  -->
+                            <span th:text="${totalComment}"></span> <!-- 게시글번호와 댓글 개수  -->
                             댓글
                         </strong>
                         <div>
-                            <ul class="list_reply">
-                                <li class="rp_admin"> <!-- 여기다가 댓글번호 작성 -->
+                            <ul class="list_reply" th:each="comment : ${boardCommentList}">
+                                <li class="rp_admin" th:attr="data-num=${comment.id}"> <!-- 댓글, 여기다가 댓글번호 작성 -->
                                     <span class="reply_content">
                                         <span class="reply_content">
-                                            <span class="tit_nickname">아이디</span>
-                                            <span class="txt_date">2022.01.09 12:50</span>
-                                            <span class="txt_reply">댓글 내용</span>
+                                            <span class="tit_nickname" th:text="${comment.writer}"></span>
+                                            <span class="txt_date" th:text="${#temporals.format(comment.createdDate, 'yyyy.MM.dd HH:mm')}">2022.01.09 12:50</span>
+                                            <span class="txt_reply" th:text="${comment.content}"></span>
                                         </span>
                                     </span>
                                     <div class="area_more">
@@ -106,26 +106,25 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li class="re_reply rp_admin"> <!-- 여기다 댓글의 댓글번호 작성 -->
-                                    <span class="reply_content">
-                                        <span class="reply_content">
-                                            <span class="tit_nickname">아이디</span>
-                                            <span class="txt_date">2022.01.09 12:50</span>
-                                            <span class="txt_reply">대댓글 내용</span>
-                                        </span>
-                                    </span>
-                                    <div class="area_more">
-                                        <div class="reply_layer">
-                                            <div class="inner_reply_layer">
-                                                <div class="layer_body">
-                                                    <button type="button" class="link_reply comment_update" data-bs-toggle="modal" data-bs-target="#comment_update">수정</button>
-                                                    <a href="#" class="link_reply reply_delete">삭제</a>
-                                                    <a href="#" class="link_reply ">대댓글쓰기</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
+<!--                                <li class="re_reply rp_admin"> &lt;!&ndash; 대댓글, 여기다 댓글의 댓글번호 작성 &ndash;&gt;-->
+<!--                                    <span class="reply_content">-->
+<!--                                        <span class="reply_content">-->
+<!--                                            <span class="tit_nickname">아이디</span>-->
+<!--                                            <span class="txt_date">2022.01.09 12:50</span>-->
+<!--                                            <span class="txt_reply">대댓글 내용</span>-->
+<!--                                        </span>-->
+<!--                                    </span>-->
+<!--                                    <div class="area_more">-->
+<!--                                        <div class="reply_layer">-->
+<!--                                            <div class="inner_reply_layer">-->
+<!--                                                <div class="layer_body">-->
+<!--                                                    <button type="button" class="link_reply comment_update" data-bs-toggle="modal" data-bs-target="#comment_update">수정</button>-->
+<!--                                                    <a href="#" class="link_reply reply_delete">삭제</a>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </li>-->
                             </ul>
                             <form method="post" action="#" onsubmit="return false" style="margin: 0" name="commentForm">
                                 <input type="hidden" id="boardId" th:value="${board.id}">
@@ -158,6 +157,84 @@
                             </form>
                         </div>
                     </div>
+<!--                    <div class="area_reply"> &lt;!&ndash; 댓글 &ndash;&gt;-->
+<!--                        <strong class="tit_reply">-->
+<!--                            <span id="commentCount141_0">0</span> &lt;!&ndash; 게시글번호와 댓글 개수  &ndash;&gt;-->
+<!--                            댓글-->
+<!--                        </strong>-->
+<!--                        <div>-->
+<!--                            <ul class="list_reply">-->
+<!--                                <li class="rp_admin"> &lt;!&ndash; 여기다가 댓글번호 작성 &ndash;&gt;-->
+<!--                                    <span class="reply_content">-->
+<!--                                        <span class="reply_content">-->
+<!--                                            <span class="tit_nickname">아이디</span>-->
+<!--                                            <span class="txt_date">2022.01.09 12:50</span>-->
+<!--                                            <span class="txt_reply">댓글 내용</span>-->
+<!--                                        </span>-->
+<!--                                    </span>-->
+<!--                                    <div class="area_more">-->
+<!--                                        <div class="reply_layer">-->
+<!--                                            <div class="inner_reply_layer">-->
+<!--                                                <div class="layer_body">-->
+<!--                                                    <button type="button" class="link_reply comment_update" data-bs-toggle="modal" data-bs-target="#comment_update">수정</button>-->
+<!--                                                    <a href="#" class="link_reply reply_delete">삭제</a>-->
+<!--                                                    <a href="#" class="link_reply ">댓글쓰기</a>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </li>-->
+<!--                                <li class="re_reply rp_admin"> &lt;!&ndash; 여기다 댓글의 댓글번호 작성 &ndash;&gt;-->
+<!--                                    <span class="reply_content">-->
+<!--                                        <span class="reply_content">-->
+<!--                                            <span class="tit_nickname">아이디</span>-->
+<!--                                            <span class="txt_date">2022.01.09 12:50</span>-->
+<!--                                            <span class="txt_reply">대댓글 내용</span>-->
+<!--                                        </span>-->
+<!--                                    </span>-->
+<!--                                    <div class="area_more">-->
+<!--                                        <div class="reply_layer">-->
+<!--                                            <div class="inner_reply_layer">-->
+<!--                                                <div class="layer_body">-->
+<!--                                                    <button type="button" class="link_reply comment_update" data-bs-toggle="modal" data-bs-target="#comment_update">수정</button>-->
+<!--                                                    <a href="#" class="link_reply reply_delete">삭제</a>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                            <form method="post" action="#" onsubmit="return false" style="margin: 0" name="commentForm">-->
+<!--                                <input type="hidden" id="boardId" th:value="${board.id}">-->
+<!--                                <fieldset class="fld_reply">-->
+<!--                                    <legend class="screen_out">댓글쓰기 폼</legend>-->
+<!--                                    <div>-->
+<!--                                        <span>-->
+<!--                                            <input type="radio" id="public" name="hide" checked="checked" value="public">-->
+<!--                                            <label for="public">-->
+<!--                                                <span>-->
+<!--                                                    공개-->
+<!--                                                </span>-->
+<!--                                            </label>-->
+<!--                                            <input type="radio" id="private" name="hide" value="private">-->
+<!--                                            <label for="private">-->
+<!--                                                <span>-->
+<!--                                                    비공개-->
+<!--                                                </span>-->
+<!--                                            </label>-->
+<!--                                        </span>-->
+<!--                                    </div>-->
+<!--                                    <div class="reply_write">-->
+<!--                                        <label for="content" class="lab_write screen_out">내용</label>-->
+<!--                                        <textarea name="content" id="content" class="tf_reply" placeholder="댓글 내용" tabindex="3"></textarea>-->
+<!--                                    </div>-->
+<!--                                    <div class="writer_btn">-->
+<!--                                        <button type="submit" class="btn_enter" tabindex="5">작성</button>-->
+<!--                                    </div>-->
+<!--                                </fieldset>-->
+<!--                            </form>-->
+<!--                        </div>-->
+<!--                    </div>-->
                     <div class="modal" tabindex="-1" id="comment_update">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">

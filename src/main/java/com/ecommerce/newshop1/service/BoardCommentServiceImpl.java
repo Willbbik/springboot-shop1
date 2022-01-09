@@ -8,8 +8,11 @@ import com.ecommerce.newshop1.exception.BoardCommentNotFoundException;
 import com.ecommerce.newshop1.repository.BoardCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +26,22 @@ public class BoardCommentServiceImpl implements BoardCommentService{
 
     @Override
     @Transactional(readOnly = true)
+    public Long countByBoard(Board board) {
+        return boardCommentRepository.countByBoard(board);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public BoardComment findById(Long commentId) {
 
         return boardCommentRepository.findById(commentId)
                     .orElseThrow(() -> new BoardCommentNotFoundException("존재하지 않는 댓글 번호입니다."));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BoardCommentDto> searchAll(Board board, Long lastCommentId) {
+        return boardCommentRepository.searchAll(board, lastCommentId);
     }
 
     @Override
@@ -37,6 +52,7 @@ public class BoardCommentServiceImpl implements BoardCommentService{
         Board board = boardService.findById(boardId);
 
         BoardComment boardComment = mapper.map(boardCommentDto, BoardComment.class);
+        boardComment.setWriter(member.getUserId());
         member.addBoardCommentList(boardComment);
         board.addBoardCommentList(boardComment);
 

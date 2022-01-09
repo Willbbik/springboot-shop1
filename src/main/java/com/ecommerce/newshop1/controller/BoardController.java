@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +37,7 @@ public class BoardController {
 
     @GetMapping("/board/freeBoard")
     @ApiOperation(value = "자유게시판 목록 페이지")
-    public String notice(@RequestParam(name = "page", defaultValue = "1") int curPage, Model model){
+    public String freeBoard(@RequestParam(name = "page", defaultValue = "1") int curPage, Model model){
 
         Long total =  boardService.count();
         PaginationShowSizeTen page = new PaginationShowSizeTen(total, curPage);
@@ -66,10 +65,14 @@ public class BoardController {
 
         Board board = boardService.findById(boardId);
         BoardDto boardDto = mapper.map(board, BoardDto.class);
-
         boardDto = boardService.editBoardDto(boardDto);
 
+        Long totalComment = boardCommentService.countByBoard(board);
+        List<BoardCommentDto> boardCommentList = boardCommentService.searchAll(board, null);
+
+        model.addAttribute("totalComment", totalComment);
         model.addAttribute("board", boardDto);
+        model.addAttribute("boardCommentList", boardCommentList);
 
         return "board/board_view";
     }

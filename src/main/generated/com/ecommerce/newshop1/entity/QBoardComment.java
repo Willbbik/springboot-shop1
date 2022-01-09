@@ -44,6 +44,8 @@ public class QBoardComment extends EntityPathBase<BoardComment> {
 
     public final NumberPath<Long> parent = createNumber("parent", Long.class);
 
+    public final StringPath writer = createString("writer");
+
     public QBoardComment(String variable) {
         this(BoardComment.class, forVariable(variable), INITS);
     }

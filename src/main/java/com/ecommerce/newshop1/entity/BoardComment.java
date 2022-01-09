@@ -27,6 +27,9 @@ public class BoardComment extends TimeEntity{
     private Member member;
 
     @Column(nullable = false)
+    private String writer;
+
+    @Column(nullable = false)
     private String content;
 
     @Column(nullable = false)

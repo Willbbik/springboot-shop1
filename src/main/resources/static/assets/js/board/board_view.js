@@ -39,7 +39,7 @@ $(function(){
 
             if(result === "success"){
                 $("#content").val("");
-                
+
             }else if(result === "login"){
                 alert("로그인 후 댓글작성이 가능합니다.");
                 let c = confirm("로그인 페이지로 이동하시겠습니까? (작성중이던 내용은 사라집니다.)");
