@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
@@ -39,5 +41,7 @@ public class Board extends TimeEntity {
     @Size(max = 10)
     private String hide;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "board")
+    private List<BoardReply> boardReplyList = new ArrayList<>();
 
 }
