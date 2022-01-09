@@ -53,6 +53,13 @@ public class BoardController {
         return "board/board_write";
     }
 
+    @GetMapping("/board/view")
+    public String boardDetails(){
+
+        return "board/board_view";
+    }
+
+
     @PostMapping("/board/write")
     @ApiOperation(value = "게시글 작성")
     public @ResponseBody String boardWrite(@Validated(ValidationSequence.class) BoardDto boardDto, BindingResult errors, Principal principal){
