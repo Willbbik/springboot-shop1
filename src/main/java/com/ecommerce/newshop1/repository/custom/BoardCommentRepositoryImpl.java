@@ -49,7 +49,9 @@ public class BoardCommentRepositoryImpl implements BoardCommentRepositoryCustom{
                         QBoardComment.boardComment.modifiedDate
                 ))
                 .from(QBoardComment.boardComment)
-                .where(QBoardComment.boardComment.id.eq(parent))
+                .where(QBoardComment.boardComment.parent.eq(parent),
+                        QBoardComment.boardComment.depth.eq(2)
+                        )
                 .orderBy(QBoardComment.boardComment.id.desc())
                 .fetch();
     }

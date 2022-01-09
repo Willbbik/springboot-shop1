@@ -10,6 +10,7 @@ import com.ecommerce.newshop1.service.SecurityService;
 import com.ecommerce.newshop1.utils.CommonService;
 import com.ecommerce.newshop1.utils.PaginationShowSizeTen;
 import com.ecommerce.newshop1.utils.ValidationSequence;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -58,6 +59,12 @@ public class BoardController {
         return "board/board_write";
     }
 
+    @GetMapping("/board/reComment/write")
+    @ApiOperation(value = "대댓글 작성 페이지")
+    public String reCommentWrite(){
+        return "board/board_reCommentWrite";
+    }
+
 
     @GetMapping("/board/view/{boardId}")
     @ApiOperation(value = "게시글 상세보기 페이지")
@@ -73,7 +80,7 @@ public class BoardController {
         List<BoardCommentDto> commentList = boardCommentService.searchAll(board, null);
         List<BoardCommentDto> reCommentList = boardCommentService.searchAll(commentList);
 
-        
+
         model.addAttribute("totalComment", totalComment);
         model.addAttribute("board", boardDto);
         model.addAttribute("commentList", commentList);

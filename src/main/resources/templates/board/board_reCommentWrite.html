@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width">
+    <title>댓글에 댓글 작성</title>
+    <link rel="stylesheet" href="/assets/css/board/board_reCommentWrite.css" />
+
+</head>
+<body id="reply">
+<header>
+    <h1 class="header_title">댓글에 댓글 작성</h1>
+</header>
+<form class="comment_form" method="post" action="#">
+    <fieldset>
+        <div class="wrap_content">
+            <label class="screen_out" for="comment">내용</label>
+            <textarea id="comment" name="comment" th:value="${content}" cols="45" rows="9" placeholder="수정할 댓글 내용을 입력해주세요.">
+            </textarea>
+        </div>
+        <div>
+            <span>
+                <input type="radio" id="public" name="hide" checked="checked" value="public">
+                <label for="public">
+                    <span>
+                        공개
+                    </span>
+                </label>
+                <input type="radio" id="private" name="hide" value="private">
+                <label for="private">
+                    <span>
+                        비공개
+                    </span>
+                </label>
+            </span>
+        </div>
+        <div class="wrap_btn">
+            <button class="btn btn_reset" type="reset">취소</button>
+            <button class="btn btn_submit" type="submit">확인</button>
+        </div>
+    </fieldset>
+</form>
+
+</body>
+</html>

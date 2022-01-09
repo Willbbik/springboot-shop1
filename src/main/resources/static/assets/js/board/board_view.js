@@ -3,7 +3,7 @@ $(function(){
     let csrfToken = $("meta[name=_csrf]").attr("content");
     let csrfHeader = $("meta[name=_csrf_header").attr("content");
 
-    $(document).on("click", ".reply_delete", function(){
+    $(document).on("click", ".comment_delete", function(){
 
         let result = confirm("해당 댓글을 삭제하시겠습니까?");
 
@@ -16,6 +16,7 @@ $(function(){
 
     });
 
+    // 댓글 작성
     $(".btn_enter").on("click", function(){
 
         let content = $("#content").val();
@@ -55,8 +56,15 @@ $(function(){
             alert("에러가 발생했습니다. \n잠시후 다시 시도해주세요.");
             return false;
         });
+    });
 
+
+    // 대댓글 작성
+    $(document).on("click", ".reComment_write", function(){
+
+        window.open("/board/reComment/write", 'google', 'width=500,height=500');
 
     });
+
 
 })
