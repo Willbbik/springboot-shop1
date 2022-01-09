@@ -10,4 +10,6 @@ public interface BoardCommentRepositoryCustom {
 
     List<BoardCommentDto> searchAll(Board board, Long lastCommentId);
 
+    List<BoardCommentDto> searchAll(Long parent);
+
 }

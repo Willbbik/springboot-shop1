@@ -22,6 +22,7 @@ public class BoardCommentRepositoryImpl implements BoardCommentRepositoryCustom{
                 .select(Projections.fields(BoardCommentDto.class,
                             QBoardComment.boardComment.id,
                             QBoardComment.boardComment.content,
+                            QBoardComment.boardComment.writer,
                             QBoardComment.boardComment.parent,
                             QBoardComment.boardComment.depth,
                             QBoardComment.boardComment.hide,
@@ -30,9 +31,26 @@ public class BoardCommentRepositoryImpl implements BoardCommentRepositoryCustom{
                         ))
                 .from(QBoardComment.boardComment)
                 .where(QBoardComment.boardComment.board.eq(board))
-                .orderBy(QBoardComment.boardComment.id.asc())
+                .orderBy(QBoardComment.boardComment.id.desc())
                 .fetch();
     }
 
-
+    @Override
+    public List<BoardCommentDto> searchAll(Long parent) {
+        return queryFactory
+                .select(Projections.fields(BoardCommentDto.class,
+                        QBoardComment.boardComment.id,
+                        QBoardComment.boardComment.content,
+                        QBoardComment.boardComment.writer,
+                        QBoardComment.boardComment.parent,
+                        QBoardComment.boardComment.depth,
+                        QBoardComment.boardComment.hide,
+                        QBoardComment.boardComment.createdDate,
+                        QBoardComment.boardComment.modifiedDate
+                ))
+                .from(QBoardComment.boardComment)
+                .where(QBoardComment.boardComment.id.eq(parent))
+                .orderBy(QBoardComment.boardComment.id.desc())
+                .fetch();
+    }
 }

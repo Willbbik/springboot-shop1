@@ -3,7 +3,6 @@ package com.ecommerce.newshop1.service;
 import com.ecommerce.newshop1.dto.BoardCommentDto;
 import com.ecommerce.newshop1.entity.Board;
 import com.ecommerce.newshop1.entity.BoardComment;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -19,5 +18,6 @@ public interface BoardCommentService {
 
     List<BoardCommentDto> searchAll(Board board, Long lastCommentId);
 
+    List<BoardCommentDto> searchAll(List<BoardCommentDto> boardCommentList);
 
 }

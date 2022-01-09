@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,6 +46,19 @@ public class BoardCommentServiceImpl implements BoardCommentService{
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<BoardCommentDto> searchAll(List<BoardCommentDto> boardCmtList) {
+
+        List<BoardCommentDto> boardCommentResultList = new ArrayList<>();
+        for(BoardCommentDto dto : boardCmtList){
+            List<BoardCommentDto> result = boardCommentRepository.searchAll(dto.getId());
+            boardCommentResultList.addAll(result);
+        }
+
+        return boardCommentResultList;
+    }
+
+    @Override
     @Transactional
     public Long saveComment(BoardCommentDto boardCommentDto, Long boardId, String userId) {
 
@@ -52,7 +66,7 @@ public class BoardCommentServiceImpl implements BoardCommentService{
         Board board = boardService.findById(boardId);
 
         BoardComment boardComment = mapper.map(boardCommentDto, BoardComment.class);
-        boardComment.setWriter(member.getUserId());
+        boardComment.setWriter(member.getUserId().substring(0, 3) + "***");
         member.addBoardCommentList(boardComment);
         board.addBoardCommentList(boardComment);
 

@@ -68,11 +68,16 @@ public class BoardController {
         boardDto = boardService.editBoardDto(boardDto);
 
         Long totalComment = boardCommentService.countByBoard(board);
-        List<BoardCommentDto> boardCommentList = boardCommentService.searchAll(board, null);
 
+        // 댓글, 대댓글
+        List<BoardCommentDto> commentList = boardCommentService.searchAll(board, null);
+        List<BoardCommentDto> reCommentList = boardCommentService.searchAll(commentList);
+
+        
         model.addAttribute("totalComment", totalComment);
         model.addAttribute("board", boardDto);
-        model.addAttribute("boardCommentList", boardCommentList);
+        model.addAttribute("commentList", commentList);
+        model.addAttribute("reCommentList", reCommentList);
 
         return "board/board_view";
     }
