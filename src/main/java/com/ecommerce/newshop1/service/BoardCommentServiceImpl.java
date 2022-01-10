@@ -1,6 +1,7 @@
 package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.BoardCommentDto;
+import com.ecommerce.newshop1.dto.CommentPostDto;
 import com.ecommerce.newshop1.entity.Board;
 import com.ecommerce.newshop1.entity.BoardComment;
 import com.ecommerce.newshop1.entity.Member;
@@ -74,7 +75,6 @@ public class BoardCommentServiceImpl implements BoardCommentService{
     }
 
 
-
     @Override
     @Transactional
     public void deleteComment(Long commentId) {
@@ -82,5 +82,13 @@ public class BoardCommentServiceImpl implements BoardCommentService{
         boardCommentRepository.deleteById(commentId);
     }
 
+    @Override
+    @Transactional
+    public void updateComment(Long commentId, CommentPostDto postDto) {
+        BoardComment comment = boardCommentRepository.findById(commentId)
+                .orElseThrow(() -> new BoardCommentNotFoundException("존재하지 않는 댓글입니다."));
 
+        comment.setContent(postDto.getContent());
+        comment.setHide(postDto.getHide());
+    }
 }

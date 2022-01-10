@@ -34,7 +34,6 @@ public class BoardController {
     private final BoardReCommentService boardReCommentService;
     private final CommonService commonService;
     private final SecurityService security;
-
     private final ModelMapper mapper;
 
     @GetMapping("/board/freeBoard")
@@ -165,11 +164,11 @@ public class BoardController {
         if(errors.hasErrors()) return commonService.getErrorMessage(errors);
 
         BoardComment comment = boardCommentService.findById(postDto.getId());
-        BoardCommentDto commentDto = mapper.map(comment, BoardCommentDto.class);
+        Member member = comment.getMember();
+        if(!member.getUserId().equals(principal.getName())) return "role";
 
+        boardCommentService.updateComment(comment.getId(), postDto);
         return "success";
-
-
     }
 
     @DeleteMapping("/board/comment")
