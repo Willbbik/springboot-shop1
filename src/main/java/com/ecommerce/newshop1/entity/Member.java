@@ -60,6 +60,9 @@ public class Member extends TimeEntity {
     private List<BoardComment> boardCommentList = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
+    private List<BoardReComment> boardReCommentList = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
     private Set<Review> reviewList = new HashSet<>();
 
     public void addReviewList(Review review) {
@@ -77,9 +80,14 @@ public class Member extends TimeEntity {
         board.setMember(this);
     }
 
-    public void addBoardCommentList(BoardComment boardComment){
-        this.getBoardCommentList().add(boardComment);
-        boardComment.setMember(this);
+    public void addBoardCommentList(BoardComment comment){
+        this.getBoardCommentList().add(comment);
+        comment.setMember(this);
+    }
+
+    public void addBoardReCommentList(BoardReComment reComment){
+        this.getBoardReCommentList().add(reComment);
+        reComment.setMember(this);
     }
 
 }

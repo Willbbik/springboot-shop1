@@ -10,7 +10,7 @@
 </strong>
 <div class="comment_list">
     <ul class="list_reply" th:each="comment : ${commentList}">
-        <li class="rp_admin" th:attr="data-num=${comment.id}"> <!-- 댓글, 여기다가 댓글번호 작성 -->
+        <li class="rp_admin" th:attr="data-commentId=${comment.id}"> <!-- 댓글, 여기다가 댓글번호 작성 -->
             <span class="reply_content">
                 <span class="reply_content">
                     <span class="tit_nickname" th:text="${comment.writer}"></span>
@@ -31,7 +31,7 @@
             </div>
         </li>
         <th:block th:each="reComment : ${reCommentList}">
-            <th:block th:if="${reComment.parent} == ${comment.id}">
+            <th:block th:if="${reComment.comment.id} == ${comment.id}">
                 <li class="re_reply rp_admin" th:attr="data-reCommentId=${reComment.id}"> <!-- 대댓글, 여기다 댓글의 댓글번호 작성 -->
                     <span class="reply_content">
                         <span class="reply_content">

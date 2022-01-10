@@ -3,14 +3,16 @@ $(function(){
     let csrfToken = $("meta[name=_csrf]").attr("content");
     let csrfHeader = $("meta[name=_csrf_header").attr("content");
 
+
+    // 대댓글 전송
     $(document).on("click", ".btn_submit", function(){
 
-        let parentId = $(this).attr("data-parentId");
+        let commentId = $(this).attr("data-commentId");
         let content = $("#content").val();
         let hide = $("input:radio[name=hide]:checked").val();
 
         let data = {
-            parent : parentId,
+            commentId : commentId,
             content : content,
             hide : hide
         }

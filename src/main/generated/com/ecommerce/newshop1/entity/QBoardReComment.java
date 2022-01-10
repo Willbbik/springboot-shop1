@@ -11,22 +11,22 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QBoard is a Querydsl query type for Board
+ * QBoardReComment is a Querydsl query type for BoardReComment
  */
 @Generated("com.querydsl.codegen.EntitySerializer")
-public class QBoard extends EntityPathBase<Board> {
+public class QBoardReComment extends EntityPathBase<BoardReComment> {
 
-    private static final long serialVersionUID = -943155181L;
+    private static final long serialVersionUID = 1266062809L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QBoard board = new QBoard("board");
+    public static final QBoardReComment boardReComment = new QBoardReComment("boardReComment");
 
     public final QTimeEntity _super = new QTimeEntity(this);
 
-    public final ListPath<BoardComment, QBoardComment> boardCommentList = this.<BoardComment, QBoardComment>createList("boardCommentList", BoardComment.class, QBoardComment.class, PathInits.DIRECT2);
+    public final QBoard board;
 
-    public final ListPath<BoardReComment, QBoardReComment> boardReCommentList = this.<BoardReComment, QBoardReComment>createList("boardReCommentList", BoardReComment.class, QBoardReComment.class, PathInits.DIRECT2);
+    public final QBoardComment comment;
 
     public final StringPath content = createString("content");
 
@@ -42,28 +42,28 @@ public class QBoard extends EntityPathBase<Board> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
 
-    public final StringPath title = createString("title");
-
     public final StringPath writer = createString("writer");
 
-    public QBoard(String variable) {
-        this(Board.class, forVariable(variable), INITS);
+    public QBoardReComment(String variable) {
+        this(BoardReComment.class, forVariable(variable), INITS);
     }
 
-    public QBoard(Path<? extends Board> path) {
+    public QBoardReComment(Path<? extends BoardReComment> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QBoard(PathMetadata metadata) {
+    public QBoardReComment(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QBoard(PathMetadata metadata, PathInits inits) {
-        this(Board.class, metadata, inits);
+    public QBoardReComment(PathMetadata metadata, PathInits inits) {
+        this(BoardReComment.class, metadata, inits);
     }
 
-    public QBoard(Class<? extends Board> type, PathMetadata metadata, PathInits inits) {
+    public QBoardReComment(Class<? extends BoardReComment> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.board = inits.isInitialized("board") ? new QBoard(forProperty("board"), inits.get("board")) : null;
+        this.comment = inits.isInitialized("comment") ? new QBoardComment(forProperty("comment"), inits.get("comment")) : null;
         this.member = inits.isInitialized("member") ? new QMember(forProperty("member"), inits.get("member")) : null;
     }
 

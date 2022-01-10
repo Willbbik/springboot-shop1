@@ -24,41 +24,16 @@ public class BoardCommentRepositoryImpl implements BoardCommentRepositoryCustom{
                             QBoardComment.boardComment.id,
                             QBoardComment.boardComment.content,
                             QBoardComment.boardComment.writer,
-                            QBoardComment.boardComment.parent,
-                            QBoardComment.boardComment.depth,
-                            QBoardComment.boardComment.hide,
                             QBoardComment.boardComment.createdDate,
                             QBoardComment.boardComment.modifiedDate
                         ))
                 .from(QBoardComment.boardComment)
                 .where(
                         QBoardComment.boardComment.board.eq(board),
-                        QBoardComment.boardComment.depth.eq(1),
                         ltCommentId(lastCommentId)
                 )
                 .orderBy(QBoardComment.boardComment.id.desc())
                 .limit(pageable.getPageSize())
-                .fetch();
-    }
-
-    @Override
-    public List<BoardCommentDto> searchAll(Long parent) {
-        return queryFactory
-                .select(Projections.fields(BoardCommentDto.class,
-                        QBoardComment.boardComment.id,
-                        QBoardComment.boardComment.content,
-                        QBoardComment.boardComment.writer,
-                        QBoardComment.boardComment.parent,
-                        QBoardComment.boardComment.depth,
-                        QBoardComment.boardComment.hide,
-                        QBoardComment.boardComment.createdDate,
-                        QBoardComment.boardComment.modifiedDate
-                ))
-                .from(QBoardComment.boardComment)
-                .where(QBoardComment.boardComment.parent.eq(parent),
-                        QBoardComment.boardComment.depth.eq(2)
-                        )
-                .orderBy(QBoardComment.boardComment.id.asc())
                 .fetch();
     }
 

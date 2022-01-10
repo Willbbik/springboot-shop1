@@ -28,6 +28,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final ListPath<Board, QBoard> boardList = this.<Board, QBoard>createList("boardList", Board.class, QBoard.class, PathInits.DIRECT2);
 
+    public final ListPath<BoardReComment, QBoardReComment> boardReCommentList = this.<BoardReComment, QBoardReComment>createList("boardReCommentList", BoardReComment.class, QBoardReComment.class, PathInits.DIRECT2);
+
     public final QCart cart;
 
     //inherited

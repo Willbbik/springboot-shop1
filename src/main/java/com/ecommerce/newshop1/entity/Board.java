@@ -44,9 +44,17 @@ public class Board extends TimeEntity {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "board")
     private List<BoardComment> boardCommentList = new ArrayList<>();
 
-    public void addBoardCommentList(BoardComment boardComment){
-        this.getBoardCommentList().add(boardComment);
-        boardComment.setBoard(this);
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "board")
+    private List<BoardReComment> boardReCommentList = new ArrayList<>();
+
+    public void addBoardCommentList(BoardComment comment){
+        this.getBoardCommentList().add(comment);
+        comment.setBoard(this);
+    }
+
+    public void addBoardReCommentList(BoardReComment reComment) {
+        this.getBoardReCommentList().add(reComment);
+        reComment.setBoard(this);
     }
 
 }

@@ -1,11 +1,9 @@
 package com.ecommerce.newshop1.entity;
 
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Getter
 @Setter
@@ -13,8 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "board_comment")
-public class BoardComment extends TimeEntity{
+@Table(name = "board_recomment")
+public class BoardReComment extends TimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +26,10 @@ public class BoardComment extends TimeEntity{
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id")
+    private BoardComment comment;
+
     @Column(nullable = false)
     private String writer;
 
@@ -36,14 +38,6 @@ public class BoardComment extends TimeEntity{
 
     @Column(nullable = false)
     private String hide;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "comment")
-    private List<BoardReComment> reCommentList = new ArrayList<>();
-
-    public void addBoardReCommentList(BoardReComment reComment){
-        this.getReCommentList().add(reComment);
-        reComment.setComment(this);
-    }
 
 
 }

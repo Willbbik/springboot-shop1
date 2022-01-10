@@ -1,7 +1,7 @@
 package com.ecommerce.newshop1.dto;
 
 import com.ecommerce.newshop1.entity.Board;
-import com.ecommerce.newshop1.entity.BoardReComment;
+import com.ecommerce.newshop1.entity.BoardComment;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.utils.ValidationGroups;
 import lombok.AllArgsConstructor;
@@ -13,19 +13,17 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
-import java.util.List;
-
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardCommentDto {
+public class BoardReCommentDto {
 
     private Long id;
     private Board board;
     private Member member;
-    private List<BoardReComment> reCommentList;
+    private BoardComment comment;
 
     @NotBlank(message = "내용을 입력해주세요.", groups = ValidationGroups.NotBlankGroup.class)
     @Length(message = "내용의 최대 길이는 2048자 입니다.", groups = ValidationGroups.LengthGroup.class)
@@ -38,6 +36,7 @@ public class BoardCommentDto {
 
     private String writer;
 
+    private Long commentId;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 

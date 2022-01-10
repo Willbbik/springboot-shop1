@@ -2,11 +2,11 @@ package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.BoardCommentDto;
 import com.ecommerce.newshop1.dto.BoardDto;
+import com.ecommerce.newshop1.dto.BoardReCommentDto;
 import com.ecommerce.newshop1.entity.Board;
 import com.ecommerce.newshop1.entity.BoardComment;
-import com.ecommerce.newshop1.service.BoardCommentService;
-import com.ecommerce.newshop1.service.BoardService;
-import com.ecommerce.newshop1.service.SecurityService;
+import com.ecommerce.newshop1.entity.Member;
+import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.CommonService;
 import com.ecommerce.newshop1.utils.PaginationShowSizeTen;
 import com.ecommerce.newshop1.utils.ValidationSequence;
@@ -31,6 +31,7 @@ public class BoardController {
 
     private final BoardService boardService;
     private final BoardCommentService boardCommentService;
+    private final BoardReCommentService boardReCommentService;
     private final CommonService commonService;
     private final SecurityService security;
 
@@ -59,11 +60,11 @@ public class BoardController {
         return "board/board_write";
     }
 
-    @GetMapping("/board/reComment/write/{parentId}")
+    @GetMapping("/board/reComment/write/{commentId}")
     @ApiOperation(value = "대댓글 작성 페이지")
-    public String reCommentWrite(@PathVariable(name = "parentId") Long parentId, Model model){
+    public String reCommentWrite(@PathVariable(name = "commentId") Long commentId, Model model){
 
-        model.addAttribute("parentId", parentId);
+        model.addAttribute("commentId", commentId);
 
         return "board/board_reCommentWrite";
     }
@@ -95,13 +96,14 @@ public class BoardController {
         Pageable pageable = PageRequest.ofSize(10);
 
         List<BoardCommentDto> commentList = boardCommentService.searchAll(board, lastCommentId, pageable);
-        List<BoardCommentDto> reCommentList = boardCommentService.searchAll(commentList);
+        List<BoardReCommentDto> reCommentList = boardReCommentService.searchAll(commentList);
         lastCommentId =  boardCommentService.getLastCommentId(commentList, lastCommentId);
 
         model.addAttribute("commentList", commentList);
         model.addAttribute("reCommentList", reCommentList);
         model.addAttribute("totalComment", totalComment);
         model.addAttribute("lastCommentId", lastCommentId);
+
 
         if(more != null) return "board/tab/board_commentListMore";
         return "board/tab/board_commentList";
@@ -127,9 +129,7 @@ public class BoardController {
         if(errors.hasErrors()) return commonService.getErrorMessage(errors);
         if(!security.isAuthenticated()) return "login";
 
-
         boardService.save(boardDto, principal.getName());
-
         return "success";
     }
 
@@ -142,24 +142,34 @@ public class BoardController {
 
         boardCommentService.saveComment(boardCommentDto, boardId, principal.getName());
         return "success";
-
     }
 
     @PostMapping("/board/reComment/write")
     @ApiOperation(value = "게시글 대댓글 저장")
-    public @ResponseBody String reCommentWrite(@Validated(ValidationSequence.class) BoardCommentDto boardCommentDto, BindingResult errors, Principal principal){
+    public @ResponseBody String reCommentWrite(@Validated(ValidationSequence.class) BoardReCommentDto reCommentDto, BindingResult errors, Principal principal){
 
         if(!security.isAuthenticated()) return "login";
         if(errors.hasErrors()) return commonService.getErrorMessage(errors);
 
-
-        boardCommentService.saveReComment(boardCommentDto, principal.getName());
+        boardReCommentService.save(reCommentDto, reCommentDto.getCommentId(), principal.getName());
         return "success";
-
     }
 
+    @DeleteMapping("/board/comment")
+    @ApiOperation(value = "댓글 삭제")
+    public String deleteComment(@RequestParam(name = "commentId") Long commentId, Principal principal){
+
+        if(!security.isAuthenticated()) return "login";
+
+        // 작성자 비교
+        BoardComment comment = boardCommentService.findById(commentId);
+        Member member = comment.getMember();
+        if(member.getUserId().equals(principal.getName())) return "role";
 
 
+        boardCommentService.deleteComment(commentId);
+        return "success";
+    }
 
 
 }
