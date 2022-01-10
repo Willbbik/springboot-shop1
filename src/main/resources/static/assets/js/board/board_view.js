@@ -136,7 +136,12 @@ $(function(){
 
      });
 
+    // 대댓글 수정
+    $(document).on("click", ".reComment_update", function(){
 
+         let reCommentId = $(this).closest("li").attr("data-reCommentId");
+         window.open("/board/reComment/"+reCommentId, 'google', 'width=500,height=500');
+    });
 
 })
 

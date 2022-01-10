@@ -3,6 +3,7 @@ $(function(){
     let csrfToken = $("meta[name=_csrf]").attr("content");
     let csrfHeader = $("meta[name=_csrf_header").attr("content");
 
+    // 댓글 수정
     $(document).on("click", ".btn_submit", function(){
 
         let commentId = $(this).attr("data-commentId");

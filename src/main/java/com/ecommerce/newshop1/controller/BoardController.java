@@ -121,6 +121,18 @@ public class BoardController {
         return "board/board_commentUpdate";
     }
 
+    @GetMapping("/board/reComment/{reCommentId}")
+    @ApiOperation(value = "대댓글 수정 팝업 페이지", notes = "팝업에 띄워줄 페이지")
+    public String boardReComment(@PathVariable(name = "reCommentId") Long reCommentId, Model model){
+
+        BoardReComment reComment = boardReCommentService.findById(reCommentId);
+
+        model.addAttribute("reCommentId", reCommentId);
+        model.addAttribute("content", reComment.getContent());
+        model.addAttribute("hide", reComment.getHide());
+        return "board/board_reCommentUpdate";
+    }
+
 
     @PostMapping("/board/write")
     @ApiOperation(value = "게시글 작성")
@@ -173,6 +185,7 @@ public class BoardController {
         boardCommentService.updateComment(comment.getId(), postDto);
         return "success";
     }
+
 
     @PatchMapping("/board/reComment")
     @ApiOperation(value = "대댓글 내용 수정")
