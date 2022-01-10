@@ -13,7 +13,7 @@ public interface BoardReCommentService {
 
     List<BoardReCommentDto> searchAll(List<BoardCommentDto> commentList);
 
-    Long save(BoardReCommentDto reCommentDto, Long commentId, String userId);
+    Long save(CommentPostDto postDto, String userId);
 
     void deleteById(Long reCommentId);
 

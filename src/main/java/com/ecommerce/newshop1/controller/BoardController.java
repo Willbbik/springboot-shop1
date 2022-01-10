@@ -146,16 +146,18 @@ public class BoardController {
     }
 
 
-//    @PostMapping("/board/reComment/write")
-//    @ApiOperation(value = "게시글 대댓글 저장")
-//    public @ResponseBody String reCommentWrite(@Validated(ValidationSequence.class) BoardReCommentDto reCommentDto, BindingResult errors, Principal principal){
-//
-//        if(!security.isAuthenticated()) return "login";
-//        if(errors.hasErrors()) return commonService.getErrorMessage(errors);
-//
-//        boardReCommentService.save(reCommentDto, reCommentDto.getCommentId(), principal.getName());
-//        return "success";
-//    }
+    @PostMapping("/board/reComment/write")
+    @ApiOperation(value = "게시글 대댓글 저장")
+    public @ResponseBody String reCommentWrite(@Validated(ValidationSequence.class) CommentPostDto postDto, BindingResult errors, Principal principal){
+
+        if(!security.isAuthenticated()) return "login";
+        if(errors.hasErrors()) return commonService.getErrorMessage(errors);
+
+
+        boardReCommentService.save(postDto, principal.getName());
+        return "success";
+    }
+
 
     @PatchMapping("/board/comment")
     @ApiOperation(value = "댓글 내용 수정")

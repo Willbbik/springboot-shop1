@@ -46,13 +46,17 @@ public class BoardReCommentServiceImpl implements BoardReCommentService{
 
     @Override
     @Transactional
-    public Long save(BoardReCommentDto reCommentDto, Long commentId, String userId) {
+    public Long save(CommentPostDto postDto, String userId) {
 
-        BoardComment comment = boardCommentService.findById(commentId);
+        BoardComment comment = boardCommentService.findById(postDto.getId());
         Member member = memberService.findByUserId(userId);
         Board board = comment.getBoard();
 
-        BoardReComment reComment = mapper.map(reCommentDto, BoardReComment.class);
+        BoardReComment reComment = BoardReComment.builder()
+                        .content(postDto.getContent())
+                        .hide(postDto.getHide())
+                        .build();
+
         reComment.setWriter(member.getUserId().substring(0, 3) + "***");
         comment.addBoardReCommentList(reComment);
         member.addBoardReCommentList(reComment);

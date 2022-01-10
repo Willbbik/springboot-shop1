@@ -16,7 +16,7 @@ $(function(){
         }
 
         let data = {
-            commentId : commentId,
+            id : commentId,
             content : content,
             hide : hide
         }
