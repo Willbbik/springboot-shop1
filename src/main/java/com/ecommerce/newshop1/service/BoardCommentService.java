@@ -20,7 +20,7 @@ public interface BoardCommentService {
 
     List<BoardCommentDto> searchAll(Board board, Long lastCommentId, Pageable pageable);
 
-    void deleteComment(Long commentId);
+    void deleteById(Long commentId);
 
     void updateComment(Long commentId, CommentPostDto postDto);
 

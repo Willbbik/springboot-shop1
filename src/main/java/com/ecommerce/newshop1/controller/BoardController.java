@@ -6,6 +6,7 @@ import com.ecommerce.newshop1.dto.BoardReCommentDto;
 import com.ecommerce.newshop1.dto.CommentPostDto;
 import com.ecommerce.newshop1.entity.Board;
 import com.ecommerce.newshop1.entity.BoardComment;
+import com.ecommerce.newshop1.entity.BoardReComment;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.CommonService;
@@ -145,16 +146,16 @@ public class BoardController {
     }
 
 
-    @PostMapping("/board/reComment/write")
-    @ApiOperation(value = "게시글 대댓글 저장")
-    public @ResponseBody String reCommentWrite(@Validated(ValidationSequence.class) BoardReCommentDto reCommentDto, BindingResult errors, Principal principal){
-
-        if(!security.isAuthenticated()) return "login";
-        if(errors.hasErrors()) return commonService.getErrorMessage(errors);
-
-        boardReCommentService.save(reCommentDto, reCommentDto.getCommentId(), principal.getName());
-        return "success";
-    }
+//    @PostMapping("/board/reComment/write")
+//    @ApiOperation(value = "게시글 대댓글 저장")
+//    public @ResponseBody String reCommentWrite(@Validated(ValidationSequence.class) BoardReCommentDto reCommentDto, BindingResult errors, Principal principal){
+//
+//        if(!security.isAuthenticated()) return "login";
+//        if(errors.hasErrors()) return commonService.getErrorMessage(errors);
+//
+//        boardReCommentService.save(reCommentDto, reCommentDto.getCommentId(), principal.getName());
+//        return "success";
+//    }
 
     @PatchMapping("/board/comment")
     @ApiOperation(value = "댓글 내용 수정")
@@ -171,6 +172,22 @@ public class BoardController {
         return "success";
     }
 
+    @PatchMapping("/board/reComment")
+    @ApiOperation(value = "대댓글 내용 수정")
+    public @ResponseBody String reCommentUpdate(@Validated(ValidationSequence.class) CommentPostDto postDto, BindingResult errors, Principal principal){
+
+        if(!security.isAuthenticated()) return "login";
+        if(errors.hasErrors()) return commonService.getErrorMessage(errors);
+
+        BoardReComment reComment = boardReCommentService.findById(postDto.getId());
+        Member member = reComment.getMember();
+        if(!member.getUserId().equals(principal.getName())) return "role";
+
+        boardReCommentService.updateReComment(reComment.getId(), postDto);
+        return "success";
+    }
+
+
     @DeleteMapping("/board/comment")
     @ApiOperation(value = "댓글 삭제")
     public @ResponseBody String deleteComment(@RequestParam(name = "commentId") Long commentId, Principal principal){
@@ -181,11 +198,24 @@ public class BoardController {
         BoardComment comment = boardCommentService.findById(commentId);
         Member member = comment.getMember();
         if(!member.getUserId().equals(principal.getName())) return "role";
-        // if(!comment.getMember().getUserId().equals(principal.getName())) return "role";
 
-        boardCommentService.deleteComment(commentId);
+        boardCommentService.deleteById(commentId);
         return "success";
     }
 
+    @DeleteMapping("/board/reComment")
+    @ApiOperation(value = "대댓글 삭제")
+    public @ResponseBody String deleteReComment(@RequestParam(name = "reCommentId") Long reCommentId, Principal principal){
+
+        if(!security.isAuthenticated()) return "login";
+
+        // 작성자 비교
+        BoardReComment reComment = boardReCommentService.findById(reCommentId);
+        Member member = reComment.getMember();
+        if(!member.getUserId().equals(principal.getName())) return "role";
+
+        boardReCommentService.deleteById(reCommentId);
+        return "success";
+    }
 
 }

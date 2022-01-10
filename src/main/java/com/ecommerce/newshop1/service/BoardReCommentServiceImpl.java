@@ -2,10 +2,12 @@ package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.BoardCommentDto;
 import com.ecommerce.newshop1.dto.BoardReCommentDto;
+import com.ecommerce.newshop1.dto.CommentPostDto;
 import com.ecommerce.newshop1.entity.Board;
 import com.ecommerce.newshop1.entity.BoardComment;
 import com.ecommerce.newshop1.entity.BoardReComment;
 import com.ecommerce.newshop1.entity.Member;
+import com.ecommerce.newshop1.exception.BoardCommentNotFoundException;
 import com.ecommerce.newshop1.repository.BoardReCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -22,8 +24,14 @@ public class BoardReCommentServiceImpl implements BoardReCommentService{
     private final BoardReCommentRepository boardReCommentRepository;
     private final BoardCommentService boardCommentService;
     private final MemberService memberService;
+    private final ModelMapper mapper;
 
-    ModelMapper mapper = new ModelMapper();
+    @Override
+    @Transactional(readOnly = true)
+    public BoardReComment findById(Long reCommentId) {
+        return boardReCommentRepository.findById(reCommentId)
+                .orElseThrow(() -> new BoardCommentNotFoundException("존재하지 않는 댓글입니다."));
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -53,4 +61,21 @@ public class BoardReCommentServiceImpl implements BoardReCommentService{
         return boardReCommentRepository.save(reComment).getId();
     }
 
+    @Override
+    @Transactional
+    public void deleteById(Long reCommentId) {
+
+        boardReCommentRepository.deleteById(reCommentId);
+    }
+
+    @Override
+    @Transactional
+    public void updateReComment(Long reCommentId, CommentPostDto postDto) {
+
+        BoardReComment reComment = boardReCommentRepository.findById(reCommentId)
+                 .orElseThrow(() -> new BoardCommentNotFoundException("존재하지 않는 댓글입니다."));
+
+        reComment.setContent(postDto.getContent());
+        reComment.setHide(postDto.getHide());
+    }
 }

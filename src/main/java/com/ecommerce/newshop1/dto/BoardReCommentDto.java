@@ -36,7 +36,6 @@ public class BoardReCommentDto {
 
     private String writer;
 
-    private Long commentId;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 

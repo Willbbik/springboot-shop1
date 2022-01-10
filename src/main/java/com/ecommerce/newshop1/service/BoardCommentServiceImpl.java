@@ -77,7 +77,7 @@ public class BoardCommentServiceImpl implements BoardCommentService{
 
     @Override
     @Transactional
-    public void deleteComment(Long commentId) {
+    public void deleteById(Long commentId) {
 
         boardCommentRepository.deleteById(commentId);
     }
