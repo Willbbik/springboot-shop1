@@ -31,8 +31,11 @@ public class BoardCommentRepositoryImpl implements BoardCommentRepositoryCustom{
                             QBoardComment.boardComment.modifiedDate
                         ))
                 .from(QBoardComment.boardComment)
-                .where(QBoardComment.boardComment.board.eq(board),
-                       ltCommentId(lastCommentId))
+                .where(
+                        QBoardComment.boardComment.board.eq(board),
+                        QBoardComment.boardComment.depth.eq(1),
+                        ltCommentId(lastCommentId)
+                )
                 .orderBy(QBoardComment.boardComment.id.desc())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -55,7 +58,7 @@ public class BoardCommentRepositoryImpl implements BoardCommentRepositoryCustom{
                 .where(QBoardComment.boardComment.parent.eq(parent),
                         QBoardComment.boardComment.depth.eq(2)
                         )
-                .orderBy(QBoardComment.boardComment.id.desc())
+                .orderBy(QBoardComment.boardComment.id.asc())
                 .fetch();
     }
 

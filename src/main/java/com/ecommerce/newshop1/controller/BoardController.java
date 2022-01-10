@@ -147,19 +147,17 @@ public class BoardController {
 
     @PostMapping("/board/reComment/write")
     @ApiOperation(value = "게시글 대댓글 저장")
-    public String reCommentWrite(@Validated(ValidationSequence.class) BoardCommentDto boardCommentDto, BindingResult errors){
+    public @ResponseBody String reCommentWrite(@Validated(ValidationSequence.class) BoardCommentDto boardCommentDto, BindingResult errors, Principal principal){
 
+        if(!security.isAuthenticated()) return "login";
         if(errors.hasErrors()) return commonService.getErrorMessage(errors);
 
 
-        return "index";
+        boardCommentService.saveReComment(boardCommentDto, principal.getName());
+        return "success";
 
     }
 
-    public String qwe(){
-
-        return "index";
-    }
 
 
 

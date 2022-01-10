@@ -79,6 +79,7 @@ public class BoardCommentServiceImpl implements BoardCommentService{
         Board board = boardService.findById(boardId);
 
         BoardComment boardComment = mapper.map(boardCommentDto, BoardComment.class);
+        boardComment.setDepth(1);
         boardComment.setWriter(member.getUserId().substring(0, 3) + "***");
         member.addBoardCommentList(boardComment);
         board.addBoardCommentList(boardComment);
@@ -88,8 +89,20 @@ public class BoardCommentServiceImpl implements BoardCommentService{
 
 
     @Override
-    public Long saveComment(BoardCommentDto boardCommentDto, Long boardId, String userId, Long parent) {
-        return null;
+    @Transactional
+    public Long saveReComment(BoardCommentDto boardCommentDto, String userId) {
+
+        Member member = memberService.findByUserId(userId);
+        BoardComment comment = findById(boardCommentDto.getParent());
+        Board board = comment.getBoard();
+
+        BoardComment reComment = mapper.map(boardCommentDto, BoardComment.class);
+        reComment.setDepth(2);
+        reComment.setWriter(member.getUserId().substring(0, 3) + "***");
+        board.addBoardCommentList(reComment);
+        member.addBoardCommentList(reComment);
+
+        return boardCommentRepository.save(reComment).getId();
     }
 
 

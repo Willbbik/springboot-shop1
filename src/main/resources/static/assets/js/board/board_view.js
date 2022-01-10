@@ -21,11 +21,11 @@ $(function(){
     });
 
     // 댓글 작성
-    $(".btn_enter").on("click", function(){
+    $(document).on("click", ".btn_enter",  function(){
 
+        let boardId = $("#mArticle").attr("data-boardId");
         let content = $("#content").val();
         let hide = $("input:radio[name=hide]:checked").val();
-        let boardId = $("#boardId").val();
 
         let data = {
             content : content,
@@ -44,7 +44,7 @@ $(function(){
 
             if(result === "success"){
                 $("#content").val("");
-
+                getCommentList();
             }else if(result === "login"){
                 alert("로그인 후 댓글작성이 가능합니다.");
                 let c = confirm("로그인 페이지로 이동하시겠습니까? (작성중이던 내용은 사라집니다.)");
@@ -55,7 +55,6 @@ $(function(){
                 alert(result);
                 return false;
             }
-
         }).fail(function(result){
             alert("에러가 발생했습니다. \n잠시후 다시 시도해주세요.");
             return false;
@@ -83,14 +82,12 @@ $(function(){
 function getCommentList(){
 
     let boardId = $("#mArticle").attr("data-boardId");
-    let lastCommentId = $("#lastCommentId").val();
 
     $.ajax({
         url : "/board/commentList",
         type : "get",
         data : {
-            boardId : boardId,
-            lastCommentId : lastCommentId
+            boardId : boardId
         }
     }).done(function(result){
        $(".area_reply").html(result);

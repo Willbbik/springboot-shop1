@@ -24,21 +24,23 @@ $(function(){
             }
         }).done(function(response, status, xhr){
 
-            let ct = xhr.getResponseHeader("content-type") || "";
-            if(ct.indexOf("html") > -1){
-                $(".wrap_content").html(response);
-            }else{
-                alert(response);
-            }
-
-//            if(result != null){o
-//                $(".wrap_content").html(result);
-////                self.close();
-////                opener.location.href = "/login";
+//            let ct = xhr.getResponseHeader("content-type") || "";
+//            if(ct.indexOf("html") > -1){
+//                self.close();
+//                opener.location.href = "javascript:getCommentList();";
 //            }else{
-//                alert(result);
-//                return false;
+//                alert(response);
 //            }
+           if(response === "success"){
+                self.close();
+                opener.location.href = "javascript:getCommentList();";
+           }else if(response === "login"){
+                alert("로그인 후 대댓글작성이 가능합니다.");
+                return false;
+           }else{
+                alert(response);
+                return false;
+           }
         }).fail(function(result){
             alert("에러가 발생했습니다. \n잠시후 다시 시도해주세요.");
             return false;

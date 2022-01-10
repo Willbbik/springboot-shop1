@@ -17,7 +17,7 @@ public interface BoardCommentService {
 
     Long saveComment(BoardCommentDto boardCommentDto, Long boardId, String userId);
 
-    Long saveComment(BoardCommentDto boardCommentDto, Long boardId, String userId, Long parent);
+    Long saveReComment(BoardCommentDto boardCommentDto, String userId);
 
     List<BoardCommentDto> searchAll(Board board, Long lastCommentId, Pageable pageable);
 
