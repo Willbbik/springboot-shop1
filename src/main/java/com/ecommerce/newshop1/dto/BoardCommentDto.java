@@ -34,6 +34,7 @@ public class BoardCommentDto {
     private String hide;
 
     private int depth;
+    private Long parent;
     private String writer;
 
     private LocalDateTime createdDate;

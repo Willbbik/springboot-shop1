@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface BoardCommentRepositoryCustom {
 
-    List<BoardCommentDto> searchAll(Board board, Long lastCommentId);
+    List<BoardCommentDto> searchAll(Board board, Long lastCommentId, Pageable pageable);
 
     List<BoardCommentDto> searchAll(Long parent);
 

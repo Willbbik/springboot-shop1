@@ -1,3 +1,9 @@
+body {
+    background-color: #FFF;
+    padding-top: 49px;
+    font-family: '맑은 고딕','Malgun Gothic',sans-serif;
+}
+
 header {
     position: fixed;
     top: 0;

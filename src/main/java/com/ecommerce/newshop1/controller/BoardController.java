@@ -59,35 +59,54 @@ public class BoardController {
         return "board/board_write";
     }
 
-    @GetMapping("/board/reComment/write")
+    @GetMapping("/board/reComment/write/{parentId}")
     @ApiOperation(value = "대댓글 작성 페이지")
-    public String reCommentWrite(){
+    public String reCommentWrite(@PathVariable(name = "parentId") Long parentId, Model model){
+
+        model.addAttribute("parentId", parentId);
+
         return "board/board_reCommentWrite";
     }
-
 
     @GetMapping("/board/view/{boardId}")
     @ApiOperation(value = "게시글 상세보기 페이지")
     public String boardDetails(@PathVariable(name = "boardId") Long boardId, Model model){
 
         Board board = boardService.findById(boardId);
-        BoardDto boardDto = mapper.map(board, BoardDto.class);
-        boardDto = boardService.editBoardDto(boardDto);
+        BoardDto boardDto = boardService.editBoardDto(mapper.map(board, BoardDto.class));
 
         Long totalComment = boardCommentService.countByBoard(board);
 
-        // 댓글, 대댓글
-        List<BoardCommentDto> commentList = boardCommentService.searchAll(board, null);
-        List<BoardCommentDto> reCommentList = boardCommentService.searchAll(commentList);
-
-
         model.addAttribute("totalComment", totalComment);
         model.addAttribute("board", boardDto);
-        model.addAttribute("commentList", commentList);
-        model.addAttribute("reCommentList", reCommentList);
 
         return "board/board_view";
     }
+
+
+    @GetMapping("/board/commentList")
+    @ApiOperation(value = "게시글 댓글 리스트가 담긴 html 반환")
+    public String getCommentList(@RequestParam(name = "boardId") Long boardId,
+                                 @RequestParam(name = "lastCommentId", required = false) Long lastCommentId,
+                                 @RequestParam(name = "more", required = false) String more, Model model){
+
+        Board board = boardService.findById(boardId);
+        Long totalComment =  boardCommentService.countByBoard(board);
+        Pageable pageable = PageRequest.ofSize(10);
+
+        List<BoardCommentDto> commentList = boardCommentService.searchAll(board, lastCommentId, pageable);
+        List<BoardCommentDto> reCommentList = boardCommentService.searchAll(commentList);
+        lastCommentId =  boardCommentService.getLastCommentId(commentList, lastCommentId);
+
+        model.addAttribute("commentList", commentList);
+        model.addAttribute("reCommentList", reCommentList);
+        model.addAttribute("totalComment", totalComment);
+        model.addAttribute("lastCommentId", lastCommentId);
+
+        if(more != null) return "board/tab/board_commentListMore";
+        return "board/tab/board_commentList";
+    }
+
 
     @GetMapping("/board/comment/manage/{commentId}")
     @ApiOperation(value = "댓글 수정 팝업 페이지", notes = "팝업에 띄워줄 페이지")
@@ -126,6 +145,21 @@ public class BoardController {
 
     }
 
+    @PostMapping("/board/reComment/write")
+    @ApiOperation(value = "게시글 대댓글 저장")
+    public String reCommentWrite(@Validated(ValidationSequence.class) BoardCommentDto boardCommentDto, BindingResult errors){
+
+        if(errors.hasErrors()) return commonService.getErrorMessage(errors);
+
+
+        return "index";
+
+    }
+
+    public String qwe(){
+
+        return "index";
+    }
 
 
 

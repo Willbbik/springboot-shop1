@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -24,6 +25,18 @@ public class BoardCommentServiceImpl implements BoardCommentService{
     private final BoardService boardService;
 
     ModelMapper mapper = new ModelMapper();
+
+    @Override
+    public Long getLastCommentId(List<BoardCommentDto> commentList, Long lastCommentId) {
+
+        if(commentList.isEmpty()){
+            return lastCommentId;
+        }else{
+            return commentList.stream()
+                    .min(Comparator.comparingLong(BoardCommentDto::getId))
+                    .get().getId();
+        }
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -41,8 +54,8 @@ public class BoardCommentServiceImpl implements BoardCommentService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<BoardCommentDto> searchAll(Board board, Long lastCommentId) {
-        return boardCommentRepository.searchAll(board, lastCommentId);
+    public List<BoardCommentDto> searchAll(Board board, Long lastCommentId, Pageable pageable) {
+        return boardCommentRepository.searchAll(board, lastCommentId, pageable);
     }
 
     @Override

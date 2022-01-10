@@ -1,7 +1,11 @@
+let openWin;
+
 $(function(){
 
     let csrfToken = $("meta[name=_csrf]").attr("content");
     let csrfHeader = $("meta[name=_csrf_header").attr("content");
+
+    getCommentList();
 
     $(document).on("click", ".comment_delete", function(){
 
@@ -59,12 +63,41 @@ $(function(){
     });
 
 
+
     // 대댓글 작성
     $(document).on("click", ".reComment_write", function(){
 
-        window.open("/board/reComment/write", 'google', 'width=500,height=500');
+        let parentId = $(this).closest(".list_reply").find(".rp_admin").attr("data-num");
+        openWin = window.open("/board/reComment/write/"+parentId, 'google', 'width=500,height=500');
+
+
 
     });
 
 
+
+
 })
+
+// 댓글 가져오기
+function getCommentList(){
+
+    let boardId = $("#mArticle").attr("data-boardId");
+    let lastCommentId = $("#lastCommentId").val();
+
+    $.ajax({
+        url : "/board/commentList",
+        type : "get",
+        data : {
+            boardId : boardId,
+            lastCommentId : lastCommentId
+        }
+    }).done(function(result){
+       $(".area_reply").html(result);
+    }).fail(function(result){
+       alert("에러가 발생했습니다. \n댓글을 가져올 수 없습니다.");
+    });
+
+
+
+}

@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
     <title>댓글에 댓글 작성</title>
     <link rel="stylesheet" href="/assets/css/board/board_reCommentWrite.css" />
 
@@ -11,11 +14,11 @@
 <header>
     <h1 class="header_title">댓글에 댓글 작성</h1>
 </header>
-<form class="comment_form" method="post" action="#">
+<form class="comment_form" method="post" onsubmit="return false" action="#">
     <fieldset>
         <div class="wrap_content">
-            <label class="screen_out" for="comment">내용</label>
-            <textarea id="comment" name="comment" th:value="${content}" cols="45" rows="9" placeholder="수정할 댓글 내용을 입력해주세요.">
+            <label class="screen_out" for="content">내용</label>
+            <textarea id="content" name="content" th:value="${content}" cols="45" rows="9" placeholder="수정할 댓글 내용을 입력해주세요.">
             </textarea>
         </div>
         <div>
@@ -35,11 +38,13 @@
             </span>
         </div>
         <div class="wrap_btn">
-            <button class="btn btn_reset" type="reset">취소</button>
-            <button class="btn btn_submit" type="submit">확인</button>
+<!--            <button class="btn btn_submit" type="submit" th:attr="data-parentId=${parentId}" onclick="test();">확인</button>-->
+            <button class="btn btn_submit" type="button" th:attr="data-parentId=${parentId}">확인</button>
         </div>
     </fieldset>
 </form>
 
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<script src="/assets/js/board/board_reCommentWrite.js"></script>
 </body>
 </html>
