@@ -3,10 +3,10 @@ package com.ecommerce.newshop1.controller;
 import com.ecommerce.newshop1.dto.BoardCommentDto;
 import com.ecommerce.newshop1.dto.BoardDto;
 import com.ecommerce.newshop1.dto.BoardReCommentDto;
+import com.ecommerce.newshop1.dto.CommentPostDto;
 import com.ecommerce.newshop1.entity.Board;
 import com.ecommerce.newshop1.entity.BoardComment;
 import com.ecommerce.newshop1.entity.Member;
-import com.ecommerce.newshop1.repository.BoardCommentRepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.CommonService;
 import com.ecommerce.newshop1.utils.PaginationShowSizeTen;
@@ -35,7 +35,7 @@ public class BoardController {
     private final CommonService commonService;
     private final SecurityService security;
 
-    ModelMapper mapper = new ModelMapper();
+    private final ModelMapper mapper;
 
     @GetMapping("/board/freeBoard")
     @ApiOperation(value = "자유게시판 목록 페이지")
@@ -109,15 +109,15 @@ public class BoardController {
     }
 
 
-    @GetMapping("/board/comment/manage/{commentId}")
+    @GetMapping("/board/comment/{commentId}")
     @ApiOperation(value = "댓글 수정 팝업 페이지", notes = "팝업에 띄워줄 페이지")
     public String boardComment(@PathVariable(name = "commentId") Long commentId, Model model){
 
         BoardComment boardComment = boardCommentService.findById(commentId);
-        BoardCommentDto boardCommentDto = mapper.map(boardComment, BoardCommentDto.class);
 
         model.addAttribute("commentId", commentId);
-        model.addAttribute("content", boardCommentDto.getContent());
+        model.addAttribute("content", boardComment.getContent());
+        model.addAttribute("hide", boardComment.getHide());
         return "board/board_commentUpdate";
     }
 
@@ -132,6 +132,7 @@ public class BoardController {
         boardService.save(boardDto, principal.getName());
         return "success";
     }
+
 
     @PostMapping("/board/comment/write")
     @ApiOperation(value = "게시글 댓글 저장")
@@ -156,6 +157,20 @@ public class BoardController {
         return "success";
     }
 
+    @PatchMapping("/board/comment")
+    @ApiOperation(value = "댓글 내용 수정")
+    public @ResponseBody String commentUpdate(@Validated(ValidationSequence.class) CommentPostDto postDto, BindingResult errors, Principal principal){
+
+        if(!security.isAuthenticated()) return "login";
+        if(errors.hasErrors()) return commonService.getErrorMessage(errors);
+
+        BoardComment comment = boardCommentService.findById(postDto.getId());
+        BoardCommentDto commentDto = mapper.map(comment, BoardCommentDto.class);
+
+        return "success";
+
+
+    }
 
     @DeleteMapping("/board/comment")
     @ApiOperation(value = "댓글 삭제")

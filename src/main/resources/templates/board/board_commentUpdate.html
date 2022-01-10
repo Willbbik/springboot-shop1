@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
     <title>댓글 수정</title>
     <link rel="stylesheet" href="/assets/css/board/board_commentUpdate.css" />
 
@@ -11,19 +14,37 @@
     <header>
         <h1 class="header_title">댓글 수정</h1>
     </header>
-    <form class="comment_form" method="post" action="#">
+    <form class="comment_form" method="post" onsubmit="return false" action="#">
         <fieldset>
             <div class="wrap_content">
-                <label class="screen_out" for="comment">내용</label>
-                <textarea id="comment" name="comment" th:value="${content}" cols="45" rows="9" placeholder="수정할 댓글 내용을 입력해주세요.">
+                <label class="screen_out" for="content">내용</label>
+                <textarea id="content" name="content" th:text="${content}" cols="45" rows="9" placeholder="수정할 댓글 내용을 입력해주세요.">
                 </textarea>
             </div>
+            <div>
+            <span>
+                <input type="radio" id="public" name="hide" value="public" th:checked="(${hide} == 'public')">
+                <label for="public">
+                    <span>
+                        공개
+                    </span>
+                </label>
+                <input type="radio" id="private" name="hide" value="private" th:checked="(${hide} == 'private')">
+                <label for="private">
+                    <span>
+                        비공개
+                    </span>
+                </label>
+            </span>
+            </div>
             <div class="wrap_btn">
-                <button class="btn btn_reset" type="reset"></button>
-                <button class="btn btn_submit" type="submit">확인</button>
+                <button class="btn btn_submit" type="submit" th:attr="data-commentId=${commentId}">확인</button>
             </div>
         </fieldset>
     </form>
 
+
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<script src="/assets/js/board/board_commentUpdate.js"></script>
 </body>
 </html>

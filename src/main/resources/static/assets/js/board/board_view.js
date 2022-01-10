@@ -46,8 +46,8 @@ $(function(){
 
     $(document).on("click", ".comment_update", function(){
 
-        $(this);
-
+           let commentId = $(this).closest(".list_reply").find(".rp_admin").attr("data-commentId");
+           openWin = window.open("/board/comment/"+commentId, 'google', 'width=500,height=500');
     });
 
     // 댓글 작성

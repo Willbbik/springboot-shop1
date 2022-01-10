@@ -3,7 +3,6 @@ $(function(){
     let csrfToken = $("meta[name=_csrf]").attr("content");
     let csrfHeader = $("meta[name=_csrf_header").attr("content");
 
-    // 대댓글 전송
     $(document).on("click", ".btn_submit", function(){
 
         let commentId = $(this).attr("data-commentId");
@@ -15,47 +14,35 @@ $(function(){
             return false;
         }
 
-        let data = {
-            commentId : commentId,
-            content : content,
-            hide : hide
-        }
-
         $.ajax({
-            url : "/board/reComment/write",
-            type : "post",
-            data : data,
+            url : "/board/comment",
+            type : "patch",
+            data : {
+                id : commentId,
+                content : content,
+                hide : hide,
+            },
             beforeSend : function(xhr){
                 xhr.setRequestHeader(csrfHeader, csrfToken);
             }
-        }).done(function(response, status, xhr){
-           if(response === "success"){
+        }).done(function(result){
+            if(result === "success"){
                 self.close();
                 opener.location.href = "javascript:getCommentList();";
-           }else if(response === "login"){
-                alert("로그인 후 대댓글작성이 가능합니다.");
+            }else if(result === "login"){
+                alert("로그인 후 이용가능합니다.");
                 return false;
-           }else{
-                alert(response);
+            }else if(result === "role"){
+                alert("작성자만 수정 가능합니다.");
                 return false;
-           }
-        }).fail(function(result){
+            }else{
+                alert(result);
+                return false;
+            }
+        }).fail(function(){
             alert("에러가 발생했습니다. \n잠시후 다시 시도해주세요.");
             return false;
         });
     });
 
-
 });
-
-function test(){
-
-//    self.close();
-//    $("#content", parent.opener.document).val("success");
-
-    if(!opener.closed){
-
-
-    }
-
-}
