@@ -6,11 +6,11 @@ import com.ecommerce.newshop1.dto.BoardReCommentDto;
 import com.ecommerce.newshop1.entity.Board;
 import com.ecommerce.newshop1.entity.BoardComment;
 import com.ecommerce.newshop1.entity.Member;
+import com.ecommerce.newshop1.repository.BoardCommentRepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.CommonService;
 import com.ecommerce.newshop1.utils.PaginationShowSizeTen;
 import com.ecommerce.newshop1.utils.ValidationSequence;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -86,7 +86,7 @@ public class BoardController {
 
 
     @GetMapping("/board/commentList")
-    @ApiOperation(value = "게시글 댓글 리스트가 담긴 html 반환")
+    @ApiOperation(value = "게시글 댓글 리스트가 담긴 html 반환", notes = "게시글 상세보기 진입시 자동 호출")
     public String getCommentList(@RequestParam(name = "boardId") Long boardId,
                                  @RequestParam(name = "lastCommentId", required = false) Long lastCommentId,
                                  @RequestParam(name = "more", required = false) String more, Model model){
@@ -104,7 +104,6 @@ public class BoardController {
         model.addAttribute("totalComment", totalComment);
         model.addAttribute("lastCommentId", lastCommentId);
 
-
         if(more != null) return "board/tab/board_commentListMore";
         return "board/tab/board_commentList";
     }
@@ -117,6 +116,7 @@ public class BoardController {
         BoardComment boardComment = boardCommentService.findById(commentId);
         BoardCommentDto boardCommentDto = mapper.map(boardComment, BoardCommentDto.class);
 
+        model.addAttribute("commentId", commentId);
         model.addAttribute("content", boardCommentDto.getContent());
         return "board/board_commentUpdate";
     }
@@ -144,6 +144,7 @@ public class BoardController {
         return "success";
     }
 
+
     @PostMapping("/board/reComment/write")
     @ApiOperation(value = "게시글 대댓글 저장")
     public @ResponseBody String reCommentWrite(@Validated(ValidationSequence.class) BoardReCommentDto reCommentDto, BindingResult errors, Principal principal){
@@ -155,17 +156,18 @@ public class BoardController {
         return "success";
     }
 
+
     @DeleteMapping("/board/comment")
     @ApiOperation(value = "댓글 삭제")
-    public String deleteComment(@RequestParam(name = "commentId") Long commentId, Principal principal){
+    public @ResponseBody String deleteComment(@RequestParam(name = "commentId") Long commentId, Principal principal){
 
         if(!security.isAuthenticated()) return "login";
 
         // 작성자 비교
         BoardComment comment = boardCommentService.findById(commentId);
         Member member = comment.getMember();
-        if(member.getUserId().equals(principal.getName())) return "role";
-
+        if(!member.getUserId().equals(principal.getName())) return "role";
+        // if(!comment.getMember().getUserId().equals(principal.getName())) return "role";
 
         boardCommentService.deleteComment(commentId);
         return "success";
