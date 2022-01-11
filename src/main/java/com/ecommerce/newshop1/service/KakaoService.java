@@ -77,9 +77,9 @@ public class KakaoService {
         params.add("cid", "TC0ONETIME");
         params.add("partner_order_id", orderNum);
         params.add("partner_user_id", "partner_user_id");
-        params.add("item_name", "초코파이");
+        params.add("item_name", session.getAttribute("orderName").toString());
         params.add("quantity", "1");
-        params.add("total_amount", "2000");
+        params.add("total_amount", session.getAttribute("totalPrice").toString());
         params.add("tax_free_amount", "0");
         params.add("approval_url", kakaoPayApprovalUrl);
         params.add("fail_url", kakaoPayFailUrl);

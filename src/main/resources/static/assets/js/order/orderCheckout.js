@@ -43,14 +43,39 @@ function kakaoPay(address){
             if(result === "fail"){
                 alert("필수정보를 입력해주세요.");
                 return false;
-            }else{
-                window.open(result, 'google', 'width=500,height=500');
+            }else if(result === "validation"){
+                alert("필수 값을 입력해주세요.");
+                return false;
+            } else{
+                window.location.href = result;
+                // window.open(result, 'google', 'width=500,height=500');
             }
         }).fail(function(result){
-            alert("에러입니다.");
+            alert("에러가 발생했습니다. \n잠시후 다시 시도해주세요.");
             return false;
         });
 }
+//function kakaoPay(address){
+//
+//    $.ajax({
+//        url  : "/kakaoPay/order",
+//        type : "post",
+//        data : address,
+//        beforeSend : function(xhr){
+//            xhr.setRequestHeader(header, token);
+//        }
+//        }).done(function(result){
+//            if(result === "fail"){
+//                alert("필수정보를 입력해주세요.");
+//                return false;
+//            }else{
+//                window.open(result, 'google', 'width=500,height=500');
+//            }
+//        }).fail(function(result){
+//            alert("에러입니다.");
+//            return false;
+//        });
+//}
 
 //가상계좌 결제
 function virtualAccount(address){

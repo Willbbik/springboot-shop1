@@ -21,7 +21,7 @@
                 <a href="/">에게모니</a>
                 <a th:href="@{/admin/main}">관리자 페이지</a>
             </li>
-            <input type="text" class="form-control me-2" placeholder="검색" maxlength="20"/>
+            <input type="text" class="form-control me-2" width="50px" placeholder="검색" maxlength="20"/>
             <br/>
             <p class="acountbuttons" style="text-align: center;">
                 <span sec:authorize="isAnonymous()"><a th:href="@{/login}">로그인</a></span>
@@ -57,7 +57,6 @@
 
             <h1>메인 화면</h1>
             <p>메뉴가 많아서 한 페이지를 넘으면 세로 스크롤바 생김</p>
-
 
 
             <!-- /본문 -->

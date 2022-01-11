@@ -9,11 +9,9 @@ import com.ecommerce.newshop1.service.CartService;
 import com.ecommerce.newshop1.service.KakaoService;
 import com.ecommerce.newshop1.service.MemberService;
 import com.ecommerce.newshop1.service.OrderService;
-import com.ecommerce.newshop1.utils.CommonService;
 import com.ecommerce.newshop1.utils.ValidationSequence;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,8 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.Optional;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -32,9 +29,7 @@ public class KakaoController {
     private final CartService cartService;
     private final KakaoService kakaoService;
     private final OrderService orderService;
-    private final CommonService commonService;
 
-    ModelMapper mapper = new ModelMapper();
 
     @PostMapping("/kakaoPay/order")
     @ApiOperation(value = "카카오페이 결제창 띄우기", notes = "카카오쪽으로 상품 정보에 대해서 전송후, 결제창 uri 리턴")
@@ -44,7 +39,7 @@ public class KakaoController {
         if(!PayType.KAKAO_PAY.equals(payType)) {
             return "fail";
         } else if(errors.hasErrors()) {
-            return commonService.getErrorMessage(errors);
+            return "validation";
         }
 
         session.setAttribute("addressDto", addressDto);
@@ -53,8 +48,9 @@ public class KakaoController {
         return kakaoService.kakaoPayReady(session);
     }
 
+
     @RequestMapping("/kakaoPay/order/success")
-    @ApiOperation(value = "카카오페이 결제 승인", notes = "사용자가 결제 인증 완료후, 결제 완료 처리하는 단계")
+    @ApiOperation(value = "카카오페이 결제 승인", notes = "카카오결제 승인 후 주문성공 페이지 띄워주기")
     public String kakaoPaySuccess(@RequestParam(name = "pg_token") String pgToken, HttpSession session, Model model){
 
         String tid = session.getAttribute("tid").toString();
@@ -75,17 +71,11 @@ public class KakaoController {
         orderNum = orderService.doOrder(session, orderPaymentInformation, delivery);
 
         // 주문 후 결제성공 페이지에 띄워주기 위해서
+        session.removeAttribute("tid");
         Order order = orderService.findByOrderNum(orderNum);
         model.addAttribute(orderService.getModelPayInfo(order, model));
 
         return "order/order_success";
-    }
-
-
-    @RequestMapping("/kakaoPay/order/cancel")
-    @ApiOperation(value = "카카오페이 결제 취소 페이지")
-    public String kakaoCencel(){
-        return "order/kakao/kakaoPayClose";
     }
 
 

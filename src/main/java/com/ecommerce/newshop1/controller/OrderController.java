@@ -36,6 +36,23 @@ public class OrderController {
     private final CommonService commonService;
 
 
+    @GetMapping("/order/checkout")
+    @ApiOperation(value = "주문 페이지로 이동", notes = "결제중이던 주문페이지로 다시 이동해야할때")
+    public String checkoutPage(HttpSession session, Model model){
+
+        if(session.getAttribute("orderNum") == null){
+            return "error/notOrder";
+        }
+
+        model.addAttribute("addressDto", session.getAttribute("addressDto"));
+        model.addAttribute("orderItems", session.getAttribute("orderItems"));
+        model.addAttribute("orderNum", session.getAttribute("orderNum"));
+        model.addAttribute("orderName", session.getAttribute("orderName"));
+        model.addAttribute("totalPrice", session.getAttribute("totalPrice"));
+        return "order/order_checkout";
+    }
+
+
     @PostMapping("/order/checkout")
     @ApiOperation(value = "구매할 상품 선택후 주문페이지로 이동")
     public String checkoutPage(String itemList, String where, Model model, HttpServletRequest request) throws Exception {
@@ -63,10 +80,11 @@ public class OrderController {
         // 주문번호
         String orderNum = orderService.createOrderNum();
 
-        // 마지막 최종 주문할 때 사용하기 위해서
+        session.setAttribute("orderItems", orderItems);
         session.setAttribute("orderNum", orderNum);
         session.setAttribute("orderItems", orderItems);
         session.setAttribute("orderName", orderName);
+        session.setAttribute("totalPrice", totalPrice);
 
         model.addAttribute("orderItems", orderItems);
         model.addAttribute("orderNum", orderNum);

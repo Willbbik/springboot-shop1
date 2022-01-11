@@ -199,6 +199,7 @@ public class OrderServiceImpl implements OrderService {
         session.removeAttribute("orderName");
         session.removeAttribute("addressDto");
         session.removeAttribute("payType");
+        session.removeAttribute("totalPrice");
 
         return orderNum;
     }
