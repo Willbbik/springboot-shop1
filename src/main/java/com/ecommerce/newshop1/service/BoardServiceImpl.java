@@ -19,8 +19,7 @@ public class BoardServiceImpl implements BoardService{
 
     private final BoardRepository boardRepository;
     private final MemberService memberService;
-
-    ModelMapper mapper = new ModelMapper();
+    private final ModelMapper mapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -46,6 +45,19 @@ public class BoardServiceImpl implements BoardService{
         member.addBoardList(board);
 
         return boardRepository.save(board).getId();
+    }
+
+    @Override
+    @Transactional
+    public Long update(Long boardId, BoardDto boardDto) {
+
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new BoardNotFoundException("존재하지 않는 게시물입니다."));
+
+        board.setTitle(boardDto.getTitle());
+        board.setContent(boardDto.getContent());
+        board.setHide(boardDto.getHide());
+        return board.getId();
     }
 
     @Override

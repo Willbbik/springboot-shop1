@@ -17,6 +17,8 @@ public interface BoardService {
 
     Long save(BoardDto boardDto, String userId);
 
+    Long update(Long boardId, BoardDto boardDto);
+
     BoardDto editBoardDto(BoardDto boardDto);
 
 }

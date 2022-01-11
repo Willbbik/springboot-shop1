@@ -100,7 +100,7 @@
             <div class="paging">
                 <a th:href="@{/board/freeBoard(page=${page.prevPage})}">이전</a>
                 <th:block th:each="i : ${#numbers.sequence(page.startPage, page.endPage)}">
-                    <a th:href="@{/board/freeBoard(page=${i})}" th:text="${i}"></a>
+                    <a th:href="@{/board/freeBoard(page=${i})}" th:classappend="${page.curPage} == ${i} ? 'here'" th:text="${i}"></a>
                 </th:block>
                 <a th:href="@{/board/freeBoard(page=${page.nextPage})}">다음</a>
             </div>

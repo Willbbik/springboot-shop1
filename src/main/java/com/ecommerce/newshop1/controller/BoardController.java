@@ -8,6 +8,7 @@ import com.ecommerce.newshop1.entity.Board;
 import com.ecommerce.newshop1.entity.BoardComment;
 import com.ecommerce.newshop1.entity.BoardReComment;
 import com.ecommerce.newshop1.entity.Member;
+import com.ecommerce.newshop1.repository.BoardRepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.CommonService;
 import com.ecommerce.newshop1.utils.PaginationShowSizeTen;
@@ -22,14 +23,17 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 public class BoardController {
 
+    private final BoardRepository boardRepository;
     private final BoardService boardService;
     private final BoardCommentService boardCommentService;
     private final BoardReCommentService boardReCommentService;
@@ -41,10 +45,10 @@ public class BoardController {
     @ApiOperation(value = "자유게시판 목록 페이지")
     public String freeBoard(@RequestParam(name = "page", defaultValue = "1") int curPage, Model model){
 
-        Long total =  boardService.count();
+        Long total = boardService.count();
         PaginationShowSizeTen page = new PaginationShowSizeTen(total, curPage);
 
-        Pageable pageable = PageRequest.of(page.getCurPage(), page.getShowMaxSize());
+        Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxSize());
         List<BoardDto> boardList = boardService.searchAll(pageable);
 
         model.addAttribute("boardList", boardList);
@@ -60,6 +64,48 @@ public class BoardController {
         return "board/board_write";
     }
 
+    @GetMapping("/board/write/{boardId}")
+    @ApiOperation(value = "게시글 수정 페이지")
+    public ModelAndView boardUpdate(@PathVariable(name = "boardId") Long boardId, Principal principal, ModelAndView modelAndView){
+
+        Optional<Board> board = boardRepository.findById(boardId);
+
+        if(board.isEmpty() || !security.isAuthenticated()){
+            modelAndView.setViewName("error/board_refuse");
+        }else if(!board.get().getMember().getUserId().equals(principal.getName())){
+            modelAndView.setViewName("error/board_refuse");
+        }else{
+            BoardDto boardDto = mapper.map(board.get(), BoardDto.class);
+            modelAndView.addObject("board", boardDto);
+            modelAndView.setViewName("board/board_update");
+        }
+        return modelAndView;
+    }
+
+
+    @GetMapping("/board/view/{boardId}")
+    @ApiOperation(value = "게시글 상세보기 페이지")
+    public String boardDetails(@PathVariable(name = "boardId") Long boardId, Model model, Principal principal){
+
+        Board board = boardService.findById(boardId);
+        Member member = board.getMember();
+        BoardDto boardDto = boardService.editBoardDto(mapper.map(board, BoardDto.class));
+
+        Long totalComment = boardCommentService.countByBoard(board);
+
+        boolean role = false;
+        if(security.isAuthenticated()){
+            if(member.getUserId().equals(principal.getName())) role = true;
+        }
+
+        model.addAttribute("totalComment", totalComment);
+        model.addAttribute("board", boardDto);
+        model.addAttribute("role", role);
+
+        return "board/board_view";
+    }
+
+
     @GetMapping("/board/reComment/write/{commentId}")
     @ApiOperation(value = "대댓글 작성 페이지")
     public String reCommentWrite(@PathVariable(name = "commentId") Long commentId, Model model){
@@ -67,21 +113,6 @@ public class BoardController {
         model.addAttribute("commentId", commentId);
 
         return "board/board_reCommentWrite";
-    }
-
-    @GetMapping("/board/view/{boardId}")
-    @ApiOperation(value = "게시글 상세보기 페이지")
-    public String boardDetails(@PathVariable(name = "boardId") Long boardId, Model model){
-
-        Board board = boardService.findById(boardId);
-        BoardDto boardDto = boardService.editBoardDto(mapper.map(board, BoardDto.class));
-
-        Long totalComment = boardCommentService.countByBoard(board);
-
-        model.addAttribute("totalComment", totalComment);
-        model.addAttribute("board", boardDto);
-
-        return "board/board_view";
     }
 
 
@@ -162,14 +193,28 @@ public class BoardController {
     @ApiOperation(value = "게시글 대댓글 저장")
     public @ResponseBody String reCommentWrite(@Validated(ValidationSequence.class) CommentPostDto postDto, BindingResult errors, Principal principal){
 
-        if(!security.isAuthenticated()) return "login";
-        if(errors.hasErrors()) return commonService.getErrorMessage(errors);
+            if(!security.isAuthenticated()) return "login";
+            if(errors.hasErrors()) return commonService.getErrorMessage(errors);
 
 
-        boardReCommentService.save(postDto, principal.getName());
-        return "success";
+            boardReCommentService.save(postDto, principal.getName());
+            return "success";
     }
 
+    @PatchMapping("/board/write/{boardId}")
+    @ApiOperation(value = "게시글 수정")
+    public @ResponseBody String boardUpdate(@PathVariable(name = "boardId") Long boardId, @Validated(ValidationSequence.class) BoardDto boardDto, BindingResult errors, Principal principal){
+
+            if(!security.isAuthenticated()) return "login";
+            if(errors.hasErrors()) return commonService.getErrorMessage(errors);
+
+            Board board = boardService.findById(boardId);
+            Member member = board.getMember();
+            if(!member.getUserId().equals(principal.getName())) return "role";
+
+            boardService.update(boardId, boardDto);
+            return "success";
+    }
 
     @PatchMapping("/board/comment")
     @ApiOperation(value = "댓글 내용 수정")
@@ -217,6 +262,7 @@ public class BoardController {
         boardCommentService.deleteById(commentId);
         return "success";
     }
+
 
     @DeleteMapping("/board/reComment")
     @ApiOperation(value = "대댓글 삭제")
