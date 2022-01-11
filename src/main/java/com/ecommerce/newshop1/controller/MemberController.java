@@ -41,10 +41,8 @@ public class MemberController {
     @GetMapping("/")
     @ApiOperation(value = "웹 기본 페이지")
     public String index() {
-
         return "index";
     }
-
 
     @GetMapping("/join")
     @ApiOperation(value = "회원가입 페이지")
@@ -52,7 +50,6 @@ public class MemberController {
 
         return "member/member_join";
     }
-
 
     @RequestMapping("/login")
     @ApiOperation(value = "로그인 페이지")
@@ -126,7 +123,6 @@ public class MemberController {
     }
 
 
-
     @DeleteMapping("/member/withdrawal")
     @ApiOperation(value = "비밀번호 확인 후 회원탈퇴 처리", notes = "회원탈퇴")
     public @ResponseBody String withdrawalPost(HttpSession session, @RequestParam(name = "password") String password){
@@ -196,13 +192,13 @@ public class MemberController {
 
 
     @DeleteMapping("/mypage/qna/delete")
+    @ApiOperation(value = "본인이 작성한 qna 삭제")
     public @ResponseBody String qnaDelete(@RequestParam List<Long> qnaIdList){
 
         qnAService.deleteQnaAndReply(qnaIdList);
 
         return "success";
     }
-
 
     @GetMapping("/member/idConfirm")
     @ApiOperation(value = "아이디 중복검사", notes = "회원가입시 ajax로 아이디 중복검사 할 때")
@@ -214,7 +210,6 @@ public class MemberController {
         if(!member && !withdrawalMember) return "Y";
         else return "N";
     }
-
 
     @GetMapping("/member/sendAuth")
     @ApiOperation(value = "인증번호", notes = "인증번호를 전송해주고 redis에 저장")
@@ -326,6 +321,7 @@ public class MemberController {
 
         if(result){
 
+            // 인증 했을시 redis에 저장된 값 삭제
             List<String> userIdList = memberService.findAllByPhoneNum(phoneNum);
             redisService.deleteKey(phoneNum);
             redisService.deleteKey(phoneNum+"_check");

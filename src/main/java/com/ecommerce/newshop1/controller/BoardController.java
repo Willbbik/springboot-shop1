@@ -125,9 +125,8 @@ public class BoardController {
 
         Board board = boardService.findById(boardId);
         Long totalComment =  boardCommentService.countByBoard(board);
-        Pageable pageable = PageRequest.ofSize(10);
 
-        List<BoardCommentDto> commentList = boardCommentService.searchAll(board, lastCommentId, pageable);
+        List<BoardCommentDto> commentList = boardCommentService.searchAll(board, lastCommentId);
         List<BoardReCommentDto> reCommentList = boardReCommentService.searchAll(commentList);
         lastCommentId =  boardCommentService.getLastCommentId(commentList, lastCommentId);
 
@@ -265,7 +264,6 @@ public class BoardController {
             boardService.updateHide(boardId);
             return "success";
         }
-
     }
 
 

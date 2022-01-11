@@ -4,7 +4,6 @@ import com.ecommerce.newshop1.dto.BoardCommentDto;
 import com.ecommerce.newshop1.dto.CommentPostDto;
 import com.ecommerce.newshop1.entity.Board;
 import com.ecommerce.newshop1.entity.BoardComment;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ public interface BoardCommentService {
 
     Long saveComment(BoardCommentDto boardCommentDto, Long boardId, String userId);
 
-    List<BoardCommentDto> searchAll(Board board, Long lastCommentId, Pageable pageable);
+    List<BoardCommentDto> searchAll(Board board, Long lastCommentId);
 
     void deleteById(Long commentId);
 

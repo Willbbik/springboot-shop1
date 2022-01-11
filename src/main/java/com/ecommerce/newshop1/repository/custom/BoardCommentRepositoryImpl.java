@@ -7,7 +7,6 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ public class BoardCommentRepositoryImpl implements BoardCommentRepositoryCustom{
     private JPAQueryFactory queryFactory;
 
     @Override
-    public List<BoardCommentDto> searchAll(Board board, Long lastCommentId, Pageable pageable) {
+    public List<BoardCommentDto> searchAll(Board board, Long lastCommentId) {
 
         return queryFactory
                 .select(Projections.fields(BoardCommentDto.class,
@@ -33,7 +32,6 @@ public class BoardCommentRepositoryImpl implements BoardCommentRepositoryCustom{
                         ltCommentId(lastCommentId)
                 )
                 .orderBy(QBoardComment.boardComment.id.desc())
-                .limit(pageable.getPageSize())
                 .fetch();
     }
 

@@ -9,7 +9,6 @@ import com.ecommerce.newshop1.exception.BoardCommentNotFoundException;
 import com.ecommerce.newshop1.repository.BoardCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,8 +53,8 @@ public class BoardCommentServiceImpl implements BoardCommentService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<BoardCommentDto> searchAll(Board board, Long lastCommentId, Pageable pageable) {
-        return boardCommentRepository.searchAll(board, lastCommentId, pageable);
+    public List<BoardCommentDto> searchAll(Board board, Long lastCommentId) {
+        return boardCommentRepository.searchAll(board, lastCommentId);
     }
 
 

@@ -56,10 +56,11 @@ public class RedisService {
     public void setAuthCheck(String phoneNum) throws Exception{
 
         ValueOperations<String, Object> vop = redisTemplate.opsForValue();
-
+        Duration time = Duration.ofHours(12);
         String check = phoneNum+"_check";
+
         try{
-            vop.set(check, true);
+            vop.set(check, true, time);
         }catch (Exception e){
             log.error("redisService, setAuthCheck 메소드 에러");
             throw new Exception("redisService, setAuthCheck 메소드 에러");
