@@ -20,7 +20,6 @@ $(function(){
             if(result === "success"){
                 alert("게시글 수정에 성공했습니다.");
                 history.back();
-                // window.location.replace("/board/freeBoard")
             } else if(result === "login"){
                 alert("로그인이 필요한 서비스입니다.");
                 let c = confirm("로그인 페이지로 이동하시겠습니까? (작성하던 내용은 모두 사라집니다.)");

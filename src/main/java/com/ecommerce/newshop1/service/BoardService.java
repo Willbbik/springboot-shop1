@@ -19,6 +19,10 @@ public interface BoardService {
 
     Long update(Long boardId, BoardDto boardDto);
 
+    Long updateHide(Long boardId);
+
     BoardDto editBoardDto(BoardDto boardDto);
+
+    void deleteById(Long boardId);
 
 }

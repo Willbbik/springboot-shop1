@@ -61,6 +61,21 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
+    @Transactional
+    public Long updateHide(Long boardId) {
+
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new BoardNotFoundException("존재하지 않는 게시물입니다."));
+        if(board.getHide().equals("private")){
+            board.setHide("public");
+        }else{
+            board.setHide("private");
+        }
+        return board.getId();
+    }
+
+
+    @Override
     @Transactional(readOnly = true)
     public List<BoardDto> searchAll(Pageable pageable) {
         return boardRepository.searchAll(pageable);
@@ -74,6 +89,12 @@ public class BoardServiceImpl implements BoardService{
         boardDto.setWriter(writer);
 
         return boardDto;
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long boardId) {
+        boardRepository.deleteById(boardId);
     }
 
 
