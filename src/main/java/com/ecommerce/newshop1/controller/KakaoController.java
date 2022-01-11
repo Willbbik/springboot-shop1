@@ -80,7 +80,7 @@ public class KakaoController {
 
 
     @GetMapping("/kakao/login")
-    @ApiOperation(value = "카카오 로그인 & 회원가입", notes = "여기서 한번에 회원가입과 로그인을 진행한다")
+    @ApiOperation(value = "카카오 로그인 & 회원가입", notes = "회원가입과 로그인을 같이 진행")
     public String kakaoLogin(String code) throws Exception {
 
         // code로 AccessToken을 받아오고 그 토큰으로 사용자 정보 가져오기

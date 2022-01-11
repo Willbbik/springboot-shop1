@@ -33,13 +33,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
             http
                 .authorizeRequests()
-                    .antMatchers("/mypage/**", "/member/**").authenticated()
                     .antMatchers("/member/findId", "/member/idConfirm", "/member/sendAuth", "/member/authNumCheck",
-                            "/member/findId/sendMessage", "/member/findId/authNum", "/member/findId/findIdResult").anonymous()
-
-                    .antMatchers("/cart/**").authenticated()
-                    .antMatchers("/join", "/login").anonymous()
-                     //.antMatchers("/admin/**").hasRole("ADMIN")
+                            "/member/findId/sendMessage", "/member/findId/authNum", "/member/findId/findIdResult").permitAll()
+                    .antMatchers("/kakao/login", "/join", "/login").permitAll()
+                    .antMatchers("/mypage/**", "/member/**", "/kakao/**", "/cart/**", "/order/**").authenticated()
+                    .antMatchers("/success", "/item/qna/send", "/item/reply/send", "/item/review/write").authenticated()
+                    .antMatchers("/board/write/**", "/board/comment", "/board/comment/write", "/board/reComment", "/board/reComment/write").authenticated()
+                    .antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/**").permitAll()
                     .anyRequest().permitAll()
                 .and()
@@ -79,7 +79,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

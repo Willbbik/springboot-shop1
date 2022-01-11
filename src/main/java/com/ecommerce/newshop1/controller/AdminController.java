@@ -15,8 +15,6 @@ import com.ecommerce.newshop1.utils.ValidationSequence;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -52,13 +50,14 @@ public class AdminController {
         Long ingOrderItemTotal = orderItemService.countByDeliveryStatus(DeliveryStatus.DELIVERY_ING);
         Long depositOrderTotal = orderService.countByDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS);
 
-        List<OrderItemDto> ingOrderItems = orderService.searchByDeliveryStatus(DeliveryStatus.DELIVERY_ING, pageable);    // 배송중 상품
+        List<OrderItemDto> ingOrderItems = orderService.searchByDeliveryStatus(DeliveryStatus.DELIVERY_ING, pageable);            // 배송중 상품
         List<OrderDto> depositOrderItems = orderService.searchOrderDtoByDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS, pageable); // 입금완료된 주문
-        List<MemberDto> memberDtos = memberService.findAll(pageable);                                                     // 회원정보
+        List<MemberDto> memberDtos = memberService.findAll(pageable);                                                             // 회원가입한 유저
 
         model.addAttribute("ingOrderItems", ingOrderItems);
         model.addAttribute("depositOrderItems", depositOrderItems);
         model.addAttribute("memberDtos", memberDtos);
+
         model.addAttribute("ingOrderItemTotal", ingOrderItemTotal);
         model.addAttribute("depositOrderTotal", depositOrderTotal);
 

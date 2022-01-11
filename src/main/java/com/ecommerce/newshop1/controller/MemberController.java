@@ -35,8 +35,7 @@ public class MemberController {
     private final CommonService commonService;
     private final QnARepository qnARepository;
     private final PasswordEncoder passwordEncoder;
-
-    ModelMapper mapper = new ModelMapper();
+    private final ModelMapper mapper;
 
     @GetMapping("/")
     @ApiOperation(value = "웹 기본 페이지")
