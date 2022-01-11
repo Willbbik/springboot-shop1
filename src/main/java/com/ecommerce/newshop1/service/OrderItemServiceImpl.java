@@ -1,6 +1,7 @@
 package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.entity.OrderItem;
+import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.ecommerce.newshop1.exception.OrderNotFoundException;
 import com.ecommerce.newshop1.repository.OrderItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderItemServiceImpl implements OrderItemService{
 
     private final OrderItemRepository orderItemRepository;
+
+    @Override
+    @Transactional(readOnly = true)
+    public Long countByDeliveryStatus(DeliveryStatus deliveryStatus) {
+        return orderItemRepository.countByDeliveryStatus(deliveryStatus);
+    }
 
     @Override
     @Transactional(readOnly = true)

@@ -35,6 +35,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final DeliveryRepository deliveryRepository;
     private final ItemRepository itemRepository;
     private final CartService cartService;
     private final MemberService memberService;
@@ -72,6 +73,12 @@ public class OrderServiceImpl implements OrderService {
 
         return orderRepository.findByOrderNum(orderNum)
                 .orElseThrow(() -> new OrderNotFoundException("해당 주문번호의 주문이 존재하지 않습니다." + orderNum));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Long countByDeliveryStatus(DeliveryStatus deliveryStatus) {
+        return deliveryRepository.countByDeliveryStatus(deliveryStatus);
     }
 
     @Override
@@ -245,8 +252,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrderDto> searchByDepositSuccess(DeliveryStatus deliveryStatus, Pageable pageable) {
-        return orderRepository.searchByDepositSuccess(deliveryStatus, pageable);
+    public List<OrderDto> searchOrderDtoByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable) {
+        return orderRepository.searchOrderDtoByDeliveryStatus(deliveryStatus, pageable);
 
     }
 

@@ -52,7 +52,6 @@
                 <div class="recent-user item">
                     <div class="item-caption">
                         <div class="item-title">최근 가입 회원</div>
-                        <div class="more" th:onclick="'location.href=\''+ @{/admin/userList} + '\''">more +</div>
                     </div>
                     <div class="item-content">
                         <table>
@@ -66,29 +65,22 @@
                             </thead>
                             <tbody>
                             <tr th:each="member : ${memberDtos}">
-                                <td th:text = "${member.userId}">홍길동(gildong000)</td>
-                                <td th:text = "${#strings.replace(member.phoneNum, ',', '-')}">010-2222-6666</td>
-                                <td th:text="${#temporals.format(member.createdDate, 'yyyy-MM-dd')}">2021-06-07</td>
-                                <td th:text = "${member.sns}">3</td>
+                                <td th:text = "${member.userId}"></td>
+                                <td th:text = "${#strings.replace(member.phoneNum, ',', '-')}"></td>
+                                <td th:text = "${#temporals.format(member.createdDate, 'yyyy-MM-dd')}"></td>
+                                <td th:text = "${member.sns}"></td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <div class="num-visitors item">
-                    <div class="item-caption">
-                        <div class="item-title">누적 방문자수</div>
-                    </div>
-                    <div class="item-content">
-                        <div th:text="${numVisitors}">0</div>
-                        <div>명</div>
-                    </div>
+
                 </div>
                 <div class="recent-order item">
                     <div class="item-caption">
                         <div class="item-title">배송중인 상품</div>
-                        <div class="item-title">0건</div>
-                        <div class="more" th:onclick="'location.href=\''+ @{/admin/orderList} + '\''">more +</div>
+                        <div class="item-title" th:text="${ingOrderItemTotal} + '건'"></div>
                     </div>
                     <div class="item-content">
                         <table>
@@ -115,7 +107,7 @@
                 <div class="recent-item item">
                     <div class="item-caption">
                         <div class="item-title">입금 완료된 주문</div>
-                        <div class="more" th:onclick="'location.href=\''+ @{/admin/itemList} + '\''">more +</div>
+                        <div class="item-title" th:text="${depositOrderTotal} + '건'"></div>
                     </div>
                     <div class="item-content">
                         <table>
@@ -128,12 +120,12 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="depositItem : ${depositOrderItems}">
-                                <td th:text = "${depositItem.delivery.deliveryAddress.customerName}"></td>
-                                <td th:text = "${depositItem.delivery.orderName}"></td>
-                                <td th:text = "${#numbers.formatInteger(depositItem.totalPrice, 0, 'COMMA')} + '원'"></td>
-                                <td th:text = "${#temporals.format(depositItem.depositDate, 'yyyy.MM.dd HH:mm')}"></td>
-                            </tr>
+<!--                            <tr th:each="depositItem : ${depositOrderItems}">-->
+<!--                                <td th:text="${depositItem.delivery.deliveryAddress.customerName}"></td>-->
+<!--                                <td th:text="${depositItem.delivery.orderName}"></td>-->
+<!--                                <td th:text="${#numbers.formatInteger(depositItem.totalPrice, 0, 'COMMA')} + '원'"></td>-->
+<!--                                <td th:text="${#temporals.format(depositItem.depositDate, 'yyyy.MM.dd HH:mm')}"></td>-->
+<!--                            </tr>-->
                             </tbody>
                         </table>
                     </div>

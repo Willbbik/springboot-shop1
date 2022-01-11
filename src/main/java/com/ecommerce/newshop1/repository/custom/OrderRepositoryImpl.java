@@ -58,7 +58,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
 
 
     @Override
-    public List<OrderDto> searchByDepositSuccess(DeliveryStatus deliveryStatus, Pageable pageable) {
+    public List<OrderDto> searchOrderDtoByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable) {
         return queryFactory
                 .select(Projections.fields(OrderDto.class,
                         QOrder.order.delivery,

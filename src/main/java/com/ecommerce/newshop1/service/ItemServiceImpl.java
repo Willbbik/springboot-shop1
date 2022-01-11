@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,18 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final ItemImageRepository itemImageRepository;
     private final AwsS3Service awsS3Service;
+
+    @Override
+    public Long getLastId(List<ItemDto> itemList, Long lastId) {
+
+        if(itemList.isEmpty()){
+            return lastId;
+        }else{
+            return itemList.stream()
+                    .min(Comparator.comparingLong(ItemDto::getId))
+                    .get().getId();
+        }
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -62,9 +75,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public List<ItemDto> searchAllNoOffset(Long ItemId) {
+    public List<ItemDto> searchAllNoOffset(String category, Long ItemId) {
 
-        return itemRepository.searchAllNoOffset(ItemId);
+        return itemRepository.searchAllNoOffset(category, ItemId);
     }
 
     @Override

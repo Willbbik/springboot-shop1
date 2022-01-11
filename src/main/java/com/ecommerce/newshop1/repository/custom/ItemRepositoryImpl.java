@@ -19,6 +19,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
     @Autowired
     private JPAQueryFactory queryFactory;
 
+    @Override
     public Long searchTotal(SearchDto searchDto) {
 
             return queryFactory
@@ -32,6 +33,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                 .fetchCount();
     }
 
+    @Override
     public List<ItemDto> searchAll(SearchDto searchDto, Pageable pageable) {
         // 커버링 인덱스로 대상 조회
         List<Long> ids = queryFactory
@@ -67,8 +69,8 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                 .fetch();
     }
 
-
-    public List<ItemDto> searchAllNoOffset(Long itemId){
+    @Override
+    public List<ItemDto> searchAllNoOffset(String category, Long itemId){
             return queryFactory
                     .select(Projections.fields(ItemDto.class,
                             QItem.item.id,
@@ -78,7 +80,9 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                             ))
                     .from(QItem.item)
                     .where(ltItemId(itemId),
-                            eqSaleStatus("onsale"))
+                            eqSaleStatus("onsale"),
+                            eqCategory(category)
+                            )
                     .orderBy(QItem.item.id.desc())
                     .limit(12)
                     .fetch();
@@ -92,9 +96,8 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
         return QItem.item.id.lt(itemId);
     }
 
-
     private BooleanExpression eqCategory(String category){
-        if(StringUtils.isBlank(category) || category.equals("whole")){
+        if(StringUtils.isBlank(category) || category.equals("whole") || category.equals("all")){
             return null;
         }
 

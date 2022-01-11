@@ -14,7 +14,7 @@ public interface OrderRepositoryCustom {
 
     List<Order> searchAllByMember(Long orderId, Member member);
 
-    List<OrderDto> searchByDepositSuccess(DeliveryStatus deliveryStatus, Pageable pageable);
+    List<OrderDto> searchOrderDtoByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable);
 
     List<OrderItemDto> searchBySearchDtoAndDeliveryStatus(SearchDto searchDto, DeliveryStatus deliveryStatus, Pageable pageable);
 

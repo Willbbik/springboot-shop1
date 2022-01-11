@@ -26,11 +26,11 @@
             <section class="veg_section layout_padding">
                 <div class="container">
                     <div class="heading_container heading_center">
-                        <h2>
-                            All
+                        <h2 th:text="${category}">
+
                         </h2>
                     </div>
-                    <div class="row">
+                    <div class="row item_list">
                         <th:block th:each="item : ${itemList}">
                             <div class="col-md-6 col-lg-4">
                                 <a th:href="@{'/items/' + ${item.id}}">
@@ -48,9 +48,9 @@
                                 </a>
                             </div>
                         </th:block>
-                        <div class="btn-box">
+                        <div class="btn-box" th:attr="data-category=${category}">
                             <a href="javascript:void(0);" th:attr="data-lastId=${lastId}" class="itemMore">
-                                View More
+                                더보기
                             </a>
                         </div>
                     </div>
@@ -59,11 +59,10 @@
             <!-- /본문 -->
         </div>
     </div>
-
-
 </div>
 
-<script src="https://code.jquery.com/jquery-latest.min.js"></script>
 
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<script src="/assets/js/item/item_list.js"></script>
 </body>
 </html>

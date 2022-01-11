@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "orders")
-public class Order {
+public class  Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

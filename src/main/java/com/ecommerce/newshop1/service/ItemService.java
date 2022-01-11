@@ -14,11 +14,13 @@ public interface ItemService {
 
     Item findById(Long id);
 
+    Long getLastId(List<ItemDto> itemList, Long lastId);
+
     List<ItemDto> searchAll(SearchDto searchDto, Pageable pageable);
 
     Long searchTotal(SearchDto searchDto);
 
-    List<ItemDto> searchAllNoOffset(Long ItemId);
+    List<ItemDto> searchAllNoOffset(String category, Long ItemId);
 
     List<ItemImageDto> searchAllItemImage(Item item);
 

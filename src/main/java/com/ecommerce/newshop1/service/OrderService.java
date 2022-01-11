@@ -24,6 +24,8 @@ public interface OrderService {
 
     Order findByOrderNum(String orderNum);
 
+    Long countByDeliveryStatus(DeliveryStatus deliveryStatus);
+
     Model getModelPayInfo(Order order, Model model);
 
     List<OrderItemDto> itemToPayment(String itemList);
@@ -40,7 +42,7 @@ public interface OrderService {
 
     Long getLastOrderId(List<OrderDto> orderList, Long lastOrderId);
 
-    List<OrderDto> searchByDepositSuccess(DeliveryStatus deliveryStatus, Pageable pageable);
+    List<OrderDto> searchOrderDtoByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable);
 
     List<OrderItemDto> searchBySearchDtoAndDeliveryStatus(SearchDto searchDto, DeliveryStatus deliveryStatus, Pageable pageable);
 

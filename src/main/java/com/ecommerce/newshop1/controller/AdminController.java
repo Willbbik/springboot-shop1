@@ -34,9 +34,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminController {
 
-    private final static Logger logger = LoggerFactory.getLogger(AdminController.class);
-    ModelMapper mapper = new ModelMapper();
-
     private final ItemRepository itemRepository;
     private final ItemService itemService;
     private final OrderService orderService;
@@ -45,18 +42,25 @@ public class AdminController {
     private final AwsS3Service awsS3Service;
     private final CommonService commonService;
     private final SecurityService security;
+    private final ModelMapper mapper;
 
     @GetMapping("/admin/main")
+    @ApiOperation(value = "관리자 메인 페이지")
     public String adminMain(Model model) {
 
         Pageable pageable = PageRequest.ofSize(3);
+        Long ingOrderItemTotal = orderItemService.countByDeliveryStatus(DeliveryStatus.DELIVERY_ING);
+        Long depositOrderTotal = orderService.countByDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS);
+
         List<OrderItemDto> ingOrderItems = orderService.searchByDeliveryStatus(DeliveryStatus.DELIVERY_ING, pageable);    // 배송중 상품
-        List<OrderDto> depositOrderItems = orderService.searchByDepositSuccess(DeliveryStatus.DEPOSIT_SUCCESS, pageable); // 입금완료된 상품
+        List<OrderDto> depositOrderItems = orderService.searchOrderDtoByDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS, pageable); // 입금완료된 주문
         List<MemberDto> memberDtos = memberService.findAll(pageable);                                                     // 회원정보
 
         model.addAttribute("ingOrderItems", ingOrderItems);
         model.addAttribute("depositOrderItems", depositOrderItems);
         model.addAttribute("memberDtos", memberDtos);
+        model.addAttribute("ingOrderItemTotal", ingOrderItemTotal);
+        model.addAttribute("depositOrderTotal", depositOrderTotal);
 
         return "admin/admin_main";
     }

@@ -47,7 +47,7 @@ public class Member extends TimeEntity {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
     private List<QnAEntity> qnaList = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "member")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
     private List<Order> orderList = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")

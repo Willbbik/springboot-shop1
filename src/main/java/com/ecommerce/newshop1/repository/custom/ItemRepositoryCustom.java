@@ -9,10 +9,11 @@ import java.util.List;
 
 public interface ItemRepositoryCustom {
 
+
     List<ItemDto> searchAll(SearchDto searchDto, Pageable pageable);
 
     Long searchTotal(SearchDto searchDto);
 
-    List<ItemDto> searchAllNoOffset(Long id);
+    List<ItemDto> searchAllNoOffset(String category, Long id);
 
 }

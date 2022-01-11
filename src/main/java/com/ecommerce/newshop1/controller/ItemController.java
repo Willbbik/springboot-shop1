@@ -6,7 +6,6 @@ import com.ecommerce.newshop1.dto.QnADto;
 import com.ecommerce.newshop1.dto.ReviewDto;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.Member;
-import com.ecommerce.newshop1.repository.ItemImageRepository;
 import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.repository.ReviewRepository;
 import com.ecommerce.newshop1.service.*;
@@ -31,7 +30,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemController {
 
-    private final ItemImageRepository itemImageRepository;
     private final QnARepository qnARepository;
     private final ReviewRepository reviewRepository;
     private final QnAService qnAService;
@@ -40,32 +38,37 @@ public class ItemController {
     private final CommonService commonService;
     private final MemberService memberService;
     private final SecurityService security;
+    private final ModelMapper mapper;
 
-    ModelMapper mapper = new ModelMapper();
 
-    @GetMapping("/category/all")
-    public String categoryAllPage(Model model){
+    @GetMapping("/category/{category}")
+    @ApiOperation(value = "카테고리별 상품 반환")
+    public String itemListPage(@PathVariable String category, Model model){
 
-        List<ItemDto> items = itemService.searchAllNoOffset(null);
+        List<ItemDto> itemList = itemService.searchAllNoOffset(category, null);
+        Long lastId = itemService.getLastId(itemList, null);
 
-        model.addAttribute("items", items);
+        model.addAttribute("itemList", itemList);
+        model.addAttribute("lastId", lastId);
+        model.addAttribute("category", category);
 
-        return "item/categoryAll";
+        return "item/itemList";
     }
 
-    @GetMapping("/category/top")
-    public String categoryTopPage(){
-        return "item/categoryTop";
-    }
 
-    @GetMapping("/category/bottom")
-    public String categoryBottomPage(){
-        return "item/categoryBottom";
-    }
+    @GetMapping("/category/{category}/more")
+    @ApiOperation(value = "상품 더보기 클릭", notes = "ajax전용")
+    public String itemListMore(@PathVariable String category,
+                               @RequestParam(name = "lastId", required = false) Long lastId, Model model){
 
-    @GetMapping("/category/cap")
-    public String categoryCapPage(){
-        return "item/categoryCap";
+        List<ItemDto> itemList = itemService.searchAllNoOffset(category, lastId);
+        lastId = itemService.getLastId(itemList, lastId);
+
+        model.addAttribute("itemList", itemList);
+        model.addAttribute("lastId", lastId);
+        model.addAttribute("category", category);
+
+        return "item/tab/tab_itemMore";
     }
 
 
@@ -116,7 +119,7 @@ public class ItemController {
         model.addAttribute("qnaList", qnaList);
         model.addAttribute("qnaReplyList", qnaReplyList);
 
-        return "item/tab/tab3QnA";
+        return "item/tab/tab_qna";
     }
 
 
@@ -198,8 +201,8 @@ public class ItemController {
         model.addAttribute("reviewSize", reviewSize);
         model.addAttribute("lastReviewId", lastReviewId);
 
-        if(more != null) return "item/tab/tab2ReviewMore";
-        return "item/tab/tab2Review";
+        if(more != null) return "item/tab/tab_reviewMore";
+        return "item/tab/tab_review";
     }
 
 
