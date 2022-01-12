@@ -79,7 +79,7 @@ public class AdminController {
         PaginationShowSizeTen page = new PaginationShowSizeTen(totalPost, curPage);
 
         // 상품 가져오기
-        Pageable pageable = PageRequest.of(page.getCurPage(), page.getShowMaxSize());
+        Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxSize());
         List<ItemDto> items = itemService.searchAll(searchDto, pageable);
 
         model.addAttribute("page", page);

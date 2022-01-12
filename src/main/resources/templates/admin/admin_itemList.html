@@ -112,8 +112,8 @@
                             </a>
                         </td>
                         <td>
-                            <input type="button" th:if="${item.saleStatus.toString().equals('onsale')}" th:value="판매중">
-                            <input type="button" id="soldoutbtn" th:if="${item.saleStatus.toString().equals('soldout')}" th:value="품절">
+                            <input type="button" class="saleStatusChange" th:if="${item.saleStatus.toString().equals('onsale')}" th:value="판매중">
+                            <input type="button" class="saleStatusChange" th:if="${item.saleStatus.toString().equals('soldout')}" th:value="품절">
                         </td>
                         <td>
                             <button class="item_delete">삭제</button>

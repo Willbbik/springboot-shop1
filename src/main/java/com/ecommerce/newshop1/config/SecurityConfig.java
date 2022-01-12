@@ -36,9 +36,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/member/findId", "/member/idConfirm", "/member/sendAuth", "/member/authNumCheck",
                             "/member/findId/sendMessage", "/member/findId/authNum", "/member/findId/findIdResult").permitAll()
                     .antMatchers("/kakao/login", "/join", "/login").permitAll()
-                    .antMatchers("/mypage/**", "/member/**", "/kakao/**", "/cart/**", "/order/**").authenticated()
+                    .antMatchers("/mypage/**", "/member/**", "/kakao/**", "/cart/**", "/order/**", "/board/write/**").authenticated()
                     .antMatchers("/success", "/item/qna/send", "/item/reply/send", "/item/review/write").authenticated()
-                    .antMatchers("/board/write/**", "/board/comment", "/board/comment/write", "/board/reComment", "/board/reComment/write").authenticated()
                     .antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/**").permitAll()
                     .anyRequest().permitAll()

@@ -85,6 +85,7 @@ public class  Order {
         for(OrderItem orderItem : orderItems){
             if(payType.equals(PayType.KAKAO_PAY)) orderItem.setDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS);
             order.setOrderItems(orderItem);
+            order.setDepositDate(LocalDateTime.now());
         }
 
         order.setPayType(payType);

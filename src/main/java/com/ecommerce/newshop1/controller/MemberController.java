@@ -226,8 +226,8 @@ public class MemberController {
         }
     }
 
-    @ApiOperation(value = "회원가입시 인증번호 검사")
     @GetMapping("/member/authNumCheck")
+    @ApiOperation(value = "회원가입시 인증번호 검사")
     public @ResponseBody String authNumCheck(@RequestParam(value = "authNum") String authNum,
                         @RequestParam(value = "phoneNum") String phoneNum) {
 

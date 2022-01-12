@@ -84,7 +84,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                     eqCustomerName(searchDto.getCustomerName()),
                     eqOrderNum(searchDto.getOrderNum()),
                     eqItemName(searchDto.getItemName()),
-                    betweenDate(searchDto.getFirstDate(), searchDto.getLastDate())
+                    betweenDateOrder(searchDto.getFirstDate(), searchDto.getLastDate())
                 )
                 .fetchCount();
     }
@@ -140,7 +140,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                 .from(QOrderItem.orderItem)
                 .where( eqSearchDto(searchDto),
                         eqDeliveryStatus(deliveryStatus),
-                        betweenDate(searchDto.getFirstDate(), searchDto.getLastDate()))
+                        betweenDateOrder(searchDto.getFirstDate(), searchDto.getLastDate()))
                 .orderBy(QOrderItem.orderItem.id.desc())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -157,30 +157,32 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
         }
     }
 
-    private BooleanExpression betweenDate(String firstDate, String lastDate){
 
-        if(StringUtils.isBlank(firstDate) && StringUtils.isBlank(lastDate)){
+    // 주문된 날짜
+    private BooleanExpression betweenDateOrder(String firstDate, String lastDate){
+        if(StringUtils.isBlank(firstDate) && StringUtils.isBlank(lastDate)){            // 전체기간
+
             LocalDateTime start = LocalDateTime.now().minusYears(5L);
             LocalDateTime end = LocalDateTime.now();
             return QOrderItem.orderItem.order.createdDate.between(start, end);
+        }else if(StringUtils.isNotBlank(firstDate) && StringUtils.isBlank(lastDate)){   // 시작 날짜만 존재
 
-        }else if(StringUtils.isNotBlank(firstDate) && StringUtils.isBlank(lastDate)){
-            LocalDateTime start = LocalDateTime.parse(firstDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDateTime start = LocalDate.parse(firstDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay();
             LocalDateTime end = LocalDateTime.now();
             return QOrderItem.orderItem.order.createdDate.between(start, end);
+        }else if(StringUtils.isBlank(firstDate) && StringUtils.isNotBlank(lastDate)) {  // 마지막 날짜만 존재
 
-        }else if(StringUtils.isBlank(firstDate) && StringUtils.isNotBlank(lastDate)) {
-
-            LocalDateTime start = LocalDateTime.parse(LocalDateTime.now().minusYears(5L).toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            LocalDateTime end = LocalDateTime.parse(lastDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDateTime start = LocalDateTime.parse(LocalDateTime.now().minusYears(5L).toString());
+            LocalDateTime end = LocalDate.parse(lastDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay();
             return QOrderItem.orderItem.order.createdDate.between(start, end);
-
         }else{
-            LocalDateTime start = LocalDateTime.parse(firstDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            LocalDateTime end = LocalDateTime.parse(lastDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                                                                                       // 시작, 마지막 날짜 모두 존재
+            LocalDateTime start = LocalDate.parse(firstDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay();
+            LocalDateTime end = LocalDate.parse(lastDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay();
             return QOrderItem.orderItem.order.createdDate.between(start, end);
         }
     }
+
 
     private BooleanExpression eqDeliveryStatus(DeliveryStatus deliveryStatus){
         if(deliveryStatus.equals(DeliveryStatus.EMPTY)) return null;

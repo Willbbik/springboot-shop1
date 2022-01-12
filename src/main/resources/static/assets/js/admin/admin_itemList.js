@@ -12,7 +12,7 @@ $(function(){
         let itemId = tr.find("input[name=itemId]").val();
         idList.push(itemId);
 
-        let result = confirm("해당 상품을 삭제 하시겠습니까?");
+        let result = confirm("해당 상품을 삭제 하시겠습니까? (한번이라도 구매된 상품은 삭제 불가능합니다.) ");
         if(result){
             $.ajax({
                type : "delete",
@@ -26,7 +26,8 @@ $(function(){
                 alert(result);
                 location.reload();
             }).fail(function(){
-                alert("오류가 발생했습니다. 잠시후 다시 시도해보시기 바랍니다.");
+                alert("상품 삭제가 불가능합니다.");
+                return false;
             });
         }
     });

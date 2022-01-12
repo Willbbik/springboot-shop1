@@ -88,7 +88,7 @@ function sendorder(){
 
     const itemId = $("#itemId").val();
     const quantity = $("#quantity").val();
-    const itemList = [{ itemId : itemId, quantity }];
+    const itemList = [{ itemId, quantity }];
 
     $("input[name='itemList']").val(JSON.stringify(itemList));
 }

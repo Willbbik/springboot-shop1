@@ -53,14 +53,7 @@
             <!-- 본문 -->
             <h1>배송 처리</h1>
             <section id="itemList">
-                <form th:action="@{/admin/itemList}" method="get" id="search">
-                    <div class="form-group">
-                        <label class="form-label">주문일자</label>
-                        <span>
-                            <input type="date" name="firstdate" class="date">&nbsp;~
-                            <input type="date" name="lastdate" class="date">
-                      </span>
-                    </div>
+                <form th:action="@{/admin/send/orderItem}" method="get" id="search">
                     <div class="form-group">
                         <label class="form-label">선택</label>
                         <span>

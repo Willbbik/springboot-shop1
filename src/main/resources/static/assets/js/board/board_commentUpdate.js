@@ -31,7 +31,7 @@ $(function(){
                 self.close();
                 opener.location.href = "javascript:getCommentList();";
             }else if(result === "login"){
-                alert("로그인 후 이용가능합니다.");
+                alert("로그인 후 수정 가능합니다.");
                 return false;
             }else if(result === "role"){
                 alert("작성자만 수정 가능합니다.");

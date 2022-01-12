@@ -6,14 +6,14 @@
 <th:block th:if="${orderList}">
 <div class="mypage_orderList">
     <input type="hidden" id="lastOrderId" th:value="${lastOrderId}">
-    <div th:each="order : ${orderList}" class="mypage_order_item_wrap"> <!-- 반복 -->
+    <div th:each="order : ${orderList}" class="mypage_order_item_wrap">
         <h2>
             <span th:text="${#temporals.format(order.createdDate, 'yyyy.MM.dd')}"></span>
             <span>ㅣ</span>
             <span th:text="${order.orderNum}"></span>
-            <a th:href="@{/member/order" class="btn_showdetailorder">주문상세보기></a>
+            <a th:href="@{/member/orderDetails/}+${order.id}" class="btn_showdetailorder">주문상세보기></a>
         </h2>
-        <div th:each="orderItem : ${order.orderItems}" class="order_item"> <!-- 주문 상품 정보 --> <!-- order의 orderitem만큼 반복 -->
+        <div th:each="orderItem : ${order.orderItems}" class="order_item">
             <dl>
                 <dt>주문 상품 정보</dt>
                 <dt></dt>

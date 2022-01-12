@@ -245,9 +245,9 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void updateOrderToDepositSuccess(String orderNum) {
 
-        Order order = findByOrderNum(orderNum);
+        Order order = orderRepository.findByOrderNum(orderNum)
+                .orElseThrow(() -> new OrderNotFoundException("존재하지 않는 주문입니다."));
         order.getDelivery().setDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS);
-        orderRepository.save(order);
     }
 
     @Override
