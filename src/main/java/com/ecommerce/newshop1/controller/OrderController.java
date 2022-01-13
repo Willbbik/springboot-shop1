@@ -103,7 +103,6 @@ public class OrderController {
         if(callbackPayload.getStatus().equals(TossPayments.DONE.getValue())){
             // 입금 완료일 때 처리
             orderService.updateOrderToDepositSuccess(callbackPayload.getOrderId());
-            System.out.println("완료처리");
         }else if(callbackPayload.getStatus().equals(TossPayments.CANCELED.getValue())){
             // 입금 취소일 때 처리
             System.out.println("취소처리");

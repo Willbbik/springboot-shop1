@@ -2,7 +2,6 @@ package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.OrderDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
-import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.Delivery;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.Order;
@@ -20,13 +19,19 @@ public interface OrderService {
 
     String createOrderNum();
 
+    String doOrder(HttpSession session, OrderPaymentInformation paymentInfo, Delivery delivery);
+
     Order findById(Long id);
 
     Order findByOrderNum(String orderNum);
 
     Long countByDeliveryStatus(DeliveryStatus deliveryStatus);
 
-    Model getModelPayInfo(Order order, Model model);
+    Long getLastOrderId(List<OrderDto> orderList, Long lastOrderId);
+
+    List<OrderDto> searchAllByMember(Long orderId, Member member);
+
+    List<OrderDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable);
 
     List<OrderItemDto> itemToPayment(String itemList);
 
@@ -34,22 +39,9 @@ public interface OrderService {
 
     OrderPaymentInformation getVirtualAccountInfo(JsonNode successNode);
 
-    String doOrder(HttpSession session, OrderPaymentInformation paymentInfo, Delivery delivery);
-
-    List<OrderDto> searchAllByMember(Long orderId, Member member);
-
     void updateOrderToDepositSuccess(String orderId);
-
-    Long getLastOrderId(List<OrderDto> orderList, Long lastOrderId);
-
-    List<OrderDto> searchOrderDtoByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable);
-
-    List<OrderItemDto> searchBySearchDtoAndDeliveryStatus(SearchDto searchDto, DeliveryStatus deliveryStatus, Pageable pageable);
-
-    List<OrderItemDto> searchAllByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable, SearchDto searchDto);
-
-    Long searchTotalOrderItem(DeliveryStatus deliveryStatus, SearchDto searchDto);
 
     boolean changeOrderItemStatus(Long orderItemId, DeliveryStatus deliveryStatus);
 
+    Model getModelPayInfo(Order order, Model model);
 }

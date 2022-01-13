@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,8 +41,7 @@ public class OrderServiceImpl implements OrderService {
     private final CartService cartService;
     private final MemberService memberService;
     private final CommonService commonService;
-
-    ModelMapper mapper = new ModelMapper();
+    private final ModelMapper mapper;
 
     @Value("${tosspayments.secret_key}")
     String SECRET_KEY;
@@ -49,13 +49,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Long getLastOrderId(List<OrderDto> orderList, Long lastOrderId){
 
-        if(orderList.size() > 1){
-            int lastIndex = orderList.size() - 1;
-            return orderList.get(lastIndex).getId();
-        }else if(orderList.size() == 1){
-            return orderList.get(0).getId();
-        }else{
+        if(orderList.isEmpty()){
             return lastOrderId;
+        }else{
+            return orderList.stream()
+                    .min(Comparator.comparingLong(OrderDto::getId))
+                    .get().getId();
         }
     }
 
@@ -93,16 +92,10 @@ public class OrderServiceImpl implements OrderService {
 
         if(!result){
             return orderNum;
-        }else{
-            return createOrderNum();
         }
+        return createOrderNum();
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public Long searchTotalOrderItem(DeliveryStatus deliveryStatus, SearchDto searchDto) {
-        return orderRepository.searchTotalOrderItem(deliveryStatus, searchDto);
-    }
 
     @Override
     @Transactional
@@ -216,10 +209,12 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(readOnly = true)
     public Model getModelPayInfo(Order order, Model model){
 
-        OrderDto orderInfo = mapper.map(order, OrderDto.class);
         OrderPaymentInfoDto payInfo = mapper.map(order.getPaymentInfo(), OrderPaymentInfoDto.class);
-        List<OrderItemDto> orderItems = OrderItem.toDtoList(order.getOrderItems());
+        OrderDto orderInfo = mapper.map(order, OrderDto.class);
         AddressDto address = mapper.map(order.getDelivery().getDeliveryAddress(), AddressDto.class);
+        List<OrderItemDto> orderItems = order.getOrderItems().stream()
+                                        .map(p -> mapper.map(p, OrderItemDto.class))
+                                        .collect(Collectors.toList());
 
         model.addAttribute("method", payInfo.getPayType());
         model.addAttribute("payInfo", payInfo);
@@ -248,26 +243,14 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findByOrderNum(orderNum)
                 .orElseThrow(() -> new OrderNotFoundException("존재하지 않는 주문입니다."));
         order.getDelivery().setDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS);
+        order.setDepositDate(LocalDateTime.now());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrderDto> searchOrderDtoByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable) {
-        return orderRepository.searchOrderDtoByDeliveryStatus(deliveryStatus, pageable);
+    public List<OrderDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable) {
+        return orderRepository.searchByDeliveryStatus(deliveryStatus, pageable);
 
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<OrderItemDto> searchBySearchDtoAndDeliveryStatus(SearchDto searchDto, DeliveryStatus deliveryStatus, Pageable pageable) {
-        return orderRepository.searchBySearchDtoAndDeliveryStatus(searchDto, deliveryStatus, pageable);
-    }
-
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<OrderItemDto> searchAllByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable, SearchDto searchDto) {
-        return orderRepository.searchAllByDeliveryStatus(deliveryStatus, pageable, searchDto);
     }
 
     @Override

@@ -3,8 +3,6 @@ package com.ecommerce.newshop1.controller;
 import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.ItemImage;
-import com.ecommerce.newshop1.entity.Order;
-import com.ecommerce.newshop1.entity.OrderItem;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.ecommerce.newshop1.enums.Role;
 import com.ecommerce.newshop1.repository.ItemRepository;
@@ -47,16 +45,16 @@ public class AdminController {
     public String adminMain(Model model) {
 
         Pageable pageable = PageRequest.ofSize(3);
-        Long ingOrderItemTotal = orderItemService.countByDeliveryStatus(DeliveryStatus.DELIVERY_ING);
+        Long ingOrderItemTotal = orderItemService.searchTotal(DeliveryStatus.DELIVERY_ING, new SearchDto());
         Long depositOrderTotal = orderService.countByDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS);
 
-        List<OrderItemDto> ingOrderItems = orderItemService.searchByDeliveryStatus(DeliveryStatus.DELIVERY_ING, pageable);        // 배송중 상품
-        List<OrderDto> depositOrderItems = orderService.searchOrderDtoByDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS, pageable); // 입금완료된 주문
-        List<MemberDto> memberDtos = memberService.findAll(pageable);                                                             // 회원가입한 유저
+        List<OrderItemDto> ingOrderItems = orderItemService.searchByDeliveryStatus(DeliveryStatus.DELIVERY_ING, pageable);  // 배송중 상품
+        List<OrderDto> depositOrderItems = orderService.searchByDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS, pageable);   // 입금완료된 주문
+        List<MemberDto> members = memberService.findAll(pageable);                                                       // 회원가입한 유저
 
         model.addAttribute("ingOrderItems", ingOrderItems);
         model.addAttribute("depositOrderItems", depositOrderItems);
-        model.addAttribute("memberDtos", memberDtos);
+        model.addAttribute("members", members);
 
         model.addAttribute("ingOrderItemTotal", ingOrderItemTotal);
         model.addAttribute("depositOrderTotal", depositOrderTotal);
@@ -84,23 +82,21 @@ public class AdminController {
 
         model.addAttribute("page", page);
         model.addAttribute("items", items);
-        model.addAttribute("itemName", searchDto.getItemName());
-        model.addAttribute("category", searchDto.getCategory());
-        model.addAttribute("saleStatus", searchDto.getSaleStatus());
+        model.addAttribute("searchDto", searchDto);
 
         return "admin/admin_itemList";
     }
 
     @GetMapping("/admin/send/orderItem")
     @ApiOperation(value = "상품 배송 페이지")
-    public String sendOrderItemPage(Model model, @RequestParam(name = "page", defaultValue = "1") int curPage, SearchDto searchDto){
+    public String sendOrderItemPage(@RequestParam(name = "page", defaultValue = "1") int curPage, SearchDto searchDto, Model model){
 
         // 배달해야하는 상품 총 개수와 그걸로 페이징처리
-        Long total = orderService.searchTotalOrderItem(DeliveryStatus.DELIVERY_READY, searchDto);
+        Long total = orderItemService.searchTotal(DeliveryStatus.DELIVERY_READY, searchDto);
         PaginationShowSizeTen page = new PaginationShowSizeTen(total, curPage);
 
         Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxSize());
-        List<OrderItemDto> orderItems = orderService.searchAllByDeliveryStatus(DeliveryStatus.DELIVERY_READY, pageable, searchDto);
+        List<OrderItemDto> orderItems = orderItemService.searchAllByDeliveryStatusAndSearchDto(DeliveryStatus.DELIVERY_READY, searchDto, pageable);
 
         model.addAttribute("page", page);
         model.addAttribute("orderItems", orderItems);
@@ -115,11 +111,12 @@ public class AdminController {
 
         DeliveryStatus deliveryStatus = DeliveryStatus.findByDeliveryStatus(searchDto.getDeliveryStatus());
 
-        Long total = orderService.searchTotalOrderItem(deliveryStatus, searchDto);
+        Long total = orderItemService.searchTotal(deliveryStatus, searchDto);
         PaginationShowSizeTen page = new PaginationShowSizeTen(total, curPage);
 
         Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxSize());
-        List<OrderItemDto> orderItems = orderService.searchBySearchDtoAndDeliveryStatus(searchDto, deliveryStatus, pageable);
+        List<OrderItemDto> orderItems = orderItemService.searchAllByDeliveryStatusAndSearchDto(deliveryStatus, searchDto, pageable);
+
 
         model.addAttribute("page", page);
         model.addAttribute("orderItems", orderItems);
@@ -127,38 +124,30 @@ public class AdminController {
         return "admin/admin_orderList";
     }
 
+
     @PatchMapping("/admin/deliveryStatus/change")
     @ApiOperation(value = "주문 상태 변경")
     public @ResponseBody String deliveryStatusChange(@RequestParam Long orderItemId, @RequestParam DeliveryStatus deliveryStatus){
 
         boolean result = orderService.changeOrderItemStatus(orderItemId, deliveryStatus);
-
-        if (result) {
-            return "success";
-        } else {
+        if(!result) {
             return "fail";
         }
-    }
 
+        return "success";
+    }
 
     @PostMapping("/admin/delivery/item")
     @ApiOperation(value = "운송장 번호 입력 후 상품 배송처리", notes = "상품 배송")
     public @ResponseBody String deliveryItem(Long orderItemId, String orderNum, String wayBillNum){
 
-        Order order = orderService.findByOrderNum(orderNum);
-        OrderItem orderItem = orderItemService.findById(orderItemId);
-        boolean result = order.getOrderItems().stream()
-                                .anyMatch(p -> p.getId().equals(orderItem.getId()));
-
-        if(result){
-            orderItem.setDeliveryStatus(DeliveryStatus.DELIVERY_ING);
-            orderItem.setWayBillNum(wayBillNum);
-            orderItemService.save(orderItem);
-
-            return "success";
+        boolean result = orderItemService.existsOrderItem(orderNum, orderItemId);
+        if (!result) {
+            return "fail";
         }
 
-        return "fail";
+        orderItemService.saveWayBillNum(orderItemId, wayBillNum);
+        return "success";
     }
 
 
@@ -210,7 +199,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/admin/item/delete")
-    @ApiOperation(value = "관리자페이지에서 단일 상품 삭제")
+    @ApiOperation(value = "관리자페이지에서 상품 삭제")
     public @ResponseBody String itemDelete (@RequestParam List <Long> itemIdList) {
         itemRepository.deleteAllById(itemIdList);
         return "상품 삭제 완료";

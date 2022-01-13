@@ -1,16 +1,10 @@
 package com.ecommerce.newshop1.entity;
 
-import com.ecommerce.newshop1.dto.OrderItemDto;
+
 import com.ecommerce.newshop1.enums.DeliveryStatus;
 import lombok.*;
-import org.modelmapper.ModelMapper;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -45,17 +39,5 @@ public class OrderItem {
 
     @Column
     private int totalPrice;
-
-    public static List<OrderItemDto> toDtoList(List<OrderItem> orderItems){
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setAmbiguityIgnored(true);
-
-        List<OrderItemDto> orderItemDtoList = new ArrayList<>();
-
-        for(OrderItem orderItem : orderItems){
-            orderItemDtoList.add(mapper.map(orderItem, OrderItemDto.class));
-        }
-        return orderItemDtoList;
-    }
 
 }

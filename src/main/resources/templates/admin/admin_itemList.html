@@ -45,7 +45,7 @@
             <div class="form-group">
                 <label class="form-label">상품명</label>
                 <span>
-                    <input type="text" name="itemName" th:value="${itemName}">
+                    <input type="text" name="itemName" th:value="${searchDto.itemName}">
                 </span>
             </div>
             <div class="search-submit-box">
@@ -93,11 +93,11 @@
                 </tbody>
             </table>
             <div class="paging">
-                <a th:href="@{/admin/itemList(page=${page.prevPage},itemName=${itemName},category=${category},saleStatus=${saleStatus})}">이전</a>
+                <a th:href="@{/admin/itemList(page=${page.prevPage},itemName=${searchDto?.itemName},category=${searchDto?.category},saleStatus=${searchDto?.saleStatus})}">이전</a>
                 <th:block th:each="i : ${#numbers.sequence(page.startPage, page.endPage)}">
-                    <a th:href="@{/admin/itemList(page=${i},itemName=${itemName},category=${category},saleStatus=${saleStatus})}" th:text="${i}" th:classappend="${page.curPage} == ${i} ? 'here'">1</a>
+                    <a th:href="@{/admin/itemList(page=${i},itemName=${searchDto?.itemName},category=${searchDto?.category},saleStatus=${searchDto?.saleStatus})}" th:text="${i}" th:classappend="${page.curPage} == ${i} ? 'here'">1</a>
                 </th:block>
-                <a th:href="@{/admin/itemList(page=${page.nextPage},itemName=${itemName},category=${category},saleStatus=${saleStatus})}">다음</a>
+                <a th:href="@{/admin/itemList(page=${page.nextPage},itemName=${searchDto?.itemName},category=${searchDto?.category},saleStatus=${searchDto?.saleStatus})}">다음</a>
             </div>
         </section>
             <!--  여기까지만 작성  -->

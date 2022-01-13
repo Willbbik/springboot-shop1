@@ -8,4 +8,6 @@ public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
 
     Long countByDeliveryStatus(DeliveryStatus deliveryStatus);
 
+
+
 }

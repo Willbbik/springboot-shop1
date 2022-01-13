@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -107,17 +108,7 @@ public class MemberController {
 
         Order order = orderService.findById(orderId);
 
-        OrderDto orderInfo = mapper.map(order, OrderDto.class);
-        OrderPaymentInfoDto payInfo = mapper.map(order.getPaymentInfo(), OrderPaymentInfoDto.class);
-        List<OrderItemDto> orderItems = OrderItem.toDtoList(order.getOrderItems());
-        AddressDto address = mapper.map(order.getDelivery().getDeliveryAddress(), AddressDto.class);
-
-        model.addAttribute("method", payInfo.getPayType());
-        model.addAttribute("payInfo", payInfo);
-        model.addAttribute("orderInfo", orderInfo);
-        model.addAttribute("orderItems",  orderItems);
-        model.addAttribute("address", address);
-
+        model.addAttribute(orderService.getModelPayInfo(order, model));
         return "member/member_orderDetails";
     }
 

@@ -92,7 +92,7 @@
                                 <td th:text="${orderItem.item.itemName}"></td>
                                 <td th:text="${orderItem.totalPrice}"></td>
                                 <td th:text="${orderItem.order.payType.getTitle}"></td>
-                                <td th:text="${orderItem.order.depositDate}"></td>
+                                <td th:text="${#temporals.format(orderItem.order.depositDate, 'yyyy.MM.dd HH:mm')}"></td>
                                 <td>
                                     <select name="changeDeliveryStatus" >
                                         <option value="DEPOSIT_READY" th:selected="${#strings.equals( orderItem.deliveryStatus.getValue, '입금대기' )}">입금대기</option>
