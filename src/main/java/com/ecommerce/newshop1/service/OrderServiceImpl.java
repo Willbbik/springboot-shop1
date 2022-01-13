@@ -266,16 +266,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable) {
-        List<OrderItemDto> orderItemDtos = orderRepository.searchByDeliveryStatus(deliveryStatus, pageable);
-        for(OrderItemDto dto : orderItemDtos){
-            dto.setDeliveryAddress(dto.getOrder().getDelivery().getDeliveryAddress());
-        }
-        return orderItemDtos;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<OrderItemDto> searchAllByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable, SearchDto searchDto) {
         return orderRepository.searchAllByDeliveryStatus(deliveryStatus, pageable, searchDto);
     }

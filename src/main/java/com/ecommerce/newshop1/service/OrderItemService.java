@@ -1,7 +1,11 @@
 package com.ecommerce.newshop1.service;
 
+import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.entity.OrderItem;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface OrderItemService {
 
@@ -10,5 +14,7 @@ public interface OrderItemService {
     OrderItem findById(Long id);
 
     void save(OrderItem orderItem);
+
+    List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable);
 
 }

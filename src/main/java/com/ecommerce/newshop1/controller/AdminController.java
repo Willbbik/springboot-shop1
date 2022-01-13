@@ -50,7 +50,7 @@ public class AdminController {
         Long ingOrderItemTotal = orderItemService.countByDeliveryStatus(DeliveryStatus.DELIVERY_ING);
         Long depositOrderTotal = orderService.countByDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS);
 
-        List<OrderItemDto> ingOrderItems = orderService.searchByDeliveryStatus(DeliveryStatus.DELIVERY_ING, pageable);            // 배송중 상품
+        List<OrderItemDto> ingOrderItems = orderItemService.searchByDeliveryStatus(DeliveryStatus.DELIVERY_ING, pageable);        // 배송중 상품
         List<OrderDto> depositOrderItems = orderService.searchOrderDtoByDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS, pageable); // 입금완료된 주문
         List<MemberDto> memberDtos = memberService.findAll(pageable);                                                             // 회원가입한 유저
 

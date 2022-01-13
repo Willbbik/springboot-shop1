@@ -46,8 +46,6 @@ public interface OrderService {
 
     List<OrderItemDto> searchBySearchDtoAndDeliveryStatus(SearchDto searchDto, DeliveryStatus deliveryStatus, Pageable pageable);
 
-    List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable);
-
     List<OrderItemDto> searchAllByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable, SearchDto searchDto);
 
     Long searchTotalOrderItem(DeliveryStatus deliveryStatus, SearchDto searchDto);

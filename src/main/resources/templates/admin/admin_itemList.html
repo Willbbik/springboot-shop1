@@ -15,40 +15,11 @@
 <body>
 
 <div id="page-wrapper">
-    <!-- 사이드바 -->
-    <div id="sidebar-wrapper">
-        <ul class="sidebar-nav">
-            <li class="sidebar-brand">
-                <p>관리자 페이지</p>
-                <a href="/">에게모니</a>
-            </li>
-            <input type="text" class="form-control me-2" placeholder="검색" maxlength="20"/>
-            <br/>
-            <p class="acountbuttons" style="text-align: center;">
-                <span sec:authorize="isAuthenticated()"><a th:href="@{/logout}">로그아웃</a></span>
-            </p>
-            <li>-</li>
-            <br/>
-            <li><a th:href="@{/admin/register}">상품 등록</a></li>
-            <li><a th:href="@{/admin/itemList}">등록된 상품 목록</a></li>
-            <li>-</li>
-            <br/>
-            <li><a th:href="@{/admin/send/orderItem}">상품 배송</a></li>
-            <li><a th:href="@{/admin/orderList}">주문 목록</a></li>
-            <li>-</li>
-            <br/>
-            <li><a th:href="@{/board/list/all}">공지사항</a></li>
-            <li><a th:href="@{/admin/write/notice}">공지사항 글쓰기</a></li>
-            <li>-</li>
-            <br/>
-
-        </ul>
+    <div th:replace="admin/admin_sidebar :: adminSidebar">
     </div>
-    <!-- /사이드바 -->
-
     <div id="page-content-wrapper">
         <div class="container-fluid">
-            <!-- 본문 -->
+        <!-- 본문 -->
         <section id="itemList">
             <h1>상품 목록</h1>
             <form th:action="@{/admin/itemList}" method="get" id="search">

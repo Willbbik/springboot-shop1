@@ -18,7 +18,7 @@ public interface OrderRepositoryCustom {
 
     List<OrderItemDto> searchBySearchDtoAndDeliveryStatus(SearchDto searchDto, DeliveryStatus deliveryStatus, Pageable pageable);
 
-    List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable);
+    List<OrderItemDto> searchItemDtoByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable);
 
     List<OrderItemDto> searchAllByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable, SearchDto searchDto);
 

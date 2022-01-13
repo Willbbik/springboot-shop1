@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
     <!-- 사이드바 -->
-        <div id="sidebar-wrapper" th:fragment="sidebarFragment">
+        <div id="sidebar-wrapper" th:fragment="main_sidebar">
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
                     <a href="/">에게모니</a>
@@ -24,34 +24,15 @@
                 <li><a th:href="@{/category/cap}">Cap</a></li>
                 <li>-</li>
                 <br/>
-                <li><a th:href="@{/board/list/all}">공지사항</a></li>
-                <li><a th:href="@{/board/write/notice}">공지사항 글쓰기</a></li>
+                <li><a th:href="@{/board/freeBoard}">자유게시판</a></li>
                 <li>-</li>
                 <br/>
                 <li>CS CENTER</li>
                 <li>070-4193-9293</li>
                 <li>토요일, 일요일, 공휴일 제외</li>
                 <li>평일 09:00 ~ 18:00</li>
-                <li>-</li>
                 <br/>
-                <li><a href="#">메뉴 4</a></li>
-                <li><a href="#">메뉴 5</a></li>
-                <li><a href="#">메뉴 6</a></li>
-                <li><a href="#">메뉴 7</a></li>
-                <li><a href="#">메뉴 8</a></li>
-                <li><a href="#">메뉴 9</a></li>
-                <li><a href="#">메뉴 1</a></li>
-                <li><a href="#">메뉴 2</a></li>
-                <li><a href="#">메뉴 3</a></li>
-                <li><a href="#">메뉴 4</a></li>
-                <li><a href="#">메뉴 5</a></li>
-                <li><a href="#">메뉴 6</a></li>
-                <li><a href="#">메뉴 7</a></li>
-                <li><a href="#">메뉴 8</a></li>
-                <li><a href="#">메뉴 9</a></li>
-
             </ul>
         </div>
-
     <!-- /사이드바 -->
 
