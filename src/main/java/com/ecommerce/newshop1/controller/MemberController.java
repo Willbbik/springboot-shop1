@@ -3,7 +3,6 @@ package com.ecommerce.newshop1.controller;
 import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.Order;
-import com.ecommerce.newshop1.entity.OrderItem;
 import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.CommonService;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -88,14 +86,7 @@ public class MemberController {
 
         Member member = memberService.getCurrentMember();
         List<OrderDto> orderList = orderService.searchAllByMember(null, member);
-
-        Long lastOrderId = null;
-        if(orderList.size() > 1){
-            int lastIndex = orderList.size() - 1;
-            lastOrderId = orderList.get(lastIndex).getId();
-        }else if(orderList.size() == 1){
-            lastOrderId = orderList.get(0).getId();
-        }
+        Long lastOrderId = orderService.getLastOrderId(orderList, null);
 
         model.addAttribute("orderList", orderList);
         model.addAttribute("lastOrderId", lastOrderId);
@@ -103,7 +94,7 @@ public class MemberController {
     }
 
     @GetMapping("/member/orderDetails/{id}")
-    @ApiOperation(value = "주문한 상품 주문정보 페이지")
+    @ApiOperation(value = "주문정보 페이지")
     public String memberOrderDetails(@PathVariable(name = "id") Long orderId, Model model){
 
         Order order = orderService.findById(orderId);

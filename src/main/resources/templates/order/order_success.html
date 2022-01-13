@@ -99,7 +99,7 @@
                     <dd th:text="${address.detailAddress} == '' ? '없음' : ${address.detailAddress} "></dd>
                 </dl>
                 <div>
-                    <a href="#" class="btn_order_order">주문/배송조회로 이동</a>
+                    <a th:href="@{/mypage}" class="btn_order_order">주문/배송조회로 이동</a>
                 </div>
             </div>
             <!-- /본문 -->

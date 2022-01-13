@@ -14,7 +14,6 @@ public class ModelMapperConfig {
     public ModelMapper mapper(){
 
         ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setAmbiguityIgnored(true);
         mapper.getConfiguration().setPropertyCondition(new Condition<Object, Object>() {
             public boolean applies(MappingContext<Object, Object> context) {
                 return !(context.getSource() instanceof PersistentCollection);

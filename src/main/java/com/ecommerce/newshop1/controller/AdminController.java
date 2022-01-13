@@ -38,7 +38,7 @@ public class AdminController {
     private final AwsS3Service awsS3Service;
     private final CommonService commonService;
     private final SecurityService security;
-    private final ModelMapper mapper;
+    ModelMapper mapper = new ModelMapper();
 
     @GetMapping("/admin/main")
     @ApiOperation(value = "관리자 메인 페이지")
@@ -50,7 +50,7 @@ public class AdminController {
 
         List<OrderItemDto> ingOrderItems = orderItemService.searchByDeliveryStatus(DeliveryStatus.DELIVERY_ING, pageable);  // 배송중 상품
         List<OrderDto> depositOrderItems = orderService.searchByDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS, pageable);   // 입금완료된 주문
-        List<MemberDto> members = memberService.findAll(pageable);                                                       // 회원가입한 유저
+        List<MemberDto> members = memberService.findAll(pageable);                                                          // 회원가입한 유저
 
         model.addAttribute("ingOrderItems", ingOrderItems);
         model.addAttribute("depositOrderItems", depositOrderItems);

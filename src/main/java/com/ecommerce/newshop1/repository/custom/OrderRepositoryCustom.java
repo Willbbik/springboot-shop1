@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface OrderRepositoryCustom {
 
-    List<Order> searchAllByMember(Long orderId, Member member);
+    List<Order> searchAllByMember(Long lastOrderId, Member member);
 
     List<OrderDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable);
 

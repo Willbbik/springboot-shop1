@@ -29,7 +29,7 @@ public interface OrderService {
 
     Long getLastOrderId(List<OrderDto> orderList, Long lastOrderId);
 
-    List<OrderDto> searchAllByMember(Long orderId, Member member);
+    List<OrderDto> searchAllByMember(Long lastOrderId, Member member);
 
     List<OrderDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable);
 

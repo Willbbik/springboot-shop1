@@ -41,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
     private final CartService cartService;
     private final MemberService memberService;
     private final CommonService commonService;
-    private final ModelMapper mapper;
+    ModelMapper mapper = new ModelMapper();
 
     @Value("${tosspayments.secret_key}")
     String SECRET_KEY;
@@ -228,8 +228,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrderDto> searchAllByMember(Long orderId, Member member) {
-        List<Order> orderList = orderRepository.searchAllByMember(orderId, member);
+    public List<OrderDto> searchAllByMember(Long lastOrderId, Member member) {
+        List<Order> orderList = orderRepository.searchAllByMember(lastOrderId, member);
         return orderList.stream()
                 .map(p -> mapper.map(p, OrderDto.class))
                 .collect(Collectors.toList());
@@ -249,8 +249,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public List<OrderDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable) {
-        return orderRepository.searchByDeliveryStatus(deliveryStatus, pageable);
 
+        return orderRepository.searchByDeliveryStatus(deliveryStatus, pageable);
     }
 
     @Override

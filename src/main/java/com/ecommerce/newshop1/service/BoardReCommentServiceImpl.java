@@ -10,7 +10,6 @@ import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.exception.BoardCommentNotFoundException;
 import com.ecommerce.newshop1.repository.BoardReCommentRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +23,6 @@ public class BoardReCommentServiceImpl implements BoardReCommentService{
     private final BoardReCommentRepository boardReCommentRepository;
     private final BoardCommentService boardCommentService;
     private final MemberService memberService;
-    private final ModelMapper mapper;
 
     @Override
     @Transactional(readOnly = true)
