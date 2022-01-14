@@ -1,9 +1,9 @@
 package com.ecommerce.newshop1.repository.custom;
 
-import com.ecommerce.newshop1.dto.QnADto;
+import com.ecommerce.newshop1.dto.ItemQnADto;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.Member;
-import com.ecommerce.newshop1.entity.QQnAEntity;
+import com.ecommerce.newshop1.entity.QItemQnA;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -18,67 +18,53 @@ public class QnARepositoryImpl implements QnARepositoryCustom{
     private JPAQueryFactory queryFactory;
 
     @Override
-    public List<QnADto> searchQnA(Item item, Pageable pageable) {
+    public List<ItemQnADto> searchAll(Item item, Pageable pageable) {
 
         return queryFactory
-                .select(Projections.fields(QnADto.class,
-                        QQnAEntity.qnAEntity.id,
-                        QQnAEntity.qnAEntity.writer,
-                        QQnAEntity.qnAEntity.content,
-                        QQnAEntity.qnAEntity.hide,
-                        QQnAEntity.qnAEntity.replyEmpty,
-                        QQnAEntity.qnAEntity.createdDate
+                .select(Projections.fields(ItemQnADto.class,
+                        QItemQnA.itemQnA.id,
+                        QItemQnA.itemQnA.writer,
+                        QItemQnA.itemQnA.content,
+                        QItemQnA.itemQnA.hide,
+                        QItemQnA.itemQnA.replyEmpty,
+                        QItemQnA.itemQnA.createdDate
                         ))
-                .from(QQnAEntity.qnAEntity)
-                .where(QQnAEntity.qnAEntity.depth.eq(1),
-                        QQnAEntity.qnAEntity.item.id.eq(item.getId()))
-                .orderBy(QQnAEntity.qnAEntity.id.desc())
-                .limit(3)
+                .from(QItemQnA.itemQnA)
+                .where(QItemQnA.itemQnA.item.eq(item))
+                .orderBy(QItemQnA.itemQnA.id.desc())
+                .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
                 .fetch();
     }
 
     @Override
-    public List<QnADto> searchAllByMember(Long id, Member member) {
+    public List<ItemQnADto> searchAllByMember(Long id, Member member, Pageable pageable) {
 
-        return queryFactory.select(Projections.fields(QnADto.class,
-                            QQnAEntity.qnAEntity.id,
-                            QQnAEntity.qnAEntity.writer,
-                            QQnAEntity.qnAEntity.content,
-                            QQnAEntity.qnAEntity.hide,
-                            QQnAEntity.qnAEntity.replyEmpty,
-                            QQnAEntity.qnAEntity.createdDate
+        return queryFactory.select(Projections.fields(ItemQnADto.class,
+                        QItemQnA.itemQnA.id,
+                        QItemQnA.itemQnA.writer,
+                        QItemQnA.itemQnA.content,
+                        QItemQnA.itemQnA.hide,
+                        QItemQnA.itemQnA.replyEmpty,
+                        QItemQnA.itemQnA.createdDate
                             ))
-                .from(QQnAEntity.qnAEntity)
+                .from(QItemQnA.itemQnA)
                 .where(
-                        QQnAEntity.qnAEntity.member.eq(member),
+                        QItemQnA.itemQnA.member.eq(member),
                         ltQnAId(id)
                 )
-                .orderBy(QQnAEntity.qnAEntity.id.desc())
-                .limit(3)
+                .orderBy(QItemQnA.itemQnA.id.desc())
+                .limit(pageable.getPageSize())
                 .fetch();
     }
 
-    @Override
-    public Long countQnAByItem(Item item) {
-
-        return queryFactory
-                .select(Projections.fields(QnADto.class,
-                        QQnAEntity.qnAEntity.id
-                ))
-                .from(QQnAEntity.qnAEntity)
-                .where(
-                      QQnAEntity.qnAEntity.item.eq(item),
-                      QQnAEntity.qnAEntity.depth.eq(1)
-                ).fetchCount();
-    }
 
     private BooleanExpression ltQnAId(Long qnaId){
 
         if(qnaId == null){
             return null;
         }
-        return QQnAEntity.qnAEntity.id.lt(qnaId);
+        return QItemQnA.itemQnA.id.lt(qnaId);
     }
 
 }

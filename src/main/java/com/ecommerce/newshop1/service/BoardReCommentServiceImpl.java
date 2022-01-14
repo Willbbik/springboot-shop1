@@ -7,6 +7,7 @@ import com.ecommerce.newshop1.entity.Board;
 import com.ecommerce.newshop1.entity.BoardComment;
 import com.ecommerce.newshop1.entity.BoardReComment;
 import com.ecommerce.newshop1.entity.Member;
+import com.ecommerce.newshop1.enums.Role;
 import com.ecommerce.newshop1.exception.BoardCommentNotFoundException;
 import com.ecommerce.newshop1.repository.BoardReCommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class BoardReCommentServiceImpl implements BoardReCommentService{
     private final BoardReCommentRepository boardReCommentRepository;
     private final BoardCommentService boardCommentService;
     private final MemberService memberService;
+    private final SecurityService security;
 
     @Override
     @Transactional(readOnly = true)
@@ -39,6 +41,29 @@ public class BoardReCommentServiceImpl implements BoardReCommentService{
         for(BoardCommentDto comment : commentList){
             reCommentList.addAll(boardReCommentRepository.searchAll(comment));
         }
+        return reCommentList;
+    }
+
+    @Override
+    @Transactional
+    public List<BoardReCommentDto> edit(List<BoardReCommentDto> reCommentList) {
+
+        if(!reCommentList.isEmpty()){
+
+            if(security.isAuthenticated()){
+                reCommentList.stream()
+                        .filter(p -> p.getHide().equals("private"))
+                        .filter(p -> !security.getName().equals(p.getComment().getMember().getUserId()))
+                        .filter(p -> !security.checkHasRole(Role.ADMIN.getValue()))
+                        .filter(p -> !p.getMember().getUserId().equals(security.getName()))
+                        .forEach(p -> p.setContent("비밀글입니다."));
+            }else{
+                reCommentList.stream()
+                        .filter(p -> p.getHide().equals("private"))
+                        .forEach(p -> p.setContent("비밀글입니다."));
+            }
+        }
+
         return reCommentList;
     }
 

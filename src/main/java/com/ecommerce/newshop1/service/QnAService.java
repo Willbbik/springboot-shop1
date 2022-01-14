@@ -1,40 +1,29 @@
 package com.ecommerce.newshop1.service;
 
-import com.ecommerce.newshop1.dto.QnADto;
+import com.ecommerce.newshop1.dto.ItemQnADto;
 import com.ecommerce.newshop1.entity.Item;
+import com.ecommerce.newshop1.entity.ItemQnA;
 import com.ecommerce.newshop1.entity.Member;
 import org.springframework.data.domain.Pageable;
-import org.springframework.ui.Model;
 
 import java.util.List;
 
 public interface QnAService  {
 
+    ItemQnA findById(Long qnaId);
 
-    List<QnADto> searchQnA(Item item, Pageable pageable);
+    Long countByItem(Item item);
 
-    Long countQnAByItem(Item item);
+    Long save(ItemQnADto dto, Long itemId);
 
-    // QnA 관리자 답글 가져오기
-    List<QnADto> getQnAReply(List<QnADto> qnaList);
+    Long getLastQnAId(List<ItemQnADto> qnaList, Long lastQnAId);
 
-    // 현재 사용자가 작성한 qnA가져오기
-    List<QnADto> searchAllByMember(Long id, Member member);
+    List<ItemQnADto> searchAll(Item item, Pageable pageable);
 
-    // QnA 질문 저장
-    void saveQnA(QnADto dto, Long itemId) ;
+    List<ItemQnADto> searchAllByMember(Long id, Member member, Pageable pageable);
 
-    // QnA 관리자 답글 저장
-    void saveQnAReply(QnADto dto, Long itemId);
+    List<ItemQnADto> edit(List<ItemQnADto> qnaList);
 
-    // view에 표시할 QnA답글 편집
-    List<QnADto> editReply(List<QnADto> replyList);
-
-    // view에 표시할 QnA질문 편집
-    List<QnADto> editQna(List<QnADto> qnaList);
-
-    Long getLastQnAId(List<QnADto> qnaList, Long lastQnAId);
-
-    void deleteQnaAndReply(List<Long> qnaIdList);
+    void deleteAllById(List<Long> id);
 
 }

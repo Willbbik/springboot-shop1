@@ -198,12 +198,12 @@
 <th:block sec:authorized="hasRole('ROLE_ADMIN')">
     <script>
     $(document).ready(function(){
-        $(document).on("click", "#qna_reply_post", function(){
+        $(document).on("click", ".qna_reply_post", function(){
 
             let itemId = $("#itemId").val();
 
             let span = $(this).closest("span");
-            let parent = span.find("#parent").val();
+            let qnaId = span.attr("data-qnaId");
             let content = span.find("#replyContent").val();
             let hide = span.find("input[type='radio']:checked").val();
 
@@ -212,8 +212,8 @@
 
             let param = {
                 itemId : itemId,
+                qnaId : qnaId,
                 content : content,
-                parent : parent,
                 hide : hide
             };
 
@@ -265,7 +265,7 @@
 
 
         // QnA작성 취소버튼 클릭
-        $(document).on('click', '#qna_reply_write_cancel', function(){
+        $(document).on('click', '.qna_reply_write_cancel', function(){
 
             $(this).closest(".qna_reply_write").css('display', 'none');
             $(this).closest(".qna_list_body").find(".qna_title").css('display', 'none');

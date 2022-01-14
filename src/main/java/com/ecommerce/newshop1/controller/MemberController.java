@@ -1,6 +1,7 @@
 package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.*;
+import com.ecommerce.newshop1.entity.ItemQnAReply;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.Order;
 import com.ecommerce.newshop1.repository.QnARepository;
@@ -10,6 +11,8 @@ import com.ecommerce.newshop1.utils.ValidationSequence;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +31,8 @@ public class MemberController {
     private final MemberService memberService;
     private final MessageService messageService;
     private final RedisService redisService;
-    private final QnAService qnAService;
+    private final QnAService qnaService;
+    private final QnAReplyService qnaReplyService;
     private final CartService cartService;
     private final OrderService orderService;
     private final CommonService commonService;
@@ -151,18 +155,19 @@ public class MemberController {
         boolean result = qnARepository.existsByMember(member);
 
         // 댓글이 없으면 빈 배열을, 있으면 가져오기
-        List<QnADto> qnaList = (!result) ? new ArrayList<>() : qnAService.searchAllByMember(lastQnAId, member);
-        List<QnADto> qnaReplyList = qnAService.getQnAReply(qnaList);
+        Pageable pageable = PageRequest.ofSize(3);
+        List<ItemQnADto> qnaList = (!result) ? new ArrayList<>() : qnaService.searchAllByMember(lastQnAId, member, pageable);
+        List<ItemQnAReplyDto> replyList = qnaReplyService.searchAllByQnA(qnaList);
 
         // 값 수정
-        qnaList = qnAService.editQna(qnaList);
-        qnaReplyList = qnAService.editReply(qnaReplyList);
+        qnaList = qnaService.edit(qnaList);
+        replyList = qnaReplyService.edit(replyList);
 
         // nooffset 페이징을 위해서 마지막 qna번호 가져오기
-        lastQnAId = qnAService.getLastQnAId(qnaList, lastQnAId);
+        lastQnAId = qnaService.getLastQnAId(qnaList, lastQnAId);
 
         model.addAttribute("qnaList", qnaList);
-        model.addAttribute("qnaReplyList", qnaReplyList);
+        model.addAttribute("qnaReplyList", replyList);
         model.addAttribute("lastQnAId", lastQnAId);
 
         if(more != null && more.equals("more")){
@@ -176,7 +181,7 @@ public class MemberController {
     @ApiOperation(value = "본인이 작성한 qna 삭제")
     public @ResponseBody String qnaDelete(@RequestParam List<Long> qnaIdList){
 
-        qnAService.deleteQnaAndReply(qnaIdList);
+        qnaService.deleteAllById(qnaIdList);
 
         return "success";
     }

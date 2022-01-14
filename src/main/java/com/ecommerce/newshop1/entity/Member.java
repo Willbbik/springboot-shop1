@@ -41,11 +41,14 @@ public class Member extends TimeEntity {
     @Column(length = 11)
     private String phoneNum;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "member")
     private Cart cart;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
-    private List<QnAEntity> qnaList = new ArrayList<>();
+    private List<ItemQnA> qnaList = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
+    private List<ItemQnAReply> qnaReplyList = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "member")
     private List<Order> orderList = new ArrayList<>();
@@ -70,9 +73,14 @@ public class Member extends TimeEntity {
         review.setMember(this);
     }
 
-    public void addQnaList(QnAEntity qnaEntity) {
-        this.getQnaList().add(qnaEntity);
-        qnaEntity.setMember(this);
+    public void addQnaList(ItemQnA qnaItem) {
+        this.getQnaList().add(qnaItem);
+        qnaItem.setMember(this);
+    }
+
+    public void addQnaReplyList(ItemQnAReply qnaReply){
+        this.getQnaReplyList().add(qnaReply);
+        qnaReply.setMember(this);
     }
 
     public void addBoardList(Board board){

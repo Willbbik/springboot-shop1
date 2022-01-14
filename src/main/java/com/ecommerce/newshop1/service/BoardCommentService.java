@@ -19,6 +19,8 @@ public interface BoardCommentService {
 
     List<BoardCommentDto> searchAll(Board board, Long lastCommentId);
 
+    List<BoardCommentDto> edit(List<BoardCommentDto> commentList);
+
     void deleteById(Long commentId);
 
     void updateComment(Long commentId, CommentPostDto postDto);

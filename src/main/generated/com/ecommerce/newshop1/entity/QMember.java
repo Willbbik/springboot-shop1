@@ -48,7 +48,9 @@ public class QMember extends EntityPathBase<Member> {
 
     public final StringPath phoneNum = createString("phoneNum");
 
-    public final ListPath<QnAEntity, QQnAEntity> qnaList = this.<QnAEntity, QQnAEntity>createList("qnaList", QnAEntity.class, QQnAEntity.class, PathInits.DIRECT2);
+    public final ListPath<ItemQnA, QItemQnA> qnaList = this.<ItemQnA, QItemQnA>createList("qnaList", ItemQnA.class, QItemQnA.class, PathInits.DIRECT2);
+
+    public final ListPath<ItemQnAReply, QItemQnAReply> qnaReplyList = this.<ItemQnAReply, QItemQnAReply>createList("qnaReplyList", ItemQnAReply.class, QItemQnAReply.class, PathInits.DIRECT2);
 
     public final SetPath<Review, QReview> reviewList = this.<Review, QReview>createSet("reviewList", Review.class, QReview.class, PathInits.DIRECT2);
 

@@ -5,6 +5,7 @@ import com.ecommerce.newshop1.dto.CommentPostDto;
 import com.ecommerce.newshop1.entity.Board;
 import com.ecommerce.newshop1.entity.BoardComment;
 import com.ecommerce.newshop1.entity.Member;
+import com.ecommerce.newshop1.enums.Role;
 import com.ecommerce.newshop1.exception.BoardCommentNotFoundException;
 import com.ecommerce.newshop1.repository.BoardCommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +13,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ public class BoardCommentServiceImpl implements BoardCommentService{
     private final BoardCommentRepository boardCommentRepository;
     private final MemberService memberService;
     private final BoardService boardService;
+    private final SecurityService security;
 
     ModelMapper mapper = new ModelMapper();
 
@@ -90,4 +95,28 @@ public class BoardCommentServiceImpl implements BoardCommentService{
         comment.setContent(postDto.getContent());
         comment.setHide(postDto.getHide());
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BoardCommentDto> edit(List<BoardCommentDto> commentList) {
+
+        if(!commentList.isEmpty()){
+            if(security.isAuthenticated()){
+
+                commentList.stream()
+                        .filter(p -> p.getHide().equals("private"))
+                        .filter(p -> !security.checkHasRole(Role.ADMIN.getValue()))
+                        .filter(p -> !p.getMember().getUserId().equals(security.getName()))
+                        .forEach(p -> p.setContent("비밀글입니다."));
+            }else{
+                commentList.stream()
+                        .filter(p -> p.getHide().equals("private"))
+                        .forEach(p -> p.setContent("비밀글입니다."));
+            }
+        }
+
+        return commentList;
+    }
+
+
 }

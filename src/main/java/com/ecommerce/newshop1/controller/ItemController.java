@@ -1,10 +1,8 @@
 package com.ecommerce.newshop1.controller;
 
-import com.ecommerce.newshop1.dto.ItemDto;
-import com.ecommerce.newshop1.dto.ItemImageDto;
-import com.ecommerce.newshop1.dto.QnADto;
-import com.ecommerce.newshop1.dto.ReviewDto;
+import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.Item;
+import com.ecommerce.newshop1.entity.ItemQnAReply;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.repository.ReviewRepository;
@@ -29,10 +27,10 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class ItemController {
-
-    private final QnARepository qnARepository;
+    
     private final ReviewRepository reviewRepository;
-    private final QnAService qnAService;
+    private final QnAService qnaService;
+    private final QnAReplyService qnaReplyService;
     private final ReviewService reviewService;
     private final ItemService itemService;
     private final CommonService commonService;
@@ -76,15 +74,12 @@ public class ItemController {
     @ApiOperation(value = "상품 상세보기")
     public String itemDetails(@PathVariable Long id, Model model) {
 
-        // 상품
         Item item = itemService.findById(id);
         ItemDto itemDto = mapper.map(item, ItemDto.class);
 
-        // 상품 이미지
         List<ItemImageDto> images = itemService.searchAllItemImage(item);
 
-        // qna, 리뷰 개수
-        Long qnaSize = qnAService.countQnAByItem(item);
+        Long qnaSize = qnaService.countByItem(item);
         Long reviewSize = reviewService.countByItem(item);
 
         model.addAttribute("item", itemDto);     // 상품
@@ -101,18 +96,16 @@ public class ItemController {
                               @RequestParam(name = "page", defaultValue = "1") int curPage){
 
         Item item = itemService.findById(itemId);
-        Long qnaSize = qnARepository.countQnAByItem(item);
+        Long qnaSize = qnaService.countByItem(item);
 
         // 페이징
         PaginationShowSizeThree page = new PaginationShowSizeThree(qnaSize, curPage);
         Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxSize());
 
-        // qna와 답글 가져오고 값 편집
-        List<QnADto> qnaList = qnARepository.searchQnA(item, pageable); // qna
-        List<QnADto> qnaReplyList = qnAService.getQnAReply(qnaList);    // qna 답글
-
-        qnaList = qnAService.editQna(qnaList);               // QnA 편집
-        qnaReplyList = qnAService.editReply(qnaReplyList);   // QnA 답글 편집
+        List<ItemQnADto> qnaList = qnaService.searchAll(item, pageable);
+        List<ItemQnAReplyDto> qnaReplyList = qnaReplyService.findAllByQnA(qnaList);
+        qnaList = qnaService.edit(qnaList);
+        qnaReplyList = qnaReplyService.edit(qnaReplyList);
 
         model.addAttribute("page", page);
         model.addAttribute("qnaSize", qnaSize);
@@ -125,38 +118,33 @@ public class ItemController {
 
     @PostMapping("/item/qna/send")
     @ApiOperation(value = "Q&A 저장")
-    public @ResponseBody String saveItemQnA(@Validated(ValidationSequence.class) QnADto qnaDto, BindingResult errors, Long itemId){
+    public @ResponseBody String saveItemQnA(@Validated(ValidationSequence.class) ItemQnADto qnaDtoItem, BindingResult errors, Long itemId){
 
         // 유효성 검사
         if(errors.hasErrors()){
             return commonService.getErrorMessage(errors);
-        }
-
-        if(security.isAuthenticated()){
-            qnAService.saveQnA(qnaDto, itemId);
-            return "success";
-        }else{
+        }else if(!security.isAuthenticated()){
             return "login";
         }
+
+        qnaService.save(qnaDtoItem, itemId);
+        return "success";
     }
 
 
     @PostMapping("/item/reply/send")
     @ApiOperation(value = "QnA답글 저장")
-    public @ResponseBody String saveItemQnaReply(@Validated(ValidationSequence.class) QnADto dto, BindingResult errors, Long itemId) {
+    public @ResponseBody String saveItemQnaReply(@Validated(ValidationSequence.class) ItemQnAReplyDto dto, BindingResult errors, Long itemId) {
 
         // 유효성 검사
         if(errors.hasErrors()){
             return commonService.getErrorMessage(errors);
-        }
-
-        // 로그인 검사
-        if(security.isAuthenticated() && security.checkHasRole(Role.ADMIN.getValue())){
-            qnAService.saveQnAReply(dto, itemId);
-            return "success";
-        }else{
+        }else if(!security.isAuthenticated() && !security.checkHasRole(Role.ADMIN.getValue())){
             return "login";
         }
+
+        qnaReplyService.save(dto, itemId, null);
+        return "success";
     }
 
 
@@ -167,8 +155,7 @@ public class ItemController {
         // 유효성 검사
         if(errors.hasErrors()){
             return commonService.getErrorMessage(errors);
-        }
-        if(!security.isAuthenticated()) {        // 로그인한 상태인지
+        } else if(!security.isAuthenticated()) {        // 로그인한 상태인지
             return "-1";
         }
 

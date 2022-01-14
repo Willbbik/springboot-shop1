@@ -118,7 +118,7 @@ public class BoardController {
 
 
     @GetMapping("/board/commentList")
-    @ApiOperation(value = "게시글 댓글 리스트가 담긴 html 반환", notes = "게시글 상세보기 진입시 자동 호출")
+    @ApiOperation(value = "게시글 댓글 리스트가 담긴 html 반환", notes = "ajax전용 게시글 상세보기 진입시 자동 호출")
     public String getCommentList(@RequestParam(name = "boardId") Long boardId,
                                  @RequestParam(name = "lastCommentId", required = false) Long lastCommentId,
                                  @RequestParam(name = "more", required = false) String more, Model model){
@@ -126,9 +126,12 @@ public class BoardController {
         Board board = boardService.findById(boardId);
         Long totalComment =  boardCommentService.countByBoard(board);
 
-        List<BoardCommentDto> commentList = boardCommentService.searchAll(board, lastCommentId);
-        List<BoardReCommentDto> reCommentList = boardReCommentService.searchAll(commentList);
-        lastCommentId =  boardCommentService.getLastCommentId(commentList, lastCommentId);
+        List<BoardCommentDto> findCommentList = boardCommentService.searchAll(board, lastCommentId);
+        List<BoardReCommentDto> findReCommentList = boardReCommentService.searchAll(findCommentList);
+        lastCommentId =  boardCommentService.getLastCommentId(findCommentList, lastCommentId);
+
+        List<BoardCommentDto> commentList = boardCommentService.edit(findCommentList);
+        List<BoardReCommentDto> reCommentList = boardReCommentService.edit(findReCommentList);
 
         model.addAttribute("commentList", commentList);
         model.addAttribute("reCommentList", reCommentList);

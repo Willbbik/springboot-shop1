@@ -21,7 +21,9 @@ public class BoardCommentRepositoryImpl implements BoardCommentRepositoryCustom{
         return queryFactory
                 .select(Projections.fields(BoardCommentDto.class,
                             QBoardComment.boardComment.id,
+                            QBoardComment.boardComment.member,
                             QBoardComment.boardComment.content,
+                            QBoardComment.boardComment.hide,
                             QBoardComment.boardComment.writer,
                             QBoardComment.boardComment.createdDate,
                             QBoardComment.boardComment.modifiedDate

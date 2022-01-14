@@ -13,10 +13,13 @@ public interface BoardReCommentService {
 
     List<BoardReCommentDto> searchAll(List<BoardCommentDto> commentList);
 
+    List<BoardReCommentDto> edit(List<BoardReCommentDto> reCommentList);
+
     Long save(CommentPostDto postDto, String userId);
 
     void deleteById(Long reCommentId);
 
     void updateReComment(Long reCommentId, CommentPostDto postDto);
+
 
 }

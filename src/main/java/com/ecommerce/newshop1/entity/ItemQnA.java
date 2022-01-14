@@ -1,16 +1,9 @@
 package com.ecommerce.newshop1.entity;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.Date;
 
 @Entity
 @Getter
@@ -20,7 +13,7 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "item_qna", indexes = @Index(name ="qnaidx", columnList = "item_id"))
-public class QnAEntity extends TimeEntity {
+public class ItemQnA extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,24 +28,24 @@ public class QnAEntity extends TimeEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "qna")
+    private ItemQnAReply qnaReply;
+
     @Column(length = 20, nullable = false)
     private String writer;
 
     @Column(length = 2048, nullable = false)
     private String content;
 
-    @Column
-    private Long parent;
-
     @Column(length = 10)
     private String hide;
 
     @Column(length = 10)
-    private String replyEmpty;
+    private boolean replyEmpty;
 
-    @Column(length = 1)
-    private Integer depth;
-
-
+    public void setQnAReply(ItemQnAReply qnaReply){
+        this.qnaReply = qnaReply;
+        qnaReply.setQna(this);
+    }
 
 }

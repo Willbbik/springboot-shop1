@@ -46,8 +46,8 @@ public class GlobalExceptionHandler{
         return "error/400";
     }
 
-    @ExceptionHandler(QnaNotFoundException.class)
-    public String qnaNotFound(QnaNotFoundException e){
+    @ExceptionHandler(QnANotFoundException.class)
+    public String qnaNotFound(QnANotFoundException e){
         log.error("qnaNotFoundException {} :", e.getMessage());
         log.error("qnaNotFoundException reason {} :", e.getCause());
         return "error/400";

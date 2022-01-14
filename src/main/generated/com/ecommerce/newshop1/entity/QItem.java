@@ -48,7 +48,9 @@ public class QItem extends EntityPathBase<Item> {
 
     public final NumberPath<Integer> price = createNumber("price", Integer.class);
 
-    public final ListPath<QnAEntity, QQnAEntity> qnaList = this.<QnAEntity, QQnAEntity>createList("qnaList", QnAEntity.class, QQnAEntity.class, PathInits.DIRECT2);
+    public final ListPath<ItemQnA, QItemQnA> qnaList = this.<ItemQnA, QItemQnA>createList("qnaList", ItemQnA.class, QItemQnA.class, PathInits.DIRECT2);
+
+    public final ListPath<ItemQnAReply, QItemQnAReply> qnaReplyList = this.<ItemQnAReply, QItemQnAReply>createList("qnaReplyList", ItemQnAReply.class, QItemQnAReply.class, PathInits.DIRECT2);
 
     public final ListPath<Review, QReview> reviewList = this.<Review, QReview>createList("reviewList", Review.class, QReview.class, PathInits.DIRECT2);
 
