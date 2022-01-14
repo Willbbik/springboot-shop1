@@ -157,13 +157,10 @@ public class MemberController {
         // 댓글이 없으면 빈 배열을, 있으면 가져오기
         Pageable pageable = PageRequest.ofSize(3);
         List<ItemQnADto> qnaList = (!result) ? new ArrayList<>() : qnaService.searchAllByMember(lastQnAId, member, pageable);
-        List<ItemQnAReplyDto> replyList = qnaReplyService.searchAllByQnA(qnaList);
+        List<ItemQnAReplyDto> replyList = qnaReplyService.findAllByQnA(qnaList);
 
-        // 값 수정
         qnaList = qnaService.edit(qnaList);
         replyList = qnaReplyService.edit(replyList);
-
-        // nooffset 페이징을 위해서 마지막 qna번호 가져오기
         lastQnAId = qnaService.getLastQnAId(qnaList, lastQnAId);
 
         model.addAttribute("qnaList", qnaList);

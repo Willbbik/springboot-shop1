@@ -10,12 +10,12 @@ import com.ecommerce.newshop1.enums.Role;
 import com.ecommerce.newshop1.repository.QnAReplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +42,7 @@ public class QnAReplyServiceImpl implements QnAReplyService{
         qnaReply.setWriter(member.getUserId().substring(0, 3) + "***");
 
         qna.setQnAReply(qnaReply);
+        qna.setReplyEmpty(false);
         member.addQnaReplyList(qnaReply);
         item.addQnaReplyList(qnaReply);
 
@@ -49,27 +50,14 @@ public class QnAReplyServiceImpl implements QnAReplyService{
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ItemQnAReplyDto> findAllByQnA(List<ItemQnADto> qnaList) {
 
         List<ItemQnAReplyDto> replyList = new ArrayList<>();
         for(ItemQnADto dto : qnaList){
-            replyList.add(qnaReplyRepository.findByQnA(dto.getId()));
+            Optional<ItemQnAReply> reply = qnaReplyRepository.findByItemQnAId(dto.getId());
+            reply.ifPresent(qnAReply -> replyList.add(mapper.map(qnAReply, ItemQnAReplyDto.class)));
         }
-
-        return replyList;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ItemQnAReplyDto> searchAllByQnA(List<ItemQnADto> qnaList) {
-
-        List<ItemQnAReplyDto> replyList = new ArrayList<>();
-
-        qnaList.stream()
-                    .forEach(
-                            p -> replyList.add(qnaReplyRepository.searchAllByQnA(p.getId()))
-                    );
 
         return replyList;
     }
@@ -79,17 +67,16 @@ public class QnAReplyServiceImpl implements QnAReplyService{
     @Transactional(readOnly = true)
     public List<ItemQnAReplyDto> edit(List<ItemQnAReplyDto> replyList) {
 
-        String hide = "private";
         if(!replyList.isEmpty()){
-            if(!security.isAuthenticated()){
+            if(security.isAuthenticated()){
                 replyList.stream()
-                        .filter(p -> p.getHide().equals(hide))
+                        .filter(p -> p.getHide().equals("private"))
                         .filter(p -> !security.checkHasRole(Role.ADMIN.getValue()))
-                        .filter(p -> ! p.getQna().getMember().getUserId().equals(security.getName()))
+                        .filter(p -> ! p.getItemQnA().getMember().getUserId().equals(security.getName()))
                         .forEach(p -> p.setContent("비밀글입니다"));
             }else{
                 replyList.stream()
-                        .filter(p -> p.getHide().equals(hide))
+                        .filter(p -> p.getHide().equals("private"))
                         .forEach(p -> p.setContent("비밀글입니다"));
             }
         }

@@ -90,7 +90,7 @@ $(function(){
     // 페이지 버튼
     $(document).on("click", ".paging a", function(){
         let itemId = $("#itemId").val();
-        let page = $(this).data("num");
+        let page = $(this).attr("data-num");
 
         $.ajax({
             url : "/item/get/qnaList",
@@ -103,22 +103,20 @@ $(function(){
         });
     });
 
-
-
 });
 
-    // QnA 리스트 가져오기
-    function getQnAList(){
+// QnA 리스트 가져오기
+function getQnAList(){
 
-       let itemId = $("#itemId").val();
+      let itemId = $("#itemId").val();
 
       $.ajax({
           type : "get",
           url  : "/item/get/qnaList",
-          data : { itemId : itemId, page : 1 }
+          data : { itemId : itemId }
       }).done(function(result){
          $(".details_qna_container").html(result);
       }).fail(function(result){
          alert("에러가 발생하였습니다. \n잠시후 다시 시도해주시기 바랍니다.");
       });
-    }
+}

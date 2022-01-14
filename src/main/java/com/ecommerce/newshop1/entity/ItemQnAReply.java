@@ -29,7 +29,7 @@ public class ItemQnAReply extends TimeEntity{
 
     @OneToOne
     @JoinColumn(name = "qna_id")
-    private ItemQnA qna;
+    private ItemQnA itemQnA;
 
     @Column(length = 20, nullable = false)
     private String writer;
@@ -39,8 +39,5 @@ public class ItemQnAReply extends TimeEntity{
 
     @Column(length = 10)
     private String hide;
-
-    @Column(length = 10)
-    private boolean replyEmpty;
 
 }

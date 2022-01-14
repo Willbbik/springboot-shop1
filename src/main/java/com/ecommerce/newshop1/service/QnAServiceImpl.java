@@ -66,25 +66,19 @@ public class QnAServiceImpl implements QnAService{
     @Override
     @Transactional(readOnly = true)
     public List<ItemQnADto> edit(List<ItemQnADto> qnaList){
-        String hide = "private";
 
         if(!qnaList.isEmpty()){
-            if(!security.isAuthenticated()){
+            if(security.isAuthenticated()){
                 qnaList.stream()
-                        .filter(p -> p.getHide().equals(hide))
+                        .filter(p -> p.getHide().equals("private"))
                         .filter(p -> !security.checkHasRole(Role.ADMIN.getValue()))
                         .filter(p -> !p.getMember().getUserId().equals(security.getName()))
                         .forEach(p -> p.setContent("비밀글입니다."));
             }else{
                 qnaList.stream()
-                        .filter(p -> p.getHide().equals(hide))
+                        .filter(p -> p.getHide().equals("private"))
                         .forEach(p -> p.setContent("비밀글입니다."));
             }
-            qnaList.stream()
-                    .filter(p -> p.getContent().length() > 30)
-                    .forEach(p -> {
-                        p.setTitle(p.getContent().substring(0, 30) + "...");
-                    });
         }
         return qnaList;
     }
@@ -96,13 +90,16 @@ public class QnAServiceImpl implements QnAService{
 
         Member member = memberService.getCurrentMember();
         Item item = itemService.findById(itemId);
-        
-        ItemQnA qna = ItemQnA.builder()
-                        .writer(member.getUserId().substring(0, 3) + "***")
-                        .content(dto.getContent().replaceAll("\\s+", " "))
-                        .hide(dto.getHide())
-                        .replyEmpty(true)
-                        .build();
+
+        if(dto.getContent().length() > 30) dto.setTitle(dto.getContent().substring(0, 30) + "...");
+        else dto.setTitle(dto.getContent());
+
+        ItemQnA qna = new ItemQnA();
+        qna.setTitle(dto.getTitle());
+        qna.setWriter(member.getUserId().substring(0, 3) + "***");
+        qna.setContent(dto.getContent().replaceAll("\\s+", " "));
+        qna.setHide(dto.getHide());
+        qna.setReplyEmpty(true);
         item.addQnaList(qna);
         member.addQnaList(qna);
 

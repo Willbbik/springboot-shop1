@@ -11,10 +11,7 @@ public interface QnAReplyService {
 
     List<ItemQnAReplyDto> findAllByQnA(List<ItemQnADto> qnaList);
 
-    List<ItemQnAReplyDto> searchAllByQnA(List<ItemQnADto> qnaList);
-
     List<ItemQnAReplyDto> edit(List<ItemQnAReplyDto> replyList);
-
 
 
 }

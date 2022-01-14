@@ -25,7 +25,6 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                             ltOrderId(lastOrderId)
                     )
                     .orderBy(QOrder.order.id.desc())
-                    .orderBy(QOrder.order.id.desc())
                     .limit(3)
                     .fetch();
     }

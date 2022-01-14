@@ -24,6 +24,7 @@ public class QnARepositoryImpl implements QnARepositoryCustom{
                 .select(Projections.fields(ItemQnADto.class,
                         QItemQnA.itemQnA.id,
                         QItemQnA.itemQnA.writer,
+                        QItemQnA.itemQnA.itemQnAReply,
                         QItemQnA.itemQnA.content,
                         QItemQnA.itemQnA.hide,
                         QItemQnA.itemQnA.replyEmpty,
@@ -47,7 +48,7 @@ public class QnARepositoryImpl implements QnARepositoryCustom{
                         QItemQnA.itemQnA.hide,
                         QItemQnA.itemQnA.replyEmpty,
                         QItemQnA.itemQnA.createdDate
-                            ))
+                        ))
                 .from(QItemQnA.itemQnA)
                 .where(
                         QItemQnA.itemQnA.member.eq(member),

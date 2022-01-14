@@ -35,14 +35,12 @@ public class QItemQnAReply extends EntityPathBase<ItemQnAReply> {
 
     public final QItem item;
 
+    public final QItemQnA itemQnA;
+
     public final QMember member;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
-
-    public final QItemQnA qna;
-
-    public final BooleanPath replyEmpty = createBoolean("replyEmpty");
 
     public final StringPath writer = createString("writer");
 
@@ -65,8 +63,8 @@ public class QItemQnAReply extends EntityPathBase<ItemQnAReply> {
     public QItemQnAReply(Class<? extends ItemQnAReply> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.item = inits.isInitialized("item") ? new QItem(forProperty("item")) : null;
+        this.itemQnA = inits.isInitialized("itemQnA") ? new QItemQnA(forProperty("itemQnA"), inits.get("itemQnA")) : null;
         this.member = inits.isInitialized("member") ? new QMember(forProperty("member"), inits.get("member")) : null;
-        this.qna = inits.isInitialized("qna") ? new QItemQnA(forProperty("qna"), inits.get("qna")) : null;
     }
 
 }

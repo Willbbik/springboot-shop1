@@ -1,6 +1,7 @@
 package com.ecommerce.newshop1.dto;
 
 import com.ecommerce.newshop1.entity.Item;
+import com.ecommerce.newshop1.entity.ItemQnAReply;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.utils.ValidationGroups;
 import lombok.*;
@@ -22,7 +23,7 @@ public class ItemQnADto {
     private Long id;
     private Item item;
     private Member member;
-    private ItemQnAReplyDto replyDto;
+    private ItemQnAReply itemQnAReply;
 
     @NotBlank(message = "내용을 입력해주세요.", groups = ValidationGroups.NotBlankGroup.class)
     @Length(max = 2048, message = "최대 길이는 2048자입니다.", groups = ValidationGroups.LengthGroup.class)
@@ -30,12 +31,12 @@ public class ItemQnADto {
 
     @NotBlank(message = "정확한 비공개여부 값을 입력해주세요.", groups = ValidationGroups.NotBlankGroup.class)
     @Pattern(regexp = "public|private", message = "정확한 비공개여부 값을 입력해주세요.", groups = ValidationGroups.PatternGroup.class)
-
-    private String writer;
     private String hide;
-    private String replyEmpty;
+
+    private String title;
+    private String writer;
+    private boolean replyEmpty;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
-    private String title;
 
 }

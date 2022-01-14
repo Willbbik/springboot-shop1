@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Setter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "item_qna", indexes = @Index(name ="qnaidx", columnList = "item_id"))
 public class ItemQnA extends TimeEntity {
@@ -28,11 +28,14 @@ public class ItemQnA extends TimeEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "qna")
-    private ItemQnAReply qnaReply;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "itemQnA")
+    private ItemQnAReply itemQnAReply;
 
     @Column(length = 20, nullable = false)
     private String writer;
+
+    @Column(length = 30, nullable = false)
+    private String title;
 
     @Column(length = 2048, nullable = false)
     private String content;
@@ -44,8 +47,8 @@ public class ItemQnA extends TimeEntity {
     private boolean replyEmpty;
 
     public void setQnAReply(ItemQnAReply qnaReply){
-        this.qnaReply = qnaReply;
-        qnaReply.setQna(this);
+        this.setItemQnAReply(qnaReply);
+        qnaReply.setItemQnA(this);
     }
 
 }

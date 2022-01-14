@@ -39,19 +39,19 @@
         <th:block th:if="${qnaList}">
             <th:block th:each="qna, index : ${qnaList}">
                 <li class="qna_list_body qna_lock">
-                    <div class="qna_status" th:text="${qna.replyDto} == null ? '답변대기' : '답변완료'"></div>
+                    <div class="qna_status" th:text="${qna.itemQnAReply} == null ? '답변대기' : '답변완료'"></div>
                     <div class="qna_text" th:text="${qna.title}"></div>
                     <div th:text="${qna.writer}"></div>
                     <div th:text="${#temporals.format(qna.createdDate, 'yyyy.MM.dd')}"></div>
                     <p class="break-all qna_title" th:text="${qna.content}"></p>
 
                     <!-- QnA 답글 -->
-                    <th:block th:if="${qna.replyDto} == null" sec:authorize="hasRole('ROLE_ADMIN')">
-                    <span th:attr="data-qnaId=${qna.id}">
+                    <th:block th:if="${qna.replyEmpty} == true" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <span th:attr="data-qnaId=${qna.id}">   <!-- 답변 작성 -->
                         <dl class="qna_reply_write" style="display: none;">
                             <dt class="reply_write_content_dt">내용</dt>
                             <dd class="reply_write_content">
-                                <textarea placeholder="내용을 입력해 주세요." id="replyContent"></textarea>
+                                <textarea placeholder="내용을 입력해 주세요." name="replyContent"></textarea>
                             </dd>
                             <dt class="reply_hide_dt">공개여부</dt>
                             <dd class="reply_hide">
@@ -69,8 +69,8 @@
                         </dl>
                     </span>
                     </th:block>
-                    <th:block th:if="${qna.replyDto} != null">
-                        <th:block th:each="reply : ${qnaReplyList}" th:if="${reply.id} == ${qna.replyDto.id}">
+                    <th:block th:if="${qna.replyEmpty} == false">
+                        <th:block th:each="reply : ${qnaReplyList}" th:if="${reply.id} == ${qna.itemQnAReply.id}">
                             <dl>
                                 <dd>ㄴ답변</dd>
                                 <dd class="break-all reply_content" th:text="${reply.content}"></dd>
@@ -79,40 +79,6 @@
                             </dl>
                         </th:block>
                     </th:block>
-
-<!--                    <th:block th:if="${qna.replyDto} == null" sec:authorize="hasRole('ROLE_ADMIN')">-->
-<!--                    <span th:attr="data-qnaId=${qna.id}">-->
-<!--                        <dl class="qna_reply_write" style="display: none;">-->
-<!--                            <dt class="reply_write_content_dt">내용</dt>-->
-<!--                            <dd class="reply_write_content">-->
-<!--                                <textarea placeholder="내용을 입력해 주세요." id="replyContent"></textarea>-->
-<!--                            </dd>-->
-<!--                            <dt class="reply_hide_dt">공개여부</dt>-->
-<!--                            <dd class="reply_hide">-->
-<!--                                <span>-->
-<!--                                    <input type="radio" th:name="'hide' + ${index.index + 1}" value="private" checked>-->
-<!--                                    <label>비공개</label>-->
-<!--                                    <input type="radio" th:name="'hide' + ${index.index + 1}" value="public">-->
-<!--                                    <label>공개</label>-->
-<!--                                </span>-->
-<!--                            </dd>-->
-<!--                            <dd class="reply_btn">-->
-<!--                                <input type="button" value="취소하기" class="qna_reply_write_cancel" />-->
-<!--                                <input type="button" value="등록하기" class="qna_reply_post"/>-->
-<!--                            </dd>-->
-<!--                        </dl>-->
-<!--                    </span>-->
-<!--                    </th:block>-->
-<!--                    <th:block th:if="${qna.replyDto} != null">-->
-<!--                        <th:block th:with="reply = ${qnaReplyList[index.index]}">-->
-<!--                            <dl>-->
-<!--                                <dd>ㄴ답변</dd>-->
-<!--                                <dd class="break-all reply_content" th:text="${reply.content}"></dd>-->
-<!--                                <dd th:text="${reply.writer}"></dd>-->
-<!--                                <dd th:text="${#temporals.format(reply.createdDate, 'yyyy.MM.dd')}"></dd>-->
-<!--                            </dl>-->
-<!--                        </th:block>-->
-<!--                    </th:block>-->
                 </li>
             </th:block>
         </th:block>

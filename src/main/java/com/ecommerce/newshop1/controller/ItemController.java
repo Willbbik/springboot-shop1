@@ -2,9 +2,7 @@ package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.Item;
-import com.ecommerce.newshop1.entity.ItemQnAReply;
 import com.ecommerce.newshop1.entity.Member;
-import com.ecommerce.newshop1.repository.QnARepository;
 import com.ecommerce.newshop1.repository.ReviewRepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.enums.Role;
@@ -27,7 +25,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class ItemController {
-    
+
     private final ReviewRepository reviewRepository;
     private final QnAService qnaService;
     private final QnAReplyService qnaReplyService;
@@ -93,12 +91,11 @@ public class ItemController {
     @GetMapping("/item/get/qnaList")
     @ApiOperation(value = "상품 상세보기에 QnA html 리턴", notes = "ajax 용도")
     public String getQnaList (@RequestParam(name = "itemId") Long itemId, Model model,
-                              @RequestParam(name = "page", defaultValue = "1") int curPage){
+                              @RequestParam(name = "page", defaultValue = "1", required = false) int curPage){
 
         Item item = itemService.findById(itemId);
         Long qnaSize = qnaService.countByItem(item);
 
-        // 페이징
         PaginationShowSizeThree page = new PaginationShowSizeThree(qnaSize, curPage);
         Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxSize());
 
@@ -118,7 +115,7 @@ public class ItemController {
 
     @PostMapping("/item/qna/send")
     @ApiOperation(value = "Q&A 저장")
-    public @ResponseBody String saveItemQnA(@Validated(ValidationSequence.class) ItemQnADto qnaDtoItem, BindingResult errors, Long itemId){
+    public @ResponseBody String saveItemQnA(@Validated(ValidationSequence.class) ItemQnADto qnaDto, BindingResult errors, Long itemId){
 
         // 유효성 검사
         if(errors.hasErrors()){
@@ -127,14 +124,14 @@ public class ItemController {
             return "login";
         }
 
-        qnaService.save(qnaDtoItem, itemId);
+        qnaService.save(qnaDto, itemId);
         return "success";
     }
 
 
     @PostMapping("/item/reply/send")
     @ApiOperation(value = "QnA답글 저장")
-    public @ResponseBody String saveItemQnaReply(@Validated(ValidationSequence.class) ItemQnAReplyDto dto, BindingResult errors, Long itemId) {
+    public @ResponseBody String saveItemQnaReply(@Validated(ValidationSequence.class) ItemQnAReplyDto dto, BindingResult errors, Long itemId, Long qnaId) {
 
         // 유효성 검사
         if(errors.hasErrors()){
@@ -143,7 +140,7 @@ public class ItemController {
             return "login";
         }
 
-        qnaReplyService.save(dto, itemId, null);
+        qnaReplyService.save(dto, itemId, qnaId);
         return "success";
     }
 
