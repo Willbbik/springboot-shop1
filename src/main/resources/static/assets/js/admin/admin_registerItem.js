@@ -26,7 +26,7 @@ $(function(){
         $.ajax({
             type : "post",
             url  : "/admin/item/register",
-            enctype:'multipart/form-data',
+            enctype : 'multipart/form-data',
             data : formData,
             contentType : false,
             processData : false,
@@ -37,6 +37,9 @@ $(function(){
             if(result === "success"){
                 alert("상품 등록에 성공하였습니다.")
                 window.location.replace("/");
+            }else if(result === "role"){
+                alert("관리자 권한이 필요합니다");
+                return false;
             }else{
                alert(result);
                return false;

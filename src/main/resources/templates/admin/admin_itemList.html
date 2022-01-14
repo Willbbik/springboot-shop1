@@ -35,10 +35,10 @@
                 <label class="form-label">카테고리</label>
                 <span>
                     <select name="category">
-                        <option value="whole" selected>전체</option>
-                        <option value="top" th:selected="(${category} == 'top')">TOP</option>
-                        <option value="bottom" th:selected="(${category} == 'bottom')">BOTTOM</option>
-                        <option value="cap" th:selected="(${category} == 'cap')">CAP</option>
+                        <option value="whole" th:selected="(${searchDto.category} == 'whole')">전체</option>
+                        <option value="top" th:selected="(${searchDto.category} == 'top')">TOP</option>
+                        <option value="bottom" th:selected="(${searchDto.category} == 'bottom')">BOTTOM</option>
+                        <option value="cap" th:selected="(${searchDto.category} == 'cap')">CAP</option>
                     </select>
                 </span>
             </div>

@@ -1,8 +1,6 @@
 package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.*;
-import com.ecommerce.newshop1.entity.Item;
-import com.ecommerce.newshop1.entity.ItemImage;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.ecommerce.newshop1.enums.Role;
 import com.ecommerce.newshop1.repository.ItemRepository;
@@ -12,7 +10,6 @@ import com.ecommerce.newshop1.utils.PaginationShowSizeTen;
 import com.ecommerce.newshop1.utils.ValidationSequence;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -20,10 +17,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -35,10 +30,8 @@ public class AdminController {
     private final OrderService orderService;
     private final OrderItemService orderItemService;
     private final MemberService memberService;
-    private final AwsS3Service awsS3Service;
     private final CommonService commonService;
     private final SecurityService security;
-    ModelMapper mapper = new ModelMapper();
 
     @GetMapping("/admin/main")
     @ApiOperation(value = "관리자 메인 페이지")
@@ -115,8 +108,7 @@ public class AdminController {
         PaginationShowSizeTen page = new PaginationShowSizeTen(total, curPage);
 
         Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxSize());
-        List<OrderItemDto> orderItems = orderItemService.searchAllByDeliveryStatusAndSearchDto(deliveryStatus, searchDto, pageable);
-
+        List<OrderItemDto> orderItems = orderItemService.searchAll(deliveryStatus, searchDto, pageable);
 
         model.addAttribute("page", page);
         model.addAttribute("orderItems", orderItems);
@@ -129,7 +121,7 @@ public class AdminController {
     @ApiOperation(value = "주문 상태 변경")
     public @ResponseBody String deliveryStatusChange(@RequestParam Long orderItemId, @RequestParam DeliveryStatus deliveryStatus){
 
-        boolean result = orderService.changeOrderItemStatus(orderItemId, deliveryStatus);
+        boolean result = orderItemService.changeOrderItemStatus(orderItemId, deliveryStatus);
         if(!result) {
             return "fail";
         }
@@ -137,7 +129,7 @@ public class AdminController {
         return "success";
     }
 
-    @PostMapping("/admin/delivery/item")
+    @PostMapping("/admin/send/orderItem")
     @ApiOperation(value = "운송장 번호 입력 후 상품 배송처리", notes = "상품 배송")
     public @ResponseBody String deliveryItem(Long orderItemId, String orderNum, String wayBillNum){
 
@@ -160,41 +152,10 @@ public class AdminController {
             return commonService.getErrorMessage(errors);
         }
         if(!security.checkHasRole(Role.ADMIN.getValue())){
-            return "관리자 권한이 필요합니다";
+            return "role";
         }
 
-        // 상품 정보 저장
-        Item item = mapper.map(itemDto, Item.class);
-
-        // 상품 이미지 저장
-        List<MultipartFile> fileList =  mtfRequest.getFiles("upload_image");
-        List<ItemImage> itemImageList = new ArrayList<>();
-
-        if (fileList.size() != 0) {
-            for (int i = 0; i < fileList.size(); i++) {
-
-                String originImageName = fileList.get(i).getOriginalFilename();
-                String imageName = awsS3Service.createFileName(originImageName);
-
-                String filePath = "static/images/" + itemDto.getCategory() + "/" + itemDto.getItemName() + "/" + imageName;
-
-                // s3에 이미지 저장
-                String s3ImageUrl = awsS3Service.upload(fileList.get(i), filePath);
-                // 첫번째 사진이 대표 이미지
-                if (i == 0) item.setImageUrl(s3ImageUrl);
-
-                ItemImage itemImage = ItemImage.builder()
-                        .imageUrl(filePath)
-                        .imageName(originImageName)
-                        .build();
-                itemImageList.add(itemImage);
-
-            }
-            for (ItemImage itemImage : itemImageList) {
-                item.setItemImageList(itemImage);
-            }
-        }
-        itemRepository.save(item);
+        itemService.saveItem(mtfRequest, itemDto);
         return "success";
     }
 
@@ -202,7 +163,7 @@ public class AdminController {
     @ApiOperation(value = "관리자페이지에서 상품 삭제")
     public @ResponseBody String itemDelete (@RequestParam List <Long> itemIdList) {
         itemRepository.deleteAllById(itemIdList);
-        return "상품 삭제 완료";
+        return "success";
     }
 
 }

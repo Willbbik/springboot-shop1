@@ -55,16 +55,50 @@ public class OrderItemRepositoryImpl implements OrderItemRepositoryCustom{
     }
 
     @Override
+    public List<OrderItemDto> searchAll(DeliveryStatus deliveryStatus, SearchDto searchDto, Pageable pageable) {
+        List<Long> ids = queryFactory
+                .select(QOrderItem.orderItem.id)
+                .from(QOrderItem.orderItem)
+                .where(
+                        eqDeliveryStatus(deliveryStatus),
+                        eqCustomerName(searchDto.getCustomerName()),
+                        eqOrderNum(searchDto.getOrderNum()),
+                        eqItemName(searchDto.getItemName()),
+                        betweenDateOrder(searchDto.getFirstDate(), searchDto.getLastDate())
+                )
+                .orderBy(QOrderItem.orderItem.id.desc())
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+
+        if(CollectionUtils.isEmpty(ids)){
+            return null;
+        }
+
+        return queryFactory.select(Projections.fields(OrderItemDto.class,
+                        QOrderItem.orderItem.id,
+                        QOrderItem.orderItem.order,
+                        QOrderItem.orderItem.item,
+                        QOrderItem.orderItem.totalPrice,
+                        QOrderItem.orderItem.deliveryStatus,
+                        QOrderItem.orderItem.quantity,
+                        QOrderItem.orderItem.wayBillNum
+                ))
+                .from(QOrderItem.orderItem)
+                .where(QOrderItem.orderItem.id.in(ids))
+                .orderBy(QOrderItem.orderItem.id.desc())
+                .fetch();
+    }
+
+
+    @Override
     public List<OrderItemDto> searchAllByDeliveryStatusAndSearchDto(DeliveryStatus deliveryStatus, SearchDto searchDto, Pageable pageable) {
         List<Long> ids = queryFactory
                 .select(QOrderItem.orderItem.id)
                 .from(QOrderItem.orderItem)
                 .where(
                         QOrderItem.orderItem.deliveryStatus.eq(deliveryStatus),
-                        eqCustomerName(searchDto.getCustomerName()),
-                        eqOrderNum(searchDto.getOrderNum()),
-                        eqItemName(searchDto.getItemName()),
-                        betweenDateOrder(searchDto.getFirstDate(), searchDto.getLastDate())
+                        eqSearchDto(searchDto)
                 )
                 .orderBy(QOrderItem.orderItem.id.desc())
                 .limit(pageable.getPageSize())
@@ -116,19 +150,37 @@ public class OrderItemRepositoryImpl implements OrderItemRepositoryCustom{
         }
     }
 
+    private BooleanExpression eqSearchDto(SearchDto searchDto){
+
+        if(StringUtils.isBlank(searchDto.getKeyType())) return null;
+
+        if(searchDto.getKeyType().equals("orderNum")){
+            return QOrderItem.orderItem.order.orderNum.contains(searchDto.getKeyValue());
+        }else{
+            return QOrderItem.orderItem.item.itemName.contains(searchDto.getKeyValue());
+        }
+    }
+
+    private BooleanExpression eqDeliveryStatus(DeliveryStatus deliveryStatus){
+        if(deliveryStatus.equals(DeliveryStatus.EMPTY)){
+            return null;
+        }
+        return QOrderItem.orderItem.deliveryStatus.eq(deliveryStatus);
+    }
+
     private BooleanExpression eqCustomerName(String customerName){
         if(StringUtils.isBlank(customerName)) return null;
-        return QOrderItem.orderItem.order.delivery.deliveryAddress.customerName.eq(customerName);
+        return QOrderItem.orderItem.order.delivery.deliveryAddress.customerName.contains(customerName);
     }
 
     private BooleanExpression eqOrderNum(String orderNum){
         if(StringUtils.isBlank(orderNum)) return null;
-        return QOrderItem.orderItem.order.orderNum.eq(orderNum);
+        return QOrderItem.orderItem.order.orderNum.contains(orderNum);
     }
 
     private BooleanExpression eqItemName(String itemName){
         if(StringUtils.isBlank(itemName)) return null;
-        return QOrderItem.orderItem.item.itemName.eq(itemName);
+        return QOrderItem.orderItem.item.itemName.contains(itemName);
     }
 
 }

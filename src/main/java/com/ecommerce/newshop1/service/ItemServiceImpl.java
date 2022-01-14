@@ -9,10 +9,15 @@ import com.ecommerce.newshop1.exception.ItemNotFoundException;
 import com.ecommerce.newshop1.repository.ItemImageRepository;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +29,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final ItemImageRepository itemImageRepository;
     private final AwsS3Service awsS3Service;
+    ModelMapper mapper = new ModelMapper();
 
     @Override
     public Long getLastId(List<ItemDto> itemList, Long lastId) {
@@ -82,7 +88,38 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public Item saveItem(Item item) {
+    public Item saveItem(MultipartHttpServletRequest mtfRequest, ItemDto itemDto) throws IOException {
+
+        Item item = mapper.map(itemDto, Item.class);
+
+        // 상품 이미지 저장
+        List<MultipartFile> fileList =  mtfRequest.getFiles("upload_image");
+        List<ItemImage> itemImageList = new ArrayList<>();
+
+        if (fileList.size() != 0) {
+            for (int i = 0; i < fileList.size(); i++) {
+
+                String originImageName = fileList.get(i).getOriginalFilename();
+                String imageName = awsS3Service.createFileName(originImageName);
+
+                String filePath = "static/images/" + itemDto.getCategory() + "/" + itemDto.getItemName() + "/" + imageName;
+
+                // s3에 이미지 저장
+                String s3ImageUrl = awsS3Service.upload(fileList.get(i), filePath);
+                // 첫번째 사진이 대표 이미지
+                if (i == 0) item.setImageUrl(s3ImageUrl);
+
+                ItemImage itemImage = ItemImage.builder()
+                        .imageUrl(filePath)
+                        .imageName(originImageName)
+                        .build();
+                itemImageList.add(itemImage);
+
+            }
+            for (ItemImage itemImage : itemImageList) {
+                item.setItemImageList(itemImage);
+            }
+        }
         return itemRepository.save(item);
     }
 

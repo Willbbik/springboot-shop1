@@ -14,6 +14,8 @@ public interface OrderItemService {
 
     OrderItem findById(Long id);
 
+    List<OrderItemDto> searchAll(DeliveryStatus deliveryStatus, SearchDto searchDto, Pageable pageable);
+
     List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable);
 
     List<OrderItemDto> searchAllByDeliveryStatusAndSearchDto(DeliveryStatus deliveryStatus, SearchDto searchDto, Pageable pageable);
@@ -24,5 +26,6 @@ public interface OrderItemService {
 
     void saveWayBillNum(Long orderItemId, String wayBillNum);
 
+    boolean changeOrderItemStatus(Long orderItemId, DeliveryStatus deliveryStatus);
 
 }

@@ -41,7 +41,5 @@ public interface OrderService {
 
     void updateOrderToDepositSuccess(String orderId);
 
-    boolean changeOrderItemStatus(Long orderItemId, DeliveryStatus deliveryStatus);
-
     Model getModelPayInfo(Order order, Model model);
 }

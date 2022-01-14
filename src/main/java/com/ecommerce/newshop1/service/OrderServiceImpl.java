@@ -253,15 +253,4 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.searchByDeliveryStatus(deliveryStatus, pageable);
     }
 
-    @Override
-    @Transactional
-    public boolean changeOrderItemStatus(Long orderItemId, DeliveryStatus deliveryStatus) {
-
-        Optional<OrderItem> orderItem = orderItemRepository.findById(orderItemId);
-        if(orderItem.isPresent()){
-            orderItem.get().setDeliveryStatus(deliveryStatus);
-            return true;
-        }
-        return false;
-    }
 }

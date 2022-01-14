@@ -7,7 +7,9 @@ import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.ItemImage;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ItemService {
@@ -24,7 +26,7 @@ public interface ItemService {
 
     List<ItemImageDto> searchAllItemImage(Item item);
 
-    Item saveItem(Item item);
+    Item saveItem(MultipartHttpServletRequest mtfRequest, ItemDto itemDto) throws IOException;
 
     ItemImage saveItemImage(ItemImage itemImage);
 

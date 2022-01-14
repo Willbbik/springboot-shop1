@@ -72,10 +72,12 @@ $(function(){
                 },
                 traditional : true
             }).done(function(result){
-                alert(result);
-                location.reload();
+                if(result === "success"){
+                    location.reload();
+                }
             }).fail(function(result){
                 alert("오류가 발생했습니다. 잠시후 다시 시도해보시기 바랍니다.");
+                return false;
             });
         }
 

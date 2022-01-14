@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -62,6 +63,13 @@ public class OrderItemServiceImpl implements OrderItemService{
                 .orElseThrow(() -> new OrderNotFoundException("존재하지 않는 주문입니다."));
 
         orderItem.setWayBillNum(wayBillNum);
+        orderItem.setDeliveryStatus(DeliveryStatus.DELIVERY_ING);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrderItemDto> searchAll(DeliveryStatus deliveryStatus, SearchDto searchDto, Pageable pageable) {
+        return orderItemRepository.searchAll(deliveryStatus, searchDto, pageable);
     }
 
     @Override
@@ -69,10 +77,9 @@ public class OrderItemServiceImpl implements OrderItemService{
     public List<OrderItemDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable) {
 
         List<OrderItemDto> orderItemList = orderItemRepository.searchByDeliveryStatus(deliveryStatus, pageable);
-
-//        for(OrderItemDto dto : orderItemList){
-//            dto.setDeliveryAddress(dto.getOrder().getDelivery().getDeliveryAddress());
-//        }
+        for(OrderItemDto dto : orderItemList){
+            dto.setDeliveryAddress(dto.getOrder().getDelivery().getDeliveryAddress());
+        }
         return orderItemList;
     }
 
@@ -83,5 +90,16 @@ public class OrderItemServiceImpl implements OrderItemService{
         return orderItemRepository.searchAllByDeliveryStatusAndSearchDto(deliveryStatus, searchDto, pageable);
     }
 
+    @Override
+    @Transactional
+    public boolean changeOrderItemStatus(Long orderItemId, DeliveryStatus deliveryStatus) {
+
+        Optional<OrderItem> orderItem = orderItemRepository.findById(orderItemId);
+        if(orderItem.isPresent()){
+            orderItem.get().setDeliveryStatus(deliveryStatus);
+            return true;
+        }
+        return false;
+    }
 
 }

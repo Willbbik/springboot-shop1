@@ -31,7 +31,6 @@
                                 <option value="whole">전체</option>
                                 <option value="itemName" th:selected="${searchDto.keyType} == 'itemName'">상품 이름</option>
                                 <option value="orderNum" th:selected="${searchDto.keyType} == 'orderNum'">주문번호</option>
-                                <option value="customerName" th:selected="${searchDto.keyType} == 'customerName'">주문자 이름</option>
                             </select>
                             <input type="text" name="keyValue" th:value="${searchDto.keyValue}" class="search-input">
                         </span>

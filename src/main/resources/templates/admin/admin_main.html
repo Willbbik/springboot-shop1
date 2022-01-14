@@ -83,16 +83,12 @@
                         <table>
                             <thead>
                             <tr>
-                                <th>구매자</th>
-                                <th>상품명</th>
                                 <th>결제금액</th>
                                 <th>입금날짜</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr th:each="depositItem : ${depositOrderItems}">
-                                <td th:text="${depositItem.delivery.deliveryAddress.customerName}"></td>
-                                <td th:text="${depositItem.delivery.orderName}"></td>
                                 <td th:text="${#numbers.formatInteger(depositItem.totalPrice, 0, 'COMMA')} + '원'"></td>
                                 <td th:text="${#temporals.format(depositItem.depositDate, 'yyyy.MM.dd HH:mm')}"></td>
                             </tr>

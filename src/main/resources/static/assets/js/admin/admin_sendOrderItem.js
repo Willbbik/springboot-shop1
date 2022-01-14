@@ -14,7 +14,7 @@ $(function(){
         if(result){
             $.ajax({
 
-                url : "/admin/delivery/item",
+                url : "/admin/send/orderItem",
                 type : "post",
                 data : {
                        orderItemId : orderItemId,

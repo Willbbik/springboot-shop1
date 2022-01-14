@@ -2,15 +2,13 @@ package com.ecommerce.newshop1.dto;
 
 import com.ecommerce.newshop1.enums.Role;
 import com.ecommerce.newshop1.enums.Sns;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

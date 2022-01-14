@@ -30,34 +30,17 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom{
                     .fetch();
     }
 
-//    @Override
-//    public List<OrderDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable) {
-//        return queryFactory
-//                .select(Projections.fields(OrderDto.class,
-//                        QOrder.order.id,
-//                        QOrder.order.delivery,
-//                        QOrder.order.totalPrice,
-//                        QOrder.order.depositDate
-//                ))
-//                .from(QOrder.order)
-//                .where(QOrder.order.delivery.deliveryStatus.eq(deliveryStatus))
-//                .orderBy(QOrder.order.id.desc())
-//                .limit(pageable.getPageSize())
-//                .fetch();
-//    }
 
     @Override
     public List<OrderDto> searchByDeliveryStatus(DeliveryStatus deliveryStatus, Pageable pageable) {
         return queryFactory
                 .select(Projections.fields(OrderDto.class,
                         QOrder.order.id,
-                        QOrder.order.delivery,
                         QOrder.order.totalPrice,
                         QOrder.order.depositDate
                 ))
                 .from(QOrder.order)
                 .where(QOrder.order.delivery.deliveryStatus.eq(deliveryStatus))
-                .leftJoin(QDelivery.delivery).on(QDelivery.delivery.deliveryStatus.eq(deliveryStatus))
                 .orderBy(QOrder.order.id.desc())
                 .limit(pageable.getPageSize())
                 .fetch();
