@@ -5,7 +5,7 @@ import com.ecommerce.newshop1.dto.ItemQnAReplyDto;
 
 import java.util.List;
 
-public interface QnAReplyService {
+public interface ItemQnAReplyService {
 
     Long save(ItemQnAReplyDto replyDto, Long itemId, Long qnaId);
 

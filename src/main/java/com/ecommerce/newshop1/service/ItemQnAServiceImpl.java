@@ -6,7 +6,7 @@ import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.ItemQnA;
 import com.ecommerce.newshop1.enums.Role;
 import com.ecommerce.newshop1.exception.QnANotFoundException;
-import com.ecommerce.newshop1.repository.QnARepository;
+import com.ecommerce.newshop1.repository.ItemQnARepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,9 +18,9 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class QnAServiceImpl implements QnAService{
+public class ItemQnAServiceImpl implements ItemQnAService {
 
-    private final QnARepository qnaRepository;
+    private final ItemQnARepository qnaRepository;
     private final MemberService memberService;
     private final ItemService itemService;
     private final SecurityService security;
@@ -37,13 +37,7 @@ public class QnAServiceImpl implements QnAService{
     public Long countByItem(Item item) {
         return qnaRepository.countByItem(item);
     }
-    
-    
-    @Override
-    @Transactional(readOnly = true)
-    public List<ItemQnADto> searchAll(Item item, Pageable pageable) {
-        return qnaRepository.searchAll(item, pageable);
-    }
+
 
     @Override
     public Long getLastQnAId(List<ItemQnADto> qnaList, Long lastQnAId) {
@@ -54,6 +48,12 @@ public class QnAServiceImpl implements QnAService{
         return qnaList.stream()
                 .min(Comparator.comparingLong(ItemQnADto::getId))
                 .get().getId();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ItemQnADto> searchAllByItem(Item item, Pageable pageable) {
+        return qnaRepository.searchAllByItem(item, pageable);
     }
 
     @Override
@@ -94,12 +94,13 @@ public class QnAServiceImpl implements QnAService{
         if(dto.getContent().length() > 30) dto.setTitle(dto.getContent().substring(0, 30) + "...");
         else dto.setTitle(dto.getContent());
 
-        ItemQnA qna = new ItemQnA();
-        qna.setTitle(dto.getTitle());
-        qna.setWriter(member.getUserId().substring(0, 3) + "***");
-        qna.setContent(dto.getContent().replaceAll("\\s+", " "));
-        qna.setHide(dto.getHide());
-        qna.setReplyEmpty(true);
+        ItemQnA qna = ItemQnA.builder()
+                        .title(dto.getTitle())
+                        .content(dto.getContent().replaceAll("\\s+", " "))
+                        .writer(member.getUserId().substring(0, 3) + "***")
+                        .hide(dto.getHide())
+                        .replyEmpty(true)
+                        .build();
         item.addQnaList(qna);
         member.addQnaList(qna);
 

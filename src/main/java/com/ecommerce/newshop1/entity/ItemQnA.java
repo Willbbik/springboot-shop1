@@ -1,7 +1,6 @@
 package com.ecommerce.newshop1.entity;
 
 import lombok.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
@@ -11,7 +10,6 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = "item_qna", indexes = @Index(name ="qnaidx", columnList = "item_id"))
 public class ItemQnA extends TimeEntity {
 
@@ -28,7 +26,7 @@ public class ItemQnA extends TimeEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "itemQnA")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "itemQnA")
     private ItemQnAReply itemQnAReply;
 
     @Column(length = 20, nullable = false)
@@ -43,7 +41,7 @@ public class ItemQnA extends TimeEntity {
     @Column(length = 10)
     private String hide;
 
-    @Column(length = 10)
+    @Column
     private boolean replyEmpty;
 
     public void setQnAReply(ItemQnAReply qnaReply){

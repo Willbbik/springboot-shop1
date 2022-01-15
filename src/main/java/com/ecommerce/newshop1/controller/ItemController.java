@@ -27,8 +27,8 @@ import java.util.List;
 public class ItemController {
 
     private final ReviewRepository reviewRepository;
-    private final QnAService qnaService;
-    private final QnAReplyService qnaReplyService;
+    private final ItemQnAService qnaService;
+    private final ItemQnAReplyService qnaReplyServiceItem;
     private final ReviewService reviewService;
     private final ItemService itemService;
     private final CommonService commonService;
@@ -91,7 +91,7 @@ public class ItemController {
     @GetMapping("/item/get/qnaList")
     @ApiOperation(value = "상품 상세보기에 QnA html 리턴", notes = "ajax 용도")
     public String getQnaList (@RequestParam(name = "itemId") Long itemId, Model model,
-                              @RequestParam(name = "page", defaultValue = "1", required = false) int curPage){
+                              @RequestParam(name = "page", defaultValue = "1") int curPage){
 
         Item item = itemService.findById(itemId);
         Long qnaSize = qnaService.countByItem(item);
@@ -99,10 +99,10 @@ public class ItemController {
         PaginationShowSizeThree page = new PaginationShowSizeThree(qnaSize, curPage);
         Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxSize());
 
-        List<ItemQnADto> qnaList = qnaService.searchAll(item, pageable);
-        List<ItemQnAReplyDto> qnaReplyList = qnaReplyService.findAllByQnA(qnaList);
+        List<ItemQnADto> qnaList = qnaService.searchAllByItem(item, pageable);
+        List<ItemQnAReplyDto> qnaReplyList = qnaReplyServiceItem.findAllByQnA(qnaList);
         qnaList = qnaService.edit(qnaList);
-        qnaReplyList = qnaReplyService.edit(qnaReplyList);
+        qnaReplyList = qnaReplyServiceItem.edit(qnaReplyList);
 
         model.addAttribute("page", page);
         model.addAttribute("qnaSize", qnaSize);
@@ -136,11 +136,13 @@ public class ItemController {
         // 유효성 검사
         if(errors.hasErrors()){
             return commonService.getErrorMessage(errors);
-        }else if(!security.isAuthenticated() && !security.checkHasRole(Role.ADMIN.getValue())){
+        }else if(!security.isAuthenticated()){
             return "login";
+        }else if(!security.checkHasRole(Role.ADMIN.getValue())){
+            return "role";
         }
 
-        qnaReplyService.save(dto, itemId, qnaId);
+        qnaReplyServiceItem.save(dto, itemId, qnaId);
         return "success";
     }
 

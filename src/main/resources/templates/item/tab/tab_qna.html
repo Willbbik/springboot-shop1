@@ -3,7 +3,6 @@
 <head></head>
 <body>
 
-
     <div class="qna_list_chk">
         <div>
             QnA
@@ -39,7 +38,7 @@
         <th:block th:if="${qnaList}">
             <th:block th:each="qna, index : ${qnaList}">
                 <li class="qna_list_body qna_lock">
-                    <div class="qna_status" th:text="${qna.itemQnAReply} == null ? '답변대기' : '답변완료'"></div>
+                    <div class="qna_status" th:text="${qna.replyEmpty} == true ? '답변대기' : '답변완료'"></div>
                     <div class="qna_text" th:text="${qna.title}"></div>
                     <div th:text="${qna.writer}"></div>
                     <div th:text="${#temporals.format(qna.createdDate, 'yyyy.MM.dd')}"></div>
@@ -70,7 +69,7 @@
                     </span>
                     </th:block>
                     <th:block th:if="${qna.replyEmpty} == false">
-                        <th:block th:each="reply : ${qnaReplyList}" th:if="${reply.id} == ${qna.itemQnAReply.id}">
+                        <th:block th:each="reply : ${qnaReplyList}" th:if="${reply.itemQnA.id} == ${qna.id}">
                             <dl>
                                 <dd>ㄴ답변</dd>
                                 <dd class="break-all reply_content" th:text="${reply.content}"></dd>

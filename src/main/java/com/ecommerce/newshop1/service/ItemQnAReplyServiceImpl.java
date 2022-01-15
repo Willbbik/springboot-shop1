@@ -19,10 +19,10 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class QnAReplyServiceImpl implements QnAReplyService{
+public class ItemQnAReplyServiceImpl implements ItemQnAReplyService {
 
     private final QnAReplyRepository qnaReplyRepository;
-    private final QnAService qnaService;
+    private final ItemQnAService qnaServiceItem;
     private final MemberService memberService;
     private final ItemService itemService;
     private final SecurityService security;
@@ -35,7 +35,7 @@ public class QnAReplyServiceImpl implements QnAReplyService{
     public Long save(ItemQnAReplyDto replyDto, Long itemId, Long qnaId) {
 
         Member member = memberService.getCurrentMember();
-        ItemQnA qna = qnaService.findById(qnaId);
+        ItemQnA qna = qnaServiceItem.findById(qnaId);
         Item item = itemService.findById(itemId);
 
         ItemQnAReply qnaReply = mapper.map(replyDto, ItemQnAReply.class);

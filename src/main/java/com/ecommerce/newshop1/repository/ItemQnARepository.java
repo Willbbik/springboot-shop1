@@ -3,11 +3,14 @@ package com.ecommerce.newshop1.repository;
 import com.ecommerce.newshop1.entity.Item;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.ItemQnA;
-import com.ecommerce.newshop1.repository.custom.QnARepositoryCustom;
+import com.ecommerce.newshop1.repository.custom.ItemQnARepositoryCustom;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 
-public interface QnARepository extends JpaRepository<ItemQnA, Long>, QnARepositoryCustom {
+
+public interface ItemQnARepository extends JpaRepository<ItemQnA, Long>, ItemQnARepositoryCustom {
 
     Long countByItem(Item item);
 

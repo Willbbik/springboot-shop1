@@ -77,6 +77,10 @@ $(function(){
                 alert("등록되었습니다.");
              }else if(result === "login"){
                 alert("로그인이 필요한 서비스입니다.");
+                let c = confirm("로그인 페이지로 이동하시겠습니까? (작성중이던 내용은 사라집니다.)");
+                if(c){
+                    location.href = "/login";
+                }
                 return false;
              }else{
                 alert(result);
@@ -84,6 +88,7 @@ $(function(){
              }
        }).fail(function(result){
            alert("에러가 발생하였습니다. \n잠시후 다시 시도해주시기 바랍니다.");
+           return false;
        });
     });
 

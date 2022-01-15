@@ -197,19 +197,19 @@
 <th:block sec:authorized="hasRole('ROLE_ADMIN')">
     <script>
 
-    $(function(){
-
-        let csrfToken = $("meta[name=_csrf]").attr("content");
-        let csrfHeader = $("meta[name=_csrf_header]").attr("content");
+     $(document).ready(function(){
 
         // qna 답변 작성
         $(document).on("click", ".qna_reply_post", function(){
+
+            let csrfToken = $("meta[name=_csrf]").attr("content");
+            let csrfHeader = $("meta[name=_csrf_header]").attr("content");
 
             let itemId = $("#itemId").val();
             let span = $(this).closest("span");
 
             let qnaId = span.attr("data-qnaId");
-            let content = span.find("input[name=replyContent]").text();
+            let content = span.find("textarea[name=replyContent]").val();
             let hide = span.find("input[type='radio']:checked").val();
 
             let param = {
@@ -234,7 +234,7 @@
                     }else if(result === "login"){
                       alert("권한이 없습니다");
                       return false;
-                    } else{
+                    } else {
                       alert(result);
                       return false;
                     }
@@ -252,25 +252,26 @@
             $(this).closest(".qna_reply_write").css('display', 'none');
             $(this).closest(".qna_list_body").find(".qna_title").css('display', 'none');
         });
+
+        // QnA 리스트 가져오기
+        function getQnAList(){
+
+           let itemId = $("#itemId").val();
+
+           $.ajax({
+              type : "get",
+              url  : "/item/get/qnaList",
+              data : { itemId : itemId, page : 1 },
+              success : function(result){
+                  $("#info_container_3").html(result);
+              },
+              error : function(result){
+                   alert("QnA 에러입니다. 잠시후에 다시 시도해보고 안되면 문의사항에 남겨주시면 감사하겠습니다.");
+              }
+           });
+        }
     });
 
-    // QnA 리스트 가져오기
-    function getQnAList(){
-
-       let itemId = $("#itemId").val();
-
-       $.ajax({
-          type : "get",
-          url  : "/item/get/qnaList",
-          data : { itemId : itemId },
-          success : function(result){
-              $("#info_container_3").html(result);
-          },
-          error : function(result){
-               alert("QnA 에러입니다. 잠시후에 다시 시도해보고 안되면 문의사항에 남겨주시면 감사하겠습니다.");
-          }
-       });
-    }
     </script>
 </th:block>
 </body>

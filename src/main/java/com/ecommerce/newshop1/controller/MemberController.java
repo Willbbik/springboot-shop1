@@ -1,10 +1,9 @@
 package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.*;
-import com.ecommerce.newshop1.entity.ItemQnAReply;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.Order;
-import com.ecommerce.newshop1.repository.QnARepository;
+import com.ecommerce.newshop1.repository.ItemQnARepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.CommonService;
 import com.ecommerce.newshop1.utils.ValidationSequence;
@@ -31,12 +30,12 @@ public class MemberController {
     private final MemberService memberService;
     private final MessageService messageService;
     private final RedisService redisService;
-    private final QnAService qnaService;
-    private final QnAReplyService qnaReplyService;
+    private final ItemQnAService qnaServiceItem;
+    private final ItemQnAReplyService qnaReplyServiceItem;
     private final CartService cartService;
     private final OrderService orderService;
     private final CommonService commonService;
-    private final QnARepository qnARepository;
+    private final ItemQnARepository qnARepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper mapper;
 
@@ -156,12 +155,12 @@ public class MemberController {
 
         // 댓글이 없으면 빈 배열을, 있으면 가져오기
         Pageable pageable = PageRequest.ofSize(3);
-        List<ItemQnADto> qnaList = (!result) ? new ArrayList<>() : qnaService.searchAllByMember(lastQnAId, member, pageable);
-        List<ItemQnAReplyDto> replyList = qnaReplyService.findAllByQnA(qnaList);
+        List<ItemQnADto> qnaList = (!result) ? new ArrayList<>() : qnaServiceItem.searchAllByMember(lastQnAId, member, pageable);
+        List<ItemQnAReplyDto> replyList = qnaReplyServiceItem.findAllByQnA(qnaList);
 
-        qnaList = qnaService.edit(qnaList);
-        replyList = qnaReplyService.edit(replyList);
-        lastQnAId = qnaService.getLastQnAId(qnaList, lastQnAId);
+        qnaList = qnaServiceItem.edit(qnaList);
+        replyList = qnaReplyServiceItem.edit(replyList);
+        lastQnAId = qnaServiceItem.getLastQnAId(qnaList, lastQnAId);
 
         model.addAttribute("qnaList", qnaList);
         model.addAttribute("qnaReplyList", replyList);
@@ -178,7 +177,7 @@ public class MemberController {
     @ApiOperation(value = "본인이 작성한 qna 삭제")
     public @ResponseBody String qnaDelete(@RequestParam List<Long> qnaIdList){
 
-        qnaService.deleteAllById(qnaIdList);
+        qnaServiceItem.deleteAllById(qnaIdList);
 
         return "success";
     }

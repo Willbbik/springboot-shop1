@@ -7,9 +7,9 @@ import com.ecommerce.newshop1.entity.Member;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
-public interface QnARepositoryCustom {
+public interface ItemQnARepositoryCustom {
 
-    List<ItemQnADto> searchAll(Item item, Pageable pageable);
+    List<ItemQnADto> searchAllByItem(Item item, Pageable pageable);
 
     List<ItemQnADto> searchAllByMember(Long id, Member member, Pageable pageable);
 

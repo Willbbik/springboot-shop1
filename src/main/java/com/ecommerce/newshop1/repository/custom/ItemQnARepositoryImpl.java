@@ -12,19 +12,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
-public class QnARepositoryImpl implements QnARepositoryCustom{
+public class ItemQnARepositoryImpl implements ItemQnARepositoryCustom {
 
     @Autowired
     private JPAQueryFactory queryFactory;
 
     @Override
-    public List<ItemQnADto> searchAll(Item item, Pageable pageable) {
+    public List<ItemQnADto> searchAllByItem(Item item, Pageable pageable) {
 
         return queryFactory
                 .select(Projections.fields(ItemQnADto.class,
                         QItemQnA.itemQnA.id,
                         QItemQnA.itemQnA.writer,
-                        QItemQnA.itemQnA.itemQnAReply,
+                        QItemQnA.itemQnA.title,
                         QItemQnA.itemQnA.content,
                         QItemQnA.itemQnA.hide,
                         QItemQnA.itemQnA.replyEmpty,
