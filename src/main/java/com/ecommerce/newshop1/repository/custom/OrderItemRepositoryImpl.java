@@ -2,6 +2,7 @@ package com.ecommerce.newshop1.repository.custom;
 
 import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.dto.SearchDto;
+import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.QOrderItem;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
 import com.querydsl.core.types.Projections;
@@ -124,6 +125,17 @@ public class OrderItemRepositoryImpl implements OrderItemRepositoryCustom{
                 .fetch();
     }
 
+    @Override
+    public List<OrderItemDto> searchAllByMember(Member member) {
+        return queryFactory
+                .select(Projections.fields(OrderItemDto.class,
+                            QOrderItem.orderItem.id,
+                            QOrderItem.orderItem.item
+                        ))
+                .from(QOrderItem.orderItem)
+                .where(QOrderItem.orderItem.order.member.eq(member))
+                .fetch();
+    }
 
     // 주문된 날짜
     private BooleanExpression betweenDateOrder(String firstDate, String lastDate){

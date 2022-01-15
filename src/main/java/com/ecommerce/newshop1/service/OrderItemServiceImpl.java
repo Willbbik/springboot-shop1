@@ -2,6 +2,7 @@ package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.OrderItemDto;
 import com.ecommerce.newshop1.dto.SearchDto;
+import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.Order;
 import com.ecommerce.newshop1.entity.OrderItem;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
@@ -70,6 +71,12 @@ public class OrderItemServiceImpl implements OrderItemService{
     @Transactional(readOnly = true)
     public List<OrderItemDto> searchAll(DeliveryStatus deliveryStatus, SearchDto searchDto, Pageable pageable) {
         return orderItemRepository.searchAll(deliveryStatus, searchDto, pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrderItemDto> searchAllByMember(Member member) {
+        return orderItemRepository.searchAllByMember(member);
     }
 
     @Override

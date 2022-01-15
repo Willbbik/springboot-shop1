@@ -20,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -149,7 +150,7 @@ public class ItemController {
 
     @PostMapping("/item/review/write")
     @ApiOperation(value = "리뷰 작성")
-    public @ResponseBody String reviewWrite(@Validated(ValidationSequence.class) ReviewDto reviewDto, BindingResult errors, Long itemId){
+    public @ResponseBody String reviewWrite(@Validated(ValidationSequence.class) ReviewDto reviewDto, BindingResult errors, Long itemId, Principal principal){
 
         // 유효성 검사
         if(errors.hasErrors()){
@@ -160,16 +161,16 @@ public class ItemController {
 
         Item item = itemService.findById(itemId);
         Member member = memberService.getCurrentMember();
-        boolean result = reviewRepository.existsByItemAndMember(item, member);
+        boolean buyResult = reviewRepository.existsByItemAndMember(item, member);
 
-        if(result) {                       // 이미 리뷰를 작성했는지
+        if(buyResult) {                               // 이미 리뷰를 작성했다면
             return "-2";
-        }else if(!memberService.existsItem(item)){ // 해당 상품을 구매했는지
+        }else if(!memberService.existsItem(item, principal.getName())){   // 해당 상품을 구매안했다면
             return "-3";
-        } else {
-            reviewService.saveReview(reviewDto, itemId);
-            return "0";
         }
+
+        reviewService.saveReview(reviewDto, itemId);
+        return "0";
     }
 
     @GetMapping("/item/reviewList/get")

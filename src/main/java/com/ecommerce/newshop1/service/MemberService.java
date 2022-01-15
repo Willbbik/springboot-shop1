@@ -2,9 +2,8 @@ package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.JoinMemberDto;
 import com.ecommerce.newshop1.dto.MemberDto;
-import com.ecommerce.newshop1.entity.Item;
-import com.ecommerce.newshop1.entity.Member;
-import com.ecommerce.newshop1.entity.WithdrawalMember;
+import com.ecommerce.newshop1.dto.OrderItemDto;
+import com.ecommerce.newshop1.entity.*;
 import com.ecommerce.newshop1.exception.MemberNotFoundException;
 import com.ecommerce.newshop1.exception.NotLoginException;
 import com.ecommerce.newshop1.repository.MemberRepository;
@@ -12,6 +11,7 @@ import com.ecommerce.newshop1.enums.Role;
 import com.ecommerce.newshop1.enums.Sns;
 import com.ecommerce.newshop1.repository.WithdrawalMemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,20 +40,86 @@ public class MemberService {
     private final WithdrawalMemberRepository withdrawalMemberRepository;
     private final MemberRepository memberRepository;
     private final RedisService redisService;
+    private final OrderItemService orderItemService;
     private final SecurityService security;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper mapper;
 
-    ModelMapper mapper = new ModelMapper();
+//    // 해당 상품을 사용자가 구매했는지 확인
+//    public boolean existsItem(Item item, String userId) {
+//
+//        Member member = memberRepository.findByuserId(userId)
+//                        .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 아이디입니다."));
+//
+//        return member.getOrderList().stream()
+//                .anyMatch(i -> i.getOrderItems().stream()
+//                        .anyMatch(p -> p.getItem().getId().equals(item.getId()))
+//                );
+//    }
+
+
+//    // 해당 상품을 사용자가 구매했는지 확인
+//    @Transactional(readOnly = true)
+//    public boolean existsItem(Item item, String userId) {
+//
+//        Member member = memberRepository.findByuserId(userId)
+//                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 아이디입니다."));
+//
+//        List<Order> orderList = member.getOrderList();
+//
+//        if(!orderList.isEmpty()){
+//
+//            for(Order order : orderList){
+//                List<OrderItem> orderItemList = order.getOrderItems();
+//                boolean result = orderItemList.stream().anyMatch(
+//                        p -> p.getItem().equals(item)
+//                );
+//                if(result) return true;
+//            }
+//            return false;
+//        }
+//
+//        return false;
+//
+//    }
+
+//    // 해당 상품을 사용자가 구매했는지 확인
+//    public boolean existsItem(Item item, String userId) {
+//
+//        Member member = memberRepository.findByuserId(userId)
+//                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 아이디입니다."));
+//        List<Order> orderList = new ArrayList<>();
+//
+//        Hibernate.initialize(member.getOrderList());
+//
+//        orderList.addAll(member.getOrderList());
+//
+//        if(!orderList.isEmpty()){
+//
+//            for(Order order : orderList){
+//                List<OrderItem> orderItemList = order.getOrderItems();
+//                boolean result = orderItemList.stream().anyMatch(
+//                        p -> p.getItem().equals(item)
+//                );
+//                if(result) return true;
+//            }
+//            return false;
+//        }
+//
+//        return false;
+//
+//    }
 
     // 해당 상품을 사용자가 구매했는지 확인
-    public boolean existsItem(Item item) {
+    @Transactional(readOnly = true)
+    public boolean existsItem(Item item, String userId) {
 
-        Member member = getCurrentMember();
+        Member member = memberRepository.findByuserId(userId)
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 아이디입니다."));
+        List<OrderItemDto> orderItemList = orderItemService.searchAllByMember(member);
 
-        return member.getOrderList().stream()
-                .anyMatch(i -> i.getOrderItems().stream()
-                        .anyMatch(p -> p.getItem().getId().equals(item.getId()))
-                );
+        return orderItemList.stream()
+                .anyMatch(p -> p.getItem().getId().equals(item.getId()));
     }
 
     // 인증번호 비교
