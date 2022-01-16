@@ -36,6 +36,8 @@ public class ItemServiceImpl implements ItemService {
         String lowPrice = "lowPrice";
         // review도 추가해야함
 
+        if(itemList.isEmpty()) return value;
+
         if(lowPrice.equals(sort)){
             return itemList.stream()
                     .max(Comparator.comparingInt(ItemDto::getPrice))

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -92,6 +93,21 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
     @Override
     public List<ItemDto> searchAllBySort(String itemName, String sort, String value, Pageable pageable) {
 
+        // 커버링 인덱스
+        List<Long> ids = queryFactory
+                .select(QItem.item.id)
+                .from(QItem.item)
+                .where(
+                        eqItemName(itemName),
+                        eqSort(sort, value)
+                )
+                .orderBy((OrderSpecifier<?>) orderBySort(sort))
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        if(ids.isEmpty()){
+            return new ArrayList<>();
+        }
 
         return queryFactory
                 .select(Projections.fields(ItemDto.class,
@@ -101,41 +117,32 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                         QItem.item.imageUrl
                 ))
                 .from(QItem.item)
-                .where(
-                        eqItemName(itemName),
-                        eqSort(sort, value)
-                )
+                .where(QItem.item.id.in(ids))
                 .orderBy((OrderSpecifier<?>) orderBySort(sort))
-                .limit(pageable.getPageSize())
                 .fetch();
     }
 
 
-    // 찾기
     private BooleanExpression eqSort(String sort, String value){
 
-        if(StringUtils.isBlank(value)){
-            return null;
-        }
+        if(StringUtils.isBlank(value)) return null;
 
-        if(sort.equals("lowPrice")) {
 
-            return QItem.item.price.gt(Integer.parseInt(value));
+        String lowPrice = "lowPrice";
+
+        if(lowPrice.equals(sort)) {
+            return QItem.item.price.goe(Integer.parseInt(value));
         } else{
-
             return QItem.item.id.lt(Long.parseLong(value));
         }
     }
 
-    // 정렬
     private Object orderBySort(String sort){
 
-        if(StringUtils.isBlank(sort)){
-            return QItem.item.id.desc();
-        }
 
-        //  최신순 : recent
-        if(sort.equals("lowPrice")){
+        String lowPrice = "lowPrice";
+
+        if(lowPrice.equals(sort)){
             return QItem.item.price.asc();
         }else{
             return QItem.item.id.desc();
