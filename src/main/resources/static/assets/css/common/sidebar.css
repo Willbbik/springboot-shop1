@@ -93,3 +93,27 @@
     color: black;
 
 }
+
+/* 검색 */
+
+.searchForm {
+
+    margin-right: -5px;
+    margin-left: -21px;
+}
+
+.searchBtn {
+
+    width : 50px;
+    height : 47px;
+    border: 1px solid #dadada;
+    background-color: black;
+    color: white;
+}
+
+
+
+
+
+
+

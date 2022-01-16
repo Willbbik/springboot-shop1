@@ -7,7 +7,10 @@
                     <a href="/">에게모니</a>
                     <a th:href="@{/admin/main}" sec:authorize="hasRole('ADMIN')">관리자 페이지</a>
                 </li>
-                <input type="text" class="form-control me-2" placeholder="검색" maxlength="20"/>
+                <li>
+                    <input type="text" class="searchForm" placeholder="검색" maxlength="100"/>
+                    <button type="button" class="searchBtn">검색</button>
+                </li>
                 <br/>
                 <p class="acountbuttons" style="text-align: center;">
                     <span sec:authorize="isAnonymous()"><a th:href="@{/login}">로그인</a></span>

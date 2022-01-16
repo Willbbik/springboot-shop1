@@ -3,6 +3,7 @@ package com.ecommerce.newshop1.repository.custom;
 import com.ecommerce.newshop1.dto.ItemDto;
 import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.QItem;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -86,6 +87,59 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                     .orderBy(QItem.item.id.desc())
                     .limit(12)
                     .fetch();
+    }
+
+    @Override
+    public List<ItemDto> searchAllBySort(String itemName, String sort, String value, Pageable pageable) {
+
+
+        return queryFactory
+                .select(Projections.fields(ItemDto.class,
+                        QItem.item.id,
+                        QItem.item.itemName,
+                        QItem.item.price,
+                        QItem.item.imageUrl
+                ))
+                .from(QItem.item)
+                .where(
+                        eqItemName(itemName),
+                        eqSort(sort, value)
+                )
+                .orderBy((OrderSpecifier<?>) orderBySort(sort))
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
+
+
+    // 찾기
+    private BooleanExpression eqSort(String sort, String value){
+
+        if(StringUtils.isBlank(value)){
+            return null;
+        }
+
+        if(sort.equals("lowPrice")) {
+
+            return QItem.item.price.gt(Integer.parseInt(value));
+        } else{
+
+            return QItem.item.id.lt(Long.parseLong(value));
+        }
+    }
+
+    // 정렬
+    private Object orderBySort(String sort){
+
+        if(StringUtils.isBlank(sort)){
+            return QItem.item.id.desc();
+        }
+
+        //  최신순 : recent
+        if(sort.equals("lowPrice")){
+            return QItem.item.price.asc();
+        }else{
+            return QItem.item.id.desc();
+        }
     }
 
 

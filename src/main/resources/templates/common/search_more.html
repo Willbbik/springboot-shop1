@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:if="${itemList}">
+    <div class="col-md-6 col-lg-4" th:each="item : ${itemList}">
+        <a th:href="@{'/items/' + ${item.id}}">
+            <div class="box">
+                <div class="img-box">
+                    <img src="#" th:src="@{${item.imageUrl}}" alt="">
+                </div>
+                <div class="detail-box">
+                    <h6 th:text="${item.itemName}"></h6>
+                    <div class="price_box">
+                        <strong class="price_heading" th:text="${item.price}"></strong>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="btn-box" >
+        <a href="javascript:void(0);" id="more" th:attr="data-value=${value}">
+            더보기
+        </a>
+    </div>
+</th:block>
+
+<th:block th:unless="${itemList}">
+    <h2>검색된 상품이 없습니다.</h2>
+</th:block>
+
+</body>
+</html>

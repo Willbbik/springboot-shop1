@@ -143,7 +143,7 @@ public class MemberController {
         model.addAttribute("orderList", orderList);
         model.addAttribute("lastOrderId", lastOrderId);
 
-        if(more != null && more.equals("more")){
+        if(more != null){
             return "member/tab/tab1ordermore";
         }
         return "member/tab/tab1orderList";

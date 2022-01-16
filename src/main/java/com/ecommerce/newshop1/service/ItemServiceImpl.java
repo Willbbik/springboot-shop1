@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +31,23 @@ public class ItemServiceImpl implements ItemService {
     ModelMapper mapper = new ModelMapper();
 
     @Override
+    public String getLastId(List<ItemDto> itemList, String sort, String value) {
+
+        String lowPrice = "lowPrice";
+        // review도 추가해야함
+
+        if(lowPrice.equals(sort)){
+            return itemList.stream()
+                    .max(Comparator.comparingInt(ItemDto::getPrice))
+                    .get().getPrice().toString();
+        }else{
+            return itemList.stream()
+                    .min(Comparator.comparingLong(ItemDto::getId))
+                    .get().getId().toString();
+        }
+    }
+
+    @Override
     public Long getLastId(List<ItemDto> itemList, Long lastId) {
 
         if(itemList.isEmpty()){
@@ -41,6 +57,13 @@ public class ItemServiceImpl implements ItemService {
                     .min(Comparator.comparingLong(ItemDto::getId))
                     .get().getId();
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Long searchTotal(SearchDto searchDto) {
+
+        return itemRepository.searchTotal(searchDto);
     }
 
     @Override
@@ -59,6 +82,21 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<ItemDto> searchAllNoOffset(String category, Long ItemId) {
+
+        return itemRepository.searchAllNoOffset(category, ItemId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ItemDto> searchAllBySort(String itemName, String sort, String value, Pageable pageable) {
+
+        return itemRepository.searchAllBySort(itemName, sort, value, pageable);
+    }
+
+
+    @Override
     @Transactional
     public List<ItemImageDto> searchAllItemImage(Item itemId) {
 
@@ -70,21 +108,6 @@ public class ItemServiceImpl implements ItemService {
         return imageDtos;
     }
 
-
-    @Override
-    @Transactional(readOnly = true)
-    public Long searchTotal(SearchDto searchDto) {
-
-        return itemRepository.searchTotal(searchDto);
-    }
-
-
-    @Override
-    @Transactional
-    public List<ItemDto> searchAllNoOffset(String category, Long ItemId) {
-
-        return itemRepository.searchAllNoOffset(category, ItemId);
-    }
 
     @Override
     @Transactional
@@ -122,14 +145,5 @@ public class ItemServiceImpl implements ItemService {
         }
         return itemRepository.save(item);
     }
-
-
-    @Override
-    @Transactional
-    public ItemImage saveItemImage(ItemImage itemImage) {
-        return itemImageRepository.save(itemImage);
-    }
-
-
 
 }

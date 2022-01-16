@@ -15,7 +15,7 @@
 <body>
 
 <div id="page-wrapper">
-    <div th:replace="sidebar :: main_sidebar">
+    <div th:replace="common/sidebar :: main_sidebar">
     </div>
     <div id="page-content-wrapper">
         <div class="container-fluid">
@@ -24,9 +24,9 @@
                     <h2>상품 검색결과 0건</h2>
                     <div class="list_sort_container">
                         <div class="list_sort">
-                            <span id="order_reg" class="list_sort_active">최신순</span>|
-                            <span id="order_low-price" class="list_sort_default">낮은 가격순</span>|
-                            <span id="order_many-reviews" class="list_sort_default">리뷰 많은순</span>
+                            <span data-sort="recent" class="list_sort_active sort">최신순</span>|
+                            <span data-sort="lowPrice" class="list_sort_default sort">낮은 가격순</span>|
+                            <span data-sort="manyReviews" class="list_sort_default sort">리뷰 많은순</span>
                         </div>
                     </div>
                 </div>
@@ -51,8 +51,8 @@
                                 </a>
                             </div>
                         </th:block>
-                        <div class="btn-box" th:attr="data-category=${category}">
-                            <a href="javascript:void(0);" th:attr="data-lastId=${lastId}" class="itemMore">
+                        <div class="btn-box" >
+                            <a href="javascript:void(0);" id="more" th:attr="data-value=${value}">
                                 더보기
                             </a>
                         </div>
@@ -64,5 +64,6 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<script src="/assets/js/search.js"></script>
 </body>
 </html>
