@@ -40,11 +40,6 @@ public class MemberController {
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper mapper;
 
-    @GetMapping("/")
-    @ApiOperation(value = "웹 기본 페이지")
-    public String index() {
-        return "index";
-    }
 
     @GetMapping("/join")
     @ApiOperation(value = "회원가입 페이지")

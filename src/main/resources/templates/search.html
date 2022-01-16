@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>에게모니</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="/assets/css/common/sidebar.css" rel="stylesheet">
+    <link href="/assets/css/common/search.css" rel="stylesheet">
+    <link href="/assets/css/item/itemList.css" rel="stylesheet">
+
+</head>
+<body>
+
+<div id="page-wrapper">
+    <div th:replace="sidebar :: main_sidebar">
+    </div>
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="search_result_item">
+                <div class="list_head">
+                    <h2>상품 검색결과 0건</h2>
+                    <div class="list_sort_container">
+                        <div class="list_sort">
+                            <span id="order_reg" class="list_sort_active">최신순</span>|
+                            <span id="order_low-price" class="list_sort_default">낮은 가격순</span>|
+                            <span id="order_many-reviews" class="list_sort_default">리뷰 많은순</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <section class="veg_section layout_padding">
+                <div class="container">
+                    <div class="row item_list">
+                        <th:block th:each="item : ${itemList}">
+                            <div class="col-md-6 col-lg-4">
+                                <a th:href="@{'/items/' + ${item.id}}">
+                                    <div class="box">
+                                        <div class="img-box">
+                                            <img src="#" th:src="@{${item.imageUrl}}" alt="">
+                                        </div>
+                                        <div class="detail-box">
+                                            <h6 th:text="${item.itemName}"></h6>
+                                            <div class="price_box">
+                                                <strong class="price_heading" th:text="${item.price}"></strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </th:block>
+                        <div class="btn-box" th:attr="data-category=${category}">
+                            <a href="javascript:void(0);" th:attr="data-lastId=${lastId}" class="itemMore">
+                                더보기
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+         </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+</body>
+</html>

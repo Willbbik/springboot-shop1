@@ -1,0 +1,180 @@
+.frame {
+    width: 100%;
+    max-width: 1300px;
+    margin: 0px auto;
+    clear: both;
+    overflow: hidden;
+}
+
+[class^=search_result] {
+    padding: 70px 0 30px;
+    border-top: 1px solid #000;
+}
+
+[class^=search_result] .list_head h2 {
+    float: left;
+    margin: 0;
+}
+
+ul, li, dl, dt, dd {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+
+.list_sort_container {
+    margin-right: 18px;
+}
+
+.list_sort {
+    float: right;
+    text-align: right;
+    padding: 5px 1%;
+    color: #8d8d8d;
+    font-size: 1.1em;
+}
+
+.list_sort span {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.list_sort_active {
+    font-weight: bold;
+}
+
+.list_sort_active {
+    color: #000000;
+}
+
+.list_sort_default {
+    color: #8d8d8d;
+}
+
+.search-no-data {
+    padding: 100px 0 130px;
+}
+
+.search-no-data {
+    padding: 64px 0 46px;
+    margin: 0;
+    font-size: 17px;
+    text-align: center;
+    line-height: 25px;
+    letter-spacing: -.7px;
+}
+
+
+/* 상품 존재 */
+
+.list_full {
+    padding: 10px 0;
+}
+
+@media screen and (min-width: 769px)
+.list_full ul:nth-child(5n+1) {
+    margin-left: 0;
+}
+
+
+@media screen and (min-width: 769px)
+.list_full ul:nth-child(odd) {
+    margin-left: 1%;
+}
+
+.list_basic ul:nth-child(odd), .list_full ul:nth-child(odd) {
+    margin-left: 0;
+}
+
+.list_full ul {
+    width: 18.4%;
+    margin: 10px 1% 20px;
+}
+
+.list_basic ul, .list_full ul {
+    display: inline-block;
+    width: calc((98% - 3px) / 2);
+    margin: 1%;
+    padding-bottom: 10px;
+    vertical-align: top;
+    font-size: 1.2em;
+}
+
+.list_basic:after, .list_full:after {
+    clear: both;
+    display: block;
+    content: "";
+
+.common-product-item a {
+    display: block;
+    position: relative;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+.common-product-item a .thumb {
+    position: relative;
+}
+
+.common-product-item a .item-thumb {
+    display: block;
+    position: relative;
+    padding-bottom: 100%;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.common-product-item a .item-thumb:before {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.02);
+    z-index: 1;
+    content: "";
+}
+
+.common-product-item a .product-name {
+    margin-top: 5px;
+    font-weight: 400;
+    color: #4f4f4f;
+    font-size: 14px;
+}
+
+.common-product-item a .product-name, .common-product-item a .seller {
+    overflow: hidden;
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.common-product-item a .seller {
+    margin-top: 7px;
+    font-size: 1em;
+    color: #000;
+}
+
+.common-product-item a .detail-price {
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+.common-product-item a .detail-price .current-price {
+    display: block;
+    float: left;
+    font-weight: 400;
+    font-size: 1em;
+    color: #000;
+}
+
+
+
+
+
+
+
