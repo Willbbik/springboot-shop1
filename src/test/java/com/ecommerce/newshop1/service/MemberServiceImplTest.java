@@ -4,7 +4,6 @@ import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.enums.Role;
 import com.ecommerce.newshop1.enums.Sns;
 import com.ecommerce.newshop1.repository.MemberRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +16,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class MemberServiceTest {
+class MemberServiceImplTest {
 
     @Autowired
-    MemberService memberService;
+    MemberServiceImpl memberService;
 
     @Autowired
-    CartService cartService;
+    CartServiceImpl cartService;
 
     @Autowired
     MemberRepository memberRepository;

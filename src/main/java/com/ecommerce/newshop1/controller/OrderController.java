@@ -21,7 +21,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.List;
@@ -55,11 +54,10 @@ public class OrderController {
 
     @PostMapping("/order/checkout")
     @ApiOperation(value = "구매할 상품 선택후 주문페이지로 이동")
-    public String checkoutPage(String itemList, String where, Model model, HttpServletRequest request) throws Exception {
+    public String checkoutPage(String itemList, String where, Model model, HttpSession session) {
 
         List<OrderItemDto> orderItems = new ArrayList<>();
         String orderName = "";
-        HttpSession session = request.getSession();
         int totalPrice = 0;
 
         if(where.equals("product")){    // 상품 바로 구매시
@@ -73,7 +71,7 @@ public class OrderController {
             for(OrderItemDto itemDto : orderItems){
                 totalPrice += itemDto.getTotalPrice();
             }
-        } else{
+        } else {
             throw new ParameterNotFoundException("주문 페이지 이동시 필수 파라미터 'where'가 정상적인 값이 아님");
         }
 
@@ -127,7 +125,6 @@ public class OrderController {
         return "success";
     }
 
-
     @RequestMapping("/success")
     @ApiOperation(value = "토스페이먼츠의 가상계좌 결제", notes = "가상계좌 결제")
     public String confirmPayment(@RequestParam String paymentKey, @RequestParam String orderId,
@@ -138,27 +135,19 @@ public class OrderController {
 
         if(responseEntity.getStatusCode() == HttpStatus.OK) {
 
-            // 로그인 검사
-            String payType = responseEntity.getBody().get("method").asText();
+            OrderPaymentInformation paymentInfo = orderService.getVirtualAccountInfo(responseEntity.getBody());
+            Delivery delivery = new Delivery();
+            delivery.setDeliveryStatus(DeliveryStatus.DEPOSIT_READY);
 
-            if(payType.equals("가상계좌")){
+            // 주문
+            String orderNum = orderService.doOrder(session, paymentInfo, delivery);
 
-                OrderPaymentInformation paymentInfo = orderService.getVirtualAccountInfo(responseEntity.getBody());
-                Delivery delivery = new Delivery();
-                delivery.setDeliveryStatus(DeliveryStatus.DEPOSIT_READY);
+            // 주문 후 주문성공 페이지에 결제정보 띄워주기 위해서
+            Order order = orderService.findByOrderNum(orderNum);
+            model.addAttribute(orderService.getModelPayInfo(order, model));
 
-                // 주문
-                String orderNum = orderService.doOrder(session, paymentInfo, delivery);
-
-                // 주문 후 주문성공페이지에 정보 띄워주기 위해서
-                Order order = orderService.findByOrderNum(orderNum);
-                model.addAttribute(orderService.getModelPayInfo(order, model));
-
-                return "order/order_success";
-            }
-            return "order/order_fail";
+            return "order/order_success";
         } else {
-
             JsonNode failNode = responseEntity.getBody();
             model.addAttribute("message", failNode.get("message").asText());
             model.addAttribute("code", failNode.get("code").asText());

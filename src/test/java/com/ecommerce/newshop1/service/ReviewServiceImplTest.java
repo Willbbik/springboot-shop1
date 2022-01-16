@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ReviewServiceImplTest {
 
     @Autowired
-    MemberService memberService;
+    MemberServiceImpl memberService;
 
     @Autowired
     ItemService itemService;

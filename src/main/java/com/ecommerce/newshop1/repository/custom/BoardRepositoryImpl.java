@@ -26,7 +26,8 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom{
                     QBoard.board.writer,
                     QBoard.board.hide,
                     QBoard.board.createdDate,
-                    QBoard.board.modifiedDate))
+                    QBoard.board.modifiedDate
+                ))
                 .from(QBoard.board)
                 .offset(pageable.getPageNumber())
                 .limit(pageable.getPageSize())

@@ -163,7 +163,7 @@ public class ItemController {
         Member member = memberService.getCurrentMember();
         boolean buyResult = reviewRepository.existsByItemAndMember(item, member);
 
-        if(buyResult) {                               // 이미 리뷰를 작성했다면
+        if(buyResult) {                                 // 이미 리뷰를 작성했다면
             return "-2";
         }else if(!memberService.existsItem(item, principal.getName())){   // 해당 상품을 구매안했다면
             return "-3";

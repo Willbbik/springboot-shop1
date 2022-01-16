@@ -44,7 +44,7 @@ function kakaoPay(address){
                 alert("필수정보를 입력해주세요.");
                 return false;
             }else if(result === "validation"){
-                alert("필수 값을 입력해주세요.");
+                alert("필수 값 혹은 정보를 정확하게 입력해주세요.");
                 return false;
             } else{
                 window.location.href = result;

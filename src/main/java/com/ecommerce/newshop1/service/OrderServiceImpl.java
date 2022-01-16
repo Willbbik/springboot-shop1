@@ -62,7 +62,7 @@ public class OrderServiceImpl implements OrderService {
     public Order findById(Long id) {
 
         return orderRepository.findById(id)
-                .orElseThrow(() -> new OrderNotFoundException("해당 주문번호의 주문이 존재하지 않습니다." + id));
+                .orElseThrow(OrderNotFoundException::new);
     }
 
     @Override
@@ -188,7 +188,7 @@ public class OrderServiceImpl implements OrderService {
 
         // 장바구니에서 주문시 해당 상품 지우기 위해서
         if(cartItemIdList != null) {
-            cartService.deleteCartItemAllById(cartItemIdList);
+            cartService.deleteCartItemAll(cartItemIdList);
             session.removeAttribute("cartItemIdList");
         }
 
@@ -207,6 +207,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public Model getModelPayInfo(Order order, Model model){
+        mapper.getConfiguration().setAmbiguityIgnored(true);
 
         OrderPaymentInfoDto payInfo = mapper.map(order.getPaymentInfo(), OrderPaymentInfoDto.class);
         OrderDto orderInfo = mapper.map(order, OrderDto.class);
@@ -215,11 +216,11 @@ public class OrderServiceImpl implements OrderService {
                                         .map(p -> mapper.map(p, OrderItemDto.class))
                                         .collect(Collectors.toList());
 
-        model.addAttribute("method", payInfo.getPayType());
-        model.addAttribute("payInfo", payInfo);
         model.addAttribute("orderInfo", orderInfo);
-        model.addAttribute("orderItems",  orderItems);
+        model.addAttribute("orderItems", orderItems);
+        model.addAttribute("payInfo", payInfo);
         model.addAttribute("address", address);
+        model.addAttribute("method", payInfo.getPayType());
 
         return model;
     }

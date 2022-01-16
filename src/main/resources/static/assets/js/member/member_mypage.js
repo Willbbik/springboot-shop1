@@ -63,7 +63,6 @@ $(document).ready(function(){
             }
         });
 
-        console.log(qnaIdList);
         if(qnaIdList.length < 1){
             alert("댓글을 선택해주세요");
             return false;

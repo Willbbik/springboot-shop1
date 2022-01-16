@@ -1,7 +1,7 @@
 $(function(){
 
-    let token = $("meta[name=_csrf]").attr("content");
-    let header = $("meta[name=_csrf_header]").attr("content");
+    let csrfToken = $("meta[name=_csrf]").attr("content");
+    let csrfHeader = $("meta[name=_csrf_header]").attr("content");
 
     // 단일 상품 삭제
     $(".item_delete").on("click", function(){
@@ -19,7 +19,7 @@ $(function(){
                url  : "/admin/item/delete",
                data : { itemIdList : idList },
                beforeSend : function(xhr){
-                    xhr.setRequestHeader(header, token);
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
                },
                traditional: true
             }).done(function(result){
@@ -68,7 +68,7 @@ $(function(){
                 url  : "/admin/item/delete",
                 data : { itemIdList : idList },
                 beforeSend : function(xhr){
-                    xhr.setRequestHeader(header, token);
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
                 },
                 traditional : true
             }).done(function(result){

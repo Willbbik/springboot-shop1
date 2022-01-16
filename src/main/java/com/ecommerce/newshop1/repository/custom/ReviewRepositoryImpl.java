@@ -3,7 +3,6 @@ package com.ecommerce.newshop1.repository.custom;
 
 import com.ecommerce.newshop1.dto.ReviewDto;
 import com.ecommerce.newshop1.entity.QReview;
-import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;

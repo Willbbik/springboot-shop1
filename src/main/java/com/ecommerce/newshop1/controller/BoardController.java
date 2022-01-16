@@ -13,7 +13,6 @@ import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.CommonService;
 import com.ecommerce.newshop1.utils.PaginationShowSizeTen;
 import com.ecommerce.newshop1.utils.ValidationSequence;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -172,8 +171,8 @@ public class BoardController {
     @ApiOperation(value = "게시글 작성")
     public @ResponseBody String boardWrite(@Validated(ValidationSequence.class) BoardDto boardDto, BindingResult errors, Principal principal){
 
-        if(errors.hasErrors()) return commonService.getErrorMessage(errors);
         if(!security.isAuthenticated()) return "login";
+        if(errors.hasErrors()) return commonService.getErrorMessage(errors);
 
         boardService.save(boardDto, principal.getName());
         return "success";
@@ -196,12 +195,11 @@ public class BoardController {
     @ApiOperation(value = "게시글 대댓글 저장")
     public @ResponseBody String reCommentWrite(@Validated(ValidationSequence.class) CommentPostDto postDto, BindingResult errors, Principal principal){
 
-            if(!security.isAuthenticated()) return "login";
-            if(errors.hasErrors()) return commonService.getErrorMessage(errors);
+        if(!security.isAuthenticated()) return "login";
+        if(errors.hasErrors()) return commonService.getErrorMessage(errors);
 
-
-            boardReCommentService.save(postDto, principal.getName());
-            return "success";
+        boardReCommentService.save(postDto, principal.getName());
+        return "success";
     }
 
     @PatchMapping("/board/write/{boardId}")
@@ -254,19 +252,14 @@ public class BoardController {
     @ApiOperation(value = "게시글 공개여부 변경")
     public @ResponseBody String boardHideUpdate(@PathVariable(name = "boardId") Long boardId, Principal principal){
 
-        if(!security.isAuthenticated()) {
-            return "login";
-        }
+        if(!security.isAuthenticated()) return "login";
 
         Board board = boardService.findById(boardId);
         Member member = board.getMember();
+        if(!member.getUserId().equals(principal.getName())) return "role";
 
-        if(!member.getUserId().equals(principal.getName())){
-            return "role";
-        }else{
-            boardService.updateHide(boardId);
-            return "success";
-        }
+        boardService.updateHide(boardId);
+        return "success";
     }
 
 
@@ -274,19 +267,14 @@ public class BoardController {
     @ApiOperation(value = "게시글 삭제")
     public @ResponseBody String deleteBoard(@PathVariable(name = "boardId") Long boardId, Principal principal){
 
-        if(!security.isAuthenticated()) {
-            return "login";
-        }
+        if(!security.isAuthenticated()) return "login";
 
         Board board = boardService.findById(boardId);
         Member member = board.getMember();
+        if(!member.getUserId().equals(principal.getName())) return "role";
 
-        if(!member.getUserId().equals(principal.getName())){
-            return "role";
-        }else{
-            boardService.deleteById(boardId);
-            return "success";
-        }
+        boardService.deleteById(boardId);
+        return "success";
     }
 
 
@@ -296,7 +284,6 @@ public class BoardController {
 
         if(!security.isAuthenticated()) return "login";
 
-        // 작성자 비교
         BoardComment comment = boardCommentService.findById(commentId);
         Member member = comment.getMember();
         if(!member.getUserId().equals(principal.getName())) return "role";

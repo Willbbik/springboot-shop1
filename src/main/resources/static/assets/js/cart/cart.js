@@ -17,8 +17,7 @@ $(function(){
 
         let cartList = new Array();
 
-        let tr = $(this).closest("tr");
-        let cartId = tr.find("input[name='cartItemId']").val();
+        let cartId = $(this).closest("tr").attr("data-cartItemId");
         let cartJson = {cartItemId : cartId};
 
         cartList.push(cartJson);
@@ -40,7 +39,7 @@ $(function(){
         let cartList = new Array();
 
         for(let i=0; i<cartItemId.length; i++){
-            if($(cartItemId[i]).closest('tr').find('.check').is(":checked") == true){
+            if($(cartItemId[i]).find('.check').is(":checked") == true){
                 let c_id = $(cartItemId[i]).val()
                 let cart_json = {cartItemId : c_id};
                 cartList.push(cart_json);
@@ -60,10 +59,12 @@ $(function(){
     $(".cartQuantityUpdate").on("click", function(){
 
         let tr = $(this).closest("tr");
-        let cartId = tr.find("input[name=cartItemId]").val();
+        let cartId = tr.attr("data-cartItemId");
         let quantity = tr.find("input[name=cartQuantity]").val();
 
-        let param = { id : cartId, quantity : quantity };
+        let param = { id : cartId,
+                      quantity : quantity
+                     };
 
         $.ajax({
             url : "/cart/update/quantity",
@@ -73,8 +74,13 @@ $(function(){
                 xhr.setRequestHeader(header, token);
             }
         }).done(function(result){
-            alert(result);
-            location.reload();
+            if(result === "success"){
+                alert("수량 변경 완료");
+                location.reload();
+            }else{
+                alert(result);
+                return false;
+            }
         }).fail(function(result){
             alert("오류가 발생했습니다. 잠시후 다시 시도해보시기 바랍니다.");
         });
@@ -83,9 +89,7 @@ $(function(){
     // 단일 상품 삭제
     $(".cart_delete").on("click", function(){
 
-        let tr = $(this).closest("tr");
-        let cartId = tr.find("input[name=cartItemId]").val();
-        let param = { id : cartId };
+        let cartItemId = $(this).closest("tr").attr("data-cartItemId");
 
         let result = confirm("해당 상품을 장바구니에서 삭제 하시겠습니까?");
 
@@ -93,15 +97,18 @@ $(function(){
             $.ajax({
                 url : "/cart/delete/item",
                 type : "delete",
-                data : param,
+                data : { id : cartItemId },
                 beforeSend : function(xhr){
                     xhr.setRequestHeader(header, token);
                 }
             }).done(function(result){
-                alert(result);
-                location.reload();
+                if(result === "success"){
+                    alert("상품 삭제 완료");
+                    location.reload();
+                }
             }).fail(function(result){
-                alert("오류가 발생했습니다. 잠시후 다시 시도해보시기 바랍니다.");
+                alert("오류가 발생했습니다. \n잠시후 다시 시도해보시기 바랍니다.");
+                return false;
             });
         }
     });
@@ -118,6 +125,11 @@ $(function(){
                 }
             });
 
+            if(itemList.length < 1){
+                alert("삭제할 상품을 선택해주세요");
+                return false;
+            }
+
             let result = confirm("선택한 상품들을 장바구니에서 삭제 하시겠습니까?");
 
             if(result){
@@ -130,14 +142,18 @@ $(function(){
                     },
                     traditional: true
                 }).done(function(result){
-                    alert("장바구니에서 해당 아이템을 삭제하였습니다.");
-                    location.reload();
+                    if(result === "success"){
+                         alert("상품을 삭제하였습니다.");
+                         location.reload();
+                    }
                 }).fail(function(result){
-                    alert("오류가 발생했습니다. 잠시후 다시 시도해보시기 바랍니다.");
+                    alert("오류가 발생했습니다. \n잠시후 다시 시도해보시기 바랍니다.");
+                    return false;
                 });
             }
         });
 
+    // 상품 장바구니에 추가
     $(document).on("click", "#addCart", function(){
 
         if($(".selected_options_box div").length == 0){
@@ -146,7 +162,7 @@ $(function(){
             }
 
         let param = {
-            itemId : $("#itemId").val(),
+            id : $("#itemId").val(),
             quantity : $("#quantity").val()
         };
 
@@ -158,15 +174,10 @@ $(function(){
                 xhr.setRequestHeader(header, token);
             }
          }).done(function(result){
-            if(result === 200){
+            if(result === "success"){
                 alert("상품을 장바구니에 담았습니다.");
-            }else if(result === 403){
-                let result = confirm("로그인이 필요한 서비스입니다. \n로그인 페이지로 이동하시겠습니까?");
-                if(result){
-                    window.location.replace("/login");
-                }
-            }else if(result === 401){
-                alert("상품과 옵션을 정확히 입력해주세요.");
+            }else{
+                alert(result);
                 return false;
             }
          }).fail(function(result){

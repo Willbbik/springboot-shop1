@@ -60,7 +60,7 @@
 //                    .build());
 //        }
 //
-//        Member findMember = memberRepository.findByuserId("test").get();
+//        Member findMember = memberRepository.findByUserId("test").get();
 //
 //        //when
 //        List<OrderDto> orderDtoList = orderService.searchAllByMember(null, findMember);

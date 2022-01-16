@@ -30,6 +30,9 @@ public class CartItem {
     @ColumnDefault("0")
     private int quantity;
 
+    @Column
+    private int totalPrice;
+
     public static CartItem createCartItem(Cart cart, Item item, int quantity){
 
         CartItem cartItem = new CartItem();

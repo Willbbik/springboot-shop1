@@ -6,7 +6,6 @@ import com.ecommerce.newshop1.entity.Order;
 import com.ecommerce.newshop1.enums.DeliveryStatus;
 import lombok.*;
 
-
 @Getter
 @Setter
 @Builder
@@ -15,19 +14,12 @@ import lombok.*;
 public class OrderItemDto {
 
     private Long id;
-
     private Order order;
-
     private Item item;
-
     private DeliveryStatus deliveryStatus;
-
     private String wayBillNum;
-
     private int quantity;
-
     private int totalPrice;
-
     private DeliveryAddress deliveryAddress;
 
 }

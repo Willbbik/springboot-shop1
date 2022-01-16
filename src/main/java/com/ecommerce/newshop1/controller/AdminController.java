@@ -69,7 +69,6 @@ public class AdminController {
         Long totalPost = itemService.searchTotal(searchDto);
         PaginationShowSizeTen page = new PaginationShowSizeTen(totalPost, curPage);
 
-        // 상품 가져오기
         Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxSize());
         List<ItemDto> items = itemService.searchAll(searchDto, pageable);
 
@@ -84,7 +83,6 @@ public class AdminController {
     @ApiOperation(value = "상품 배송 페이지")
     public String sendOrderItemPage(@RequestParam(name = "page", defaultValue = "1") int curPage, SearchDto searchDto, Model model){
 
-        // 배달해야하는 상품 총 개수와 그걸로 페이징처리
         Long total = orderItemService.searchTotal(DeliveryStatus.DELIVERY_READY, searchDto);
         PaginationShowSizeTen page = new PaginationShowSizeTen(total, curPage);
 
@@ -150,8 +148,7 @@ public class AdminController {
         // 상품 유효성 검사 && 권한 검사
         if(errors.hasErrors()){
             return commonService.getErrorMessage(errors);
-        }
-        if(!security.checkHasRole(Role.ADMIN.getValue())){
+        } else if(!security.checkHasRole(Role.ADMIN.getValue())){
             return "role";
         }
 

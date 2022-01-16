@@ -13,15 +13,13 @@
     <link href="/assets/css/cart/cart.css" rel="stylesheet">
 </head>
 <body>
-
-
 <div id="page-wrapper">
     <div th:replace="sidebar :: main_sidebar">
     </div>
-    <!-- 본문 -->
+
     <div id="page-content-wrapper">
         <div class="container-fluid">
-            <!--   start   -->
+            <!-- 본문 -->
 
             <div class="page-title">
                 <h1>장바구니</h1>
@@ -49,8 +47,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <th:block th:each="cartItem : ${cartItems}">
-                        <tr>
+                        <tr class="cartItemId" th:attr="data-cartItemId=${cartItem.id}" th:each="cartItem : ${cartItems}">
                             <input type="hidden" class="cartItemId" name="cartItemId" th:value="${cartItem.id}">
                             <td>
                                 <input type="checkbox" class="check">
@@ -61,7 +58,7 @@
                             <td>
                                 <a th:href="@{'/items/' + ${cartItem.item.id}}">
                                     <div class="item-name" th:text="${cartItem.item.itemName}"></div>
-                                    <div th:text="${cartItem.item.price}"></div>
+                                    <div th:text="${cartItem.item.price} + 원"></div>
                                 </a>
                             </td>
                             <td>
@@ -77,16 +74,14 @@
                                 <button class="cart_delete">삭제</button>
                             </td>
                         </tr>
-                    </th:block>
                     </tbody>
                 </table>
                 <button id="order_select_btn">구매하기</button>
             </div>
 
+            <!-- /본문 -->
         </div>
     </div>
-    <!-- /본문 -->
-
 </div>
 
 

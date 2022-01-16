@@ -11,8 +11,6 @@ public class KakaoDto {
     public Kakao_account kakao_account;
 
 
-
-
     @Data
     public class Properties {
         public String nickname;

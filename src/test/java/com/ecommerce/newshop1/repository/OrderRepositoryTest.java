@@ -49,7 +49,7 @@
 //                    .build());
 //        }
 //
-//        Member findMember = memberRepository.findByuserId("userid").get();
+//        Member findMember = memberRepository.findByUserId("userid").get();
 //
 //        //when
 //        List<Order> orderList = orderRepository.searchAllByMember(null, findMember);

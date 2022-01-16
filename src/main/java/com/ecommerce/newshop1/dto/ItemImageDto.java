@@ -1,7 +1,6 @@
 package com.ecommerce.newshop1.dto;
 
 import com.ecommerce.newshop1.entity.Item;
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 
 @Getter

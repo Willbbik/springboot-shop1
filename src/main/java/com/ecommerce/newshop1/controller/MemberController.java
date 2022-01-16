@@ -3,6 +3,7 @@ package com.ecommerce.newshop1.controller;
 import com.ecommerce.newshop1.dto.*;
 import com.ecommerce.newshop1.entity.Member;
 import com.ecommerce.newshop1.entity.Order;
+import com.ecommerce.newshop1.enums.Sns;
 import com.ecommerce.newshop1.repository.ItemQnARepository;
 import com.ecommerce.newshop1.service.*;
 import com.ecommerce.newshop1.utils.CommonService;
@@ -113,17 +114,24 @@ public class MemberController {
 
         Member member = memberService.getCurrentMember();
 
-        boolean result = passwordEncoder.matches(password, member.getPassword());
-
-        if(result){
-
+        // 소셜 회원가입
+        if(!member.getSns().equals(Sns.NONE)){
             memberService.withdrawal(member.getUserId());
             memberService.saveWithdrawalMember(member.getUserId());
-            session.invalidate();;
+            session.invalidate();
             return "success";
-        }else{
+        }
+
+        // 일반 회원가입
+        boolean result = passwordEncoder.matches(password, member.getPassword());
+        if(!result){
             return "fail";
         }
+
+        memberService.withdrawal(member.getUserId());
+        memberService.saveWithdrawalMember(member.getUserId());
+        session.invalidate();
+        return "success";
     }
 
 
@@ -200,19 +208,19 @@ public class MemberController {
         boolean result = messageService.phoneValidationCheck(phoneNum);
         int randomNum = messageService.randomNum();
 
-        if (result) {
-            redisService.setAuthNo(phoneNum, randomNum);
-            // 메시지 전송 메소드 사용해야함
-            return "Y";
-        } else {
+        if (!result) {
             return "N";
         }
+
+        redisService.setAuthNo(phoneNum, randomNum);
+        messageService.sendMessage(phoneNum, randomNum);
+        return "Y";
     }
 
     @GetMapping("/member/authNumCheck")
     @ApiOperation(value = "회원가입시 인증번호 검사")
     public @ResponseBody String authNumCheck(@RequestParam(value = "authNum") String authNum,
-                        @RequestParam(value = "phoneNum") String phoneNum) {
+                                             @RequestParam(value = "phoneNum") String phoneNum) {
 
         int result = redisService.authNumCheck(phoneNum, authNum);
 
@@ -231,7 +239,7 @@ public class MemberController {
 
     @PostMapping("/join")
     @ApiOperation(value = "일반 회원가입")
-    public String join(@ModelAttribute("member") @Validated(ValidationSequence.class) JoinMemberDto joinMemberDto, BindingResult errors, Model model) throws Exception {
+    public String join(@ModelAttribute("member") @Validated(ValidationSequence.class) JoinMemberDto joinMemberDto, BindingResult errors, Model model) {
 
         if(errors.hasErrors()){
             Map<String, String > errorMsgMap = memberService.getErrorMsg(errors);   // 에러 메시지가 담긴 map
@@ -268,7 +276,7 @@ public class MemberController {
         int authNum = commonService.randomAuthNum();
 
         redisService.setAuthNo(phoneNum, authNum);
-        // messageService.sendMessage(phoneNum, authNum);
+        messageService.sendMessage(phoneNum, authNum);
         return "success";
     }
 
@@ -282,16 +290,13 @@ public class MemberController {
 
         boolean result = memberService.checkAuthNum(findIdDto.getPhoneNum(), findIdDto.getAuthNum());
 
-        if(result){ // 인증번호가 일치하다면
-
-            // 아이디 확인 클릭시 인증번호 확인받았는지 검사하기 위해서
-            session.setAttribute("phoneNum", findIdDto.getPhoneNum());
-            memberService.setAuthCheck(findIdDto.getPhoneNum());
-
-            return "success";
-        }else{
+        if(!result){  // 인증번호가 일치하지않으면
             return "fail";
         }
+
+        session.setAttribute("phoneNum", findIdDto.getPhoneNum());
+        memberService.setAuthCheck(findIdDto.getPhoneNum());
+        return "success";
     }
 
     @PostMapping("/member/findId/findIdResult")

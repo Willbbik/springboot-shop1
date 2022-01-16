@@ -9,8 +9,4 @@ public class ItemNotFoundException extends RuntimeException{
         super(message);
     }
 
-    public ItemNotFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
 }

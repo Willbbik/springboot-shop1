@@ -1,6 +1,5 @@
 package com.ecommerce.newshop1.dto;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;

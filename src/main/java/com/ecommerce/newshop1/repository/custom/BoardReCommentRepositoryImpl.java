@@ -2,7 +2,6 @@ package com.ecommerce.newshop1.repository.custom;
 
 import com.ecommerce.newshop1.dto.BoardCommentDto;
 import com.ecommerce.newshop1.dto.BoardReCommentDto;
-import com.ecommerce.newshop1.entity.BoardComment;
 import com.ecommerce.newshop1.entity.QBoardReComment;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;

@@ -25,7 +25,7 @@ public class BoardServiceTest {
     BoardServiceImpl boardService;
 
     @Autowired
-    MemberService memberService;
+    MemberServiceImpl memberService;
 
     @Test
     void save(){

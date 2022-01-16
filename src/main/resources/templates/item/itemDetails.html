@@ -194,8 +194,8 @@
     <script src="/assets/js/item/itemReview.js"></script>
     <script src="/assets/js/cart/cart.js"></script>
 
-<th:block sec:authorized="hasRole('ROLE_ADMIN')">
-    <script>
+
+    <script sec:authorize="hasRole('ADMIN')">
 
      $(document).ready(function(){
 
@@ -271,8 +271,7 @@
            });
         }
     });
+   </script>
 
-    </script>
-</th:block>
 </body>
 </html>
