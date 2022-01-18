@@ -66,7 +66,7 @@ public class AdminController {
     @ApiOperation(value = "상품 목록 페이지")
     public String itemListPage(@RequestParam(name = "page", defaultValue = "1") int curPage, SearchDto searchDto, Model model){
 
-        Long totalPost = itemService.searchTotal(searchDto);
+        Long totalPost = itemService.searchTotal(searchDto.getItemName(), searchDto.getCategory(), searchDto.getSaleStatus());
         PaginationShowSizeTen page = new PaginationShowSizeTen(totalPost, curPage);
 
         Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxSize());

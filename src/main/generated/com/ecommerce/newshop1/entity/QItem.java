@@ -46,6 +46,8 @@ public class QItem extends EntityPathBase<Item> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
 
+    public final StringPath noOffset = createString("noOffset");
+
     public final NumberPath<Integer> price = createNumber("price", Integer.class);
 
     public final ListPath<ItemQnA, QItemQnA> qnaList = this.<ItemQnA, QItemQnA>createList("qnaList", ItemQnA.class, QItemQnA.class, PathInits.DIRECT2);

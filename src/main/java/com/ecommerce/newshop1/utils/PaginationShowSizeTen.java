@@ -40,19 +40,19 @@ public class PaginationShowSizeTen {
                 (this.curPage / showMaxSize) * showMaxSize + 1;
 
         // 현재 페이지의 마지막 버튼 번호
-        this.endPage = (this.curPage % showMaxSize == 0) ? this.curPage :
-                ((this.curPage / showMaxSize) + 1) * showMaxSize;
+        this.endPage = (this.curPage % showMaxSize == 0) ?
+                this.curPage : ((this.curPage / showMaxSize) + 1) * showPageNum;
         this.endPage = Math.min(this.endPage, totalPage);
 
 
         // 다음 페이지 버튼 ( 10칸 앞으로 이동 )
         this.nextPage = (this.curPage % showMaxSize == 0) ?
-                this.curPage + 1 : (((this.curPage / showMaxSize) + 1) * showMaxSize + 1);
+                this.curPage + 1 : (((this.curPage / showMaxSize) + 1) * showPageNum + 1);
         this.nextPage = Math.min(this.nextPage, totalPage);
 
 
         // 이전 페이지 버튼 ( 10칸 뒤로 이동 )
-        this.prevPage = (((this.curPage - 11) / showMaxSize) * showMaxSize + 1);
+        this.prevPage = (((this.curPage - 11) / showMaxSize) * showPageNum + 1);
         this.prevPage = Math.max(this.prevPage, 1);
 
     }

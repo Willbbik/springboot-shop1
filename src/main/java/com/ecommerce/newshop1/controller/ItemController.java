@@ -42,7 +42,9 @@ public class ItemController {
     @ApiOperation(value = "카테고리별 상품 반환")
     public String itemListPage(@PathVariable String category, Model model){
 
-        List<ItemDto> itemList = itemService.searchAllNoOffset(category, null);
+        Pageable pageable = PageRequest.ofSize(12);
+
+        List<ItemDto> itemList = itemService.searchAllNoOffset(category, null, pageable);
         Long lastId = itemService.getLastId(itemList, null);
 
         model.addAttribute("itemList", itemList);
@@ -58,7 +60,9 @@ public class ItemController {
     public String itemListMore(@PathVariable String category,
                                @RequestParam(name = "lastId", required = false) Long lastId, Model model){
 
-        List<ItemDto> itemList = itemService.searchAllNoOffset(category, lastId);
+        Pageable pageable = PageRequest.ofSize(12);
+
+        List<ItemDto> itemList = itemService.searchAllNoOffset(category, lastId, pageable);
         lastId = itemService.getLastId(itemList, lastId);
 
         model.addAttribute("itemList", itemList);

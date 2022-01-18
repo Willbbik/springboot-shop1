@@ -21,7 +21,7 @@
         <div class="container-fluid">
             <div class="search_result_item">
                 <div class="list_head">
-                    <h2>상품 검색결과 0건</h2>
+                    <h2 th:text="'상품 검색결과' + ${total} + '건'"></h2>
                     <div class="list_sort_container">
                         <div class="list_sort">
                             <span data-sort="recent" class="list_sort_active sort">최신순</span>|
@@ -52,7 +52,7 @@
                             </div>
                         </th:block>
                         <div class="btn-box" >
-                            <a href="javascript:void(0);" id="more" th:attr="data-value=${value}">
+                            <a href="javascript:void(0);" id="more" th:attr="data-value=${value}, data-page=${page}">
                                 더보기
                             </a>
                         </div>

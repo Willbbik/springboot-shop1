@@ -53,6 +53,8 @@ public class ItemDto {
 
     private String imageUrl;
 
+    private String noOffset;
+
     private LocalDateTime createdDate;
 
     private LocalDateTime modifiedDate;

@@ -9,7 +9,6 @@ $(function(){
 
         let sort = $(this).attr("data-sort");
         let itemName = $("#itemName").val();
-        let value = $("#more").attr("data-value");
 
         $.ajax({
             url : "/search",
@@ -17,7 +16,6 @@ $(function(){
             data : {
                 itemName : itemName,
                 sort : sort,
-                value : value,
                 more : "more"
             }
         }).done(function(result){
@@ -32,9 +30,10 @@ $(function(){
     // 더보기 버튼
     $(document).on("click", "#more", function(){
 
-        let sort = $(".list_sort_active").attr("data-sort");
-        let itemName = $("#itemName").val();
-        let value = $("#more").attr("data-value");
+         itemName = $("#itemName").val();
+         sort = $(".list_sort_active").attr("data-sort");
+         value = $("#more").attr("data-value");
+         page = $(this).attr("data-page");
 
          $.ajax({
             url : "/search",
@@ -43,7 +42,8 @@ $(function(){
                 itemName : itemName,
                 sort : sort,
                 value : value,
-                more : "more"
+                more : "more",
+                page : page
             }
         }).done(function(result){
             $(".btn-box").remove();

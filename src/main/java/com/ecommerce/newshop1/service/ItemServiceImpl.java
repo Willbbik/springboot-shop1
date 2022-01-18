@@ -39,6 +39,20 @@ public class ItemServiceImpl implements ItemService {
         if(itemList.isEmpty()) return value;
 
         if(lowPrice.equals(sort)){
+//            ItemDto itemDto = itemList.stream()
+//                    .max(Comparator.comparingInt(ItemDto::getPrice))
+//                    .get();
+//
+//            int price = itemDto.getPrice();
+//            Long id = itemDto.getId();
+//
+//            for(ItemDto dto : itemList){
+//                if(dto.getPrice().equals(price)){
+//                    id = Math.max(id, dto.getId());
+//                }
+//            }
+//
+//            return String.valueOf(1000000000 - price) + String.valueOf(1000000000 - id);
             return itemList.stream()
                     .max(Comparator.comparingInt(ItemDto::getPrice))
                     .get().getPrice().toString();
@@ -63,10 +77,10 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public Long searchTotal(SearchDto searchDto) {
-
-        return itemRepository.searchTotal(searchDto);
+    public Long searchTotal(String itemName, String category, String saleStatus) {
+        return itemRepository.searchTotal(itemName, category, saleStatus);
     }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -85,9 +99,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ItemDto> searchAllNoOffset(String category, Long ItemId) {
+    public List<ItemDto> searchAllNoOffset(String category, Long ItemId, Pageable pageable) {
 
-        return itemRepository.searchAllNoOffset(category, ItemId);
+        return itemRepository.searchAllNoOffset(category, ItemId, pageable);
     }
 
     @Override
@@ -109,7 +123,6 @@ public class ItemServiceImpl implements ItemService {
         }
         return imageDtos;
     }
-
 
     @Override
     @Transactional
@@ -145,7 +158,7 @@ public class ItemServiceImpl implements ItemService {
                 item.setItemImageList(itemImage);
             }
         }
-        return itemRepository.save(item);
+         return  itemRepository.save(item);
     }
 
 }

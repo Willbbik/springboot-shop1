@@ -5,14 +5,13 @@ import com.ecommerce.newshop1.dto.SearchDto;
 import com.ecommerce.newshop1.entity.QItem;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -22,16 +21,14 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
     private JPAQueryFactory queryFactory;
 
     @Override
-    public Long searchTotal(SearchDto searchDto) {
+    public Long searchTotal(String itemName, String category, String saleStatus) {
 
             return queryFactory
-                .select(Projections.fields(ItemDto.class,
-                        QItem.item.id
-                ))
+                .select(QItem.item.id)
                 .from(QItem.item)
-                .where(eqItemName(searchDto.getItemName()),
-                        eqCategory(searchDto.getCategory()),
-                        eqSaleStatus(searchDto.getSaleStatus()))
+                .where(eqItemName(itemName),
+                        eqCategory(category),
+                        eqSaleStatus(saleStatus))
                 .fetchCount();
     }
 
@@ -72,7 +69,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
     }
 
     @Override
-    public List<ItemDto> searchAllNoOffset(String category, Long itemId){
+    public List<ItemDto> searchAllNoOffset(String category, Long itemId, Pageable pageable){
             return queryFactory
                     .select(Projections.fields(ItemDto.class,
                             QItem.item.id,
@@ -86,28 +83,43 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                             eqCategory(category)
                             )
                     .orderBy(QItem.item.id.desc())
-                    .limit(12)
+                    .limit(pageable.getPageSize())
                     .fetch();
     }
 
+//    @Override
+//    public List<ItemDto> searchAllBySort(String itemName, String sort, String value, Pageable pageable) {
+//
+//        List<Long> ids = queryFactory
+//                .select(QItem.item.id)
+//                .from(QItem.item)
+//                .where(
+//                        eqItemName(itemName),
+//                        eqSort(sort, value)
+//                )
+//                .fetch();
+//
+//        if(ids.isEmpty()){
+//            return new ArrayList<>();
+//        }
+//
+//        return queryFactory
+//                .select(Projections.fields(ItemDto.class,
+//                        QItem.item.id,
+//                        QItem.item.itemName,
+//                        QItem.item.price,
+//                        QItem.item.imageUrl
+//                ))
+//                .from(QItem.item)
+//                .where(QItem.item.id.in(ids))
+//                .orderBy((OrderSpecifier<?>) orderBySort(sort))
+//                .offset(dynamicOffset(sort, pageable))
+//                .limit(pageable.getPageSize())
+//                .fetch();
+//    }
+
     @Override
     public List<ItemDto> searchAllBySort(String itemName, String sort, String value, Pageable pageable) {
-
-        // 커버링 인덱스
-        List<Long> ids = queryFactory
-                .select(QItem.item.id)
-                .from(QItem.item)
-                .where(
-                        eqItemName(itemName),
-                        eqSort(sort, value)
-                )
-                .orderBy((OrderSpecifier<?>) orderBySort(sort))
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        if(ids.isEmpty()){
-            return new ArrayList<>();
-        }
 
         return queryFactory
                 .select(Projections.fields(ItemDto.class,
@@ -117,8 +129,10 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                         QItem.item.imageUrl
                 ))
                 .from(QItem.item)
-                .where(QItem.item.id.in(ids))
+                .where(eqItemName(itemName),
+                        eqSort(sort, value))
                 .orderBy((OrderSpecifier<?>) orderBySort(sort))
+                .limit(pageable.getPageSize())
                 .fetch();
     }
 
@@ -127,33 +141,30 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
 
         if(StringUtils.isBlank(value)) return null;
 
+        if(sort.equals("lowPrice")){
 
-        String lowPrice = "lowPrice";
-
-        if(lowPrice.equals(sort)) {
-            return QItem.item.price.goe(Integer.parseInt(value));
-        } else{
-            return QItem.item.id.lt(Long.parseLong(value));
+            return QItem.item.price.gt(Integer.parseInt(value));
+//            return QItem.item.noOffset
+//                    .concat(String.valueOf(1000000000 - Integer.parseInt(String.valueOf(QItem.item.id.stringValue()))))
+//                    .concat(String.valueOf(1000000000 - Integer.parseInt(String.valueOf(QItem.item.price.stringValue())))).lt(value);
         }
+
+        return QItem.item.id.lt(Long.parseLong(value));
     }
 
     private Object orderBySort(String sort){
 
-
         String lowPrice = "lowPrice";
+        if(lowPrice.equals(sort)) return QItem.item.price.asc();
 
-        if(lowPrice.equals(sort)){
-            return QItem.item.price.asc();
-        }else{
-            return QItem.item.id.desc();
-        }
+        return QItem.item.id.desc();
     }
 
 
     private BooleanExpression ltItemId(Long itemId){
-        if(itemId == null){
-            return null;
-        }
+
+        if(itemId == null) return null;
+
         return QItem.item.id.lt(itemId);
     }
 

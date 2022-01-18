@@ -49,6 +49,9 @@ public class Item extends TimeEntity{
     @Column
     private String imageUrl;
 
+    @Column
+    private String noOffset;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "item")
     private List<CartItem> cartItemList = new ArrayList<>();
 

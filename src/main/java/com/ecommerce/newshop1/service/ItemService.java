@@ -19,14 +19,13 @@ public interface ItemService {
     Item saveItem(MultipartHttpServletRequest mtfRequest, ItemDto itemDto) throws IOException;
 
     Long getLastId(List<ItemDto> itemList, Long lastId);
-
-    Long searchTotal(SearchDto searchDto);
+    Long searchTotal(String itemName, String category, String saleStatus);
 
     List<ItemDto> searchAllBySort(String itemName, String sort, String value, Pageable pageable);
 
     List<ItemDto> searchAll(SearchDto searchDto, Pageable pageable);
 
-    List<ItemDto> searchAllNoOffset(String category, Long ItemId);
+    List<ItemDto> searchAllNoOffset(String category, Long ItemId, Pageable pageable);
 
     List<ItemImageDto> searchAllItemImage(Item item);
 
