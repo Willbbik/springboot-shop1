@@ -55,7 +55,7 @@
                 <li>noOffset 페이징</li>
                 <li>상품 등록,삭제</li>
                 <li>최신순,오래된순 정렬</li>
-                <li>리뷰, QnA</li>
+                <li>리뷰, QnA, QnA 관리자 답글</li>
             </ul>
         </li>
         <li>
