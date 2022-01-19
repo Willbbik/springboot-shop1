@@ -7,8 +7,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="/assets/css/common/sidebar.css" />
-    <link rel="stylesheet" href="/assets/css/order/order_success.css" />
+    <link href="/assets/css/common/sidebar.css" rel="stylesheet">
+    <link href="/assets/css/common/footer.css" rel="stylesheet">
+    <link href="/assets/css/order/order_success.css" rel="stylesheet">
 </head>
 <body>
 
@@ -102,12 +103,12 @@
                     <a th:href="@{/mypage}" class="btn_order_order">주문/배송조회로 이동</a>
                 </div>
             </div>
+            <footer th:replace="common/footer :: footer">
+            </footer>
             <!-- /본문 -->
         </div>
     </div>
-
 </div>
-
 
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <script src="/assets/js/common.js"></script>

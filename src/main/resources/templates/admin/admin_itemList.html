@@ -20,90 +20,91 @@
     <div id="page-content-wrapper">
         <div class="container-fluid">
         <!-- 본문 -->
-        <section id="itemList">
-            <h1>상품 목록</h1>
-            <form th:action="@{/admin/itemList}" method="get" id="search">
-            <div class="form-group">
-                <label class="form-label">판매상태</label>
-                <span>
-                    <label><input type="radio" name="saleStatus" value="onsale" checked>정상판매</label>
-                    &nbsp;
-                    <label><input type="radio" name="saleStatus" value="soldout" th:checked="${saleStatus == 'soldout'}">품절</label>
-                </span>
-            </div>
-            <div class="form-group">
-                <label class="form-label">카테고리</label>
-                <span>
-                    <select name="category">
-                        <option value="whole" th:selected="(${searchDto.category} == 'whole')">전체</option>
-                        <option value="top" th:selected="(${searchDto.category} == 'top')">TOP</option>
-                        <option value="bottom" th:selected="(${searchDto.category} == 'bottom')">BOTTOM</option>
-                        <option value="cap" th:selected="(${searchDto.category} == 'cap')">CAP</option>
-                    </select>
-                </span>
-            </div>
-            <div class="form-group">
-                <label class="form-label">상품명</label>
-                <span>
-                    <input type="text" name="itemName" th:value="${searchDto.itemName}">
-                </span>
-            </div>
-            <div class="search-submit-box">
-                <input type="submit" class="search-submit" value="검색">
-            </div>
-            </form>
+            <section id="itemList">
+                <h1>상품 목록</h1>
+                <form th:action="@{/admin/itemList}" method="get" id="search">
+                <div class="form-group">
+                    <label class="form-label">판매상태</label>
+                    <span>
+                        <label><input type="radio" name="saleStatus" value="onsale" checked>정상판매</label>
+                        &nbsp;
+                        <label><input type="radio" name="saleStatus" value="soldout" th:checked="${saleStatus == 'soldout'}">품절</label>
+                    </span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">카테고리</label>
+                    <span>
+                        <select name="category">
+                            <option value="whole" th:selected="(${searchDto.category} == 'whole')">전체</option>
+                            <option value="top" th:selected="(${searchDto.category} == 'top')">TOP</option>
+                            <option value="bottom" th:selected="(${searchDto.category} == 'bottom')">BOTTOM</option>
+                            <option value="cap" th:selected="(${searchDto.category} == 'cap')">CAP</option>
+                        </select>
+                    </span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">상품명</label>
+                    <span>
+                        <input type="text" name="itemName" th:value="${searchDto.itemName}">
+                    </span>
+                </div>
+                <div class="search-submit-box">
+                    <input type="submit" class="search-submit" value="검색">
+                </div>
+                </form>
 
-            <input type="checkbox" class="checkbox-selectall">
-            <button id="delete_select">선택 삭제</button>
-            <table class="item-table">
-                <colgroup>
-                    <col width="10%"/>
-                    <col width="10%"/>
-                    <col width="55%"/>
-                    <col width="15%"/>
-                    <col width="10%"/>
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th colspan="2">상품정보</th>
-                        <th>판매상태</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="item : ${items}">
-                        <input type="hidden" name="itemId" th:value="${item.id}" />
-                        <td><input type="checkbox" class="checkbox-select"></td>
-                        <td><img th:src="@{${item.imageUrl}}" width="70px" height="60px"></td>
-                        <td>
-                            <a th:href="'/items/' + ${item.id}">
-                                <div class="item-name" th:text="${item.itemName} + ' 사이즈 : [ ' + ${item.size} + ' ]'"></div>
-                                <div class="item-color" th:text="'색상 : ' + ${item.color}"></div>
-                                <div class="item-category" th:text=" '분류 : ' + ${item.category}"></div>
-                                <div class="item-price" th:text="'가격 : ' + ${item.price}"></div>
-                            </a>
-                        </td>
-                        <td>
-                            <input type="button" class="saleStatusChange" th:if="${item.saleStatus.toString().equals('onsale')}" th:value="판매중">
-                            <input type="button" class="saleStatusChange" th:if="${item.saleStatus.toString().equals('soldout')}" th:value="품절">
-                        </td>
-                        <td>
-                            <button class="item_delete">삭제</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="paging">
-                <a th:href="@{/admin/itemList(page=${page.prevPage},itemName=${searchDto?.itemName},category=${searchDto?.category},saleStatus=${searchDto?.saleStatus})}">이전</a>
-                <th:block th:each="i : ${#numbers.sequence(page.startPage, page.endPage)}">
-                    <a th:href="@{/admin/itemList(page=${i},itemName=${searchDto?.itemName},category=${searchDto?.category},saleStatus=${searchDto?.saleStatus})}" th:text="${i}" th:classappend="${page.curPage} == ${i} ? 'here'">1</a>
-                </th:block>
-                <a th:href="@{/admin/itemList(page=${page.nextPage},itemName=${searchDto?.itemName},category=${searchDto?.category},saleStatus=${searchDto?.saleStatus})}">다음</a>
-            </div>
-        </section>
-            <!--  여기까지만 작성  -->
+                <input type="checkbox" class="checkbox-selectall">
+                <button id="delete_select">선택 삭제</button>
+                <table class="item-table">
+                    <colgroup>
+                        <col width="10%"/>
+                        <col width="10%"/>
+                        <col width="55%"/>
+                        <col width="15%"/>
+                        <col width="10%"/>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th colspan="2">상품정보</th>
+                            <th>판매상태</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${items}">
+                            <input type="hidden" name="itemId" th:value="${item.id}" />
+                            <td><input type="checkbox" class="checkbox-select"></td>
+                            <td><img th:src="@{${item.imageUrl}}" width="70px" height="60px"></td>
+                            <td>
+                                <a th:href="'/items/' + ${item.id}">
+                                    <div class="item-name" th:text="${item.itemName} + ' 사이즈 : [ ' + ${item.size} + ' ]'"></div>
+                                    <div class="item-color" th:text="'색상 : ' + ${item.color}"></div>
+                                    <div class="item-category" th:text=" '분류 : ' + ${item.category}"></div>
+                                    <div class="item-price" th:text="'가격 : ' + ${item.price}"></div>
+                                </a>
+                            </td>
+                            <td>
+                                <input type="button" class="saleStatusChange" th:if="${item.saleStatus.toString().equals('onsale')}" th:value="판매중">
+                                <input type="button" class="saleStatusChange" th:if="${item.saleStatus.toString().equals('soldout')}" th:value="품절">
+                            </td>
+                            <td>
+                                <button class="item_delete">삭제</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="paging">
+                    <a th:href="@{/admin/itemList(page=${page.prevPage},itemName=${searchDto?.itemName},category=${searchDto?.category},saleStatus=${searchDto?.saleStatus})}">이전</a>
+                    <th:block th:each="i : ${#numbers.sequence(page.startPage, page.endPage)}">
+                        <a th:href="@{/admin/itemList(page=${i},itemName=${searchDto?.itemName},category=${searchDto?.category},saleStatus=${searchDto?.saleStatus})}" th:text="${i}" th:classappend="${page.curPage} == ${i} ? 'here'">1</a>
+                    </th:block>
+                    <a th:href="@{/admin/itemList(page=${page.nextPage},itemName=${searchDto?.itemName},category=${searchDto?.category},saleStatus=${searchDto?.saleStatus})}">다음</a>
+                </div>
+            </section>
+            <footer th:replace="common/footer :: footer">
+            </footer>
+            <!-- /본문 -->
         </div>
     </div>
-    <!-- /본문 -->
 </div>
 
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>

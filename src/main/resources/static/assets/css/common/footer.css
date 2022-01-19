@@ -1,0 +1,209 @@
+.Sec_footer {
+    padding-bottom: 140px;
+}
+
+.Sec_footer {
+    position: relative;
+    margin-top: 80px;
+    padding-bottom: 80px;
+    border-top: 1px solid #ebeef2;
+    background-color: hsla(0,0%,96%,.6);
+    z-index: 11;
+}
+
+@media screen and (min-width: 769px)
+.Sec_footer .division:nth-child(n+2) {
+    margin-top: 20px;
+    padding-top: 40px;
+    border-top: 1px solid #ebeef2;
+}
+
+.Sec_footer .division:nth-child(n+2) {
+    margin-top: 28px;
+    border-top: 1px solid #ebeef2;
+}
+
+
+.Sec_footer .division{
+    padding: 30px 16px 0;
+}
+
+.Sec_footer {
+    font-family: Noto Sans KR,Spoqa Han Sans,Sans-serif;
+    font-weight: 400;
+    letter-spacing: 0;
+}
+
+.Sec_footer .inner {
+    max-width: 1160px;
+    margin: 0 auto;
+}
+
+/* 버튼 바 */
+@media screen and (min-width: 1100px)
+.Sec_footer .links-about {
+    float: left;
+    margin-top: 8px;
+}
+
+@media screen and (min-width: 769px)
+.Sec_footer .links-about .terms:nth-child(n+2) {
+    margin-left: 8px;
+    padding-left: 12px;
+}
+.Sec_footer .links-about .terms:nth-child(n+2) {
+    margin: 0;
+    padding: 0;
+}
+
+@media screen and (min-width: 769px)
+.Sec_footer .links-about .about, .Sec_footer .links-about .business, .Sec_footer .links-about .privacy, .Sec_footer .links-about .question, .Sec_footer .links-about .recruit, .Sec_footer .links-about .terms {
+    float: left;
+    font-size: 14px;
+}
+
+.Sec_footer .links-about .privacy {
+    font-weight: 700;
+}
+
+about .business, .Sec_footer .links-about .privacy, .Sec_footer .links-about .question, .Sec_footer .links-about .recruit, .Sec_footer .links-about .terms {
+    position: relative;
+    font-size: 12px;
+    color: #666;
+}
+
+/* 그 밑에 */
+
+@media screen and (min-width: 1200px)
+.Sec_footer .infos-company, .Sec_footer .infos-cs {
+    float: left;
+}
+
+@media screen and (min-width: 769px)
+.Sec_footer .infos-company, .Sec_footer .infos-cs {
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.Sec_footer .infos-company, .Sec_footer .infos-cs {
+    color: #666;
+    font-size: 11px;
+    line-height: 16px;
+    font-style: normal;
+}
+
+
+@media screen and (min-width: 769px)
+.Sec_footer .tit-h1 {
+    margin-bottom: 8px;
+    font-size: 18px;
+}
+
+.Sec_footer .tit-h1 {
+    margin: 0 0 8px;
+    color: #333;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+@media screen and (min-width: 769px)
+.Sec_footer .infos-company .tit-h1 .more-brandi {
+    cursor: default;
+}
+
+.Sec_footer .tit-h1 a.more-brandi {
+    font-weight: 700;
+}
+
+.Sec_footer .tit-h1 a {
+    font-weight: 700;
+    color: #333;
+}
+
+.Sec_footer .infos-company a, .Sec_footer .infos-cs a {
+    color: #666;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+
+@media screen and (min-width: 769px)
+.Sec_footer .infos-company .infos {
+    display: block;
+}
+
+
+@media screen and (min-width: 769px)
+.Sec_footer .infos-company .infos .bundle {
+    color: #666;
+}
+
+.Sec_footer .infos .bundle, .Sec_footer .infos .part {
+    display: block;
+}
+
+@media screen and (min-width: 769px)
+.Sec_footer .infos .part {
+    display: inline;
+    position: relative;
+}
+
+@media screen and (min-width: 769px)
+.Sec_footer .infos .part:nth-child(n+2) {
+    margin-left: 3px;
+    padding-left: 7px;
+}
+
+@media screen and (min-width: 769px)
+.Sec_footer .infos .part:nth-child(n+2) {
+    margin-left: 3px;
+    padding-left: 7px;
+}
+
+@media screen and (min-width: 769px)
+.Sec_footer .prd-info {
+    margin-top: 24px;
+    padding-top: 0;
+    border-top: none;
+}
+
+.Sec_footer .prd-info {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #e2e3e6;
+    color: #666;
+}
+
+@media screen and (min-width: 769px)
+.Sec_footer .prd-info>strong {
+    font-size: 14px;
+}
+
+.Sec_footer .prd-info>strong {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+@media screen and (min-width: 769px)
+.Sec_footer .prd-info>p {
+    margin: 2px 0 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
