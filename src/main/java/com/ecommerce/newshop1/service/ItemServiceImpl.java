@@ -33,26 +33,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public String getLastId(List<ItemDto> itemList, String sort, String value) {
 
-        String lowPrice = "lowPrice";
-        // review도 추가해야함
-
         if(itemList.isEmpty()) return value;
 
+        String lowPrice = "lowPrice";
         if(lowPrice.equals(sort)){
-//            ItemDto itemDto = itemList.stream()
-//                    .max(Comparator.comparingInt(ItemDto::getPrice))
-//                    .get();
-//
-//            int price = itemDto.getPrice();
-//            Long id = itemDto.getId();
-//
-//            for(ItemDto dto : itemList){
-//                if(dto.getPrice().equals(price)){
-//                    id = Math.max(id, dto.getId());
-//                }
-//            }
-//
-//            return String.valueOf(1000000000 - price) + String.valueOf(1000000000 - id);
             return itemList.stream()
                     .max(Comparator.comparingInt(ItemDto::getPrice))
                     .get().getPrice().toString();
@@ -113,7 +97,7 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ItemImageDto> searchAllItemImage(Item itemId) {
 
         List<ItemImageDto> imageDtos = itemImageRepository.searchAll(itemId);

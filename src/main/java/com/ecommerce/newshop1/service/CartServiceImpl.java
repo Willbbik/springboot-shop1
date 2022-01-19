@@ -68,6 +68,12 @@ public class CartServiceImpl implements CartService{
     }
 
     @Override
+    @Transactional
+    public Cart save(Cart cart) {
+        return cartRepository.save(cart);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<CartItemDto> findCartItems(Member member){
 

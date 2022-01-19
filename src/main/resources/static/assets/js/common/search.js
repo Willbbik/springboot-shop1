@@ -1,6 +1,5 @@
 $(function(){
 
-
     // 정렬 버튼
     $(document).on("click", ".sort", function(){
 
@@ -8,7 +7,7 @@ $(function(){
         $(this).attr("class", "list_sort_active sort");
 
         let sort = $(this).attr("data-sort");
-        let itemName = $("#itemName").val();
+        let itemName = $(".searchForm").val();
 
         $.ajax({
             url : "/search",
@@ -19,7 +18,7 @@ $(function(){
                 more : "more"
             }
         }).done(function(result){
-            $("#more").remove();
+            $(".btn-box").remove();
             $(".item_list").html(result);
         }).fail(function(result){
             alert("에러가 발생했습니다. \n잠시후 다시 시도해주세요.");
@@ -28,12 +27,11 @@ $(function(){
     });
 
     // 더보기 버튼
-    $(document).on("click", "#more", function(){
+    $(document).on("click", ".itemMore", function(){
 
-         itemName = $("#itemName").val();
-         sort = $(".list_sort_active").attr("data-sort");
-         value = $("#more").attr("data-value");
-         page = $(this).attr("data-page");
+         let itemName = $(".searchForm").val();
+         let sort = $(".list_sort_active").attr("data-sort");
+         let value = $(this).attr("data-value");
 
          $.ajax({
             url : "/search",
@@ -42,8 +40,7 @@ $(function(){
                 itemName : itemName,
                 sort : sort,
                 value : value,
-                more : "more",
-                page : page
+                more : "more"
             }
         }).done(function(result){
             $(".btn-box").remove();
@@ -52,12 +49,6 @@ $(function(){
             alert("에러가 발생했습니다. \n잠시후 다시 시도해주세요.");
             return false
         });
-
     });
-
-
-
-
-
 
 });

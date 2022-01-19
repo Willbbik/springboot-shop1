@@ -2,6 +2,7 @@ package com.ecommerce.newshop1.service;
 
 import com.ecommerce.newshop1.dto.CartItemDto;
 import com.ecommerce.newshop1.dto.OrderItemDto;
+import com.ecommerce.newshop1.entity.Cart;
 import com.ecommerce.newshop1.entity.Member;
 
 import javax.servlet.http.HttpSession;
@@ -18,6 +19,8 @@ public interface CartService {
     void deleteCartItemAll(List<Long> id);
 
     void updateQuantity(Long id, int quantity);
+
+    Cart save(Cart cart);
 
     List<CartItemDto> findCartItems(Member member);
 

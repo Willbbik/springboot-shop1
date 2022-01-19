@@ -10,13 +10,11 @@
     <link href="/assets/css/common/sidebar.css" rel="stylesheet">
     <link href="/assets/css/common/search.css" rel="stylesheet">
     <link href="/assets/css/item/itemList.css" rel="stylesheet">
-
 </head>
 <body>
 
 <div id="page-wrapper">
-    <div th:replace="common/sidebar :: main_sidebar">
-    </div>
+    <div th:replace="common/sidebar :: main_sidebar"></div>
     <div id="page-content-wrapper">
         <div class="container-fluid">
             <div class="search_result_item">
@@ -25,8 +23,7 @@
                     <div class="list_sort_container">
                         <div class="list_sort">
                             <span data-sort="recent" class="list_sort_active sort">최신순</span>|
-                            <span data-sort="lowPrice" class="list_sort_default sort">낮은 가격순</span>|
-                            <span data-sort="manyReviews" class="list_sort_default sort">리뷰 많은순</span>
+                            <!--<span data-sort="lowPrice" class="list_sort_default sort">낮은 가격순</span>-->
                         </div>
                     </div>
                 </div>
@@ -51,8 +48,8 @@
                                 </a>
                             </div>
                         </th:block>
-                        <div class="btn-box" >
-                            <a href="javascript:void(0);" id="more" th:attr="data-value=${value}, data-page=${page}">
+                        <div class="btn-box">
+                            <a href="javascript:void(0);" class="itemMore" th:attr="data-value=${value}">
                                 더보기
                             </a>
                         </div>

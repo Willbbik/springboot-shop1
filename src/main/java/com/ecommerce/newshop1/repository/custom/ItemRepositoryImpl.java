@@ -87,37 +87,6 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                     .fetch();
     }
 
-//    @Override
-//    public List<ItemDto> searchAllBySort(String itemName, String sort, String value, Pageable pageable) {
-//
-//        List<Long> ids = queryFactory
-//                .select(QItem.item.id)
-//                .from(QItem.item)
-//                .where(
-//                        eqItemName(itemName),
-//                        eqSort(sort, value)
-//                )
-//                .fetch();
-//
-//        if(ids.isEmpty()){
-//            return new ArrayList<>();
-//        }
-//
-//        return queryFactory
-//                .select(Projections.fields(ItemDto.class,
-//                        QItem.item.id,
-//                        QItem.item.itemName,
-//                        QItem.item.price,
-//                        QItem.item.imageUrl
-//                ))
-//                .from(QItem.item)
-//                .where(QItem.item.id.in(ids))
-//                .orderBy((OrderSpecifier<?>) orderBySort(sort))
-//                .offset(dynamicOffset(sort, pageable))
-//                .limit(pageable.getPageSize())
-//                .fetch();
-//    }
-
     @Override
     public List<ItemDto> searchAllBySort(String itemName, String sort, String value, Pageable pageable) {
 
@@ -129,9 +98,11 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                         QItem.item.imageUrl
                 ))
                 .from(QItem.item)
-                .where(eqItemName(itemName),
-                        eqSort(sort, value))
-                .orderBy((OrderSpecifier<?>) orderBySort(sort))
+                .where(
+                        eqItemName(itemName),
+                        eqSort(sort, value)
+                )
+                .orderBy((OrderSpecifier<?>) orderBySort(sort), QItem.item.id.asc())
                 .limit(pageable.getPageSize())
                 .fetch();
     }
@@ -144,6 +115,10 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
         if(sort.equals("lowPrice")){
 
             return QItem.item.price.gt(Integer.parseInt(value));
+//            return QItem.item.noOffset.stringValue()
+//                    .concat(QItem.item.price.stringValue())
+//                    .concat(QItem.item.id.stringValue())
+//                    .gt(value);
 //            return QItem.item.noOffset
 //                    .concat(String.valueOf(1000000000 - Integer.parseInt(String.valueOf(QItem.item.id.stringValue()))))
 //                    .concat(String.valueOf(1000000000 - Integer.parseInt(String.valueOf(QItem.item.price.stringValue())))).lt(value);
@@ -152,17 +127,15 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
         return QItem.item.id.lt(Long.parseLong(value));
     }
 
-    private Object orderBySort(String sort){
 
+    private Object orderBySort(String sort){
         String lowPrice = "lowPrice";
         if(lowPrice.equals(sort)) return QItem.item.price.asc();
 
         return QItem.item.id.desc();
     }
 
-
     private BooleanExpression ltItemId(Long itemId){
-
         if(itemId == null) return null;
 
         return QItem.item.id.lt(itemId);

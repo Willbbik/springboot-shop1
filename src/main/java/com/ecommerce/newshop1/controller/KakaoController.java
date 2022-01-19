@@ -56,19 +56,17 @@ public class KakaoController {
         // 결제 승인 요청
         kakaoService.kakaoPayApprove(pgToken, tid, orderNum);
 
-        // 결제 정보
         OrderPaymentInformation orderPaymentInformation = new OrderPaymentInformation();
         orderPaymentInformation.setPayType(PayType.KAKAO_PAY.getTitle());
 
-        // 배송 정보
         Delivery delivery = new Delivery();
         delivery.setDeliveryStatus(DeliveryStatus.DEPOSIT_SUCCESS);
 
         // 주문
         orderNum = orderService.doOrder(session, orderPaymentInformation, delivery);
+        session.removeAttribute("tid");
 
         // 주문 후 결제성공 페이지에 띄워주기 위해서
-        session.removeAttribute("tid");
         Order order = orderService.findByOrderNum(orderNum);
         model.addAttribute(orderService.getModelPayInfo(order, model));
 
@@ -80,7 +78,6 @@ public class KakaoController {
     @ApiOperation(value = "카카오 로그인 & 회원가입", notes = "회원가입과 로그인을 같이 진행")
     public String kakaoLogin(String code) throws Exception {
 
-        // code로 AccessToken을 받아오고 그 토큰으로 사용자 정보 가져오기
         OAuthToken oAuthToken = kakaoService.getAccessToken(code);
         KakaoDto kakaoDto = kakaoService.getUserKakaoProfile(oAuthToken.getAccess_token());
 
@@ -89,11 +86,13 @@ public class KakaoController {
 
         boolean result = memberService.existsByUserId(userId);
         Member member = new Member();
+        Cart cart = new Cart();
 
         // 존재하지 않으면 가입
         if (!result) {
             member = memberService.joinOAuth(userId, Sns.KAKAO);
-            cartService.createCart(member);
+            cart.createCart(member);
+            cartService.save(cart);
         }else{
             member = memberService.findByUserId(userId);
         }

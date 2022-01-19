@@ -3,12 +3,10 @@ package com.ecommerce.newshop1.controller;
 
 import com.ecommerce.newshop1.dto.ItemDto;
 import com.ecommerce.newshop1.service.ItemService;
-import com.ecommerce.newshop1.utils.Pagination;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,27 +42,23 @@ public class MainController {
     public String search(@RequestParam(name = "itemName", required = false) String itemName,
                          @RequestParam(name = "sort", required = false) String sort,
                          @RequestParam(name = "value", required = false) String value,
-                         @RequestParam(name = "more", required = false) String more,
-                         @RequestParam(name = "page", required = false, defaultValue = "1") int curPage, Model model){
+                         @RequestParam(name = "more", required = false) String more, Model model){
+
+//        if(itemName.isBlank()) return "common/search_empty";
 
         Long total = itemService.searchTotal(itemName, null, "onsale");
-
-        Pagination pagination = new Pagination(total, curPage, 9, 10);
-        Pageable pageable = PageRequest.of(pagination.getCurPage() - 1, pagination.getShowMaxSize());
+        Pageable pageable = PageRequest.ofSize(9);
 
         List<ItemDto> itemList = itemService.searchAllBySort(itemName, sort, value, pageable);
         value = itemService.getLastId(itemList, sort, value);
 
         model.addAttribute("itemList", itemList);
-        model.addAttribute("value", value);
-        model.addAttribute("page", pagination.getCurPage());
-        model.addAttribute("total", total);
         model.addAttribute("itemName", itemName);
+        model.addAttribute("value", value);
+        model.addAttribute("total", total);
 
         if(more != null) return "common/search_more";
         return "common/search";
     }
-
-
 
 }
