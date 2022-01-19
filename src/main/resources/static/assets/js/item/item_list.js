@@ -5,9 +5,11 @@ $(function(){
         let category = $(this).closest(".btn-box").attr("data-category");
 
         $.ajax({
-            url : "/category/"+category+"/more",
+            url : "/category/"+category,
             type : "get",
-            data : { lastId : lastId }
+            data : { lastId : lastId,
+                     more : "more"
+             }
         }).done(function(result){
             $(".btn-box").remove();
             $(".item_list").append(result);
@@ -16,6 +18,5 @@ $(function(){
             return false;
         });
     });
-
 
 });

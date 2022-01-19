@@ -12,7 +12,10 @@
             <a th:href="@{/admin/main}">관리자 페이지</a>
             <a th:href="@{/}">에게모니</a>
         </li>
-        <input type="text" class="form-control me-2" placeholder="검색" maxlength="20"/>
+        <li>
+            <input type="text" class="searchForm" th:value="${itemName}" placeholder="검색" maxlength="100"/>
+            <button type="button" class="searchBtn">검색</button>
+        </li>
         <br/>
         <p class="acountbuttons" style="text-align: center;">
             <span sec:authorize="isAuthenticated()"><a th:href="@{/logout}">로그아웃</a></span>

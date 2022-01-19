@@ -8,7 +8,7 @@
                     <a th:href="@{/admin/main}" sec:authorize="hasRole('ADMIN')">관리자 페이지</a>
                 </li>
                 <li>
-                    <input type="text" class="searchForm" placeholder="검색" maxlength="100"/>
+                    <input type="text" class="searchForm" th:value="${itemName}" placeholder="검색" maxlength="100"/>
                     <button type="button" class="searchBtn">검색</button>
                 </li>
                 <br/>

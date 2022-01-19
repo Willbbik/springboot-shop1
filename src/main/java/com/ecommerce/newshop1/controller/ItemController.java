@@ -37,28 +37,11 @@ public class ItemController {
     private final SecurityService security;
     private final ModelMapper mapper;
 
-
     @GetMapping("/category/{category}")
     @ApiOperation(value = "카테고리별 상품 반환")
-    public String itemListPage(@PathVariable String category, Model model){
-
-        Pageable pageable = PageRequest.ofSize(12);
-
-        List<ItemDto> itemList = itemService.searchAllNoOffset(category, null, pageable);
-        Long lastId = itemService.getLastId(itemList, null);
-
-        model.addAttribute("itemList", itemList);
-        model.addAttribute("lastId", lastId);
-        model.addAttribute("category", category);
-
-        return "item/itemList";
-    }
-
-
-    @GetMapping("/category/{category}/more")
-    @ApiOperation(value = "상품 더보기 클릭", notes = "ajax전용")
-    public String itemListMore(@PathVariable String category,
-                               @RequestParam(name = "lastId", required = false) Long lastId, Model model){
+    public String itemListPage(@PathVariable String category,
+                               @RequestParam(name = "lastId", required = false) Long lastId,
+                               @RequestParam(name = "more", required = false) String more, Model model){
 
         Pageable pageable = PageRequest.ofSize(12);
 
@@ -69,8 +52,44 @@ public class ItemController {
         model.addAttribute("lastId", lastId);
         model.addAttribute("category", category);
 
-        return "item/tab/tab_itemMore";
+        if(more != null) return "item/tab/tab_itemMore";
+        return "item/itemList";
     }
+
+
+//    @GetMapping("/category/{category}")
+//    @ApiOperation(value = "카테고리별 상품 반환")
+//    public String itemListPage(@PathVariable String category, Model model){
+//
+//        Pageable pageable = PageRequest.ofSize(12);
+//
+//        List<ItemDto> itemList = itemService.searchAllNoOffset(category, null, pageable);
+//        Long lastId = itemService.getLastId(itemList, null);
+//
+//        model.addAttribute("itemList", itemList);
+//        model.addAttribute("lastId", lastId);
+//        model.addAttribute("category", category);
+//
+//        return "item/itemList";
+//    }
+//
+//
+//    @GetMapping("/category/{category}/more")
+//    @ApiOperation(value = "상품 더보기 클릭", notes = "ajax전용")
+//    public String itemListMore(@PathVariable String category,
+//                               @RequestParam(name = "lastId", required = false) Long lastId, Model model){
+//
+//        Pageable pageable = PageRequest.ofSize(12);
+//
+//        List<ItemDto> itemList = itemService.searchAllNoOffset(category, lastId, pageable);
+//        lastId = itemService.getLastId(itemList, lastId);
+//
+//        model.addAttribute("itemList", itemList);
+//        model.addAttribute("lastId", lastId);
+//        model.addAttribute("category", category);
+//
+//        return "item/tab/tab_itemMore";
+//    }
 
 
     @GetMapping("/items/{id}")

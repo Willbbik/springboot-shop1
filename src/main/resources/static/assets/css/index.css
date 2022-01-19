@@ -1,0 +1,224 @@
+.carousel .carousel-item {
+  height: 500px;
+}
+
+.carousel-item img {
+    position: absolute;
+    object-fit:cover;
+    top: 0;
+    left: 0;
+    min-height: 500px;
+}
+
+/*
+
+#adaptive.main-banner {
+    margin-bottom: 80px;
+}
+
+#adaptive.main-banner {
+    margin-bottom: 50px;
+}
+
+#adaptive.main-banner {
+    overflow: hidden;
+    padding: 0;
+}
+
+#adaptive {
+    padding-bottom: 24px;
+}
+
+#adaptive {
+    position: relative;
+    padding-bottom: 3px;
+}
+
+.bannerBeforeLoad[data-v-34dc132a] {
+    margin: 0;
+    padding: 0!important;
+}
+
+.bannerLoad {
+    opacity: 1;
+}
+
+.bannerBeforeLoad {
+    opacity: 0;
+}
+
+#adaptive.main-banner .swiper-container {
+    width: 1000px;
+}
+
+#adaptive.main-banner .swiper-container {
+    overflow: visible;
+    width: 83.333%;
+}
+
+.swiper-container-autoheight, .swiper-container-autoheight .swiper-slide {
+    height: auto;
+}
+
+.swiper-container {
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    overflow: hidden;
+    list-style: none;
+    padding: 0;
+    z-index: 1;
+}
+
+#adaptive .swiper-wrapper {
+    transition: all .7s cubic-bezier(.645,.045,.355,1);
+}
+
+.swiper-container-autoheight .swiper-wrapper {
+    -webkit-box-align: start;
+    -webkit-align-items: flex-start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    -webkit-transition-property: height, -webkit-transform;
+    transition-property: height, -webkit-transform;
+    -o-transition-property: transform, height;
+    transition-property: transform, height;
+    transition-property: transform, height, -webkit-transform;
+}
+
+.swiper-container-android .swiper-slide, .swiper-wrapper {
+    -webkit-transform: translate3d(0px, 0, 0);
+    transform: translate3d(0px, 0, 0);
+}
+
+.swiper-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-transition-property: -webkit-transform;
+    transition-property: -webkit-transform;
+    -o-transition-property: transform;
+    transition-property: transform;
+    transition-property: transform, -webkit-transform;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+*/
+/*ul, li, dl, dt, dd {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}*//*
+
+
+#adaptive .swiper-wrapper .swiper-slide {
+    text-align: center;
+}
+
+.swiper-slide {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    -webkit-transition-property: -webkit-transform;
+    transition-property: -webkit-transform;
+    -o-transition-property: transform;
+    transition-property: transform;
+    transition-property: transform, -webkit-transform;
+}
+
+#adaptive .swiper-wrapper .swiper-slide img {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    margin-top: 0;
+    vertical-align: top;
+    border: none;
+    cursor: pointer;
+}
+
+*/
+/*img {
+    width: auto;
+    height: auto;
+    border: 0;
+}*//*
+
+
+#adaptive.main-banner .swiper-container .swiper-button-prev {
+    left: -31px;
+    background: url(/static/21.06.01/images/ic-arrow-l@3x.png) no-repeat 50%/140%;
+}
+
+#adaptive.main-banner .swiper-container .swiper-button-next, #adaptive.main-banner .swiper-container .swiper-button-prev {
+    width: 62px;
+    height: 62px;
+    padding: 0;
+    opacity: 1;
+}
+
+#adaptive .swiper-button-next, #adaptive .swiper-button-prev {
+    display: block;
+}
+
+#adaptive .swiper-button-prev {
+    left: 10px;
+    background-position: 0 0;
+}
+
+#adaptive .swiper-button-next, #adaptive .swiper-button-prev {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    display: none;
+    position: absolute;
+    top: 50%;
+    width: 32px;
+    height: 32px;
+    margin-top: 0;
+    border: none;
+    border-radius: 0;
+    text-shadow: none;
+    background: url(/static/21.06.01/images/controls.png) no-repeat;
+    transform: translateY(-50%);
+    cursor: pointer;
+    opacity: .5;
+    z-index: 99;
+}
+
+#adaptive.main-banner .swiper-container .swiper-button-next {
+    right: -31px;
+    background: url(/static/21.06.01/images/ic-arrow-r@3x.png) no-repeat 50%/140%;
+}
+
+#adaptive.main-banner .swiper-container .swiper-button-next, #adaptive.main-banner .swiper-container .swiper-button-prev {
+    width: 62px;
+    height: 62px;
+    padding: 0;
+    opacity: 1;
+}
+
+#adaptive .swiper-button-next {
+    right: 10px;
+    background-position: -32px 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+*/
