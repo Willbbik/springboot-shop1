@@ -197,7 +197,7 @@ public class MemberController {
     }
 
     @GetMapping("/member/sendAuth")
-    @ApiOperation(value = "인증번호", notes = "인증번호를 전송해주고 redis에 저장")
+    @ApiOperation(value = "인증번호 전송")
     public @ResponseBody String sendAuth(@RequestParam(name = "phoneNum") String phoneNum) throws Exception {
 
         boolean result = messageService.phoneValidationCheck(phoneNum);

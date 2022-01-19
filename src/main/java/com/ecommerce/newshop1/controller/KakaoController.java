@@ -86,11 +86,12 @@ public class KakaoController {
 
         boolean result = memberService.existsByUserId(userId);
         Member member = new Member();
-        Cart cart = new Cart();
 
         // 존재하지 않으면 가입
         if (!result) {
             member = memberService.joinOAuth(userId, Sns.KAKAO);
+
+            Cart cart = new Cart();
             cart.createCart(member);
             cartService.save(cart);
         }else{

@@ -23,8 +23,10 @@ $(function(){
                },
                traditional: true
             }).done(function(result){
-                alert(result);
-                location.reload();
+                if(result == "success"){
+                    alert("해당 상품을 삭제했습니다.");
+                    location.reload();
+                }
             }).fail(function(){
                 alert("상품 삭제가 불가능합니다.");
                 return false;

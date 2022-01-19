@@ -38,7 +38,7 @@ public class MessageService {
         params.put("app_version", "test app 1.2");
 
         try{
-            JSONObject obj = coolsms.send(params);
+            JSONObject obj = (JSONObject) coolsms.send(params);
         }catch(CoolsmsException e){
             log.info("MessageService 40 line : send failed and " + e.getMessage());
         }
