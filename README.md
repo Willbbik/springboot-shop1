@@ -1,7 +1,7 @@
 # springboot-shop1[![Build Status](https://app.travis-ci.com/Willbbik/springboot-shop1.svg?token=1bwEC37snuxQCAFWRAxt&branch=master)](https://app.travis-ci.com/Willbbik/springboot-shop1)
 
 <p>미니 쇼핑몰 개인 프로젝트입니다.</p>
-<p>하이버 클론코딩</p>
+<p> css 출처(하이버) </p>
 <br/>
 
 <h1>배포환경</h1>
