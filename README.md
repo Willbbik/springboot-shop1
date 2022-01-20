@@ -2,6 +2,13 @@
 
 <p>미니 쇼핑몰 개인 프로젝트입니다.</p>
 <p> css 출처(하이버) </p>
+<div>
+    <strong>개인 블로그 주소</strong>
+    <ul>
+        <li><a href="https://clear-clouds.tistory.com">블로그</a></li>
+    </ul>
+</div>
+
 <br/>
 
 <h1>배포환경</h1>
@@ -245,9 +252,3 @@
 </div>
 <br/>
 <br/>
-<div>
-    <strong>개인 블로그 주소</strong>
-    <ul>
-        <li><a href="https://clear-clouds.tistory.com">블로그</a></li>
-    </ul>
-</div>
