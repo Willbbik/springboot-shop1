@@ -41,7 +41,7 @@ public class BoardServiceImpl implements BoardService{
 
         Member member = memberService.findByUserId(userId);
         Board board = mapper.map(boardDto, Board.class);
-        board.setWriter(member.getUserId());
+        board.setWriter(member.getUserId().substring(0, 3) + "***");
         member.addBoardList(board);
 
         return boardRepository.save(board).getId();

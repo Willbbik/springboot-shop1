@@ -81,6 +81,7 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public void saveWithdrawalMember(String userId){
+        // 회원탈퇴한 아이디 목록에 추가
 
         WithdrawalMember member = WithdrawalMember.builder()
                 .userId(userId)

@@ -13,7 +13,6 @@ $(function(){
         let result = confirm("해당 상품을 배송하시겠습니까?");
         if(result){
             $.ajax({
-
                 url : "/admin/send/orderItem",
                 type : "post",
                 data : {

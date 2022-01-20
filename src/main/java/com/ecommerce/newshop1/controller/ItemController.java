@@ -29,7 +29,7 @@ public class ItemController {
 
     private final ReviewRepository reviewRepository;
     private final ItemQnAService qnaService;
-    private final ItemQnAReplyService qnaReplyServiceItem;
+    private final ItemQnAReplyService qnaReplyService;
     private final ReviewService reviewService;
     private final ItemService itemService;
     private final CommonService commonService;
@@ -55,41 +55,6 @@ public class ItemController {
         if(more != null) return "item/tab/tab_itemMore";
         return "item/itemList";
     }
-
-
-//    @GetMapping("/category/{category}")
-//    @ApiOperation(value = "카테고리별 상품 반환")
-//    public String itemListPage(@PathVariable String category, Model model){
-//
-//        Pageable pageable = PageRequest.ofSize(12);
-//
-//        List<ItemDto> itemList = itemService.searchAllNoOffset(category, null, pageable);
-//        Long lastId = itemService.getLastId(itemList, null);
-//
-//        model.addAttribute("itemList", itemList);
-//        model.addAttribute("lastId", lastId);
-//        model.addAttribute("category", category);
-//
-//        return "item/itemList";
-//    }
-//
-//
-//    @GetMapping("/category/{category}/more")
-//    @ApiOperation(value = "상품 더보기 클릭", notes = "ajax전용")
-//    public String itemListMore(@PathVariable String category,
-//                               @RequestParam(name = "lastId", required = false) Long lastId, Model model){
-//
-//        Pageable pageable = PageRequest.ofSize(12);
-//
-//        List<ItemDto> itemList = itemService.searchAllNoOffset(category, lastId, pageable);
-//        lastId = itemService.getLastId(itemList, lastId);
-//
-//        model.addAttribute("itemList", itemList);
-//        model.addAttribute("lastId", lastId);
-//        model.addAttribute("category", category);
-//
-//        return "item/tab/tab_itemMore";
-//    }
 
 
     @GetMapping("/items/{id}")
@@ -124,9 +89,9 @@ public class ItemController {
         Pageable pageable = PageRequest.of(page.getCurPage() - 1, page.getShowMaxSize());
 
         List<ItemQnADto> qnaList = qnaService.searchAllByItem(item, pageable);
-        List<ItemQnAReplyDto> qnaReplyList = qnaReplyServiceItem.findAllByQnA(qnaList);
+        List<ItemQnAReplyDto> qnaReplyList = qnaReplyService.findAllByQnA(qnaList);
         qnaList = qnaService.edit(qnaList);
-        qnaReplyList = qnaReplyServiceItem.edit(qnaReplyList);
+        qnaReplyList = qnaReplyService.edit(qnaReplyList);
 
         model.addAttribute("page", page);
         model.addAttribute("qnaSize", qnaSize);
@@ -166,7 +131,7 @@ public class ItemController {
             return "role";
         }
 
-        qnaReplyServiceItem.save(dto, itemId, qnaId);
+        qnaReplyService.save(dto, itemId, qnaId);
         return "success";
     }
 

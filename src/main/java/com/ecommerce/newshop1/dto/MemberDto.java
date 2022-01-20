@@ -4,7 +4,7 @@ import com.ecommerce.newshop1.enums.Role;
 import com.ecommerce.newshop1.enums.Sns;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,7 +19,7 @@ public class MemberDto {
     private Role role;
     private Sns sns;
     private String phoneNum;
-    private LocalDate createdDate;
-    private LocalDate modifiedDate;
+    private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
 
 }
