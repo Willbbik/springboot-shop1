@@ -91,7 +91,8 @@
         <li>
             <strong>회원가입</strong>
             <ul>
-                <li>회원가입시 문자인증 기능구현</li>
+                <li>문자인증 기능</li>
+                <li>유효성 검사, 아이디 중복검사</li>
                 <li>
                     <img src="https://user-images.githubusercontent.com/89326946/150129225-9668ed2b-21ea-4f2d-87f5-d25ceeda701f.png ">
                 </li>
