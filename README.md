@@ -1,6 +1,14 @@
 # springboot-shop1[![Build Status](https://app.travis-ci.com/Willbbik/springboot-shop1.svg?token=1bwEC37snuxQCAFWRAxt&branch=master)](https://app.travis-ci.com/Willbbik/springboot-shop1)
 
-<p>처음으로 진행해본 미니 쇼핑몰 개인 프로젝트입니다.</p>
+<p>미니 쇼핑몰 개인 프로젝트입니다.</p>
+<p> css 출처(하이버) </p>
+<div>
+    <strong>개인 블로그 주소</strong>
+    <ul>
+        <li><a href="https://clear-clouds.tistory.com">블로그</a></li>
+    </ul>
+</div>
+
 <br/>
 
 <h1>배포환경</h1>
@@ -75,7 +83,8 @@
 <br/>
 <br/>
 <h1>이미지</h1>
-<p>( 이미지는 aws s3에 저장하고 사용하는데 비용문제로 사용 중단하면서 이미지는 없습니다 )</p>
+<p>( 이미지는 aws s3에 저장하고 사용하는데 비용문제로 사용 중단하면서 이미지가 없습니다. )</p>
+<p>( 그래서 임시 이미지로 대체했습니다. )</p>
 <br/>
 <div>
     <ul>
@@ -85,7 +94,7 @@
                 <li>카테고리별 상품 조회 가능</li>
                 <li>더보기 버튼 (noOffset 페이징)</li>
                 <li>
-                    <img src="https://user-images.githubusercontent.com/89326946/150129402-868062cc-952d-4261-a3a9-a1ea6f9a4611.png">
+                    <img src="https://user-images.githubusercontent.com/89326946/150293655-aaabd2a8-0587-4966-8440-7b150b2d5b80.png">
                 </li>
             </ul>
         </li>
@@ -120,7 +129,7 @@
                 <li>주문상세보기 클릭시 해당 주문 관련 정보들 표시</li>
                 <li>더보기 버튼 (noOffset 페이징)</li>
                 <li>
-                    <img src="https://user-images.githubusercontent.com/89326946/150129415-ed601095-fe4d-4548-8f83-b7b178f888bf.png">
+                    <img src="https://user-images.githubusercontent.com/89326946/150294134-9774bb46-ac1d-49c5-b94f-6f51b576bd9d.png">
                 </li>
             </ul>
         </li>
@@ -150,7 +159,7 @@
                 <li>QnA : 비공개여부 선택 가능, 관리자만 답글 가능</li>
                 <li>일반 페이징, noOffset 페이징</li>
                 <li>
-                    <img src="https://user-images.githubusercontent.com/89326946/150262699-51323395-5c2b-49a0-b31c-df5ce1deffaf.png">
+                    <img src="https://user-images.githubusercontent.com/89326946/150293680-55db76f0-9ec8-49d9-bef9-94cfbf829d99.png">
                 </li>
                 <li>
                     <img src="https://user-images.githubusercontent.com/89326946/150261169-4ba3f6dc-fee5-4d9c-b6d9-e4d894225d3f.png">
@@ -168,9 +177,8 @@
                 <li>개별 혹은 선택주문</li>
                 <li>비동기 수량변경, 삭제 가능</li>
                 <li>
-                    <img src="https://user-images.githubusercontent.com/89326946/150262474-ad4f9593-b81f-4131-9749-f2701bcb4187.png">
+                    <img src="https://user-images.githubusercontent.com/89326946/150293781-519e646c-c017-4f9a-aaf9-202f531c702f.png">
                 </li>
-              
             </ul>
         </li>
         <br/>
@@ -180,21 +188,21 @@
                 <li>주문한 상품에 대한 기본 정보들</li>
                 <li>가상계좌 구매시 유효기간과, 계좌번호도 표시</li>
                 <li>
-                    <img src="https://user-images.githubusercontent.com/89326946/150129429-b2760c68-eafb-44d6-bdd2-6d1e8a0ad765.png">
+                    <img src="https://user-images.githubusercontent.com/89326946/150293700-fbaec84b-3cc9-4fa2-9c59-cecd61f2a756.png">
                 </li>
                 <li>
-                    <img src="https://user-images.githubusercontent.com/89326946/150158308-deb2e458-4b20-465f-8330-83c022423d44.png">
+                    <img src="https://user-images.githubusercontent.com/89326946/150294626-c3d1b4cf-1517-4e89-bfca-524b3e6dcb37.png">
                 </li>
             </ul>
         </li>
-        <br/>
         <li>
             <strong>상품 주문</strong>
             <ul>
                 <li>구매하려는 상품 목록 표시</li>
                 <li>구매 클릭시 서버에서 배송정보 유효성검사후 결제 진행</li>
+                <li>카카오페이, 가상계좌 결제 가능</li>
                 <li>
-                    <img src="https://user-images.githubusercontent.com/89326946/150129455-b47a3d7c-f46b-4a46-b11c-859321ca96d8.png">
+                    <img src="https://user-images.githubusercontent.com/89326946/150293743-7034ca49-43d5-41c5-8a3d-eaf673efef3d.png">
                 </li>
             </ul>
         </li>
@@ -226,7 +234,7 @@
                 <li>입금 완료된 주문만 표시</li>
                 <li>운송장 입력후 배송시 해당 주문 배송상태 변경</li>
                 <li>
-                    <img src="https://user-images.githubusercontent.com/89326946/150158645-8d72a797-4af7-481a-b693-fb5a9e8288af.png">
+                    <img src="https://user-images.githubusercontent.com/89326946/150293811-24e6beaa-9b10-430d-9dbe-d4c64ea7fa51.png">
                 </li>
             </ul>
         </li>
@@ -236,7 +244,7 @@
             <ul>
                 <li>상품 동적 검색 및 삭제</li>
                 <li>
-                    <img src="https://user-images.githubusercontent.com/89326946/150129486-ac9fd377-3744-4b43-8878-b37a6c580b72.png">
+                    <img src="https://user-images.githubusercontent.com/89326946/150293851-7689a098-f254-4fbd-b6ed-b31fd2d0a299.png">
                 </li>
             </ul>
         </li>
@@ -244,10 +252,3 @@
 </div>
 <br/>
 <br/>
-<div>
-    <strong>개인 블로그 주소</strong>
-    <ul>
-        <li><a href="https://clear-clouds.tistory.com">블로그</a></li>
-    </ul>
-</div>
-
