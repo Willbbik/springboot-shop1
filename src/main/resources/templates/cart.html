@@ -49,7 +49,6 @@
                     </thead>
                     <tbody>
                         <tr class="cartItemId" th:attr="data-cartItemId=${cartItem.id}" th:each="cartItem : ${cartItems}">
-                            <input type="hidden" class="cartItemId" name="cartItemId" th:value="${cartItem.id}">
                             <td>
                                 <input type="checkbox" class="check">
                             </td>

@@ -40,11 +40,19 @@ $(function(){
 
         for(let i=0; i<cartItemId.length; i++){
             if($(cartItemId[i]).find('.check').is(":checked") == true){
-                let c_id = $(cartItemId[i]).val()
+
+                let c_id = $(cartItemId[i]).attr("data-cartItemId");
                 let cart_json = {cartItemId : c_id};
                 cartList.push(cart_json);
             }
         }
+
+        if(cartList.length < 1){
+            alert("구매할 상품을 선택해주세요.");
+            return false;
+        }
+
+        alert(cartList);
 
         const form = $("<form method='post'></form>");
         form.attr("action", "/order/checkout");
@@ -120,8 +128,9 @@ $(function(){
             let itemList = new Array();
             $(".check").each(function(){
                 if($(this).is(":checked")){
-                    let tr = $(this).closest("tr");
-                    itemList.push(tr.find("input[name=cartItemId]").val());
+
+                    let cartItemId = $(this).closest("tr").attr("data-cartItemId");
+                    itemList.push(cartItemId);
                 }
             });
 
