@@ -1,6 +1,7 @@
 # springboot-shop1[![Build Status](https://app.travis-ci.com/Willbbik/springboot-shop1.svg?token=1bwEC37snuxQCAFWRAxt&branch=master)](https://app.travis-ci.com/Willbbik/springboot-shop1)
 
-<p>처음으로 진행해본 미니 쇼핑몰 개인 프로젝트입니다.</p>
+<p>미니 쇼핑몰 개인 프로젝트입니다.</p>
+<p>하이버 클론코딩</p>
 <br/>
 
 <h1>배포환경</h1>
@@ -170,7 +171,6 @@
                 <li>
                     <img src="https://user-images.githubusercontent.com/89326946/150262474-ad4f9593-b81f-4131-9749-f2701bcb4187.png">
                 </li>
-              
             </ul>
         </li>
         <br/>
@@ -187,12 +187,12 @@
                 </li>
             </ul>
         </li>
-        <br/>
         <li>
             <strong>상품 주문</strong>
             <ul>
                 <li>구매하려는 상품 목록 표시</li>
                 <li>구매 클릭시 서버에서 배송정보 유효성검사후 결제 진행</li>
+                <li>카카오페이, 가상계좌 결제 가능</li>
                 <li>
                     <img src="https://user-images.githubusercontent.com/89326946/150129455-b47a3d7c-f46b-4a46-b11c-859321ca96d8.png">
                 </li>
@@ -250,4 +250,3 @@
         <li><a href="https://clear-clouds.tistory.com">블로그</a></li>
     </ul>
 </div>
-
