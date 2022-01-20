@@ -83,7 +83,7 @@
             <strong>메인 페이지</strong>
             <ul>
                 <li>카테고리별 상품 조회 가능</li>
-                <li>noOffset 페이징</li>
+                <li>더보기 버튼 (noOffset 페이징)</li>
                 <li>
                     <img src="https://user-images.githubusercontent.com/89326946/150129402-868062cc-952d-4261-a3a9-a1ea6f9a4611.png">
                 </li>
@@ -93,8 +93,8 @@
         <li>
             <strong>회원가입</strong>
             <ul>
-                <li>문자인증 기능</li>
-                <li>유효성 검사, 아이디 중복검사</li>
+                <li>문자인증 기능, 아이디 중복검사</li>
+                <li>프론트, 서버 모두 유효성 검사</li>
                 <li>
                     <img src="https://user-images.githubusercontent.com/89326946/150129225-9668ed2b-21ea-4f2d-87f5-d25ceeda701f.png ">
                 </li>
@@ -105,6 +105,7 @@
             <strong>로그인</strong>
             <ul>
                 <li>카카오 로그인 구현</li>
+                <li>프론트, 서버 모두 유효성 검사</li>
                 <li>
                     <img src="https://user-images.githubusercontent.com/89326946/150129246-d77023e6-d76b-4950-af5b-b0f1523dd198.png">
                 </li>
@@ -115,7 +116,9 @@
             <strong>MyPage</strong>
             <ul>
                 <li>주문, QnA버튼 클릭시 비동기로 내용 가져오게끔 구현</li>
-                <li>noOffset 페이징처리</li>
+                <li>회원탈퇴 기능</li>
+                <li>주문상세보기 클릭시 해당 주문 관련 정보들 표시</li>
+                <li>더보기 버튼 (noOffset 페이징)</li>
                 <li>
                     <img src="https://user-images.githubusercontent.com/89326946/150129415-ed601095-fe4d-4548-8f83-b7b178f888bf.png">
                 </li>
@@ -125,11 +128,49 @@
         <li>
             <strong>자유게시판</strong>
             <ul>
+                <li>기본적인 CRUD</li>
+                <li>댓글, 대댓글 CRUD, 비공개 여부 설정가능</li>
                 <li>작성자 아이디 마스킹처리</li>
                 <li>페이징</li>
                 <li>
                     <img src="https://user-images.githubusercontent.com/89326946/150129443-4f43da01-8ed8-450f-87b6-c6c994d6e3d4.png">
                 </li>
+                <li>
+                    <img src="https://user-images.githubusercontent.com/89326946/150262071-b6dbc5ee-1fb8-46b5-85bc-457b2a449e39.png">
+                </li>
+            </ul>
+        </li>
+        <br/>
+        <br/>
+        <li>
+            <strong>상품, 상품리뷰, 상품 QnA</strong>
+            <ul>
+                <li>수량 변경 가능</li>
+                <li>리뷰 : 상품 구매시에만 리뷰 작성 가능, 정렬 기능</li>
+                <li>QnA : 비공개여부 선택 가능, 관리자만 답글 가능</li>
+                <li>일반 페이징, noOffset 페이징</li>
+                <li>
+                    <img src="https://user-images.githubusercontent.com/89326946/150262699-51323395-5c2b-49a0-b31c-df5ce1deffaf.png">
+                </li>
+                <li>
+                    <img src="https://user-images.githubusercontent.com/89326946/150261169-4ba3f6dc-fee5-4d9c-b6d9-e4d894225d3f.png">
+                </li>
+                <li>
+                    <img src="https://user-images.githubusercontent.com/89326946/150261150-4780b106-e5df-49d8-89a4-d5f920f0b506.png">
+                </li>
+            </ul>
+        </li>
+        <br/>
+        <br/>
+        <li>
+            <strong>장바구니</strong>
+            <ul>
+                <li>개별 혹은 선택주문</li>
+                <li>비동기 수량변경, 삭제 가능</li>
+                <li>
+                    <img src="https://user-images.githubusercontent.com/89326946/150262474-ad4f9593-b81f-4131-9749-f2701bcb4187.png">
+                </li>
+              
             </ul>
         </li>
         <br/>
