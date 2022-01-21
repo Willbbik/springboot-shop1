@@ -70,11 +70,11 @@
                 </colgroup>
                 <tr>
                     <th><label for="customerName">주문자 이름<span>＊ </span></label></th>
-                    <td><input type="text" id="customerName" th:value="${addressDto?.customerName}" placeholder="주문자 이름"></td>
+                    <td><input type="text" id="customerName" th:value="${addressDto?.customerName}" placeholder="주문자 이름" autocomplete="off"></td>
                 </tr>
                 <tr>
                     <th><label for="customerPhoneNum">주문자 전화번호<span>＊ </span></label></th>
-                    <td><input type="text" id="customerPhoneNum" th:value="${addressDto?.customerPhoneNum}" placeholder="주문자 전화번호"></td>
+                    <td><input type="text" id="customerPhoneNum" th:value="${addressDto?.customerPhoneNum}" placeholder="주문자 전화번호" autocomplete="off"></td>
                 </tr>
             </table>
 
@@ -86,20 +86,20 @@
                 </colgroup>
                 <tr>
                     <th><label for="recipientName">수령인<span>＊ </span></label></th>
-                    <td><input type="text" id="recipientName" th:value="${addressDto?.recipientName}" placeholder="수령인"></td>
+                    <td><input type="text" id="recipientName" th:value="${addressDto?.recipientName}" placeholder="수령인" autocomplete="off"></td>
                 </tr>
                 <tr>
                     <th><label for="recipientPhoneNum">수령인 전화번호<span>＊ </span></label></th>
-                    <td><input type="text" id="recipientPhoneNum" th:value="${addressDto?.recipientPhoneNum}" placeholder="수령인 전화번호"></td>
+                    <td><input type="text" id="recipientPhoneNum" th:value="${addressDto?.recipientPhoneNum}" placeholder="수령인 전화번호" autocomplete="off"></td>
                 </tr>
                 <tr>
                     <!-- vertical align을 맞추기위해 th와 td를 같은 class로 지정-->
                     <th><label for="zipcode">배송주소<span>＊</span></label></th>
                     <td>
-                        <input type="text" id="zipcode" th:value="${addressDto?.zipcode}" placeholder="우편번호">
-                        <input type="button" onclick="createAddress()" value="우편번호 찾기"><br>
-                        <input type="text" id="address" th:value="${addressDto?.address}" placeholder="주소"><br>
-                        <input type="text" id="detailAddress" th:value="${addressDto?.detailAddress}" placeholder="상세주소">
+                        <input type="text" id="zipcode" th:value="${addressDto?.zipcode}" placeholder="우편번호" autocomplete="off">
+                        <input type="button" onclick="createAddress()" value="우편번호 찾기" autocomplete="off"><br>
+                        <input type="text" id="address" th:value="${addressDto?.address}" placeholder="주소" autocomplete="off"><br>
+                        <input type="text" id="detailAddress" th:value="${addressDto?.detailAddress}" placeholder="상세주소" autocomplete="off">
                     </td>
                 </tr>
             </table>

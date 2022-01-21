@@ -25,6 +25,7 @@ public class ItemQnARepositoryImpl implements ItemQnARepositoryCustom {
                         QItemQnA.itemQnA.id,
                         QItemQnA.itemQnA.writer,
                         QItemQnA.itemQnA.title,
+                        QItemQnA.itemQnA.member,
                         QItemQnA.itemQnA.content,
                         QItemQnA.itemQnA.hide,
                         QItemQnA.itemQnA.replyEmpty,

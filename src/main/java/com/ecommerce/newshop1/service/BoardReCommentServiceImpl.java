@@ -49,7 +49,6 @@ public class BoardReCommentServiceImpl implements BoardReCommentService{
     public List<BoardReCommentDto> edit(List<BoardReCommentDto> reCommentList) {
 
         if(!reCommentList.isEmpty()){
-
             if(security.isAuthenticated()){
                 reCommentList.stream()
                         .filter(p -> p.getHide().equals("private"))
