@@ -9,6 +9,8 @@ import com.ecommerce.newshop1.enums.Sns;
 import com.ecommerce.newshop1.repository.ItemRepository;
 import com.ecommerce.newshop1.repository.MemberRepository;
 import com.ecommerce.newshop1.repository.ReviewRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,73 +42,76 @@ class ReviewServiceImplTest {
     @Autowired
     ReviewRepository reviewRepository;
 
-//    @Test
-//    @DisplayName("리뷰 작성 테스트")
-//    void saveReview() {
-//
-//        //given
-//        Member member = Member.builder()
-//                .userId("wqdwqd")
-//                .password("asdasd")
-//                .role(Role.MEMBER)
-//                .sns(Sns.NONE)
-//                .build();
-//        Item item = Item.builder()
-//                .itemName("testitem")
-//                .build();
-//
-//        memberService.joinNormal(member);
-//        itemService.saveItem(item);
-//
-//        ReviewDto reviewDto = new ReviewDto();
-//
-//        // when
-//        reviewService.saveReview(reviewDto, item.getId());
-//
-//        // then
-//        Review findReview = reviewRepository.findByMember(member);
-//        Item findItem = itemService.findById(item.getId());
-//
-//        assertAll(
-//                () -> assertNotNull(findReview),
-//                () -> assertTrue(findItem.getReviewList().size() != 0)
-//        );
-//    }
-
     @Test
-    void searchAll(){
+    @DisplayName("리뷰 작성 테스트")
+    void saveReview() {
 
-        // given
+        //given
         Member member = Member.builder()
-                .userId("wqdwqd")
-                .password("asdasd")
+                .userId("t")
+                .password("password")
                 .role(Role.MEMBER)
                 .sns(Sns.NONE)
                 .build();
         Item item = Item.builder()
                 .itemName("testitem")
                 .build();
+
         memberRepository.save(member);
         itemRepository.save(item);
 
+        Review review = Review.builder()
+                .member(member)
+                .item(item)
+                .writer("testWriter")
+                .content("testContent")
+                .build();
+        // when
+        Long id = reviewRepository.save(review).getId();
 
-        Item findItem = itemService.findById(item.getId());
-        Member findMember = memberService.findById(member.getId());
+        // then
+        Review findReview = reviewRepository.findById(id).get();
+
+        assertAll(
+                () -> assertNotNull(findReview),
+                () -> assertTrue(findReview.getMember().equals(member))
+        );
+    }
+
+
+    @Test
+    @DisplayName("특정 상품에 작성된 리뷰 가져오기")
+    void searchAll(){
+
+        // given
+        Member member = Member.builder()
+                .userId("t")
+                .password("password")
+                .role(Role.MEMBER)
+                .sns(Sns.NONE)
+                .build();
+        Item item = Item.builder()
+                .itemName("testitem")
+                .build();
+
+        memberRepository.save(member);
+        itemRepository.save(item);
 
         Review review = Review.builder()
-                .content("test")
-                .writer(member.getUserId())
+                .member(member)
+                .item(item)
+                .content("testContent")
+                .writer("testWriter")
                 .build();
-        findItem.addReviewList(review);
-        findMember.addReviewList(review);
-
         reviewRepository.save(review);
 
         // when
-        List<ReviewDto> reviewList = reviewService.searchAll(item.getId(),null, null);
+        List<ReviewDto> reviewList = reviewRepository.searchAll(item.getId(),null, null);
 
         // then
-        assertNotNull(reviewList);
+        assertAll(
+                () -> assertFalse(reviewList.isEmpty())
+        );
 
     }
 

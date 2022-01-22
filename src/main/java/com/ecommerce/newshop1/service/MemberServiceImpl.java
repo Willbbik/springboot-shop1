@@ -154,6 +154,7 @@ public class MemberServiceImpl implements MemberService{
 
 
     @Override
+    @Transactional
     public void login(String userId){
         // 로그인 메소드
 

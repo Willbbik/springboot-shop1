@@ -72,7 +72,7 @@ public class ItemQnAReplyServiceImpl implements ItemQnAReplyService {
                 replyList.stream()
                         .filter(p -> p.getHide().equals("private"))
                         .filter(p -> !security.checkHasRole(Role.ADMIN.getValue()))
-                        .filter(p -> ! p.getItemQnA().getMember().getUserId().equals(security.getName()))
+                        .filter(p -> !p.getItemQnA().getMember().getUserId().equals(security.getName()))
                         .forEach(p -> p.setContent("비밀글입니다"));
             }else{
                 replyList.stream()

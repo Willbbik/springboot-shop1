@@ -33,19 +33,24 @@ class MemberServiceImplTest {
 
         // given
         Member member = Member.builder()
-                .userId("test")
+                .userId("t")
                 .password("password")
-                .phoneNum("01081387026")
+                .phoneNum("01012341234")
                 .role(Role.MEMBER)
                 .sns(Sns.NONE)
                 .build();
 
         // when
-        memberService.joinNormal(member);
+        Long id = memberService.joinNormal(member).getId();
 
         // then
-        Optional<Member> findMember = memberRepository.findById(member.getId());
-        assertTrue(findMember.isPresent());
+        Optional<Member> findMember = memberRepository.findById(id);
+
+        assertAll(
+                () -> assertTrue(findMember.isPresent()),
+                () -> assertTrue(findMember.get().getUserId().equals(member.getUserId()))
+        );
+
     }
 
 
@@ -54,9 +59,9 @@ class MemberServiceImplTest {
     void 장바구니생성확인(){
         // given
         Member member = Member.builder()
-                .userId("test")
+                .userId("t")
                 .password("password")
-                .phoneNum("01081387026")
+                .phoneNum("01012341234")
                 .role(Role.MEMBER)
                 .sns(Sns.NONE)
                 .build();
@@ -66,9 +71,9 @@ class MemberServiceImplTest {
         cartService.createCart(member);
 
         // then
-
-        assertTrue(member.getCart() != null);
-
+        assertAll(
+                () -> assertNotNull(member.getCart())
+        );
 
     }
 

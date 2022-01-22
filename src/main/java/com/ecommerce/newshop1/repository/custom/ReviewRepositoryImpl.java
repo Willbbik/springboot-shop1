@@ -18,7 +18,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom{
     @Override
     public List<ReviewDto> searchAll(Long itemId, Long lastReviewId, String sort) {
 
-        if(sort.equals("old")){
+        if("old".equals(sort)){
             return queryFactory
                     .select(Projections.fields(ReviewDto.class,
                             QReview.review.id,

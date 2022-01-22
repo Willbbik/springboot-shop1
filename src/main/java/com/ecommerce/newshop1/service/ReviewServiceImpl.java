@@ -41,7 +41,7 @@ public class ReviewServiceImpl implements ReviewService{
 
     @Override
     @Transactional
-    public void saveReview(ReviewDto reviewDto, Long itemId) {
+    public Long saveReview(ReviewDto reviewDto, Long itemId) {
 
         Item item = itemService.findById(itemId);
         Member member = memberService.getCurrentMember();
@@ -51,7 +51,7 @@ public class ReviewServiceImpl implements ReviewService{
         item.addReviewList(review);
         member.addReviewList(review);
 
-        reviewRepository.save(review);
+        return reviewRepository.save(review).getId();
     }
 
     @Override
