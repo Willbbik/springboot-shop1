@@ -28,7 +28,6 @@
         <li>Querydsl</li>
         <li>Thymeleaf</li>
         <li>Mysql</li>
-        <li>Redis</li>
     </ul>
 </div>
 <br/>
