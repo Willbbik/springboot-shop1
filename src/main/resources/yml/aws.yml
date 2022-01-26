@@ -1,0 +1,11 @@
+cloud:
+  aws:
+    s3:
+      bucket: egemony-image
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      access-key: AKIAW4MO3OKCVPPIFYOX
+      secret-key: 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
