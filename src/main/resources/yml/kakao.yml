@@ -1,9 +1,0 @@
-kakao:
-  admin_key : 0434939c9599519f64b7e143af5f1c28
-
-kakaoPay:
-  ready_url: https://kapi.kakao.com/v1/payment/ready
-  approve_url : https://kapi.kakao.com/v1/payment/approve
-  approval_url : http://localhost:8080/kakaoPay/order/success
-  fail_url : http://localhost:8080/order/checkout
-  cancel_url : http://localhost:8080/order/checkout
