@@ -46,7 +46,7 @@
 
                     <!-- QnA 답글 -->
                     <th:block th:if="${qna.replyEmpty} == true" sec:authorize="hasRole('ROLE_ADMIN')">
-                    <span th:attr="data-qnaId=${qna.id}">   <!-- 답변 작성 -->
+                    <span th:attr="data-qnaId=${qna.id}">
                         <dl class="qna_reply_write" style="display: none;">
                             <dt class="reply_write_content_dt">내용</dt>
                             <dd class="reply_write_content">
@@ -62,7 +62,7 @@
                                 </span>
                             </dd>
                             <dd class="reply_btn">
-                                <input type="button" value="취소하기" class="qna_reply_write_cancel" />
+                                <input type="button" value="취소하기" class="qna_reply_write_cancel"/>
                                 <input type="button" value="등록하기" class="qna_reply_post"/>
                             </dd>
                         </dl>
