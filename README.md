@@ -49,7 +49,6 @@
             <strong>게시판</strong>
             <ul>
                 <li>게시글 CRUD</li>
-                <li>게시글 공개,비공개 설정</li>
                 <li>비동기 댓글, 대댓글 CRUD 및 공개,비공개 설정</li>
                 <li>버튼 페이징</li>
             </ul>
