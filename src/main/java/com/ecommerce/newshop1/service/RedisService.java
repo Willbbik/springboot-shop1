@@ -74,7 +74,7 @@ public class RedisService {
         Object result = vop.get(phoneNum+"_check");
 
         if(result instanceof Boolean){
-            return (Boolean) result;
+            return (boolean) result;
         }else{
             return false;
         }

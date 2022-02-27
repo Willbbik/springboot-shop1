@@ -55,7 +55,7 @@ $(document).ready(function(){
 		return false;
 	});
 
-    $("#btnjoin").click(function(event){
+    $("#btnJoin").click(function(event){
         submitOpen();
         mainSubmit();
     });

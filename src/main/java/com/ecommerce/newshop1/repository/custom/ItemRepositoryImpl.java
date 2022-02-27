@@ -32,6 +32,7 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
                 .fetchCount();
     }
 
+
     @Override
     public List<ItemDto> searchAll(SearchDto searchDto, Pageable pageable) {
         // 커버링 인덱스로 대상 조회
