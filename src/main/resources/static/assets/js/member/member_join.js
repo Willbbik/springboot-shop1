@@ -55,7 +55,7 @@ $(document).ready(function(){
 		return false;
 	});
 
-    $("#btnJoin").click(function(event){
+    $("#btnjoin").click(function(event){
         submitOpen();
         mainSubmit();
     });
@@ -99,14 +99,14 @@ function checkUnrealInput() {
 
 // 가입하기 버튼 활성화
 function submitOpen() {
-    $("#btnJoin").attr("disabled",false);
+    $("#btnjoin").attr("disabled",false);
 }
 
 
 // 가입하기 버튼 비활성화
 function submitClose(){
 	submitFlag = true;
-	$("#btnJoin").attr("disabled",true);
+	$("#btnjoin").attr("disabled",true);
 }
 
 
