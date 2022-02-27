@@ -73,16 +73,21 @@ public class ItemQnAServiceImpl implements ItemQnAService {
                         .filter(p -> p.getHide().equals("private"))
                         .filter(p -> !security.checkHasRole(Role.ADMIN.getValue()))
                         .filter(p -> !p.getMember().getUserId().equals(security.getName()))
-                        .forEach(p -> p.setContent("비밀글입니다."));
+                        .forEach(p -> {
+                            p.setContent("비밀글입니다.");
+                            p.setTitle("비밀글입니다.");
+                        });
             }else{
                 qnaList.stream()
                         .filter(p -> p.getHide().equals("private"))
-                        .forEach(p -> p.setContent("비밀글입니다."));
+                        .forEach(p -> {
+                            p.setContent("비밀글입니다.");
+                            p.setTitle("비밀글입니다.");
+                        });
             }
         }
         return qnaList;
     }
-
 
     @Override
     @Transactional
