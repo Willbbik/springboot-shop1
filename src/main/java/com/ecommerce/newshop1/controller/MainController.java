@@ -22,13 +22,12 @@ public class MainController {
 
     @GetMapping("/")
     @ApiOperation(value = "웹 기본 페이지")
-    public String index(@RequestParam(name = "category", required = false) String category, Model model) {
+    public String index(@RequestParam(name = "category", required = false, defaultValue = "all") String category, Model model) {
 
         Pageable pageable = PageRequest.ofSize(9);
 
         List<ItemDto> itemList = itemService.searchAllNoOffset(category, null, pageable);
         Long lastId = itemService.getLastId(itemList, null);
-        if(category == null) category = "all";
 
         model.addAttribute("itemList", itemList);
         model.addAttribute("lastId", lastId);
@@ -43,8 +42,6 @@ public class MainController {
                          @RequestParam(name = "sort", required = false) String sort,
                          @RequestParam(name = "value", required = false) String value,
                          @RequestParam(name = "more", required = false) String more, Model model){
-
-//        if(itemName.isBlank()) return "common/search_empty";
 
         Long total = itemService.searchTotal(itemName, null, "onsale");
         Pageable pageable = PageRequest.ofSize(9);
