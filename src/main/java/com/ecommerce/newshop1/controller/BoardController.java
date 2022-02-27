@@ -89,7 +89,7 @@ public class BoardController {
 
         Board board = boardService.findById(boardId);
         Member member = board.getMember();
-        BoardDto boardDto = boardService.editBoardDto(mapper.map(board, BoardDto.class));
+        BoardDto boardDto = mapper.map(board, BoardDto.class);
 
         Long totalComment = boardCommentService.countByBoard(board);
 

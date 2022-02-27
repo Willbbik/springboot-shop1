@@ -66,8 +66,8 @@ public class BoardCommentServiceImpl implements BoardCommentService{
 
         Member member = memberService.findByUserId(userId);
         Board board = boardService.findById(boardId);
-
         BoardComment boardComment = mapper.map(boardCommentDto, BoardComment.class);
+
         boardComment.setWriter(member.getUserId().substring(0, 3) + "***");
         member.addBoardCommentList(boardComment);
         board.addBoardCommentList(boardComment);

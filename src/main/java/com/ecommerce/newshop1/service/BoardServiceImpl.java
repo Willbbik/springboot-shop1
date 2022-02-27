@@ -83,15 +83,6 @@ public class BoardServiceImpl implements BoardService{
 
 
     @Override
-    public BoardDto editBoardDto(BoardDto boardDto) {
-
-        String writer = boardDto.getWriter().substring(0, 3) + "***";
-        boardDto.setWriter(writer);
-
-        return boardDto;
-    }
-
-    @Override
     @Transactional
     public void deleteById(Long boardId) {
         boardRepository.deleteById(boardId);

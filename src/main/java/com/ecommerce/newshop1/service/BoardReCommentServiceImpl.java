@@ -73,7 +73,6 @@ public class BoardReCommentServiceImpl implements BoardReCommentService{
         BoardComment comment = boardCommentService.findById(postDto.getId());
         Member member = memberService.findByUserId(userId);
         Board board = comment.getBoard();
-
         BoardReComment reComment = BoardReComment.builder()
                         .content(postDto.getContent())
                         .hide(postDto.getHide())
