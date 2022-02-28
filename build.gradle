@@ -41,7 +41,6 @@ dependencies {
 	implementation 'org.modelmapper:modelmapper:2.4.4'		// entity를 dto로 바꾸기위해서
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' // oauth2
 	implementation 'com.querydsl:querydsl-jpa'				// querydsl
-	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6'   //query parameter log
 	implementation 'commons-io:commons-io:2.6'				// Commons-파일 업로드
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'  // aws s3에 이미지 저장
 
