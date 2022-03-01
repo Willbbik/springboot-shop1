@@ -17,6 +17,4 @@ public interface ReviewService {
 
     List<ReviewDto> searchAll(Long itemId, Long lastReviewId, String sort);
 
-    ReviewDto editReview(ReviewDto reviewDto);
-
 }

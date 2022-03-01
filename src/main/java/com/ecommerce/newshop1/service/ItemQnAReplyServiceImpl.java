@@ -37,10 +37,9 @@ public class ItemQnAReplyServiceImpl implements ItemQnAReplyService {
         Member member = memberService.getCurrentMember();
         ItemQnA qna = qnaServiceItem.findById(qnaId);
         Item item = itemService.findById(itemId);
-
         ItemQnAReply qnaReply = mapper.map(replyDto, ItemQnAReply.class);
-        qnaReply.setWriter(member.getUserId().substring(0, 3) + "***");
 
+        qnaReply.setWriter(member.getUserId().substring(0, 3) + "***");
         qna.setQnAReply(qnaReply);
         qna.setReplyEmpty(false);
         member.addQnaReplyList(qnaReply);

@@ -28,6 +28,5 @@ public interface ItemService {
     List<ItemDto> searchAllNoOffset(String category, Long ItemId, Pageable pageable);
 
     List<ItemImageDto> searchAllItemImage(Item item);
-
 }
 

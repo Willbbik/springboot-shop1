@@ -26,9 +26,9 @@ public class ReviewServiceImpl implements ReviewService{
 
     public Long getLastReviewId(List<ReviewDto> reviewList, Long lastReviewId, String sort){
 
-        if(reviewList.isEmpty()){
-            return lastReviewId;
-        }else if(sort.equals("old")){   // 오래된순일 때
+        if(reviewList.isEmpty()) return lastReviewId;
+
+        if(sort.equals("old")){   // 오래된순일 때
             return reviewList.stream()
                     .max(Comparator.comparingLong(ReviewDto::getId))
                     .get().getId();
@@ -47,7 +47,7 @@ public class ReviewServiceImpl implements ReviewService{
         Member member = memberService.getCurrentMember();
         Review review = mapper.map(reviewDto, Review.class);
 
-        review.setWriter(member.getUserId());
+        review.setWriter(member.getUserId().substring(0, 3) + "***");
         item.addReviewList(review);
         member.addReviewList(review);
 
@@ -65,21 +65,8 @@ public class ReviewServiceImpl implements ReviewService{
     @Transactional(readOnly = true)
     public List<ReviewDto> searchAll(Long itemId, Long lastReviewId, String sort) {
 
-        List<ReviewDto> reviewDtos = reviewRepository.searchAll(itemId, lastReviewId, sort);
-        if(!reviewDtos.isEmpty()) {
-            for (ReviewDto reviewDto : reviewDtos) editReview(reviewDto);
-        }
-        return reviewDtos;
+        return reviewRepository.searchAll(itemId, lastReviewId, sort);
     }
-
-    @Override
-    public ReviewDto editReview(ReviewDto reviewDto) {
-
-        String maskingWriter = reviewDto.getWriter().substring(0, 3) + "***";
-        reviewDto.setWriter(maskingWriter);
-        return reviewDto;
-    }
-
 
 }
 
